@@ -1,0 +1,18 @@
+[
+  {
+    "id": "alarm",
+    "code": "void setup(){pinMode(2,INPUT);}\nvoid loop(){if(digitalRead(2))tone(8,1000);else noTone(8);}"
+  },
+  {
+    "id": "metronome",
+    "code": "void setup(){}\nvoid loop(){tone(8,1000,80);delay(500);}"
+  },
+  {
+    "id": "fade",
+    "code": "void setup(){pinMode(9,OUTPUT);}\nvoid loop(){for(int v=0;v<256;v++){analogWrite(9,v);delay(5);}for(int v=255;v>=0;v--){analogWrite(9,v);delay(5);}}"
+  },
+  {
+    "id": "lcd-i2c",
+    "code": "#include <Wire.h>\nvoid nibble(byte n,bool rs){Wire.beginTransmission(0x27);Wire.write((n<<4)|8|(rs?1:0)|4);Wire.endTransmission();delayMicroseconds(10);Wire.beginTransmission(0x27);Wire.write((n<<4)|8|(rs?1:0));Wire.endTransmission();delayMicroseconds(100);}\nvoid send(byte v,bool rs){nibble(v>>4,rs);nibble(v&15,rs);}\nvoid setup(){Wire.begin();delay(50);nibble(3,false);delay(5);nibble(3,false);nibble(3,false);nibble(2,false);send(0x28,false);send(1,false);delay(2);send(0x0C,false);const char* text=\"Privet\";while(*text)send(*text++,true);}\nvoid loop(){}"
+  }
+]

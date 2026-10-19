@@ -1,0 +1,15 @@
+export const inputCopy = {
+  horizontal: "Горизонталь",
+  vertical: "Вертикаль",
+  distance: "Расстояние, см",
+  temperature: "Температура, °C",
+  humidity: "Влажность, %",
+  position: "Положение",
+  rotation: "Поворот энкодера",
+  key: "Клавиша",
+  released: "Не нажата",
+  movement: "Движение",
+  tilt: "Наклон",
+  level: "Уровень",
+  switches: "Каналы DIP",
+};

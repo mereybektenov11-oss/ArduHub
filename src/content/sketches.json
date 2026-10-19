@@ -1,0 +1,38 @@
+[
+  {
+    "id": "blink",
+    "title": "Первый огонёк",
+    "idea": "Светодиод мигает раз в секунду.",
+    "code": "void setup() {\n  pinMode(13, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(13, HIGH);\n  delay(1000);\n  digitalWrite(13, LOW);\n  delay(1000);\n}\n"
+  },
+  {
+    "id": "button",
+    "title": "Свет по кнопке",
+    "idea": "Кнопка включает светодиод. Используется INPUT_PULLUP.",
+    "code": "void setup() {\n  pinMode(13, OUTPUT);\n  pinMode(2, INPUT_PULLUP);\n}\n\nvoid loop() {\n  digitalWrite(13, digitalRead(2) == LOW ? HIGH : LOW);\n}\n"
+  },
+  {
+    "id": "pwm",
+    "title": "Яркость",
+    "idea": "Потенциометр меняет яркость светодиода и выводит число в порт.",
+    "code": "void setup() {\n  pinMode(9, OUTPUT);\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  int value = analogRead(A0) / 4;\n  analogWrite(9, value);\n  Serial.println(value);\n  delay(100);\n}\n"
+  },
+  {
+    "id": "serial",
+    "title": "Привет, порт!",
+    "idea": "Arduino выводит сообщение в монитор порта.",
+    "code": "void setup() {\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  Serial.println(\"Hello ArduHub\");\n  delay(1000);\n}\n"
+  },
+  {
+    "id": "constant",
+    "title": "Постоянный свет",
+    "idea": "Пин 13 постоянно включён. Сравни это поведение с миганием.",
+    "code": "void setup() {\n  pinMode(13, OUTPUT);\n  digitalWrite(13, HIGH);\n}\n\nvoid loop() {\n}\n"
+  },
+  {
+    "id": "buzzer",
+    "title": "Звуковой сигнал",
+    "idea": "Зуммер на пине 8 воспроизводит частоту 1000 Гц. Для звука разреши воспроизведение в браузере.",
+    "code": "void setup() {\n  tone(8, 1000);\n}\n\nvoid loop() {\n}\n"
+  }
+]

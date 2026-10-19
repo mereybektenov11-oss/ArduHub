@@ -1,0 +1,716 @@
+.cabinet {
+  --lesson-h1: calc(2rem * var(--lesson-scale));
+  --lesson-h2: calc(1.75rem * var(--lesson-scale));
+  --lesson-body: calc(1.25rem * var(--lesson-scale));
+  --lesson-task: calc(1.125rem * var(--lesson-scale));
+  --lesson-code: calc(1rem * var(--lesson-scale));
+  --l2-wire: #c58320;
+  --l2-blue: #287aab;
+}
+.l2-workspace {
+  min-width: 0;
+  overflow: hidden;
+  background: var(--white);
+  border: 1px solid var(--line-dark);
+  border-radius: var(--radius-card);
+}
+.l2-quiz {
+  width: min(100%, 800px);
+  margin-inline: auto;
+  display: grid;
+  gap: var(--space-md);
+}
+.l2-quiz header {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-sm);
+}
+.l2-quiz p,
+.l2-quiz label {
+  font-size: var(--lesson-task);
+  line-height: 1.65;
+}
+.l2-quiz h3 {
+  font-size: calc(var(--type-card-title) * var(--lesson-scale));
+  line-height: 1.5;
+}
+.l2-quiz fieldset {
+  display: grid;
+  gap: var(--space-xs);
+  min-width: 0;
+  border: 0;
+  padding: 0;
+}
+.l2-quiz fieldset label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  border: 1px solid var(--line-dark);
+  border-radius: 12px;
+  cursor: pointer;
+  background: var(--cream-50);
+}
+.l2-quiz fieldset label.selected {
+  background: var(--cream-100);
+  border-color: var(--forest-700);
+}
+.l2-quiz fieldset label:focus-within {
+  outline: 2px solid var(--forest-700);
+  outline-offset: 2px;
+}
+.l2-quiz input {
+  flex-shrink: 0;
+  accent-color: var(--forest-700);
+}
+.l2-quiz-progress,
+.l2-quiz-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+.l2-quiz-progress button {
+  width: 44px;
+  border: 1px solid var(--line-dark);
+  border-radius: 50%;
+  color: var(--text-dark);
+  background: var(--cream-50);
+  font-size: var(--type-body);
+  cursor: pointer;
+}
+.l2-quiz-progress [aria-current] {
+  color: var(--text-light);
+  background: var(--forest-700);
+}
+.l2-quiz-progress .answered:not([aria-current]) {
+  background: var(--cream-100);
+  border-color: var(--forest-700);
+}
+.l2-quiz-actions {
+  justify-content: space-between;
+}
+.l2-quiz-review {
+  display: grid;
+  gap: var(--space-md);
+  padding: 0;
+  list-style: none;
+}
+.l2-quiz-review li {
+  border-left: 3px solid var(--forest-700);
+  padding-left: var(--space-sm);
+}
+.l2-quiz-review .is-incorrect {
+  border-color: var(--amber-600);
+}
+.l2-workbar,
+.l2-tools,
+.l2-properties,
+.l2-inputs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  padding: var(--space-sm);
+  border-bottom: 1px solid var(--line-dark);
+}
+.l2-workbar .cab-tabs {
+  margin: 0;
+}
+.l2-workbar .cab-btn,
+.l2-tools .cab-btn {
+  min-height: 38px;
+  padding: 8px 14px;
+  font-size: var(--type-caption);
+}
+.l2-palette {
+  display: flex;
+  gap: var(--space-xs);
+  padding: var(--space-sm);
+  overflow-x: auto;
+  border-bottom: 1px solid var(--line-dark);
+}
+.l2-palette button {
+  flex: 0 0 96px;
+  min-height: 85px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px;
+  border-radius: 12px;
+  border: 1px solid var(--line-dark);
+  font-size: var(--type-caption);
+  cursor: pointer;
+}
+.l2-palette button:hover:not(:disabled) {
+  background: var(--cream-100);
+  border-color: var(--amber-600);
+}
+.l2-palette small {
+  font-size: var(--type-caption);
+  color: var(--text-muted-dark);
+}
+.l2-extra-parts summary {
+  cursor: pointer;
+  padding: 10px 16px;
+  font-size: var(--type-caption);
+  border-bottom: 1px solid var(--line-dark);
+  color: var(--text-muted-dark);
+}
+.l2-canvas-scroll {
+  width: 100%;
+  overflow: auto;
+  background: var(--cream-100);
+}
+.l2-canvas {
+  position: relative;
+  width: 600px;
+  min-width: 600px;
+  margin-inline: auto;
+  height: 440px;
+  background-image: radial-gradient(var(--line-dark) 1px, transparent 1px);
+  background-size: 10px 10px;
+  isolation: isolate;
+}
+.l2-wires {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  overflow: visible;
+}
+.l2-part {
+  position: absolute;
+  z-index: 1;
+  transform-origin: 0 0;
+  outline: 1px solid transparent;
+}
+.l2-part.selected {
+  outline: 2px dashed var(--amber-600);
+  outline-offset: 5px;
+}
+.l2-part.invalid {
+  outline: 2px solid var(--error);
+  outline-offset: 6px;
+}
+.l2-part-handle {
+  position: absolute;
+  top: -25px;
+  left: 0;
+  white-space: nowrap;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: var(--white);
+  border: 1px solid var(--line-dark);
+  font-size: var(--type-caption);
+  cursor: grab;
+  touch-action: none;
+  color: var(--text-dark);
+}
+.l2-part-handle:active {
+  cursor: grabbing;
+}
+.l2-pin {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px solid var(--forest-700);
+  background: var(--cream-50);
+  opacity: 0.75;
+  padding: 0;
+  z-index: 5;
+  cursor: crosshair;
+}
+.l2-pin:hover,
+.l2-pin:focus-visible,
+.l2-pin.pending {
+  opacity: 1;
+  background: var(--amber-500);
+  outline: 3px solid var(--white);
+  z-index: 6;
+}
+.l2-pin:disabled {
+  pointer-events: none;
+  opacity: 0.25;
+}
+.l2-canvas-hint,
+.l2-note {
+  font-size: var(--type-caption);
+  line-height: 1.6;
+  color: var(--text-muted-dark);
+  padding: 8px 16px;
+  margin: 0;
+}
+.l2-empty-canvas {
+  position: absolute;
+  inset: 40% 0 auto;
+  text-align: center;
+  color: var(--text-muted-dark);
+}
+.l2-properties label,
+.l2-tools label,
+.l2-inputs label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--type-caption);
+}
+.l2-properties input[type="number"] {
+  max-width: 100px;
+}
+.l2-wire-list {
+  padding: 12px 16px;
+  font-size: var(--type-caption);
+}
+.l2-wire-list summary {
+  cursor: pointer;
+}
+.l2-wire-list .cab-row {
+  padding: 6px 0;
+  overflow-wrap: anywhere;
+}
+.l2-wire-list button {
+  color: var(--error-ink);
+  text-decoration: underline;
+}
+.l2-serial {
+  padding: var(--space-sm);
+}
+.l2-serial pre {
+  background: var(--ink-900);
+  color: var(--cream-50);
+  padding: var(--space-sm);
+  border-radius: 12px;
+  min-height: 260px;
+  max-height: 400px;
+  overflow: auto;
+  font-size: var(--type-caption);
+}
+.l2-run-status {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 12px 16px;
+  background: var(--cream-50);
+  font-size: var(--type-caption);
+}
+.l2-active-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--success-ink);
+}
+.l2-error {
+  padding: 12px 16px;
+  margin: 0;
+  background: var(--light-error);
+  color: var(--error-ink);
+  font-size: var(--type-caption);
+  overflow-wrap: anywhere;
+}
+.l2-error code {
+  white-space: pre-wrap;
+}
+.l2-stepper {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  padding: 0;
+  gap: 6px;
+}
+.l2-stepper button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid var(--line-dark);
+  width: 100%;
+  background: var(--white);
+  font-size: var(--type-caption);
+}
+.l2-stepper button span {
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line-dark);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  flex: none;
+}
+.l2-stepper [aria-current="step"] {
+  background: var(--forest-700);
+  color: var(--cream-50);
+}
+.l2-stepper button:disabled {
+  opacity: 0.5;
+}
+.l2-lesson-layout {
+  display: grid;
+  grid-template-columns: minmax(230px, 0.7fr) minmax(0, 1.7fr);
+  gap: var(--space-md);
+  align-items: start;
+}
+.l2-lesson-guide {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+.l2-theory {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+.l2-theory h3 {
+  font-size: var(--type-body);
+  margin: 0 0 6px;
+}
+.l2-theory p {
+  font-size: var(--type-body-small);
+}
+.l2-theory-part {
+  float: right;
+  margin-left: 12px;
+}
+.l2-video {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: var(--ink-900);
+  border-radius: 16px;
+}
+.l2-project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: var(--space-sm);
+}
+.l2-project-preview {
+  height: 140px;
+  border-radius: 14px;
+  display: flex;
+  gap: var(--space-md);
+  align-items: center;
+  justify-content: center;
+  background: var(--cream-100);
+  margin-bottom: var(--space-sm);
+  overflow: hidden;
+}
+.l2-project-grid h2 {
+  font-size: var(--type-card-title);
+}
+.l2-project-grid p {
+  font-size: var(--type-caption);
+}
+.l2-project-meta {
+  display: grid;
+  gap: var(--space-xs);
+}
+.l2-project-meta input,
+.l2-project-meta textarea {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--white);
+  color: var(--text-dark);
+  border: 1px solid var(--line-dark);
+  border-radius: 12px;
+}
+.l2-project-meta label {
+  font-size: var(--type-caption);
+}
+.l2-project-meta textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+.l2-import input {
+  max-width: 100%;
+  font-size: var(--type-caption);
+}
+.l2-code {
+  min-width: 0;
+}
+.l2-step-content {
+  animation: l2-enter var(--motion-micro, 225ms) var(--motion-ease);
+}
+@keyframes l2-enter {
+  from {
+    opacity: 0.5;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 1100px) {
+  .l2-lesson-layout {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 600px) {
+  .l2-stepper button {
+    flex-direction: column;
+    gap: 5px;
+    padding: 9px 3px;
+    font-size: var(--type-caption);
+  }
+  .l2-workbar {
+    align-items: stretch;
+  }
+  .l2-workbar .cab-row {
+    width: 100%;
+  }
+  .l2-palette button {
+    flex-basis: 82px;
+  }
+  .l2-canvas-scroll {
+    max-width: 100%;
+  }
+  .l2-lesson-layout {
+    gap: var(--space-sm);
+  }
+  .l2-project-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .l2-step-content {
+    animation: none;
+  }
+}
+/* Reading sizes are shared with the mentor, independently of the cabinet navigation. */
+.l2-lesson {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.l2-lesson h1 {
+  font-size: var(--lesson-h1);
+}
+.l2-lesson h2 {
+  font-size: var(--lesson-h2);
+  line-height: 1.25;
+}
+.l2-theory {
+  width: 100%;
+  max-width: 760px;
+  margin-inline: auto;
+  gap: 32px;
+}
+.l2-theory section {
+  display: flow-root;
+  padding-block: 12px;
+}
+.l2-theory h2 {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin: 0 0 16px;
+}
+.l2-theory-number {
+  color: var(--amber-600);
+  font-variant-numeric: tabular-nums;
+  flex: none;
+}
+.l2-theory p {
+  font-size: var(--lesson-body);
+  line-height: 1.65;
+  max-width: 62ch;
+}
+.l2-theory-part {
+  margin: 8px 0 16px 16px;
+}
+.l2-theory > .cab-btn {
+  min-height: 52px;
+  align-self: flex-start;
+}
+.l2-lesson-guide p,
+.l2-lesson-guide strong {
+  font-size: var(--lesson-task);
+  line-height: 1.65;
+}
+.l2-lesson .cab-btn,
+.l2-lesson .cab-tabs button,
+.l2-stepper button,
+.l2-workspace label,
+.l2-workspace small,
+.l2-workspace summary,
+.l2-workspace .l2-note,
+.l2-workspace .l2-error,
+.l2-canvas-hint,
+.l2-run-status,
+.l2-wire-list {
+  font-size: calc(1rem * var(--lesson-scale));
+}
+.l2-lesson button:not(.l2-pin),
+.l2-text-size select {
+  min-height: 44px;
+}
+.l2-text-size {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: var(--type-card-title);
+}
+.l2-text-size select {
+  max-width: 100%;
+  border: 1px solid var(--line-dark);
+  border-radius: 12px;
+  padding: 8px;
+  background: var(--white);
+}
+.cab-chat p,
+.cab-chat textarea,
+.cab-chat input,
+.cab-chat .cab-message {
+  font-size: calc(1.0625rem * var(--lesson-scale));
+  line-height: 1.65;
+}
+.l2-palette > button {
+  font-size: var(--type-body);
+  flex-basis: 144px;
+}
+.l2-palette small {
+  font-size: var(--type-body);
+}
+.l2-part-handle {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  pointer-events: auto;
+}
+.l2-part-handle:focus-visible {
+  outline: 2px dashed var(--amber-600);
+  outline-offset: 4px;
+}
+.l2-serial pre {
+  font-size: var(--lesson-code);
+}
+@media (max-width: 600px) {
+  .l2-stepper {
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  .l2-stepper li {
+    flex: 0 0 110px;
+  }
+  .l2-stepper button {
+    font-size: var(--type-body);
+    flex-direction: row;
+  }
+  .l2-theory-part {
+    float: none;
+    margin: 0 0 16px;
+  }
+  .l2-theory h2 {
+    gap: 10px;
+  }
+  .l2-lesson .cab-card {
+    min-width: 0;
+  }
+}
+.l2-tools input[type="search"],
+.l2-tools select {
+  min-width: 0;
+  max-width: 100%;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--line-dark);
+  border-radius: 10px;
+  background: var(--white);
+  font-size: var(--type-body);
+}
+.l2-canvas-scroll {
+  max-height: 640px;
+  touch-action: none;
+}
+.cab-chat-user p,
+.cab-chat-assistant p {
+  margin: 8px 0;
+  white-space: pre-wrap;
+}
+.cab-chat pre {
+  overflow: auto;
+  max-width: 100%;
+  font-size: var(--lesson-code);
+}
+.l2-lesson .cab-eyebrow,
+.l2-lesson .cab-small,
+.l2-lesson .cab-pill {
+  font-size: calc(1rem * var(--lesson-scale));
+}
+.l2-inputs fieldset {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--line-dark);
+  border-radius: 12px;
+}
+.l2-inputs legend {
+  font-size: var(--type-body);
+  overflow-wrap: anywhere;
+}
+.l2-inputs button,
+.l2-inputs select {
+  min-height: 44px;
+  min-width: 44px;
+  border: 1px solid var(--line-dark);
+  border-radius: 8px;
+  padding: 8px;
+}
+.l2-project-preview {
+  height: 180px;
+}
+.l2-tools > button {
+  min-height: 44px;
+}
+.cab-chat-log > div {
+  padding: var(--space-sm);
+  border-radius: var(--space-sm);
+  max-width: 95%;
+  min-width: 0;
+  font-size: calc(1.0625rem * var(--lesson-scale));
+  overflow-wrap: anywhere;
+}
+.cab-chat-log > div > span {
+  font-size: var(--type-body);
+  font-weight: 700;
+  color: var(--cab-muted);
+}
+.l2-project-review {
+  display: grid;
+  gap: 20px;
+}
+.l2-project-review p {
+  white-space: pre-wrap;
+  font-size: var(--type-card-title);
+  line-height: 1.65;
+}
+.l2-code-keyword {
+  color: var(--forest-700);
+  font-weight: 700;
+}
+.l2-code-number {
+  color: var(--l2-blue);
+}
+.l2-code-string {
+  color: var(--error-ink);
+}
+.l2-code-comment {
+  color: var(--text-muted-dark);
+}
+.l2-mentor-code {
+  max-width: 100%;
+  min-width: 0;
+}

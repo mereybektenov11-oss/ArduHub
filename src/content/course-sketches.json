@@ -1,0 +1,14 @@
+[
+  {
+    "id": "blink-fast",
+    "code": "void setup() {\n  pinMode(13, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(13, HIGH);\n  delay(250);\n  digitalWrite(13, LOW);\n  delay(250);\n}\n"
+  },
+  {
+    "id": "traffic",
+    "code": "void setup(){pinMode(13,OUTPUT);pinMode(12,OUTPUT);}\nvoid loop(){digitalWrite(13,HIGH);digitalWrite(12,LOW);delay(500);digitalWrite(13,LOW);digitalWrite(12,HIGH);delay(500);}"
+  },
+  {
+    "id": "pwm-fixed",
+    "code": "void setup(){pinMode(9,OUTPUT);analogWrite(9,128);}\nvoid loop(){}"
+  }
+]

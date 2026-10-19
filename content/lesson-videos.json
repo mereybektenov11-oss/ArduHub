@@ -1,0 +1,470 @@
+{
+  "lesson-1": {
+    "videoId": "3OKOLiOHnVM",
+    "title": "ПЕРВАЯ СХЕМА НА АРДУИНО [Уроки Arduino #4]",
+    "channel": "Радиолюбитель TV",
+    "durationSec": 471,
+    "resolvedAt": "2026-10-17T13:36:43.499Z",
+    "alternatives": [
+      {
+        "videoId": "ld74Amx6nhI",
+        "title": "Как подключить светодиод к Arduino и сделать мигалку — первый проект",
+        "channel": "Уля Уля | Arduino для начинающих",
+        "durationSec": 326
+      },
+      {
+        "videoId": "Yx4WF4YlyQ4",
+        "title": "Уроки Ардуино в tinkercad. Урок 1_2 ArduinoBasics. Домашнее задание.",
+        "channel": "UfaRobo Club",
+        "durationSec": 452
+      },
+      {
+        "videoId": "oW8qFD99U2k",
+        "title": "Уроки Arduino, #1, введение и работа с портами",
+        "channel": "arduinoLab",
+        "durationSec": 885
+      },
+      {
+        "videoId": "6wOEK5fEPdI",
+        "title": "2.2 А вы делали такой блинк - сложнее обычного - на arduino uno из 3 LED + цикл for?",
+        "channel": "Electro world",
+        "durationSec": 493
+      },
+      {
+        "videoId": "RZsbbCQOrzI",
+        "title": "Первый проект на Ардуино. Светодиодное сердце.",
+        "channel": "Мартен Фуркад",
+        "durationSec": 636
+      }
+    ]
+  },
+  "lesson-2": {
+    "videoId": "qBwfQOSKUAo",
+    "title": "Ардуино: плавное мигание светодиода",
+    "channel": "Алексей RN6LLV радио турист",
+    "durationSec": 421,
+    "resolvedAt": "2026-10-17T13:36:44.061Z",
+    "alternatives": [
+      {
+        "videoId": "LvW1XHZcWaA",
+        "title": "Arduino Урок №1 - Мигание светодиода и регулирование яркостью светодиода #Arduino",
+        "channel": "MyTechnologychannel",
+        "durationSec": 783
+      },
+      {
+        "videoId": "ZiMiL5zgyQE",
+        "title": "Arduino /// Урок 2 - Управление светодиодом при помощи команд",
+        "channel": "Розмысл",
+        "durationSec": 293
+      },
+      {
+        "videoId": "ZE54gaeOPsw",
+        "title": "Arduino 3 пина на 6 светодиодов чарлиплексинг",
+        "channel": "GEEKMATIC",
+        "durationSec": 857
+      },
+      {
+        "videoId": "x7MsdMnkpQU",
+        "title": "Arduino: первый скетч мигающий светодиод  (BLINK)!!!",
+        "channel": "Electronic !",
+        "durationSec": 1132
+      },
+      {
+        "videoId": "Utjbrb-cAmk",
+        "title": "Arduino № 5 Имитация горящей свечи",
+        "channel": "KNL Games",
+        "durationSec": 1004
+      }
+    ]
+  },
+  "lesson-3": {
+    "videoId": "erfasto8HMg",
+    "title": "ARDUINO - Входные сигналы #3 (перезагружено после взлома канала)  - (перезалито после взлома)",
+    "channel": "РукоПоп",
+    "durationSec": 874,
+    "resolvedAt": "2026-10-17T13:36:44.642Z",
+    "alternatives": [
+      {
+        "videoId": "SwbfG9MtGao",
+        "title": "Arduino INPUT, INPUT_PULLUP and Floating Pins Explained",
+        "channel": "Zero Amps",
+        "durationSec": 536
+      },
+      {
+        "videoId": "9euhTHrn6aQ",
+        "title": "input_pullup - Curso de Arduino #52",
+        "channel": "CFBCursos",
+        "durationSec": 619
+      },
+      {
+        "videoId": "ou59Q0mkHMs",
+        "title": "Lesson41 Arduino: INPUT PULLUP (ARABIC) كورس اردوينو-دورة الاردوينو",
+        "channel": "Electronicsandcoding",
+        "durationSec": 426
+      },
+      {
+        "videoId": "BUa4t60FjLc",
+        "title": "internal pullup resistor - digitalRead - Arduino Uno Programming Basics",
+        "channel": "Playduino",
+        "durationSec": 442
+      },
+      {
+        "videoId": "zER0e0YTZYs",
+        "title": "Curso de Arduino- Clase N°5 (Función INPUT_PULLUP) - Mechatronics",
+        "channel": "Mechatronics",
+        "durationSec": 602
+      }
+    ]
+  },
+  "lesson-4": {
+    "videoId": "5GF5iAcj1ac",
+    "title": "Урок светофор на Arduino UNO",
+    "channel": "Arduino Tex",
+    "durationSec": 558,
+    "resolvedAt": "2026-10-17T13:36:45.161Z",
+    "alternatives": [
+      {
+        "videoId": "GiAafft4X_o",
+        "title": "Светофор на Arduino / Как сделать светофор на Ардуино / Arduino traffic light",
+        "channel": "DIY Club",
+        "durationSec": 489
+      },
+      {
+        "videoId": "ISG6_SsbXo8",
+        "title": "Arduino урок. Светофор для машин и пешеходов",
+        "channel": "Arduino Tex",
+        "durationSec": 448
+      },
+      {
+        "videoId": "h56pRDAILvM",
+        "title": "Arduino UNO уроки для начинающих.  Мигаем двумя светодиодами",
+        "channel": "Arduino Tex",
+        "durationSec": 493
+      },
+      {
+        "videoId": "kc8Qr0jbK-g",
+        "title": "Видео урок 8 — Светофор на Arduino из 3 светодиодов для машин и 2 х для пешеходов",
+        "channel": "Arduino Tex",
+        "durationSec": 433
+      },
+      {
+        "videoId": "hjFHljMTMIE",
+        "title": "Видео урок 7  - Светофор на Arduino  своими руками.  Пишем скетч используя функции",
+        "channel": "Arduino Tex",
+        "durationSec": 600
+      }
+    ]
+  },
+  "lesson-5": {
+    "videoId": "Utjbrb-cAmk",
+    "title": "Arduino № 5 Имитация горящей свечи",
+    "channel": "KNL Games",
+    "durationSec": 1004,
+    "resolvedAt": "2026-10-17T13:36:45.624Z",
+    "alternatives": [
+      {
+        "videoId": "rCmaMST8qkg",
+        "title": "Уроки Ардуино #11 - плавное управление нагрузкой, ШИМ сигнал",
+        "channel": "Заметки Ардуинщика",
+        "durationSec": 473
+      },
+      {
+        "videoId": "CBvqGrrzI38",
+        "title": "Fading and Blinking a LED using Arduino + Code Explained",
+        "channel": "Electronics Simplified",
+        "durationSec": 330
+      },
+      {
+        "videoId": "yZdr3qexDpQ",
+        "title": "Подключение светодиода к Arduino.",
+        "channel": "DEM САМОДЕЛКИН",
+        "durationSec": 403
+      },
+      {
+        "videoId": "gad6zAkGlvM",
+        "title": "DIY LED Fill Light for YouTube Videos | Adjustable Warm & Cool Lighting | Budget setup",
+        "channel": "ERL Engineering",
+        "durationSec": 890
+      },
+      {
+        "videoId": "t3_hor588Mg",
+        "title": "Arduino PIR Sensor Fade Kitchen LED Lighting",
+        "channel": "Rudy's Hobby Channel",
+        "durationSec": 431
+      }
+    ]
+  },
+  "lesson-6": {
+    "videoId": "IfIwmy14zdo",
+    "title": "ATiny85 Индикатор проверки LiIon аккумулятора",
+    "channel": "Alexandr Batura",
+    "durationSec": 716,
+    "resolvedAt": "2026-10-17T13:36:46.182Z",
+    "alternatives": [
+      {
+        "videoId": "CPMQSXrsaO8",
+        "title": "Tutorial 08: analogRead() and the Serial Port: Arduino Course for Absolute Beginners (ReM)",
+        "channel": "Programming Electronics Academy",
+        "durationSec": 723
+      },
+      {
+        "videoId": "2SSg9chJF_Q",
+        "title": "Arduino: AdaFruit NeoPixel Ring Demonstration",
+        "channel": "TinselKoala",
+        "durationSec": 326
+      },
+      {
+        "videoId": "MPrhzvHvDH8",
+        "title": "Arduino tutorial - Control an LED's Brightness",
+        "channel": "kevbriga",
+        "durationSec": 831
+      },
+      {
+        "videoId": "CQD2LAsRZxQ",
+        "title": "Arduino LDR Sensor Tutorial – Auto LED Brightness Control with Photoresistor (Beginner + Code)",
+        "channel": "Waqas Farooq",
+        "durationSec": 244
+      },
+      {
+        "videoId": "rwLtN0BxeLU",
+        "title": "ESP32 PWM & ADC Tutorial – LED Dimming & Analog Read | IoT Bootcamp Ep 9",
+        "channel": "IoT Bhai",
+        "durationSec": 978
+      }
+    ]
+  },
+  "lesson-7": {
+    "videoId": "_CeLMSYjNjs",
+    "title": "Вивчаємо Arduino  Урок 7 граємо музику (зуммер, buzzer, спікер або просто пищалка)   tinkercad",
+    "channel": "Кабінет інформатики | Михайло Дериведмідь ",
+    "durationSec": 1030,
+    "resolvedAt": "2026-10-17T13:36:46.914Z",
+    "alternatives": [
+      {
+        "videoId": "wz29-doB1Dk",
+        "title": "Урок 9. Зуммер - излучатель звука. Обучающий курс по Arduino",
+        "channel": "Iarduino - Arduino, ESP, raspberry",
+        "durationSec": 540
+      },
+      {
+        "videoId": "Vk1fpPXUIJU",
+        "title": "Arduino Tut. #8 - Arduino Tone & Sounds - Super Mario Theme",
+        "channel": "Vlad Romanov",
+        "durationSec": 507
+      },
+      {
+        "videoId": "tRqz8Ek3UqY",
+        "title": "How To Play Musical Notes With Arduino",
+        "channel": "eTech Tom",
+        "durationSec": 743
+      },
+      {
+        "videoId": "DQsSiShI3vs",
+        "title": "Arduino Guide 4: Tone Melody",
+        "channel": "william o'hara",
+        "durationSec": 978
+      },
+      {
+        "videoId": "ovPRCeZbb2o",
+        "title": "Tinkercad Урок №12 - Подключение Buzzer к Arduino  UNO #Tinkercad",
+        "channel": "MyTechnologychannel",
+        "durationSec": 255
+      }
+    ]
+  },
+  "lesson-8": {
+    "videoId": "gmgw6nLgzbY",
+    "title": "Уроки Arduino #2 - работа с монитором COM порта",
+    "channel": "Заметки Ардуинщика",
+    "durationSec": 423,
+    "resolvedAt": "2026-10-17T13:36:47.482Z",
+    "alternatives": [
+      {
+        "videoId": "e7Pd5vvlFgc",
+        "title": "Serial и Монитор последовательного порта  #4 | Arduino - учимся программировать",
+        "channel": "Iarduino - Arduino, ESP, raspberry",
+        "durationSec": 515
+      },
+      {
+        "videoId": "L-UdTunGEzM",
+        "title": "Отладочные платы (Arduino и аналоги). Подключение платы и монитор порта.",
+        "channel": "SMWTech",
+        "durationSec": 326
+      },
+      {
+        "videoId": "ZOVWZM_04wI",
+        "title": "Уроки Ардуино – управление ардуино с компьютера  [ работа с монитором COM порта ] #ДомаВместе",
+        "channel": "Cool Easy Diy Electronic",
+        "durationSec": 535
+      },
+      {
+        "videoId": "FsVX4vXnbW0",
+        "title": "Arduino урок 1 работа с монитором порта",
+        "channel": "У Павла!",
+        "durationSec": 648
+      },
+      {
+        "videoId": "L5uI5rRtBu4",
+        "title": "Ардуино для начинающих вывод данных на монитор порта",
+        "channel": "Вивитроника",
+        "durationSec": 1028
+      }
+    ]
+  },
+  "lesson-9": {
+    "videoId": "0JaKx7hrJDw",
+    "title": "Подключение семисегментного индикатора к АРДУИНО / Как подключить семисегментный индикатор",
+    "channel": "DIY Club",
+    "durationSec": 315,
+    "resolvedAt": "2026-10-17T13:36:48.029Z",
+    "alternatives": [
+      {
+        "videoId": "O0wdCXdzWcA",
+        "title": "Семисегментный светодиодный индикатор. Распиновка. Подключение к Ардуино.",
+        "channel": "Neoalternator",
+        "durationSec": 398
+      },
+      {
+        "videoId": "ePXeEozFr4s",
+        "title": "Счётчик нажатий. Уроки по Arduino UNO. Байхаджиев Апти Зурапович.",
+        "channel": "ДЮТ Гудермес",
+        "durationSec": 317
+      },
+      {
+        "videoId": "fbRYTCj2s_U",
+        "title": "Уроки \"Ардуино\" для начинающих. Семисегментный индикатор. Простой счетчик 0-9",
+        "channel": "Упоротый DIY",
+        "durationSec": 452
+      },
+      {
+        "videoId": "WTECDWTzf80",
+        "title": "Работа Arduino с дисплеем TM74HC595",
+        "channel": "Заметки Ардуинщика",
+        "durationSec": 831
+      },
+      {
+        "videoId": "VRvCiPmgfWg",
+        "title": "Подключение 2-x, 3-х и 4-х символьных светодиодных индикаторов к Ардуино",
+        "channel": "Neoalternator",
+        "durationSec": 572
+      }
+    ]
+  },
+  "lesson-10": {
+    "videoId": "S0tb3jnfdw4",
+    "title": "Уроки Arduino - управление сервомашинкой",
+    "channel": "Заметки Ардуинщика",
+    "durationSec": 677,
+    "resolvedAt": "2026-10-17T13:36:48.557Z",
+    "alternatives": [
+      {
+        "videoId": "EqRNt_8OwBI",
+        "title": "Панель управления шаговым двигателем на Arduino.",
+        "channel": "Arduino Tex",
+        "durationSec": 384
+      },
+      {
+        "videoId": "-Qv_4-vAsVA",
+        "title": "Исследование сервоприводов MG90, SG90 : Калибровка, Диапазон и Управление в микросекундах, sweep",
+        "channel": "Я сам себе и небо и земля",
+        "durationSec": 857
+      },
+      {
+        "videoId": "T2HMJiy9b_I",
+        "title": "Control Servo motor with a Push Button:  Move Servo to ONE direction SPB-2 - RJT247",
+        "channel": "Robojax",
+        "durationSec": 844
+      },
+      {
+        "videoId": "dCpNBFHPAPY",
+        "title": "Arduino Sensor Servo Sweep Tutorial - Locating the nearest target",
+        "channel": "Vlad Romanov",
+        "durationSec": 635
+      },
+      {
+        "videoId": "Wo6Ev2tSsbA",
+        "title": "Arduino Servo Basics: Positional vs. Continuous Servos Explained!",
+        "channel": "Mario's Ideas",
+        "durationSec": 740
+      }
+    ]
+  },
+  "lesson-11": {
+    "videoId": "TxwruoxLUXk",
+    "title": "Ультразвуковой датчик расстояния на ARDUINO",
+    "channel": "Senior MariO",
+    "durationSec": 591,
+    "resolvedAt": "2026-10-17T13:36:49.201Z",
+    "alternatives": [
+      {
+        "videoId": "hvzMyNRjv9k",
+        "title": "Arduino для начинающих. Урок 4. Ультразвуковой дальномер (HC-SR04)",
+        "channel": "Уля Уля | Arduino для начинающих",
+        "durationSec": 411
+      },
+      {
+        "videoId": "6zQ-7foF1GE",
+        "title": "HC-SR04 Датчик расстояния и сигнализация на Ардуино!",
+        "channel": "Home Made",
+        "durationSec": 523
+      },
+      {
+        "videoId": "F6nZ1l_KYnQ",
+        "title": "Arduino Проекты #3 \"Измеряем расстояние с помощью ультразвукового датчика HC-SR04\"",
+        "channel": "Arturos TV",
+        "durationSec": 363
+      },
+      {
+        "videoId": "FR698oJk2ac",
+        "title": "УЛЬТРАЗВУКОВОЙ МОДУЛЬ HC-SR04 ARDUINO. Дальномер DIY",
+        "channel": "Михаил Лакомкин",
+        "durationSec": 314
+      },
+      {
+        "videoId": "68Vz_fjo42I",
+        "title": "Ультразвуковой дальномер своими руками на Arduino",
+        "channel": "AlexGyver",
+        "durationSec": 538
+      }
+    ]
+  },
+  "lesson-12": {
+    "videoId": "yg0KK8kmke0",
+    "title": "Текстовые LCD дисплей на контроллере HD44780, Уроки Arduino",
+    "channel": "arduinoLab",
+    "durationSec": 887,
+    "resolvedAt": "2026-10-17T13:36:49.687Z",
+    "alternatives": [
+      {
+        "videoId": "U7GKu1JMWYY",
+        "title": "LCD дисплей и ардуино. Как lcd дисплей подключить к arduino.",
+        "channel": "Ардуїно&Я",
+        "durationSec": 1117
+      },
+      {
+        "videoId": "AoSNpP7zEZE",
+        "title": "Как подключить текстовый LCD экран к SPI на Arduino",
+        "channel": "РадиоТех",
+        "durationSec": 429
+      },
+      {
+        "videoId": "s_-nIgo71_w",
+        "title": "How to Use an LCD Screen with an Arduino (Lesson #21)",
+        "channel": "Science Buddies",
+        "durationSec": 601
+      },
+      {
+        "videoId": "g_6OJDyUw1w",
+        "title": "How to Use LCD 1602 with Arduino (Wiring + Code)",
+        "channel": "Mario's Ideas",
+        "durationSec": 757
+      },
+      {
+        "videoId": "hdW-cLaQ9WE",
+        "title": "Как настроить LCD ДИСПЛЕЙ и I2C на Arduino ?!",
+        "channel": "Teacher Inventor DIY",
+        "durationSec": 276
+      }
+    ]
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "ci": {
+    "collect": {
+      "url": ["http://127.0.0.1:3100/sign-in", "http://127.0.0.1:3100/app"],
+      "numberOfRuns": 1,
+      "puppeteerScript": "scripts/lighthouse-guest.cjs",
+      "settings": {
+        "disableStorageReset": true
+      },
+      "puppeteerLaunchOptions": {
+        "args": ["--no-sandbox"]
+      }
+    },
+    "assert": {
+      "assertions": {
+        "categories:accessibility": [
+          "error",
+          {
+            "minScore": 0.95
+          }
+        ]
+      }
+    },
+    "upload": {
+      "target": "filesystem",
+      "outputDir": "reports/lighthouse/dashboard"
+    }
+  }
+}

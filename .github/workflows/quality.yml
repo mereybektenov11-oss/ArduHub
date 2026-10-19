@@ -1,0 +1,41 @@
+name: ArduHub quality
+on: [push, pull_request]
+jobs:
+  compiler-libraries:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: docker build -t arduhub-compiler-test compiler-service
+      - run: node scripts/test-compiler-libraries.mjs
+  check:
+    runs-on: ubuntu-latest
+    env:
+      SITE_URL: http://127.0.0.1:3100
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint && pnpm lint:type && pnpm format:check && pnpm test && pnpm test:db && pnpm test:coverage && pnpm test:learning:coverage && pnpm build && pnpm test:secrets
+      - run: pnpm exec playwright install --with-deps chrome
+      - run: pnpm test:e2e
+      - run: pnpm start --port 3100 &
+      - run: npx --yes @lhci/cli@0.15.1 autorun
+      - run: pnpm test:lighthouse:cabinet
+      - run: pnpm test:lighthouse:learning
+      - run: pnpm test:lighthouse:dashboard
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: quality-reports
+          path: |
+            playwright-report
+            reports/lighthouse
+            coverage

@@ -1,0 +1,38 @@
+{
+  "lesson-1": {
+    "query": "Arduino светодиод резистор первый урок для начинающих"
+  },
+  "lesson-2": {
+    "query": "Arduino мигание светодиода delay скорость"
+  },
+  "lesson-3": {
+    "query": "Arduino кнопка светодиод INPUT_PULLUP"
+  },
+  "lesson-4": {
+    "query": "Arduino два светодиода светофор урок"
+  },
+  "lesson-5": {
+    "query": "Arduino ШИМ плавное свечение analogWrite"
+  },
+  "lesson-6": {
+    "query": "Arduino потенциометр яркость светодиода analogRead"
+  },
+  "lesson-7": {
+    "query": "Arduino зуммер мелодия tone урок"
+  },
+  "lesson-8": {
+    "query": "Arduino монитор порта Serial начинающим"
+  },
+  "lesson-9": {
+    "query": "Arduino семисегментный индикатор цифры урок"
+  },
+  "lesson-10": {
+    "query": "Arduino сервопривод Servo угол урок"
+  },
+  "lesson-11": {
+    "query": "Arduino HC SR04 ультразвуковой датчик расстояния"
+  },
+  "lesson-12": {
+    "query": "Arduino LCD1602 LiquidCrystal экран урок"
+  }
+}
