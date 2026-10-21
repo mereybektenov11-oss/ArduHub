@@ -16,7 +16,7 @@ export async function POST(request: Request) {
   }
   if (
     !body ||
-    !["lesson", "mission", "game"].includes(body.source) ||
+    !["lesson", "lesson_quiz", "mission", "game"].includes(body.source) ||
     typeof body.refId !== "string" ||
     body.refId.length > 100 ||
     !Number.isInteger(body.amount) ||
@@ -27,7 +27,8 @@ export async function POST(request: Request) {
   const { data: result, error } = await client.rpc("award", {
     source: body.source,
     ref_id: body.refId,
-    amount: body.amount,
+    // The lesson reward is authoritative; older queued clients sent 40–60 XP.
+    amount: body.source === "lesson" ? 30 : body.amount,
   });
   if (error) {
     const code =

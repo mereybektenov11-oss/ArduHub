@@ -93,12 +93,11 @@ for (const route of routes)
   });
 test("reading 18px and 1.3 scale affects only content", async ({ page }) => {
   await page.goto("/app/lesson/lesson-1");
-  await page.getByRole("button", { name: "Продолжить без видео" }).click();
   await expect(page.locator(".l2-theory p").first()).toHaveCSS(
     "font-size",
     "18px",
   );
-  const button = page.getByRole("button", { name: /^Понятно/ });
+  const button = page.getByRole("button", { name: "Я посмотрел", exact: true });
   const before = await button.evaluate((el) => getComputedStyle(el).fontSize);
   await page.getByLabel("Размер текста").selectOption("1.3");
   await expect(page.locator(".l2-theory p").first()).toHaveCSS(
@@ -236,12 +235,11 @@ test("reference sketch runs when compiler is offline, including comment changes"
     page.getByRole("heading", { name: "Урок пройден!" }),
   ).toBeVisible({ timeout: 30000 });
   expect(calls).toBe(0);
-  await expect(page.locator(".polish-reward")).toContainText("+");
-  await expect(page.locator(".polish-reward")).not.toBeVisible({
-    timeout: 5000,
-  });
+  await expect(page.locator(".flow-rewards")).toContainText("+30 XP");
 });
-test("lesson two keeps the type scale at all six steps", async ({ page }) => {
+test("lesson two keeps the type scale at all three stages", async ({
+  page,
+}) => {
   const lesson = learningLessons[1];
   const p = createProgress();
   p.profile.level = 4;
@@ -276,17 +274,11 @@ test("lesson two keeps the type scale at all six steps", async ({ page }) => {
     },
     { p, lesson },
   );
-  for (const step of [0, 1, 5, 2, 3, 4]) {
-    await page.goto("/app/lesson/lesson-2");
-    await page.evaluate((step) => {
-      const key = "arduhub.drafts.v1";
-      const store = JSON.parse(localStorage.getItem(key)!);
-      store.drafts["lesson-2"].step = step;
-      localStorage.setItem(key, JSON.stringify(store));
-    }, step);
-    await page.reload();
-    await expect(page.locator(".l2-lesson")).toBeVisible();
-    const violations = await page.locator(".l2-lesson").evaluate((root) => {
+  for (const stage of ["video", "test", "practice"]) {
+    await page.goto(`/app/lesson/lesson-2?stage=${stage}`);
+    await expect(page.locator(".flow-shell")).toBeVisible();
+    await expect(page.locator(".flow-skeleton-layout")).toHaveCount(0);
+    const violations = await page.locator(".flow-shell").evaluate((root) => {
       const out: string[] = [];
       const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
       const sizes = new Set<number>();

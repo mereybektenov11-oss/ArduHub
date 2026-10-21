@@ -19,8 +19,8 @@ async function init(page: Page) {
   }, p);
 }
 async function build(page: Page) {
-  await page.getByRole("button", { name: "Продолжить без видео" }).click();
-  await page.getByRole("button", { name: "Понятно" }).click();
+  await page.getByRole("button", { name: "Я посмотрел", exact: true }).click();
+  await page.getByRole("button", { name: "К тесту →", exact: true }).click();
   await passLessonQuiz(page);
   const pin = (name: string) => page.getByRole("button", { name, exact: true });
   for (const [a, b] of [
@@ -31,9 +31,7 @@ async function build(page: Page) {
     await pin(a).click();
     await pin(b).click();
   }
-  await page
-    .getByRole("button", { name: "Проверить схему", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Проверить", exact: true }).click();
 }
 test("v2 complete first lesson, gates, real worker blink, reward once and resume", async ({
   page,
@@ -43,8 +41,11 @@ test("v2 complete first lesson, gates, real worker blink, reward once and resume
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/app/lesson/lesson-1");
-  await expect(page.getByRole("button", { name: /Тема$/ })).toBeDisabled();
+  await expect(
+    page.getByRole("button", { name: "Практика", exact: true }),
+  ).toBeDisabled();
   await build(page);
+  await page.getByRole("tab", { name: "Код", exact: true }).click();
   await expect(
     page.getByRole("textbox", { name: "Код", exact: true }),
   ).toContainText("___");
@@ -52,10 +53,10 @@ test("v2 complete first lesson, gates, real worker blink, reward once and resume
     await page.evaluate(
       () => JSON.parse(localStorage.getItem("arduhub.progress.v1")!).xp,
     ),
-  ).toBe(0);
+  ).toBe(6);
   const editor = page.getByRole("textbox", { name: "Код", exact: true });
   await editor.fill(sketches[0].code);
-  await page.getByRole("button", { name: /^Дальше/ }).click();
+  await page.getByRole("tab", { name: "Код", exact: true }).click();
   await page.getByRole("button", { name: /^Запустить/ }).click();
   await expect(
     page.getByRole("heading", { name: "Урок пройден!" }),
@@ -64,11 +65,9 @@ test("v2 complete first lesson, gates, real worker blink, reward once and resume
     await page.evaluate(
       () => JSON.parse(localStorage.getItem("arduhub.progress.v1")!).xp,
     ),
-  ).toBe(30);
+  ).toBe(36);
   await page.reload();
-  await expect(
-    page.getByRole("heading", { name: "Урок пройден!" }),
-  ).toBeVisible();
+  await expect(page.locator(".flow-practice")).toBeVisible();
   await page.getByRole("button", { name: /^Запустить/ }).click();
   await expect(
     page.getByText("Запущена проверенная учебная прошивка", { exact: false }),
@@ -80,7 +79,7 @@ test("v2 complete first lesson, gates, real worker blink, reward once and resume
     await page.evaluate(
       () => JSON.parse(localStorage.getItem("arduhub.progress.v1")!).xp,
     ),
-  ).toBe(30);
+  ).toBe(36);
   expect(errors).toEqual([]);
   await page.screenshot({
     path: "reports/learning-v2/lesson-desktop.png",
@@ -192,12 +191,17 @@ test("serial, missing compiler preserves code and mentor has three honest sectio
   await expect(
     page.getByRole("textbox", { name: "Код", exact: true }),
   ).toContainText("void setup() {}");
+  await page.route("**/api/mentor", (r) =>
+    r.fulfill({ status: 503, json: { error: "mentor_unavailable" } }),
+  );
   await page
     .getByRole("button", { name: "Разбор наставника", exact: true })
     .click();
   for (const text of ["Что работает", "Что рискованно", "Следующий шаг"])
     await expect(
-      page.getByRole("status").filter({ hasText: text }),
+      page
+        .locator(".l2-project-review")
+        .getByRole("heading", { name: text, exact: true }),
     ).toBeVisible();
 });
 test("mobile workspace and all palette elements pass serious accessibility checks", async ({
@@ -207,8 +211,8 @@ test("mobile workspace and all palette elements pass serious accessibility check
   await init(page);
   await page.setViewportSize({ width: 360, height: 800 });
   await page.goto("/app/lesson/lesson-1");
-  await page.getByRole("button", { name: "Продолжить без видео" }).click();
-  await page.getByRole("button", { name: "Понятно" }).click();
+  await page.getByRole("button", { name: "Я посмотрел", exact: true }).click();
+  await page.getByRole("button", { name: "К тесту →", exact: true }).click();
   await passLessonQuiz(page);
   for (const route of ["/app/lesson/lesson-1", "/app/projects"]) {
     await page.goto(route);

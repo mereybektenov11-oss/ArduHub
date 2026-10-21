@@ -1,79 +1,87 @@
 "use client";
 import dynamic from "next/dynamic";
-import { useState, useEffect } from "react";
-import { browserSupabase } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
-import { dashboardRu as d, lessonExpected } from "@/content/dashboard.ru";
-import { Modal } from "@/components/cabinet/ui";
-import { learningRu as c, lessonV2Copy } from "@/content/learning.ru";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { lessons } from "@/domain/seed";
-import {
-  learningLessons,
-  type LearningLesson as Lesson,
-} from "@/domain/lessons/content";
+import type { LearningLesson as Lesson } from "@/domain/lessons/content";
 import {
   initialSteps,
   type Draft,
-  type StepState,
+  type LearningStore,
 } from "@/domain/projects/storage";
 import { migrateScene } from "@/domain/scene/migrate";
 import { checkScene } from "@/domain/scene/check";
 import { codeIssue } from "@/domain/lessons/codeChecks";
 import { checkBehavior, type CheckResult } from "@/domain/sim/checks";
 import type { Trace } from "@/domain/sim/runner";
-import type { LearningStore } from "@/domain/projects/storage";
 import { lessonOpen, awardLesson } from "@/domain/progress/xp";
+import {
+  migrateLessonFlow,
+  flowPercent,
+  resolveStage,
+  flowQuizResult,
+  type LessonStage,
+  type FlowQuiz,
+} from "@/domain/lessons/flow";
 import { useProgress } from "@/lib/useProgress";
 import { useLearningStore } from "@/lib/useLearningStore";
-import { Action, Card, Pill } from "@/components/cabinet/ui";
-import LessonStepper from "./LessonStepper";
-import LessonQuiz from "./LessonQuiz";
-import { lessonQuizzes } from "@/content/lesson-quiz.ru";
-import { prepareLessonDraft, canOpenLessonStep } from "@/domain/lessons/quiz";
-import VideoStep from "./VideoStep";
-import PartView from "@/components/workspace/PartView";
+import { useLessonData } from "@/lib/useLessonData";
+import { useStageGate } from "@/lib/useStageGate";
+import { Action, Card, Modal } from "@/components/cabinet/ui";
 import { openMentor } from "@/components/mentor/openMentor";
-import CabinetArt, { type ArtName } from "@/components/cabinet/CabinetArt";
-import { polishRu } from "@/content/ru";
-import RewardIcon from "@/components/icons/RewardIcon";
+import { lessonFlowRu as c, learningRu } from "@/content/ru";
+import { lessonExpected } from "@/content/dashboard.ru";
+import LessonShell from "./LessonShell";
+import LessonSkeleton, { Skeleton } from "./LessonSkeleton";
+import StageIndicator from "./StageIndicator";
+import StageTransition from "./StageTransition";
+import VideoStage from "./stages/VideoStage";
+import QuizStage from "./stages/QuizStage";
+import PracticeStage from "./stages/PracticeStage";
+import Link from "next/link";
+import CompletionModal from "./CompletionModal";
+import { catalog } from "@/domain/parts/catalog";
 const Workspace = dynamic(() => import("@/components/workspace/Workspace"), {
   ssr: false,
-  loading: () => <Card>{c.workspace}…</Card>,
+  loading: () => <Skeleton shape="practice" />,
 });
 export default function LearningLesson({ id }: { id: string }) {
   const { progress, ready } = useProgress(),
-    { store, mutate } = useLearningStore();
-  const lesson = learningLessons.find((l) => l.id === id),
-    legacy = lessons.find((l) => l.id === id);
-  if (!ready || !store) return <p>{c.workspace}…</p>;
-  if (!legacy)
+    { store, mutate } = useLearningStore(),
+    data = useLessonData(id);
+  const legacy = lessons.find((l) => l.id === id);
+  if (data.error)
     return (
-      <Card>
-        <h1>{c.notFound}</h1>
-        <Action href="/app/lessons">{c.backMap}</Action>
-      </Card>
+      <LessonShell title={legacy?.title}>
+        <div className="flow-load-error" role="alert">
+          <h1>
+            {typeof navigator !== "undefined" && !navigator.onLine
+              ? c.offline
+              : c.unavailable}
+          </h1>
+          <Action onClick={data.retry}>{c.retry}</Action>
+        </div>
+      </LessonShell>
     );
-  if (!lesson)
+  if (data.loading || !ready || !store)
     return (
-      <Card>
-        <Pill>{c.prepare}</Pill>
-        <h1>{legacy.title}</h1>
-        <p>{c.prepareNote}</p>
-        <Action href="/app/lesson/lesson-1">{lessons[0].title}</Action>
-        <Action secondary href="/app/projects">
-          {c.projects}
-        </Action>
-      </Card>
+      <LessonShell title={legacy?.title} loading>
+        <LessonSkeleton />
+      </LessonShell>
     );
-  if (!lessonOpen(progress, id))
+  if (!data.lesson || !legacy || !lessonOpen(progress, id))
     return (
-      <Card>
-        <h1>{legacy.title}</h1>
-        <p>{c.prepareNote}</p>
-        <Action href="/app/map">{c.backMap}</Action>
-      </Card>
+      <LessonShell title={legacy?.title}>
+        <Card>
+          <h1>{legacy?.title ?? learningRu.notFound}</h1>
+          <p>{c.lockedNote}</p>
+          <Action href="/app">{c.back}</Action>
+        </Card>
+      </LessonShell>
     );
-  return <LessonFlow key={id} lesson={lesson} store={store} mutate={mutate} />;
+  return (
+    <LessonFlow key={id} lesson={data.lesson} store={store} mutate={mutate} />
+  );
 }
 function LessonFlow({
   lesson,
@@ -84,74 +92,125 @@ function LessonFlow({
   store: LearningStore;
   mutate: (fn: (s: LearningStore) => void) => void;
 }) {
-  const router = useRouter();
-  const [showHints, setShowHints] = useState(false);
-  const [showTheory, setShowTheory] = useState(false);
-  const { progress, update, refreshAccount } = useProgress(),
-    { id } = lesson,
-    index = learningLessons.indexOf(lesson),
-    copy = {
-      title: lesson.title ?? lessonV2Copy[0].title,
-      task: lesson.task ?? lessonV2Copy[0].task,
-    },
-    legacy = lessons.find((l) => l.id === id)!;
-  const [extraHint, setExtraHint] = useState(-1),
-    [hintBusy, setHintBusy] = useState(false);
-  async function useExtraHint() {
-    if (hintBusy || (progress.boosts?.hints ?? 0) < 1) return;
-    setHintBusy(true);
-    try {
-      if (progress.account?.userId) {
-        const client = browserSupabase();
-        if (!client) return;
-        const { error } = await client.rpc("consume_boost", { kind: "hint" });
-        if (error) return;
-        await refreshAccount();
-      } else
-        update((p) => ({
-          ...p,
-          boosts: {
-            freeze: p.boosts?.freeze ?? 0,
-            hints: Math.max(0, (p.boosts?.hints ?? 0) - 1),
-          },
-        }));
-      setExtraHint((i) => (i + 1) % d.extraHints.length);
-    } finally {
-      setHintBusy(false);
-    }
-  }
-  const [draft, setDraft] = useState<Draft>(() =>
-    prepareLessonDraft(
-      store.drafts[id] ?? {
-        scene: progress.circuits[id]
-          ? (migrateScene(progress.circuits[id]) ?? lesson.circuit.starterScene)
-          : lesson.circuit.starterScene,
-        code: lesson.code.starter,
-        step: 0,
-        steps: initialSteps(),
-      },
-    ),
-  );
+  const { progress, update } = useProgress(),
+    router = useRouter(),
+    path = usePathname(),
+    id = lesson.id,
+    index = Number(id.split("-")[1]) - 1;
+  const [draft, setDraft] = useState<Draft>(() => {
+    const old = store.drafts[id] ?? {
+      scene: progress.circuits[id]
+        ? (migrateScene(progress.circuits[id]) ?? lesson.circuit.starterScene)
+        : lesson.circuit.starterScene,
+      code: lesson.code.starter,
+      step: 0,
+      steps: progress.lessons[id]?.steps ?? initialSteps(),
+    };
+    const saved = progress.lessons[id];
+    const flow = migrateLessonFlow(
+      !old.flow && saved?.stages && saved?.practice && saved?.quiz
+        ? {
+            ...old,
+            flow: {
+              version: 2,
+              stage: "video",
+              stages: saved.stages,
+              practice: saved.practice,
+              quiz: saved.quiz,
+            },
+          }
+        : old,
+    );
+    if (!lesson.quiz?.questions.length) flow.stages.test = true;
+    return { ...old, flow };
+  });
+  const flow = draft.flow!,
+    gate = useStageGate(flow, !lesson.quiz?.questions.length);
   const [errors, setErrors] = useState<
       { message: string; componentIds: string[] }[]
     >([]),
-    [hint, setHint] = useState({ circuit: 0, code: 0 }),
     [report, setReport] = useState<CheckResult[]>([]),
-    [notice, setNotice] = useState("");
-  const [compileErrors, setCompileErrors] = useState<string[]>([]);
+    [notice, setNotice] = useState(""),
+    [compileErrors, setCompileErrors] = useState<string[]>([]),
+    [showTheory, setShowTheory] = useState(false),
+    [showReference, setShowReference] = useState(false),
+    [hint, setHint] = useState({ circuit: 0, code: 0 });
+  const [complete, setComplete] = useState<null | { rewarded: boolean }>(null);
+  const initialized = useRef(false);
+  const save = useCallback(
+    (next: Draft, xp = 0) => {
+      const f = next.flow!;
+      next = {
+        ...next,
+        updatedAt: new Date().toISOString(),
+        step:
+          f.stage === "video"
+            ? 0
+            : f.stage === "test"
+              ? 5
+              : f.tab === "code"
+                ? 3
+                : 2,
+        steps: {
+          video: f.stages.video,
+          theory: f.stages.video,
+          quiz: f.stages.test,
+          circuit: f.practice.circuit,
+          code: f.practice.code,
+          run: f.practice.run,
+        },
+      };
+      setDraft(next);
+      mutate((s) => {
+        s.drafts = { ...s.drafts, [id]: next };
+        s.save();
+      });
+      update((p) => ({
+        ...p,
+        xp: p.xp + xp,
+        lessons: {
+          ...p.lessons,
+          [id]: {
+            ...p.lessons[id],
+            steps: next.steps,
+            flowUpdatedAt: next.updatedAt,
+            stages: f.stages,
+            practice: f.practice,
+            quiz: f.quiz,
+          },
+        },
+      }));
+    },
+    [id, mutate, update],
+  );
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      if (!initialized.current) {
+        initialized.current = true;
+        if (!lesson.quiz?.questions.length)
+          console.warn(`Lesson ${id} has no quiz; skipping test stage`);
+        if (!store.drafts[id]?.flow) save(draft);
+      }
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [draft, id, lesson.quiz, save, store]);
+  function navigate(stage: LessonStage, next = flow) {
+    const active = resolveStage(next, stage);
+    save({ ...draft, flow: { ...next, stage: active } });
+    router.replace(`${path}?stage=${active}`, { scroll: false });
+  }
   const mentorContext = {
     lessonId: id,
     context: {
-      step: c.steps[draft.step],
+      step: c.stages[
+        gate.active === "video" ? 0 : gate.active === "test" ? 1 : 2
+      ],
       code: draft.code,
       scene: JSON.stringify(draft.scene),
       errors: [...errors.map((e) => e.message), ...compileErrors],
       level: progress.profile.level,
     },
   };
-  function ask() {
-    openMentor(mentorContext);
-  }
   useEffect(() => {
     window.dispatchEvent(
       new CustomEvent("arduhub:mentor-context", { detail: mentorContext }),
@@ -165,24 +224,28 @@ function LessonFlow({
     },
     [],
   );
-  function save(next: Draft) {
-    next = { ...next, updatedAt: new Date().toISOString() };
-    setDraft(next);
-    mutate((s) => {
-      s.drafts = { ...s.drafts, [id]: next };
-      s.save();
-    });
-    update((p) => ({
-      ...p,
-      lessons: { ...p.lessons, [id]: { ...p.lessons[id], steps: next.steps } },
-    }));
-  }
-  function done(key: keyof StepState, step: number) {
-    save({ ...draft, step, steps: { ...draft.steps, [key]: true } });
-  }
+  const ask = () => openMentor(mentorContext);
+  const unlockVideo = () => {
+    if (!flow.stages.video)
+      save({
+        ...draft,
+        flow: { ...flow, stages: { ...flow.stages, video: true } },
+      });
+  };
   function verify() {
     const found = checkScene(draft.scene, lesson.circuit.referenceScene);
     setErrors(found);
+    const issue = codeIssue(draft.code),
+      code =
+        flow.practice.code || (!issue && draft.code !== lesson.code.starter);
+    save({
+      ...draft,
+      flow: {
+        ...flow,
+        stage: "practice",
+        practice: { ...flow.practice, circuit: !found.length, code },
+      },
+    });
     update((p) => ({
       ...p,
       lessons: {
@@ -194,389 +257,239 @@ function LessonFlow({
         },
       },
     }));
-    if (!found.length) {
-      setNotice(c.circuitOk);
-      done("circuit", 3);
-    } else setNotice("");
+    setNotice(found.length ? "" : learningRu.circuitOk);
   }
   function run(trace: Trace) {
     const found = checkScene(draft.scene, lesson.circuit.referenceScene);
     setErrors(found);
-    const buttonId = draft.scene.components.find(
-      (c) => c.type === "button",
-    )?.id;
+    const button = draft.scene.components.find((p) => p.type === "button")?.id;
     const checks = lesson.run.checks.map((check) =>
-      check.kind === "pinHighWhen" && buttonId
-        ? { ...check, input: { ...check.input, part: buttonId } }
+      check.kind === "pinHighWhen" && button
+        ? { ...check, input: { ...check.input, part: button } }
         : check,
     );
     const result = checkBehavior(checks, trace);
     setReport(result);
-    if (!found.length && result.every((r) => r.pass)) {
-      save({
-        ...draft,
-        steps: { ...draft.steps, circuit: true, code: true, run: true },
-      });
+    const pass =
+      !found.length && !codeIssue(draft.code) && result.every((r) => r.pass);
+    save({
+      ...draft,
+      flow: {
+        ...flow,
+        stage: "practice",
+        stages: { ...flow.stages, practice: pass },
+        practice: {
+          circuit: !found.length,
+          code: !codeIssue(draft.code),
+          run: pass,
+        },
+      },
+    });
+    if (pass) {
+      const rewarded = progress.lessons[id]?.status !== "done";
       update((p) => awardLesson(p, id));
-    } else save({ ...draft, steps: { ...draft.steps, run: false } });
+      if (rewarded) {
+        try {
+          sessionStorage.setItem("arduhub.lesson.completed", id);
+        } catch {}
+      }
+      setComplete({ rewarded });
+    }
   }
-  const circuitMode = draft.step === 2,
-    codeMode = draft.step === 3,
-    runMode = draft.step === 4;
+  const hintKind = flow.tab === "code" ? "code" : "circuit";
+  const addHint = () =>
+    setHint((h) => ({ ...h, [hintKind]: Math.min(3, h[hintKind] + 1) }));
+  const expected = lessonExpected[index] ?? lesson.task ?? "";
+  function changeQuiz(quiz: FlowQuiz, passed: boolean, newAward?: string) {
+    const valid =
+      passed &&
+      flowQuizResult(
+        lesson.quiz?.questions ?? [],
+        quiz,
+        lesson.quiz?.passPercent,
+      ).passed;
+    save(
+      {
+        ...draft,
+        flow: {
+          ...flow,
+          stage: "test",
+          quiz,
+          stages: { ...flow.stages, test: flow.stages.test || valid },
+        },
+      },
+      newAward ? 1 : 0,
+    );
+  }
   return (
-    <div className="cab-stack l2-lesson">
-      <div className="dash-focus-top" data-tour="lesson-header">
-        <button
-          className="cab-icon-btn"
-          aria-label={d.back}
-          onClick={() => {
-            if (window.history.length > 1) router.back();
-            else router.push("/app");
-          }}
-        >
-          ×
-        </button>
-        <span>{copy.title}</span>
-        <span>
-          <RewardIcon kind="spark" /> {progress.sparks} ·{" "}
-          <RewardIcon kind="token" /> {progress.mentor.tokens}
-        </span>
-      </div>
-      <nav className="dash-focus-tools" aria-label={d.theory}>
-        <button aria-label={d.theory} onClick={() => setShowTheory(true)}>
-          ▤
-        </button>
-        <button
-          aria-label={d.hint}
-          onClick={() => {
-            setShowHints(true);
-            setHint((h) => ({
-              ...h,
-              circuit: Math.min(3, h.circuit + 1),
-              code: Math.min(3, h.code + 1),
-            }));
-          }}
-        >
-          ?
-        </button>
-        <button aria-label={d.askAI} onClick={() => ask()}>
-          <CabinetArt
-            name={progress.mentor.selectedId as ArtName}
-            alt=""
-            size={28}
-          />
-          <span>{polishRu.mentor}</span>
-        </button>
-      </nav>
-      <div className="cab-row">
-        <div>
-          <p className="cab-eyebrow">
-            {c.workspace} · {index + 1}
-          </p>
-          <h1>{copy.title}</h1>
-        </div>
-        <div className="cab-row">
-          <label className="l2-text-size">
-            Аа
-            <select
-              aria-label={c.textSize}
-              value={progress.settings?.textScale ?? 1}
-              onChange={(e) =>
-                update((p) => ({
-                  ...p,
-                  settings: {
-                    ...p.settings,
-                    textScale: Number(e.target.value) as 1 | 1.15 | 1.3,
-                  },
-                }))
-              }
-            >
-              {([1, 1.15, 1.3] as const).map((scale, i) => (
-                <option key={scale} value={scale}>
-                  {c.textSizes[i]}
-                </option>
-              ))}
-            </select>
-          </label>
-          <Pill>+{legacy.xp} XP</Pill>
-        </div>
-      </div>
-      <LessonStepper
-        step={draft.step}
-        steps={draft.steps}
-        onStep={(step) => {
-          if (canOpenLessonStep(step, draft.steps)) save({ ...draft, step });
-        }}
-      />
+    <LessonShell
+      title={lesson.title}
+      progress={flowPercent(flow)}
+      indicator={
+        <StageIndicator
+          flow={flow}
+          active={gate.active}
+          onStage={(stage) => navigate(stage)}
+        />
+      }
+      onVideo={() => navigate("video")}
+      onReference={() => setShowReference(true)}
+    >
       {store.unavailable && (
         <p className="l2-error" role="alert">
-          {c.unsaved}
+          {learningRu.unsaved}
         </p>
       )}
       {store.corrupt && (
         <Card>
-          <p>{c.corrupt}</p>
+          <p>{learningRu.corrupt}</p>
           <Action secondary onClick={() => mutate((s) => s.reset())}>
-            {c.reset}
+            {learningRu.reset}
           </Action>
         </Card>
       )}
-      {draft.step === 0 && (
-        <div className="l2-step-content">
-          <VideoStep lessonId={id} onDone={() => done("video", 1)} />
-        </div>
-      )}
-      {draft.step === 1 && (
-        <Card>
-          <div className="l2-theory l2-step-content">
-            {lesson.theory.map((block, i) => (
-              <section key={block.title}>
-                <div className="l2-theory-part">
-                  <PartView
-                    type={block.partType}
-                    scale={Math.min(
-                      0.8,
-                      80 / (block.partType === "uno" ? 274 : 80),
-                    )}
-                  />
-                </div>
-                <h2>
-                  <span className="l2-theory-number" aria-hidden="true">
-                    {i + 1}
-                  </span>
-                  {block.title}
-                </h2>
-                <p>{block.text}</p>
-              </section>
-            ))}
-            <Action onClick={() => done("theory", 5)}>{c.understood} →</Action>
-          </div>
-        </Card>
-      )}
-      {draft.step === 5 && (
-        <LessonQuiz
-          questions={lessonQuizzes[id]}
-          value={draft.quiz}
-          onChange={(quiz, passed) =>
-            save({
-              ...draft,
-              quiz,
-              steps: { ...draft.steps, quiz: draft.steps.quiz || passed },
-            })
-          }
-          onContinue={() => {
-            if (draft.steps.quiz) save({ ...draft, step: 2 });
-          }}
-        />
-      )}
-      {(circuitMode || codeMode || runMode) && (
-        <div className="l2-lesson-layout">
-          <div className="l2-lesson-guide">
-            <Card>
-              <Pill>{c.steps[draft.step]}</Pill>
-              <h2>{copy.title}</h2>
-              <p>{copy.task}</p>
-              <div className="dash-guide-actions">
-                <Action secondary onClick={() => setShowTheory(true)}>
-                  {d.theory}
-                </Action>
-                <Action secondary onClick={() => ask()}>
-                  {d.explain}
-                </Action>
-              </div>
-              <section className="dash-expected">
-                <h3>{d.expected}</h3>
-                <p>{lessonExpected[index] ?? copy.task}</p>
-              </section>
-              <p className="l2-note">
-                {store.unavailable ? c.unsaved : c.saved}
-              </p>
-              {(progress.boosts?.hints ?? 0) > 0 && (
-                <Action secondary disabled={hintBusy} onClick={useExtraHint}>
-                  {d.extraHint} · {progress.boosts?.hints}
-                </Action>
-              )}
-              {extraHint >= 0 && <p role="status">{d.extraHints[extraHint]}</p>}
-
-              {codeMode && (
+      <StageTransition stage={gate.active}>
+        {gate.active === "video" && (
+          <VideoStage
+            lesson={lesson}
+            completed={flow.stages.video}
+            onUnlock={unlockVideo}
+            onContinue={() =>
+              navigate(lesson.quiz?.questions.length ? "test" : "practice", {
+                ...flow,
+                stages: { ...flow.stages, video: true },
+              })
+            }
+          />
+        )}
+        {gate.active === "test" && (
+          <QuizStage
+            questions={lesson.quiz?.questions ?? []}
+            passPercent={lesson.quiz?.passPercent}
+            value={flow.quiz}
+            onChange={changeQuiz}
+            onContinue={() => {
+              if (flow.stages.test) navigate("practice");
+            }}
+          />
+        )}
+        {gate.active === "practice" && (
+          <PracticeStage
+            lesson={lesson}
+            flow={flow}
+            expected={expected}
+            onExplain={ask}
+            onTheory={() => setShowTheory(true)}
+            onHint={addHint}
+            hint={
+              hint[hintKind] > 0 ? (
                 <>
-                  <p>{lesson.code.mode === "fill" ? c.blanks : c.steps[3]}</p>
-                  <Action
-                    onClick={() => {
-                      const issue = codeIssue(draft.code);
-                      if (issue) setNotice(issue);
-                      else {
-                        setNotice("");
-                        done("code", 4);
+                  <p>{lesson[hintKind].hints[hint[hintKind] - 1]}</p>
+                  {hintKind === "code" && hint.code === 3 && (
+                    <Action
+                      secondary
+                      onClick={() =>
+                        save({
+                          ...draft,
+                          code: lesson.code.solution,
+                          flow: {
+                            ...flow,
+                            practice: {
+                              ...flow.practice,
+                              code: true,
+                              run: false,
+                            },
+                            stages: { ...flow.stages, practice: false },
+                          },
+                        })
                       }
-                    }}
-                  >
-                    {c.next} →
+                    >
+                      {learningRu.hintStages[2]}
+                    </Action>
+                  )}
+                </>
+              ) : undefined
+            }
+            notice={notice}
+            errors={errors}
+            report={report}
+          >
+            <Workspace
+              practiceMode
+              scene={draft.scene}
+              code={draft.code}
+              initialTab={flow.tab ?? (draft.step === 3 ? "code" : "circuit")}
+              onTabChange={(tab) => save({ ...draft, flow: { ...flow, tab } })}
+              allowedParts={lesson.circuit.allowedParts}
+              durationMs={lesson.run.durationMs}
+              autoButton={
+                lesson.run.autoButton
+                  ? draft.scene.components.find((p) => p.type === "button")?.id
+                  : undefined
+              }
+              errors={errors.flatMap((e) => e.componentIds)}
+              onDiagnostics={setCompileErrors}
+              onRun={run}
+              actions={
+                <>
+                  <Action secondary onClick={ask}>
+                    {c.ask}
+                  </Action>
+                  <Action secondary onClick={addHint}>
+                    {c.hint}
+                  </Action>
+                  <Action secondary onClick={verify}>
+                    {c.check}
                   </Action>
                 </>
-              )}
-              {runMode && (
-                <p>
-                  {c.steps[4]}: {c.run}
-                </p>
-              )}
-            </Card>
-            {(circuitMode || codeMode) && (
-              <Card>
-                <Action
-                  secondary
-                  disabled={hint[circuitMode ? "circuit" : "code"] >= 3}
-                  onClick={() =>
-                    setHint((h) => ({
-                      ...h,
-                      [circuitMode ? "circuit" : "code"]:
-                        h[circuitMode ? "circuit" : "code"] + 1,
-                    }))
-                  }
-                >
-                  {c.hint}{" "}
-                  {Math.min(3, hint[circuitMode ? "circuit" : "code"] + 1)}/3
-                </Action>
-                {hint[circuitMode ? "circuit" : "code"] > 0 && (
-                  <>
-                    <strong>
-                      {c.hintStages[hint[circuitMode ? "circuit" : "code"] - 1]}
-                    </strong>
-                    <p>
-                      {
-                        (circuitMode
-                          ? lesson.circuit.hints
-                          : lesson.code.hints)[
-                          hint[circuitMode ? "circuit" : "code"] - 1
-                        ]
+              }
+              onScene={(scene) => {
+                const changed =
+                  JSON.stringify([scene.components, scene.wires]) !==
+                  JSON.stringify([draft.scene.components, draft.scene.wires]);
+                if (changed) {
+                  setReport([]);
+                  setErrors([]);
+                  setNotice(learningRu.recheck);
+                }
+                save({
+                  ...draft,
+                  scene,
+                  flow: changed
+                    ? {
+                        ...flow,
+                        stages: { ...flow.stages, practice: false },
+                        practice: {
+                          ...flow.practice,
+                          circuit: false,
+                          run: false,
+                        },
                       }
-                    </p>
-                    {codeMode && hint.code === 3 && (
-                      <Action
-                        secondary
-                        onClick={() =>
-                          save({ ...draft, code: lesson.code.solution })
-                        }
-                      >
-                        {c.hintStages[2]} → {c.code}
-                      </Action>
-                    )}
-                  </>
-                )}
-              </Card>
-            )}
-            {notice && (
-              <p role="status" className="cab-card">
-                {notice}
-              </p>
-            )}
-            {errors.map((e, i) => (
-              <p key={i} className="l2-error" role="alert">
-                {e.message}
-              </p>
-            ))}
-            {report.length > 0 && (
-              <Card>
-                {report.map((r, i) => (
-                  <p key={i}>
-                    {r.pass ? "✓" : "↻"} {r.message}
-                  </p>
-                ))}
-              </Card>
-            )}
-          </div>
-          <Workspace
-            onDiagnostics={setCompileErrors}
-            tests={
-              report.length ? (
-                <div className="cab-stack">
-                  {report.map((r, i) => (
-                    <p key={i}>
-                      {r.pass ? "✓" : "↻"} {r.message}
-                    </p>
-                  ))}
-                </div>
-              ) : (
-                <p>{lessonExpected[index]}</p>
-              )
-            }
-            solution={hint.code >= 3 ? lesson.code.solution : undefined}
-            actions={
-              <>
-                <Action secondary onClick={() => ask()}>
-                  {d.askAI}
-                </Action>
-                <Action
-                  secondary
-                  onClick={() =>
-                    setHint((h) => ({
-                      ...h,
-                      [circuitMode ? "circuit" : "code"]: Math.min(
-                        3,
-                        h[circuitMode ? "circuit" : "code"] + 1,
-                      ),
-                    }))
-                  }
-                >
-                  {d.hint}
-                </Action>
-                <Action secondary onClick={verify}>
-                  {c.check}
-                </Action>
-              </>
-            }
-            key={id}
-            scene={draft.scene}
-            code={draft.code}
-            initialTab={circuitMode ? "circuit" : codeMode ? "code" : "circuit"}
-            allowedParts={lesson.circuit.allowedParts}
-            durationMs={lesson.run.durationMs}
-            autoButton={
-              lesson.run.autoButton
-                ? draft.scene.components.find((c) => c.type === "button")?.id
-                : undefined
-            }
-            errors={errors.flatMap((e) => e.componentIds)}
-            canRun={true}
-            onScene={(scene) => {
-              setNotice(c.recheck);
-              setReport([]);
-              setErrors([]);
-              save({
-                ...draft,
-                scene,
-                step: 2,
-                steps: { ...draft.steps, circuit: false, run: false },
-              });
-            }}
-            onCode={(code) => {
-              setReport([]);
-              save({
-                ...draft,
-                code,
-                steps: { ...draft.steps, code: false, run: false },
-              });
-            }}
-            onRun={run}
-          />
-        </div>
-      )}
-      {draft.steps.run && (
-        <Card className="cab-success">
-          <h2>{c.success}</h2>
-          <p>{c.reward}</p>
-          <Action href={`/app/map/${legacy.levelId}`}>{c.backMap} →</Action>
-        </Card>
-      )}
-      {showHints && (
-        <Modal title={d.hint} onClose={() => setShowHints(false)}>
-          <p>
-            {lesson.circuit.hints[Math.max(0, Math.min(2, hint.circuit - 1))]}
-          </p>
-        </Modal>
-      )}
+                    : flow,
+                });
+              }}
+              onCode={(code) => {
+                setReport([]);
+                save({
+                  ...draft,
+                  code,
+                  flow: {
+                    ...flow,
+                    stages: { ...flow.stages, practice: false },
+                    practice: {
+                      ...flow.practice,
+                      code: !codeIssue(code),
+                      run: false,
+                    },
+                  },
+                });
+              }}
+            />
+          </PracticeStage>
+        )}
+      </StageTransition>
       {showTheory && (
-        <Modal title={d.theory} onClose={() => setShowTheory(false)}>
+        <Modal title={c.summary} onClose={() => setShowTheory(false)}>
           <div className="l2-theory">
             {lesson.theory.map((block) => (
               <section key={block.title}>
@@ -587,6 +500,32 @@ function LessonFlow({
           </div>
         </Modal>
       )}
-    </div>
+      {showReference && (
+        <Modal title={c.reference} onClose={() => setShowReference(false)}>
+          <Link className="cab-btn" href="/app/practice?tab=glossary">
+            {c.detailsLink}
+          </Link>
+          <ul>
+            {lesson.circuit.allowedParts.map((part) => (
+              <li key={part}>{catalog[part]?.name ?? part}</li>
+            ))}
+          </ul>
+        </Modal>
+      )}
+      {complete && (
+        <CompletionModal
+          rewarded={complete.rewarded}
+          nextId={
+            lessons.find(
+              (l) =>
+                l.id !== id &&
+                progress.lessons[l.id]?.status !== "done" &&
+                lessonOpen(progress, l.id),
+            )?.id
+          }
+          onClose={() => setComplete(null)}
+        />
+      )}
+    </LessonShell>
   );
 }

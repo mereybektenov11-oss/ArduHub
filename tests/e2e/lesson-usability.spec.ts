@@ -41,22 +41,20 @@ async function lesson(page: Page) {
   await page.goto("/app/lesson/lesson-1");
 }
 
-test("Tests tab executes real AVR from the code step and preserves results", async ({
+test("Practice executes real AVR from the code tab and preserves results", async ({
   page,
 }) => {
   test.setTimeout(60000);
   await lesson(page);
-  await page.getByRole("tab", { name: "Тесты", exact: true }).click();
+  await page.getByRole("tab", { name: "Код", exact: true }).click();
   await page.getByRole("button", { name: /^Запустить/ }).click();
   await expect(
     page.getByRole("heading", { name: "Урок пройден!" }),
   ).toBeVisible({ timeout: 30000 });
   await expect(
-    page.getByRole("tab", { name: "Тесты", exact: true }),
+    page.getByRole("tab", { name: "Код", exact: true }),
   ).toHaveAttribute("aria-selected", "true");
-  await expect(page.locator(".l2-workspace .cab-card").first()).toContainText(
-    "✓",
-  );
+  await expect(page.locator(".flow-output")).toContainText("✓");
 });
 
 test("wire pointer selection, visible removal, undo and Delete work without losing history", async ({
@@ -123,6 +121,9 @@ test("component bodies drag without a name popup and guide keeps spacing on mobi
     ),
   ).toBeTruthy();
   await page
+    .getByRole("button", { name: "Показать задание", exact: true })
+    .click();
+  await page
     .locator(".l2-lesson-guide")
     .screenshot({ path: "reports/usability/guide-mobile.png" });
 });
@@ -186,6 +187,10 @@ test("edited sketch is compiled by Arduino CLI and runs in the browser", async (
     { timeout: 15000 },
   );
   await expect(run).toBeEnabled({ timeout: 15000 });
+  await page
+    .getByRole("dialog", { name: "Урок пройден!" })
+    .getByRole("button", { name: "Закрыть", exact: true })
+    .click();
   await page
     .locator(".l2-workspace")
     .screenshot({ path: "reports/compiler-clear/edited-code.png" });

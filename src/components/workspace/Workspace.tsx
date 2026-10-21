@@ -31,6 +31,8 @@ const CodePanel = dynamic(() => import("./CodePanel"), {
   loading: () => <p>{c.code}…</p>,
 });
 type Props = {
+  practiceMode?: boolean;
+  onTabChange?: (tab: "circuit" | "code" | "serial") => void;
   tests?: ReactNode;
   solution?: string;
   actions?: ReactNode;
@@ -49,6 +51,8 @@ type Props = {
   onDiagnostics?: (errors: string[]) => void;
 };
 export default function Workspace({
+  practiceMode = false,
+  onTabChange,
   scene,
   code,
   onScene,
@@ -407,20 +411,27 @@ export default function Workspace({
               "circuit",
               "code",
               "serial",
-              ...(tests ? ["tests" as const, "solution" as const] : []),
+              ...(tests && !practiceMode
+                ? ["tests" as const, "solution" as const]
+                : []),
             ] as const
           ).map((t) => (
             <button
               role="tab"
               aria-selected={tab === t}
               key={t}
-              onClick={() => setTab(t)}
+              onClick={() => {
+                setTab(t);
+                if (t === "circuit" || t === "code" || t === "serial")
+                  onTabChange?.(t);
+              }}
             >
               {t === "tests" ? d.tests : t === "solution" ? d.solution : c[t]}
             </button>
           ))}
         </div>
         <div className="cab-row">
+          {practiceMode && actions}
           {
             <Action onClick={run} disabled={busy || !canRun}>
               {status === "compiling" ? c.compiling : c.run} ▶
@@ -687,7 +698,9 @@ export default function Workspace({
           {solution ? <pre>{solution}</pre> : <p>{c.hint} 3/3</p>}
         </div>
       )}
-      {actions && <div className="dash-focus-actions">{actions}</div>}
+      {actions && !practiceMode && (
+        <div className="dash-focus-actions">{actions}</div>
+      )}
       <InputControls scene={scene} states={inputStates} onInput={input} />
       <div className="l2-run-status" role="status">
         <span className={busy ? "l2-active-dot" : ""} />

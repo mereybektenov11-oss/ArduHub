@@ -9,7 +9,11 @@ import hardware from "@/content/hardware-examples.json" with { type: "json" };
 import { hardwareScene } from "./hardware";
 import { catalog } from "@/domain/parts/catalog";
 import courseSketches from "@/content/course-sketches.json" with { type: "json" };
+import { lessonQuizzes } from "@/content/lesson-quiz.ru";
+import { lessonFlowFourthOptions } from "@/content/lesson-flow-options.ru";
+import type { FlowQuestion } from "../flow";
 export type LearningLesson = {
+  quiz?: { passPercent: number; questions: FlowQuestion[] };
   id: string;
   title?: string;
   task?: string;
@@ -248,6 +252,19 @@ export const learningLessons: LearningLesson[] = courseCopy.map(
     return {
       id: `lesson-${i + 1}`,
       title: content.title,
+      quiz: {
+        passPercent: 70,
+        questions: (lessonQuizzes[`lesson-${i + 1}`] ?? []).map((q, j) => ({
+          id: `q${j + 1}`,
+          text: q.prompt,
+          options: [
+            ...q.options,
+            lessonFlowFourthOptions[`lesson-${i + 1}`][j],
+          ],
+          correctIndex: q.correct,
+          explanation: q.explanation,
+        })),
+      },
       task: content.task,
       available: scene.components.every((p) => catalog[p.type].simulated),
       video: {

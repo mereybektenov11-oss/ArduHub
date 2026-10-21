@@ -23,17 +23,15 @@ test("lesson checkpoint: wiring alone never awards XP in v2", async ({
 }) => {
   await seed(page);
   await page.goto("/app/lesson/lesson-1");
-  await page.getByRole("button", { name: "Продолжить без видео" }).click();
-  await page.getByRole("button", { name: "Понятно" }).click();
+  await page.getByRole("button", { name: "Я посмотрел", exact: true }).click();
+  await page.getByRole("button", { name: "К тесту →", exact: true }).click();
   await passLessonQuiz(page);
   const pin = (name: string) => page.getByRole("button", { name, exact: true });
   await pin("uno 13").click();
   await pin("led A").click();
   await pin("led C").click();
   await pin("uno GND.2").click();
-  await page
-    .getByRole("button", { name: "Проверить схему", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Проверить", exact: true }).click();
   await expect(
     page.locator(".l2-error").filter({ hasText: "Нет резистора" }),
   ).toBeVisible();
@@ -53,9 +51,8 @@ test("lesson checkpoint: wiring alone never awards XP in v2", async ({
   await pin("r 1").click();
   await pin("r 2").click();
   await pin("led A").click();
-  await page
-    .getByRole("button", { name: "Проверить схему", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Проверить", exact: true }).click();
+  await page.getByRole("tab", { name: "Код", exact: true }).click();
   await expect(
     page.getByRole("textbox", { name: "Код", exact: true }),
   ).toBeVisible();
@@ -63,8 +60,9 @@ test("lesson checkpoint: wiring alone never awards XP in v2", async ({
     await page.evaluate(
       () => JSON.parse(localStorage.getItem("arduhub.progress.v1")!).xp,
     ),
-  ).toBe(0);
+  ).toBe(6);
   await page.reload();
+  await page.getByRole("tab", { name: "Код", exact: true }).click();
   await expect(
     page.getByRole("textbox", { name: "Код", exact: true }),
   ).toBeVisible();
@@ -120,8 +118,8 @@ test("landing, diagnosis, map, lesson and reward", async ({ page }) => {
   await page
     .getByRole("button", { name: "Первый огонёк", exact: true })
     .click();
-  await page.getByRole("button", { name: "Продолжить без видео" }).click();
-  await page.getByRole("button", { name: "Понятно" }).click();
+  await page.getByRole("button", { name: "Я посмотрел", exact: true }).click();
+  await page.getByRole("button", { name: "К тесту →", exact: true }).click();
   await passLessonQuiz(page);
   await expect(
     page.getByRole("button", { name: "uno 13", exact: true }),
@@ -297,8 +295,8 @@ test("all routes at 360, reduced motion and touch pin connections", async ({
   const touch = await context.newPage();
   await seed(touch);
   await touch.goto("/app/lesson/lesson-1");
-  await touch.getByRole("button", { name: "Продолжить без видео" }).tap();
-  await touch.getByRole("button", { name: "Понятно" }).tap();
+  await touch.getByRole("button", { name: "Я посмотрел", exact: true }).tap();
+  await touch.getByRole("button", { name: "К тесту →", exact: true }).tap();
   await passLessonQuiz(touch);
   await touch.getByRole("button", { name: "uno 13", exact: true }).tap();
   await touch.getByRole("button", { name: "led A", exact: true }).tap();
@@ -315,8 +313,8 @@ test("keyboard editor undo/redo and no duplicate/self wire", async ({
 }) => {
   await seed(page);
   await page.goto("/app/lesson/lesson-1");
-  await page.getByRole("button", { name: "Продолжить без видео" }).click();
-  await page.getByRole("button", { name: "Понятно" }).click();
+  await page.getByRole("button", { name: "Я посмотрел", exact: true }).click();
+  await page.getByRole("button", { name: "К тесту →", exact: true }).click();
   await passLessonQuiz(page);
   const first = page.getByRole("button", { name: "uno 13", exact: true }),
     second = page.getByRole("button", { name: "led A", exact: true });

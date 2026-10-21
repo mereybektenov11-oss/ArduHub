@@ -80,7 +80,7 @@ export const lessons: Lesson[] = curriculum.slice(0, 12).map((l, i) => ({
     "Для светодиода нужна последовательная цепь с резистором.",
     "Пин 13 → резистор → анод A, катод K → GND.",
   ],
-  xp: 30 + Math.floor(i / 3) * 10,
+  xp: 30,
 }));
 export const mentors: Mentor[] = mentorDeck.map(
   ([id, name, character, tone, cost]) => ({

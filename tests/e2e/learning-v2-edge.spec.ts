@@ -52,13 +52,12 @@ for (const index of [2, 5])
       { p, id, draft },
     );
     await page.goto(`/app/lesson/${id}`);
-    await page
-      .getByRole("button", { name: "Проверить схему", exact: true })
-      .click();
+    await page.getByRole("button", { name: "Проверить", exact: true }).click();
+    await page.getByRole("tab", { name: "Код", exact: true }).click();
     await page
       .getByRole("textbox", { name: "Код", exact: true })
       .fill(sketches[index === 2 ? 1 : 2].code);
-    await page.getByRole("button", { name: /^Дальше/ }).click();
+    await page.getByRole("tab", { name: "Код", exact: true }).click();
     await page.getByRole("button", { name: /^Запустить/ }).click();
     await expect(
       page.getByRole("heading", { name: "Урок пройден!" }),

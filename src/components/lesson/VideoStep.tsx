@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { learningRu as c } from "@/content/learning.ru";
 import { Action, Card } from "@/components/cabinet/ui";
 import { polishRu } from "@/content/ru";
+import { lessonFlowRu as flowCopy } from "@/content/ru";
 type Video = {
   videoId: string;
   title: string;
@@ -146,9 +147,15 @@ function VideoPlayer({
 export default function VideoStep({
   lessonId,
   onDone,
+  onUnlock,
+  completed = false,
+  nextLabel,
 }: {
   lessonId: string;
   onDone: () => void;
+  onUnlock?: () => void;
+  completed?: boolean;
+  nextLabel?: string;
 }) {
   const [videos, setVideos] = useState<Video[]>([]),
     [index, setIndex] = useState(0),
@@ -183,6 +190,9 @@ export default function VideoStep({
     setNotice(c.switchingVideo);
   }
   const video = videos[index];
+  useEffect(() => {
+    if (watched >= 0.8 && !completed) onUnlock?.();
+  }, [watched, completed, onUnlock]);
   return (
     <Card className="polish-video-step">
       <h2>{c.steps[0]}</h2>
@@ -215,17 +225,33 @@ export default function VideoStep({
             >
               {c.anotherVideo}
             </Action>
-            <Action disabled={watched < 0.8} onClick={onDone}>
-              {c.next} →
+            <Action disabled={watched < 0.8 && !completed} onClick={onDone}>
+              {nextLabel ?? c.next} →
             </Action>
           </div>
         </>
       ) : (
-        <p role="status">{polishRu.videoUnavailable}</p>
+        <div className="polish-video-frame flow-video-unavailable">
+          <p role="status">
+            {onUnlock ? flowCopy.videoMissing : polishRu.videoUnavailable}
+          </p>
+        </div>
       )}
-      <Action secondary onClick={onDone}>
-        {c.withoutVideo} →
-      </Action>
+      {onUnlock && (
+        <Action secondary onClick={onUnlock}>
+          {flowCopy.watched}
+        </Action>
+      )}
+      {(!onUnlock || !video) && (
+        <Action secondary onClick={onDone}>
+          {c.withoutVideo} →
+        </Action>
+      )}
+      {onUnlock && !video && (
+        <Action disabled={!completed} onClick={onDone}>
+          {nextLabel ?? flowCopy.toTest} →
+        </Action>
+      )}
     </Card>
   );
 }

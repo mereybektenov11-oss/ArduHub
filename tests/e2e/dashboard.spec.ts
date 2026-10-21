@@ -96,8 +96,8 @@ test("grouped menu persists collapsed state and path shows 3 of 6", async ({
     page.locator(".dash-sidebar").getByRole("link", { name: "Мои проекты" }),
   ).toHaveCount(0);
   await page.locator(".dash-node.locked").first().click();
-  await expect(page.getByRole("status")).toContainText(
-    "Сначала пройди предыдущий урок",
+  await expect(page.locator(".flow-node-popover")).toContainText(
+    "Пройди предыдущий урок, чтобы открыть этот",
   );
   await expect(page).toHaveURL(/\/app$/);
 });
@@ -207,10 +207,9 @@ test("lesson focus has no sidebar and expected behavior on work steps", async ({
   await page.goto("/app/lesson/lesson-1");
   await expect(page.locator(".dash-sidebar")).toHaveCount(0);
   await expect(
-    page.getByRole("button", { name: "Назад к обучению" }),
+    page.getByRole("link", { name: "К пути", exact: true }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Продолжить без видео" }).click();
-  await page.getByRole("button", { name: /Понятно/ }).click();
   await passLessonQuiz(page);
   await expect(
     page.getByRole("heading", { name: "Ожидаемое поведение" }),

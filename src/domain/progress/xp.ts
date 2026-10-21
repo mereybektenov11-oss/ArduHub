@@ -41,7 +41,7 @@ export function awardLesson(p: Progress, id: string): Progress {
   const next = structuredClone(p);
   next.lessons[id].status = "done";
   next.xp += lesson.xp;
-  next.sparks += lesson.xp;
+  next.sparks += 10;
   next.streak = recordActivity(p.streak);
   next.diagnostic.skillScores[lesson.topic] = Math.min(
     100,

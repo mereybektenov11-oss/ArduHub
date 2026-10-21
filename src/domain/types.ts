@@ -91,6 +91,10 @@ export type Mentor = {
   unlockCost: number;
 };
 export type LessonProgress = {
+  flowUpdatedAt?: string;
+  stages?: import("./lessons/flow").LessonFlowState["stages"];
+  practice?: import("./lessons/flow").LessonFlowState["practice"];
+  quiz?: import("./lessons/flow").FlowQuiz;
   status: "locked" | "current" | "done";
   attempts: number;
   bestErrors: number;

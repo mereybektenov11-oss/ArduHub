@@ -3,7 +3,9 @@ import {
   LearningStore,
   type Draft,
   type Project,
+  isDraft,
 } from "@/domain/projects/storage";
+import { motionTokens } from "@/lib/motion";
 export async function loadLearning(
   client: SupabaseClient,
   userId: string,
@@ -11,20 +13,33 @@ export async function loadLearning(
   importGuest = false,
 ) {
   const [drafts, projects] = await Promise.all([
-    client.from("drafts").select("*").eq("user_id", userId),
-    client.from("projects").select("*").eq("user_id", userId),
+    client
+      .from("drafts")
+      .select("*")
+      .eq("user_id", userId)
+      .abortSignal(AbortSignal.timeout(motionTokens.lessonFlow.timeout)),
+    client
+      .from("projects")
+      .select("*")
+      .eq("user_id", userId)
+      .abortSignal(AbortSignal.timeout(motionTokens.lessonFlow.timeout)),
   ]);
   if (drafts.error || projects.error) throw Error("offline");
   const cloudDrafts = Object.fromEntries(
-    (drafts.data ?? []).map((d) => [
-      d.lesson_id,
-      {
-        ...d.data,
-        scene: d.scene,
-        code: d.code,
-        updatedAt: d.updated_at,
-      } as Draft,
-    ]),
+    (drafts.data ?? [])
+      .map(
+        (d) =>
+          [
+            d.lesson_id,
+            {
+              ...d.data,
+              scene: d.scene,
+              code: d.code,
+              updatedAt: d.updated_at,
+            } as Draft,
+          ] as const,
+      )
+      .filter(([, draft]) => isDraft(draft)),
   );
   const cloudProjects = (projects.data ?? []).map(
     (p) =>

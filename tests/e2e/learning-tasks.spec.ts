@@ -15,17 +15,20 @@ async function init(page: Page) {
 test("large text persists at 360px and the lesson has no page overflow", async ({
   page,
 }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.route("**/api/lesson-video?*", (route) =>
+    route.fulfill({ json: {} }),
+  );
   await init(page);
   await page.setViewportSize({ width: 360, height: 800 });
   await page.goto("/app/lesson/lesson-1");
-  await page.getByRole("button", { name: "Продолжить без видео" }).click();
   await expect(page.locator(".l2-theory section p").first()).toHaveCSS(
     "font-size",
     "18px",
   );
-  await expect(page.locator(".l2-theory h2").first()).toHaveCSS(
+  await expect(page.locator(".l2-theory h3").first()).toHaveCSS(
     "font-size",
-    "20px",
+    "16px",
   );
   await page.getByLabel("Размер текста").selectOption("1.3");
   await page.reload();

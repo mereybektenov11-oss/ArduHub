@@ -538,3 +538,4 @@ export { ideaCopy, projectCopy } from "./projects.ru";
 export { dashboardRu, authRu, dailyFacts } from "./dashboard.ru";
 
 export { shopDeck } from "./shop.ru";
+export { lessonFlowRu } from "./lesson-flow.ru";

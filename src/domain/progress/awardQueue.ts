@@ -1,5 +1,5 @@
 export type AwardEvent = {
-  source: "lesson" | "game";
+  source: "lesson" | "lesson_quiz" | "game";
   refId: string;
   amount: number;
 };

@@ -29,9 +29,11 @@ function fakeClient(
       return {
         select() {
           return {
-            eq: async () => ({
-              data: table === "drafts" ? remoteDrafts : remoteProjects,
-              error: null,
+            eq: () => ({
+              abortSignal: async () => ({
+                data: table === "drafts" ? remoteDrafts : remoteProjects,
+                error: null,
+              }),
             }),
           };
         },

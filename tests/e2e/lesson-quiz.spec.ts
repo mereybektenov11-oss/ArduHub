@@ -4,6 +4,7 @@ import { createProgress } from "../../src/domain/seed";
 import { lessonQuizzes } from "../../src/content/lesson-quiz.ru";
 import { passLessonQuiz } from "./helpers/lessonQuiz";
 import { createClient } from "@supabase/supabase-js";
+
 test.beforeEach(async ({ page, context }) => {
   await context.addCookies([
     { name: "arduhub-guest", value: "1", domain: "127.0.0.1", path: "/" },
@@ -14,88 +15,93 @@ test.beforeEach(async ({ page, context }) => {
     if (!localStorage.getItem("arduhub.progress.v1"))
       localStorage.setItem("arduhub.progress.v1", JSON.stringify(p));
   }, p);
+  await page.route("**/api/lesson-video?*", (r) => r.fulfill({ json: {} }));
   await page.goto("/app/lesson/lesson-1");
-  await page.getByRole("button", { name: "Продолжить без видео" }).click();
-  await page.getByRole("button", { name: "Понятно" }).click();
+  await page
+    .getByRole("button", { name: "Продолжить без видео →", exact: true })
+    .click();
 });
-test("six-question checkpoint blocks circuit, saves answers, explains errors and retries", async ({
+
+test("70% gate, immediate feedback, saved position, one retry and reward dedup", async ({
   page,
 }) => {
-  await expect(page.locator(".l2-quiz h2")).toHaveText("Тест по теме");
-  const circuitStep = page
-    .locator(".l2-stepper")
-    .getByRole("button", { name: /Схема$/ });
-  await expect(circuitStep).toBeDisabled();
-  await expect(page.locator(".l2-workspace")).toHaveCount(0);
-  await expect(
-    page.getByRole("button", { name: /Следующий вопрос/ }),
-  ).toBeDisabled();
   const questions = lessonQuizzes["lesson-1"];
-  await page
-    .getByRole("radio", { name: questions[0].options[1], exact: true })
-    .check();
-  await page.reload();
+  const practice = page
+    .locator(".flow-stage-indicator")
+    .getByRole("button", { name: "Практика", exact: true });
+  await expect(practice).toBeDisabled();
+  await expect(page.locator(".flow-answer")).toHaveCount(4);
   await expect(
-    page.getByRole("radio", { name: questions[0].options[1], exact: true }),
-  ).toBeChecked();
-  for (let i = 1; i < questions.length; i++) {
+    page.getByRole("button", { name: "Дальше →", exact: true }),
+  ).toHaveCount(0);
+  // Four correct answers are 67%, so practice must stay closed.
+  for (let i = 0; i < 6; i++) {
     await page
-      .getByRole("button", { name: `Вопрос ${i + 1}`, exact: true })
+      .locator(".flow-answer")
+      .nth(i < 4 ? questions[i].correct : (questions[i].correct + 1) % 4)
       .click();
-    await page
-      .getByRole("radio", {
-        name: questions[i].options[questions[i].correct],
-        exact: true,
-      })
-      .check();
+    await expect(page.locator(".flow-feedback")).toContainText(
+      questions[i].explanation,
+    );
+    if (i === 1) {
+      await page.reload();
+      await expect(page.locator(".flow-question-progress")).toContainText(
+        "Вопрос 2 из 6",
+      );
+      await expect(page.locator(".flow-answer").first()).toBeDisabled();
+    }
+    await page.getByRole("button", { name: "Дальше →", exact: true }).click();
   }
-  await page
-    .getByRole("button", { name: "Проверить ответы", exact: true })
-    .click();
-  await expect(page.locator(".l2-quiz-result")).toHaveText(
-    "Верных ответов: 5 из 6",
+  await expect(page.locator(".flow-quiz-score")).toHaveText(
+    "67% · Верно 4 из 6",
   );
-  await expect(page.locator(".is-incorrect")).toContainText(
-    questions[0].explanation,
-  );
-  await expect(circuitStep).toBeDisabled();
-  await page.reload();
-  await expect(page.locator(".l2-quiz-result")).toHaveText(
-    "Верных ответов: 5 из 6",
-  );
-  await page
-    .getByRole("button", { name: "Исправить ошибки", exact: true })
-    .click();
-  await page
-    .getByRole("radio", { name: questions[0].options[0], exact: true })
-    .check();
-  await page.getByRole("button", { name: "Вопрос 6", exact: true }).click();
-  await page
-    .getByRole("button", { name: "Проверить ответы", exact: true })
-    .click();
-  await expect(page.locator(".l2-quiz-result")).toHaveText(
-    "Верных ответов: 6 из 6",
-  );
-  await page.reload();
-  await expect(circuitStep).toBeEnabled();
-  await page.getByRole("button", { name: /Перейти к схеме/ }).click();
+  await expect(practice).toBeDisabled();
   await expect(
-    page.getByRole("button", { name: "uno 13", exact: true }),
+    page.getByRole("button", { name: "Пройти заново", exact: true }),
   ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Повторить ошибки", exact: true })
+    .click();
+  await page.locator(".flow-answer").nth(questions[4].correct).click();
+  await page.getByRole("button", { name: "Дальше →", exact: true }).click();
+  await page
+    .locator(".flow-answer")
+    .nth((questions[5].correct + 1) % 4)
+    .click();
+  await page.getByRole("button", { name: "Дальше →", exact: true }).click();
+  await expect(page.locator(".flow-quiz-score")).toHaveText(
+    "83% · Верно 5 из 6",
+  );
+  await expect(
+    page.getByRole("button", { name: "Повторить ошибки", exact: true }),
+  ).toHaveCount(0);
+  await expect(practice).toBeEnabled();
+  const xp = await page.evaluate(
+    () => JSON.parse(localStorage.getItem("arduhub.progress.v1")!).xp,
+  );
+  expect(xp).toBe(5);
+  await page.goto("/app/lesson/lesson-1");
+  await expect(page.locator(".flow-practice")).toBeVisible();
+  await page
+    .locator(".flow-stage-indicator")
+    .getByRole("button", { name: /Тест/, exact: false })
+    .click();
+  await expect(page.locator(".flow-quiz-score")).toContainText("83%");
   expect(
     await page.evaluate(
       () => JSON.parse(localStorage.getItem("arduhub.progress.v1")!).xp,
     ),
-  ).toBe(0);
+  ).toBe(xp);
 });
-test("mobile keyboard quiz is accessible and opens the circuit on success", async ({
+
+test("mobile keyboard quiz is accessible and opens practice on success", async ({
   page,
 }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  const first = page.getByRole("radio").first();
+  await page.setViewportSize({ width: 360, height: 800 });
+  const first = page.locator(".flow-answer").first();
   await first.focus();
   await first.press("Space");
-  await expect(first).toBeChecked();
+  await expect(page.locator(".flow-feedback")).toContainText("Верно");
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
@@ -108,7 +114,7 @@ test("mobile keyboard quiz is accessible and opens the circuit on success", asyn
     ),
   ).toEqual([]);
   await page
-    .locator(".l2-quiz")
+    .locator(".flow-quiz")
     .screenshot({ path: "reports/lesson-quiz/mobile.png" });
   await passLessonQuiz(page);
   await expect(page.locator(".l2-workspace")).toBeVisible();
@@ -130,7 +136,7 @@ test("account saves quiz results to Supabase", async ({ page }) => {
         .click();
     },
   );
-  await page.getByRole("radio").first().check();
+  await page.locator(".flow-answer").first().click();
   await page.goto("/sign-in");
   await page.getByLabel("Почта").fill(process.env.E2E_AUTH_EMAIL!);
   await page
@@ -145,10 +151,11 @@ test("account saves quiz results to Supabase", async ({ page }) => {
     page.getByRole("dialog", { name: "Перенести прогресс гостя?" }),
   ).toBeHidden();
   await page.goto("/app/lesson/lesson-1");
-  await expect(page.locator(".l2-quiz h2")).toHaveText("Тест по теме");
+  await page.goto("/app/lesson/lesson-1?stage=test");
+  await expect(page.locator(".flow-quiz h1")).toHaveText("Тест по теме");
   const skip = page.getByRole("button", { name: "Пропустить", exact: true });
   if (await skip.isVisible()) await skip.click();
-  await expect(page.getByRole("radio").first()).toBeChecked();
+  await expect(page.locator(".flow-answer").first()).toBeDisabled();
   await passLessonQuiz(page);
   const client = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -172,25 +179,27 @@ test("account saves quiz results to Supabase", async ({ page }) => {
             .single();
           return {
             passed: data?.data.steps.quiz,
-            submitted: data?.data.quiz.submitted,
-            answers: data?.data.quiz.answers,
+            submitted: data?.data.flow.quiz.phase,
+            answers: data?.data.flow.quiz.answers,
           };
         },
         { timeout: 15000 },
       )
       .toEqual({
         passed: true,
-        submitted: true,
-        answers: lessonQuizzes["lesson-1"].map((q) => q.correct),
+        submitted: "result",
+        answers: Object.fromEntries(
+          lessonQuizzes["lesson-1"].map((q, i) => [`q${i + 1}`, q.correct]),
+        ),
       });
     await page.reload();
     await expect(page.locator(".l2-workspace")).toBeVisible();
     await page
-      .locator(".l2-stepper")
-      .getByRole("button", { name: /Тест по теме$/ })
+      .locator(".flow-stage-indicator")
+      .getByRole("button", { name: /Тест/ })
       .click();
-    await expect(page.locator(".l2-quiz-result")).toHaveText(
-      "Верных ответов: 6 из 6",
+    await expect(page.locator(".flow-quiz-score")).toHaveText(
+      "100% · Верно 6 из 6",
     );
   } finally {
     await client.auth.signOut();

@@ -26,6 +26,18 @@ beforeAll(async () => {
     ),
   );
   await db.exec(
+    await readFile(
+      "supabase/migrations/20261021075810_lesson_flow_rewards.sql",
+      "utf8",
+    ),
+  );
+  await db.exec(
+    await readFile(
+      "supabase/migrations/20261021082200_lesson_quiz_reward_receipts.sql",
+      "utf8",
+    ),
+  );
+  await db.exec(
     `insert into auth.users values('${A}','{"display_name":"Лис","role":"student"}'),('${B}','{"display_name":"Робот","role":"teacher"}');insert into public.progress values('${A}','{"lessons":{"lesson-1":{"status":"done","attempts":1,"bestErrors":0},"lesson-2":{"status":"done","attempts":1,"bestErrors":0}}}'),('${B}','{}');insert into public.drafts(user_id,lesson_id,scene,code) values('${B}','lesson-1','{}','');insert into public.projects(user_id,title,scene,code) values('${B}','Hidden','{}','');`,
   );
 }, 30000);
@@ -77,7 +89,7 @@ describe("ArduHub PostgreSQL migration and security", () => {
     ).rejects.toThrow(/already_awarded/);
     await asUser(A, "select public.award('lesson','lesson-2',30)");
     const r = await asUser(A, "select sparks from public.profiles");
-    expect(r.rows).toEqual([{ sparks: 60 }]);
+    expect(r.rows).toEqual([{ sparks: 20 }]);
   });
   it("claims mission reward only once", async () => {
     const day = (
@@ -93,7 +105,7 @@ describe("ArduHub PostgreSQL migration and security", () => {
       A,
       "select sparks,mentor_tokens from public.profiles",
     );
-    expect(r.rows).toEqual([{ sparks: 70, mentor_tokens: 55 }]);
+    expect(r.rows).toEqual([{ sparks: 30, mentor_tokens: 55 }]);
   });
   it("buy_item is atomic and request is idempotent", async () => {
     await db.exec(`update public.profiles set sparks=100 where id='${A}'`);
@@ -201,5 +213,24 @@ describe("ArduHub PostgreSQL migration and security", () => {
     await expect(
       asUser(B, "update public.profiles set timezone='invalid-zone'"),
     ).rejects.toThrow(/invalid_timezone/);
+  });
+  it("validates quiz answers and awards each question once without sparks", async () => {
+    await db.exec(
+      `update public.progress set data=jsonb_set(data,'{lessons}', '{"lesson-1":{"stages":{"video":true},"quiz":{"answers":{"q1":0,"q2":0}}}}'::jsonb) where user_id='${B}'`,
+    );
+    const before = await asUser(B, "select sparks from public.profiles");
+    await asUser(B, "select public.award('lesson_quiz','lesson-1:q1',1)");
+    await expect(
+      asUser(B, "select public.award('lesson_quiz','lesson-1:q1',1)"),
+    ).rejects.toThrow(/already_awarded/);
+    await expect(
+      asUser(B, "select public.award('lesson_quiz','lesson-1:q2',1)"),
+    ).rejects.toThrow(/bad_request/);
+    await expect(
+      asUser(B, "select public.award('lesson_quiz','lesson-1:q3',20)"),
+    ).rejects.toThrow(/bad_request/);
+    expect(
+      (await asUser(B, "select sparks from public.profiles")).rows,
+    ).toEqual(before.rows);
   });
 });

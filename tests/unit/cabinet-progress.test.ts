@@ -71,7 +71,7 @@ describe("curriculum and progress", () => {
     expect(awardLesson(p, "lesson-4")).toBe(p);
     p = awardLesson(p, "lesson-1");
     expect(p.xp).toBe(30);
-    expect(p.sparks).toBe(30);
+    expect(p.sparks).toBe(10);
     expect(p.diagnostic.skillScores.leds).toBe(15);
     expect(awardLesson(p, "lesson-1")).toBe(p);
     expect(p.lessons["lesson-2"].status).toBe("current");

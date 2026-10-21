@@ -25,6 +25,11 @@ import { Modal } from "@/components/cabinet/ui";
 import { freezeStreak } from "@/domain/progress/streak";
 import { recordDaily } from "@/domain/missions";
 import { lessons } from "@/domain/seed";
+import { usePathname } from "next/navigation";
+import LessonShell from "@/components/lesson/LessonShell";
+import LessonSkeleton from "@/components/lesson/LessonSkeleton";
+import { lessonFlowRu } from "@/content/ru";
+import { motionTokens } from "@/lib/motion";
 type Context = {
   progress: Progress;
   update: (fn: (p: Progress) => Progress) => void;
@@ -44,6 +49,16 @@ const ProgressContext = createContext<Context | null>(null);
 export function ProgressProvider({ children }: { children: ReactNode }) {
   const [progress, setProgress] = useState(createProgress);
   const [ready, setReady] = useState(false);
+  const [loadError, setLoadError] = useState(false);
+  const path = usePathname();
+  useEffect(() => {
+    if (ready) return;
+    const timer = setTimeout(
+      () => setLoadError(true),
+      motionTokens.lessonFlow.timeout,
+    );
+    return () => clearTimeout(timer);
+  }, [ready]);
   const [unavailable, setUnavailable] = useState(false);
   const [corrupt, setCorrupt] = useState(false);
   const [toast, setToast] = useState("");
@@ -190,6 +205,20 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
       );
       const gameDelta =
         next.gameRuns > before.gameRuns ? Math.max(0, next.xp - before.xp) : 0;
+      const quizEvents: AwardEvent[] = lessons.flatMap((lesson) =>
+        (next.lessons[lesson.id]?.quiz?.awarded ?? [])
+          .filter(
+            (question) =>
+              !(before.lessons[lesson.id]?.quiz?.awarded ?? []).includes(
+                question,
+              ),
+          )
+          .map((question) => ({
+            source: "lesson_quiz",
+            refId: `${lesson.id}:${question}`,
+            amount: 1,
+          })),
+      );
       next = {
         ...next,
         sparks: before.sparks,
@@ -201,9 +230,10 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
         },
         inventory: before.inventory,
       };
-      if (completed.length || gameDelta) {
+      if (completed.length || gameDelta || quizEvents.length) {
         const id = before.account.userId;
         const events: AwardEvent[] = [
+          ...quizEvents,
           ...completed.map((l) => ({
             source: "lesson" as const,
             refId: l.id,
@@ -279,6 +309,26 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     >
       {ready ? (
         children
+      ) : path.startsWith("/app/lesson/") ? (
+        <div className="cabinet dash-shell dash-focus">
+          <main id="cab-main">
+            <LessonShell
+              loading={!loadError}
+              title={lessons.find((l) => path.endsWith(l.id))?.title}
+            >
+              {loadError ? (
+                <div className="flow-load-error" role="alert">
+                  <h1>{lessonFlowRu.unavailable}</h1>
+                  <button className="cab-btn" onClick={() => location.reload()}>
+                    {lessonFlowRu.retry}
+                  </button>
+                </div>
+              ) : (
+                <LessonSkeleton />
+              )}
+            </LessonShell>
+          </main>
+        </div>
       ) : (
         <div className="cabinet" aria-busy="true">
           ArduHub…
@@ -296,6 +346,20 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
                 store.current?.save(next);
                 setProgress(next);
                 if (next.account?.userId) {
+                  const accountId = next.account.userId;
+                  queueAwards(
+                    localStorage,
+                    accountId,
+                    lessons.flatMap((lesson) =>
+                      (next.lessons[lesson.id]?.quiz?.awarded ?? []).map(
+                        (question) => ({
+                          source: "lesson_quiz" as const,
+                          refId: `${lesson.id}:${question}`,
+                          amount: 1,
+                        }),
+                      ),
+                    ),
+                  );
                   sessionStorage.setItem(
                     "arduhub.import:" + next.account.userId,
                     "1",
@@ -324,6 +388,16 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
                       );
                       window.dispatchEvent(new Event("arduhub:import"));
                     }
+                    await flushAwards(
+                      localStorage,
+                      accountId,
+                      () => current.current.account?.userId,
+                      async () => {
+                        if (store.current instanceof SupabaseProgressStore)
+                          await store.current.flush();
+                      },
+                    );
+                    await refreshAccount();
                   } catch {
                     setOffline(true);
                   }

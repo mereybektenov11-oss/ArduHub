@@ -7,6 +7,14 @@ export function mergeProgress(guest: Progress, account: Progress): Progress {
     if (!own) continue;
     merged.lessons[id] = {
       ...own,
+      ...((value.flowUpdatedAt ?? "") > (own.flowUpdatedAt ?? "")
+        ? {
+            stages: value.stages,
+            practice: value.practice,
+            quiz: value.quiz,
+            flowUpdatedAt: value.flowUpdatedAt,
+          }
+        : {}),
       status:
         own.status === "done" || value.status === "done" ? "done" : own.status,
       attempts: Math.max(own.attempts, value.attempts),

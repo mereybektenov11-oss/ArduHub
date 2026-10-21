@@ -1,22 +1,25 @@
-import type { Page } from "@playwright/test";
+import { expect, type Page } from "@playwright/test";
 import { lessonQuizzes } from "../../../src/content/lesson-quiz.ru";
 export async function passLessonQuiz(page: Page, id = "lesson-1") {
   const questions = lessonQuizzes[id];
-  for (let i = 0; i < questions.length; i++) {
+  if (
     await page
-      .getByRole("button", { name: `Вопрос ${i + 1}`, exact: true })
+      .getByRole("button", { name: "К практике →", exact: true })
+      .isVisible()
+  ) {
+    await page
+      .getByRole("button", { name: "К практике →", exact: true })
       .click();
-    await page
-      .getByRole("radio", {
-        name: questions[i].options[questions[i].correct],
-        exact: true,
-      })
-      .check();
+    return;
   }
-  await page
-    .getByRole("button", { name: "Проверить ответы", exact: true })
-    .click();
-  await page
-    .getByRole("button", { name: "Перейти к схеме", exact: false })
-    .click();
+  for (let i = 0; i < questions.length; i++) {
+    await expect(page.locator(".flow-question-progress")).toContainText(
+      `Вопрос ${i + 1} из`,
+    );
+    const answer = page.locator(".flow-answer").nth(questions[i].correct);
+    if (await answer.isEnabled()) await answer.click();
+    await page.getByRole("button", { name: "Дальше →", exact: true }).click();
+  }
+  await page.getByRole("button", { name: "К практике →", exact: true }).click();
+  await expect(page.locator(".l2-workspace")).toBeVisible();
 }

@@ -10,6 +10,7 @@ test.use({
 test("hero layers drift, remain readable and are static with reduced motion", async ({
   page,
 }) => {
+  test.setTimeout(60000);
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/");

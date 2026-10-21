@@ -3,6 +3,7 @@ import CabinetShell from "@/components/cabinet/CabinetShell";
 import "./cabinet.css";
 import "./learning.css";
 import "./dashboard.css";
+import "./lesson-flow.css";
 export const metadata: Metadata = {
   title: "Кабинет ученика · ArduHub",
   robots: { index: false, follow: false },

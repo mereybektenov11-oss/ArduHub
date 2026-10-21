@@ -1,5 +1,6 @@
 import { isScene, type SceneDoc } from "../scene/scene";
 import { isQuizProgress, type QuizProgress } from "../lessons/quiz";
+import { isLessonFlow, type LessonFlowState } from "../lessons/flow";
 export type StepState = {
   video: boolean;
   theory: boolean;
@@ -9,6 +10,7 @@ export type StepState = {
   run: boolean;
 };
 export type Draft = {
+  flow?: LessonFlowState;
   updatedAt?: string;
   scene: SceneDoc;
   code: string;
@@ -45,6 +47,7 @@ const dateValid = (v: unknown) =>
 export function isDraft(v: unknown): v is Draft {
   return (
     record(v) &&
+    (v.flow === undefined || isLessonFlow(v.flow)) &&
     isScene(v.scene) &&
     codeValid(v.code) &&
     Number.isInteger(v.step) &&
@@ -126,7 +129,7 @@ export class LearningStore {
       const projects = p ? JSON.parse(p) : { version: 1, projects: [] };
       if (
         !record(drafts) ||
-        drafts.version !== 1 ||
+        ![1, 2].includes(Number(drafts.version)) ||
         !record(drafts.drafts) ||
         Object.keys(drafts.drafts).length > 30 ||
         !Object.entries(drafts.drafts).every(
@@ -169,7 +172,7 @@ export class LearningStore {
       this.storage.setItem(
         DRAFTS_KEY,
         JSON.stringify({
-          version: 1,
+          version: 2,
           curriculumVersion: 2,
           drafts: this.drafts,
         }),

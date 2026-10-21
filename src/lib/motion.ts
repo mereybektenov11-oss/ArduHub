@@ -29,11 +29,38 @@ export const motionTokens = {
   },
   stagger: 0.11,
   bankStagger: 0.07,
+  lessonFlow: {
+    prefetch: 150,
+    popover: 0.2,
+    exit: 0.15,
+    bob: 2,
+    bobY: 4,
+    loading: 0.4,
+    skeleton: 1.4,
+    minimum: 350,
+    timeout: 8000,
+    reveal: 0.45,
+    revealY: 12,
+    stagger: 0.06,
+    stage: 0.35,
+    stageX: 24,
+    segment: 0.5,
+    complete: 0.4,
+    reward: 0.8,
+    node: 0.5,
+    connector: 0.7,
+  },
   hero: { drift: [28, 34, 41, 32, 48, 38], aura: [24, 29], pulse: [6, 8, 10] },
   reveal: { y: 28, blur: 6, threshold: 0.2 },
 } as const;
 
 export const motionCssVars = {
+  ...Object.fromEntries(
+    Object.entries(motionTokens.lessonFlow).map(([key, value]) => [
+      `--flow-${key.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`)}`,
+      `${value}${["bobY", "stageX", "revealY"].includes(key) ? "px" : ["minimum", "timeout", "prefetch"].includes(key) ? "ms" : "s"}`,
+    ]),
+  ),
   ...Object.fromEntries(
     Object.entries(motionTokens.duration).map(([key, value]) => [
       `--motion-${key}`,
