@@ -1,4 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
+import { stubExternalVideo } from "./helpers/externalVideo";
 import AxeBuilder from "@axe-core/playwright";
 import { createProgress } from "../../src/domain/seed";
 import { learningLessons } from "../../src/domain/lessons/content";
@@ -366,6 +367,7 @@ test("video loading placeholder and automatic alternative on player error", asyn
 });
 for (const route of ["/app", "/app/practice", "/app/lesson/lesson-1"])
   test("accessibility " + route, async ({ page }) => {
+    await stubExternalVideo(page);
     await page.goto(route);
     await expect(page.locator("h1").first()).toBeVisible();
     const a = await new AxeBuilder({ page }).analyze();

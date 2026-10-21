@@ -25,7 +25,7 @@ Railway: подключите репозиторий, root `compiler-service`, �
 
 В Production variables ArduHub задайте `COMPILER_URL=https://ваш-домен/compile` и тот же `COMPILER_SECRET` как sensitive secret; удалите устаревшие COMPILER_API_* только после проверки, если они мешают приоритету. Выполните повторный production deploy. Секрет используется только серверным API Next.js, не добавляйте NEXT_PUBLIC_.
 
-Проверка живого HTTP-контейнера на этом компьютере пока не выполнена: Docker отсутствует, аккаунта внешнего хостинга нет. Настоящую компиляцию локальным Arduino CLI проверяли отдельно; это не доказательство работоспособности Docker-образа. Инструкции соответствуют [документации Render](https://render.com/docs/docker).
+На этом компьютере Docker отсутствует. HTTP-образ собран и прошёл настоящий smoke в [GitHub Actions 39535828271](https://github.com/mereybektenov11-oss/ArduHub/actions/runs/39535828271), job compiler-libraries: Blink, кэш, 401 и ошибка строки. Отдельного внешнего хостинга нет, production Vercel к компилятору пока не подключён. Native smoke на Windows проверялся отдельно. Инструкции соответствуют [документации Render](https://render.com/docs/docker).
 
 ## Режим gateway с отдельным контейнером на запрос
 

@@ -1,4 +1,5 @@
 import { passLessonQuiz } from "./helpers/lessonQuiz";
+import { stubExternalVideo } from "./helpers/externalVideo";
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { createProgress } from "../../src/domain/seed";
@@ -71,6 +72,7 @@ test("lesson checkpoint: wiring alone never awards XP in v2", async ({
 
 test("cabinet mobile accessibility", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
+  await stubExternalVideo(page);
   await seed(page);
   await page.setViewportSize({ width: 360, height: 800 });
   for (const route of [
