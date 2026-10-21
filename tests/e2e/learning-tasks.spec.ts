@@ -211,6 +211,7 @@ test("servo lesson runs real Servo firmware and reports a passing angle", async 
   const progress = createProgress();
   progress.profile.level = 4;
   progress.lessons["lesson-9"].status = "done";
+  progress.tourSeen = { "/app/lesson/lesson-10": true };
   const lesson = learningLessons[9];
   await page.addInitScript(
     ({ progress, lesson }) => {
