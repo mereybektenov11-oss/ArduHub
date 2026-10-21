@@ -42,6 +42,8 @@ jobs:
         env:
           COMPILER_TEST_SECRET: ci-only-test-secret
       - run: pnpm exec playwright install --with-deps chrome
+      - name: Locate Chrome for Lighthouse and Puppeteer
+        run: echo "CHROME_PATH=$(command -v google-chrome)" >> "$GITHUB_ENV"
       - run: pnpm test:e2e
       - run: pnpm start --port 3100 &
       - run: npx --yes @lhci/cli@0.15.1 autorun
