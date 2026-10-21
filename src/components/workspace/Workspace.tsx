@@ -1,4 +1,5 @@
 "use client";
+import { polishRu } from "@/content/ru";
 import dynamic from "next/dynamic";
 import {
   useCallback,
@@ -244,7 +245,9 @@ export default function Workspace({
               ? c.compilerPolicy
               : result.error === "compile_error"
                 ? c.compileFailed
-                : c.unavailable,
+                : (polishRu.compiler[
+                    result.error as keyof typeof polishRu.compiler
+                  ] ?? c.unavailable),
       );
       if (result.diagnostics?.length) setTab("code");
       return;
@@ -689,7 +692,7 @@ export default function Workspace({
       <div className="l2-run-status" role="status">
         <span className={busy ? "l2-active-dot" : ""} />
         {status === "compiling"
-          ? c.compiling
+          ? polishRu.compiling
           : status === "running"
             ? c.running
             : status === "paused"

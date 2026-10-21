@@ -1,9 +1,9 @@
 .cabinet {
-  --lesson-h1: calc(2rem * var(--lesson-scale));
-  --lesson-h2: calc(1.75rem * var(--lesson-scale));
-  --lesson-body: calc(1.25rem * var(--lesson-scale));
-  --lesson-task: calc(1.125rem * var(--lesson-scale));
-  --lesson-code: calc(1rem * var(--lesson-scale));
+  --lesson-h1: var(--type-page-title);
+  --lesson-h2: var(--type-section-title);
+  --lesson-body: calc(var(--type-reading) * var(--lesson-scale));
+  --lesson-task: calc(var(--type-task) * var(--lesson-scale));
+  --lesson-code: var(--type-body-small);
   --l2-wire: #c58320;
   --l2-blue: #287aab;
 }
@@ -31,7 +31,7 @@
   line-height: 1.65;
 }
 .l2-quiz h3 {
-  font-size: calc(var(--type-card-title) * var(--lesson-scale));
+  font-size: var(--type-card-title);
   line-height: 1.5;
 }
 .l2-quiz fieldset {
@@ -384,6 +384,53 @@
   background: var(--ink-900);
   border-radius: 16px;
 }
+.polish-video-step {
+  width: min(100%, 800px);
+  margin-inline: auto;
+}
+.polish-video-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid var(--line-dark);
+  border-radius: var(--space-sm);
+  background: var(--cream-100);
+}
+.polish-video-frame iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.polish-video-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  color: var(--text-muted-dark);
+  font-size: var(--type-body);
+}
+.polish-video-frame > .polish-video-loading {
+  position: absolute;
+  inset: 0;
+}
+.polish-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--line-dark);
+  border-top-color: var(--forest-700);
+  border-radius: 50%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .polish-spinner {
+    animation: video-spin 1s linear infinite;
+  }
+}
+@keyframes video-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 .l2-project-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
@@ -543,7 +590,7 @@
 .l2-canvas-hint,
 .l2-run-status,
 .l2-wire-list {
-  font-size: calc(1rem * var(--lesson-scale));
+  font-size: var(--type-button);
 }
 .l2-lesson button:not(.l2-pin),
 .l2-text-size select {
@@ -566,7 +613,7 @@
 .cab-chat textarea,
 .cab-chat input,
 .cab-chat .cab-message {
-  font-size: calc(1.0625rem * var(--lesson-scale));
+  font-size: var(--type-body);
   line-height: 1.65;
 }
 .l2-palette > button {
@@ -646,7 +693,7 @@
 .l2-lesson .cab-eyebrow,
 .l2-lesson .cab-small,
 .l2-lesson .cab-pill {
-  font-size: calc(1rem * var(--lesson-scale));
+  font-size: var(--type-button);
 }
 .l2-inputs fieldset {
   min-width: 0;
@@ -680,7 +727,7 @@
   border-radius: var(--space-sm);
   max-width: 95%;
   min-width: 0;
-  font-size: calc(1.0625rem * var(--lesson-scale));
+  font-size: var(--type-body);
   overflow-wrap: anywhere;
 }
 .cab-chat-log > div > span {

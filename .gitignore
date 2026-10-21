@@ -19,3 +19,5 @@ tools/arduino/
 /reference/
 /tools/
 *.log
+/tmp/
+compiler.env

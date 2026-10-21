@@ -1,4 +1,4 @@
-import MentorPage from "@/components/cabinet/MentorPage";
+import MentorPage from "@/components/mentor/MentorEntry";
 export default async function Page({
   searchParams,
 }: {

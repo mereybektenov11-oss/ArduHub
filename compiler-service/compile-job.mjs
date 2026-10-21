@@ -71,6 +71,7 @@ export async function compileJob(
       child.on("error", () => finish(-1));
       child.on("close", finish);
     });
+    if (result.exit === -1) return { error: "compiler_timeout" };
     if (result.exit !== 0)
       return {
         error: result.exit === -1 ? "compiler_unavailable" : "compile_error",

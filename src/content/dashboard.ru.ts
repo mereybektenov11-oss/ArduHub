@@ -5,11 +5,7 @@ export const dashboardRu = {
       items: [
         ["Главная", "/app", "home"],
         ["Карта", "/app/map", "map"],
-        ["Уроки", "/app/lessons", "book"],
         ["Практика", "/app/practice", "puzzle"],
-        ["Словарь", "/app/glossary", "book"],
-        ["Домашка", "/app/homework", "clipboard-check"],
-        ["Наставник", "/app/mentor", "message-circle"],
       ],
     },
     {
@@ -22,11 +18,10 @@ export const dashboardRu = {
     {
       title: "ПРОГРЕСС",
       items: [
-        ["Миссии", "/app/missions", "clipboard-check"],
-        ["Таблица лидеров", "/app/leaderboard", "school"],
+        ["Лидеры", "/app/leaderboard", "school"],
+        ["Магазин", "/app/shop", "puzzle"],
       ],
     },
-    { title: "МАГАЗИН", items: [["Магазин", "/app/shop", "puzzle"]] },
   ],
   extraHint: "Подсказка из набора",
   extraHints: [
@@ -38,6 +33,7 @@ export const dashboardRu = {
     "Сессия истекла. Войди снова, чтобы синхронизировать прогресс.",
   signIn: "Войти",
   diagnostic: "Пройти тест",
+  allLessons: "Все уроки",
   help: "Справка и тур",
   askMentor: "Спросить наставника",
   tests: "Тесты",

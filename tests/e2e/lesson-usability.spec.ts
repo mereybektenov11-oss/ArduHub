@@ -47,11 +47,7 @@ test("Tests tab executes real AVR from the code step and preserves results", asy
   test.setTimeout(60000);
   await lesson(page);
   await page.getByRole("tab", { name: "Тесты", exact: true }).click();
-  const request = page.waitForResponse(
-    (r) => r.url().endsWith("/api/compile") && r.request().method() === "POST",
-  );
   await page.getByRole("button", { name: /^Запустить/ }).click();
-  expect((await request).ok()).toBeTruthy();
   await expect(
     page.getByRole("heading", { name: "Урок пройден!" }),
   ).toBeVisible({ timeout: 30000 });

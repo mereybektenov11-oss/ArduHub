@@ -11,6 +11,13 @@ export function searchCabinet(
     g.items.map(([title, href]) => ({ title, href, group: 3 })),
   );
   const all: SearchResult[] = [
+    ...[
+      ["Все уроки", "/app/lessons"],
+      ["Словарь", "/app/practice?tab=glossary"],
+      ["Домашка", "/app/practice?tab=homework"],
+      ["Миссии", "/app/missions"],
+      ["Наставник", "/app/mentor"],
+    ].map(([title, href]) => ({ title, href, group: 3 })),
     ...lessons.map((l) => ({
       title: l.title,
       href: "/app/lesson/" + l.id,

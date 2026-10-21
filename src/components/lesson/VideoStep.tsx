@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { learningRu as c } from "@/content/learning.ru";
 import { Action, Card } from "@/components/cabinet/ui";
+import { polishRu } from "@/content/ru";
 type Video = {
   videoId: string;
   title: string;
@@ -17,7 +18,7 @@ type Player = {
 type YouTube = {
   Player: new (
     element: HTMLIFrameElement,
-    options: { events: { onError: () => void } },
+    options: { events: { onError: () => void; onReady: () => void } },
   ) => Player;
 };
 let api: Promise<YouTube> | undefined;
@@ -49,6 +50,7 @@ function VideoPlayer({
   onError: () => void;
   onProgress: (n: number) => void;
 }) {
+  const [ready, setReady] = useState(false);
   const iframe = useRef<HTMLIFrameElement>(null);
   const callbacks = useRef({ onError, onProgress });
   useEffect(() => {
@@ -58,11 +60,27 @@ function VideoPlayer({
     let active = true,
       player: Player | undefined,
       timer: ReturnType<typeof setInterval> | undefined;
+    let failed = false;
+    const fail = () => {
+      if (active && !failed) {
+        failed = true;
+        callbacks.current.onError();
+      }
+    };
+    const deadline = setTimeout(fail, 12000);
     void youtubeApi()
       .then((YT) => {
         if (!active || !iframe.current) return;
         player = new YT.Player(iframe.current, {
-          events: { onError: () => callbacks.current.onError() },
+          events: {
+            onError: fail,
+            onReady: () => {
+              if (active) {
+                clearTimeout(deadline);
+                setReady(true);
+              }
+            },
+          },
         });
         let previous = 0,
           watched = 0,
@@ -94,24 +112,35 @@ function VideoPlayer({
         }, 1000);
       })
       .catch(() => {
-        if (active) callbacks.current.onError();
+        api = undefined;
+        fail();
       });
     return () => {
       active = false;
       clearInterval(timer);
+      clearTimeout(deadline);
       player?.destroy();
     };
   }, []);
   return (
-    <iframe
-      ref={iframe}
-      className="l2-video"
-      title={video.title}
-      src={`https://www.youtube-nocookie.com/embed/${encodeURIComponent(video.videoId)}?enablejsapi=1&origin=${typeof location === "undefined" ? "" : encodeURIComponent(location.origin)}`}
-      allow="fullscreen; encrypted-media"
-      allowFullScreen
-      referrerPolicy="strict-origin-when-cross-origin"
-    />
+    <div className="polish-video-frame" aria-busy={!ready}>
+      {!ready && (
+        <div className="polish-video-loading" role="status">
+          <span className="polish-spinner" aria-hidden="true" />
+          {polishRu.videoLoading}
+        </div>
+      )}
+      <iframe
+        ref={iframe}
+        className="l2-video"
+        style={{ opacity: ready ? 1 : 0 }}
+        title={video.title}
+        src={`https://www.youtube-nocookie.com/embed/${encodeURIComponent(video.videoId)}?enablejsapi=1&origin=${typeof location === "undefined" ? "" : encodeURIComponent(location.origin)}`}
+        allow="fullscreen; encrypted-media"
+        allowFullScreen
+        referrerPolicy="strict-origin-when-cross-origin"
+      />
+    </div>
   );
 }
 export default function VideoStep({
@@ -155,10 +184,13 @@ export default function VideoStep({
   }
   const video = videos[index];
   return (
-    <Card>
+    <Card className="polish-video-step">
       <h2>{c.steps[0]}</h2>
       {loading ? (
-        <p role="status">{c.searchingVideo}</p>
+        <div className="polish-video-frame polish-video-loading" role="status">
+          <span className="polish-spinner" aria-hidden="true" />
+          {polishRu.videoLoading}
+        </div>
       ) : video ? (
         <>
           <VideoPlayer
@@ -189,7 +221,7 @@ export default function VideoStep({
           </div>
         </>
       ) : (
-        <p>{c.videoNotSelected}</p>
+        <p role="status">{polishRu.videoUnavailable}</p>
       )}
       <Action secondary onClick={onDone}>
         {c.withoutVideo} →

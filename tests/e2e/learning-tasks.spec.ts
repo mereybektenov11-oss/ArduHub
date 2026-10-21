@@ -21,18 +21,18 @@ test("large text persists at 360px and the lesson has no page overflow", async (
   await page.getByRole("button", { name: "Продолжить без видео" }).click();
   await expect(page.locator(".l2-theory section p").first()).toHaveCSS(
     "font-size",
-    "20px",
+    "18px",
   );
   await expect(page.locator(".l2-theory h2").first()).toHaveCSS(
     "font-size",
-    "22px",
+    "20px",
   );
   await page.getByLabel("Размер текста").selectOption("1.3");
   await page.reload();
   await expect(page.getByLabel("Размер текста")).toHaveValue("1.3");
   await expect(page.locator(".l2-theory section p").first()).toHaveCSS(
     "font-size",
-    "26px",
+    "23.4px",
   );
   expect(
     await page.evaluate(

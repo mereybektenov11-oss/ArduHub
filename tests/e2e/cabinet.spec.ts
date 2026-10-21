@@ -70,6 +70,7 @@ test("lesson checkpoint: wiring alone never awards XP in v2", async ({
 });
 
 test("cabinet mobile accessibility", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
   await seed(page);
   await page.setViewportSize({ width: 360, height: 800 });
   for (const route of [
@@ -219,7 +220,7 @@ test("mentor fallback, demo balance and quick chat", async ({ page }) => {
     page.getByText("50 демо-токенов", { exact: true }),
   ).toBeVisible();
   await page.goto("/app/lessons");
-  await page.getByRole("button", { name: "Спросить наставника" }).click();
+  await page.getByRole("button", { name: "Спроси наставника" }).click();
   const dialog = page.getByRole("dialog");
   await dialog.getByRole("textbox").fill("Зачем резистор?");
   await dialog.getByRole("button", { name: /Отправить/ }).click();

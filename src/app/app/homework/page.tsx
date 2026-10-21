@@ -1,4 +1,4 @@
-import HomeworkView from "@/components/cabinet/HomeworkView";
+import { redirect } from "next/navigation";
 export default function Page() {
-  return <HomeworkView />;
+  redirect("/app/practice?tab=homework");
 }

@@ -2,6 +2,7 @@ import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { createProgress } from "../../src/domain/seed";
 import { dayInZone } from "../../src/domain/missions";
+import { passLessonQuiz } from "./helpers/lessonQuiz";
 async function guest(
   page: Page,
   mutate?: (p: ReturnType<typeof createProgress>) => void,
@@ -210,6 +211,7 @@ test("lesson focus has no sidebar and expected behavior on work steps", async ({
   ).toBeVisible();
   await page.getByRole("button", { name: "Продолжить без видео" }).click();
   await page.getByRole("button", { name: /Понятно/ }).click();
+  await passLessonQuiz(page);
   await expect(
     page.getByRole("heading", { name: "Ожидаемое поведение" }),
   ).toBeVisible();
@@ -217,7 +219,9 @@ test("lesson focus has no sidebar and expected behavior on work steps", async ({
     .getByRole("button", { name: "Спросить ИИ", exact: true })
     .last()
     .click();
-  await expect(page.getByRole("dialog", { name: "Спросить ИИ" })).toBeVisible();
+  await expect(
+    page.getByRole("dialog", { name: "Наставник", exact: true }),
+  ).toBeVisible();
 });
 test("mobile menu exposes every group without page overflow", async ({
   page,
@@ -231,10 +235,8 @@ test("mobile menu exposes every group without page overflow", async ({
     .getByRole("button", { name: "Ещё" })
     .click();
   const dialog = page.getByRole("dialog");
-  for (const name of ["УЧЁБА", "ПРОЕКТЫ", "ПРОГРЕСС", "МАГАЗИН"])
-    await expect(
-      dialog.getByRole("button", { name, exact: true }),
-    ).toBeVisible();
+  for (const name of ["Лидеры", "Магазин", "Профиль"])
+    await expect(dialog.getByRole("link", { name, exact: true })).toBeVisible();
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
@@ -283,7 +285,7 @@ for (const route of [
         small: found.filter(
           (v) => v.size < 13 && !v.className.includes("group-label"),
         ),
-        large: found.filter((v) => v.size > 40),
+        large: found.filter((v) => v.size > 28),
       };
     });
     expect(result.small).toEqual([]);
@@ -299,7 +301,7 @@ for (const route of [
           .first()
           .evaluate((el) => getComputedStyle(el).fontSize),
       ),
-    ).toBeLessThanOrEqual(32);
+    ).toBeLessThanOrEqual(28);
   });
 for (const route of [
   "/sign-in",

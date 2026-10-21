@@ -1,6 +1,7 @@
 import { createCompileHandler } from "@/services/compile/handler";
 import { sameOrigin } from "@/lib/requestOrigin";
 export const runtime = "nodejs";
+export const maxDuration = 45;
 const handle = createCompileHandler({
   url: process.env.COMPILER_API_URL || process.env.COMPILER_URL,
   key: process.env.COMPILER_API_KEY || process.env.COMPILER_SECRET,

@@ -93,24 +93,24 @@ test("findbug and matching games can be completed", async ({ page }) => {
 test("mentor unlock exact sparks, no duplicate charge", async ({ page }) => {
   await init(page, 80);
   await page.goto("/app/mentor");
-  const oma = page
-    .locator(".cab-mentors .cab-card")
-    .filter({ has: page.getByRole("heading", { name: "Ома", exact: true }) });
-  await oma.getByRole("button", { name: /Открыть/ }).click();
-  await expect(page).toHaveURL(/app\/shop$/);
+  await expect(
+    page.getByLabel("Выбрать наставника").locator('option[value="oma"]'),
+  ).toHaveAttribute("disabled", "");
+  await page.keyboard.press("Escape");
+  await page.goto("/app/shop");
   const item = page
     .locator(".dash-shop-item")
     .filter({ has: page.getByRole("heading", { name: "Ома", exact: true }) });
   await item.getByRole("button", { name: "Купить", exact: true }).click();
   await page.goto("/app/mentor");
-  await oma.getByRole("button", { name: "Выбрать", exact: true }).click();
-  await expect(
-    page.getByText("20 искр для новых наставников", { exact: true }),
-  ).toBeVisible();
-  await oma.getByRole("button", { name: "Выбран", exact: true }).click();
-  await expect(
-    page.getByText("20 искр для новых наставников", { exact: true }),
-  ).toBeVisible();
+  await page.getByLabel("Выбрать наставника").selectOption("oma");
+  await expect(page.getByLabel("Выбрать наставника")).toHaveValue("oma");
+  await page.getByLabel("Выбрать наставника").selectOption("oma");
+  expect(
+    await page.evaluate(
+      () => JSON.parse(localStorage.getItem("arduhub.progress.v1")!).sparks,
+    ),
+  ).toBe(20);
 });
 test("corrupt and unavailable storage do not crash", async ({
   page,

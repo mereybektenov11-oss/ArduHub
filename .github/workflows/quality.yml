@@ -10,11 +10,23 @@ jobs:
           node-version: 24
       - run: docker build -t arduhub-compiler-test compiler-service
       - run: node scripts/test-compiler-libraries.mjs
+      - run: docker build -f compiler-service/Dockerfile.http -t arduhub-compiler-http compiler-service
+      - run: docker run -d --name arduhub-http-test --read-only --cap-drop=ALL --security-opt=no-new-privileges --pids-limit=128 --memory=1g --cpus=2 --tmpfs /tmp:rw,nosuid,nodev,size=256m -p 8081:8081 -e COMPILER_SECRET=ci-only-test-secret arduhub-compiler-http
+      - run: node scripts/test-compiler-http.mjs
+        env:
+          COMPILER_TEST_SECRET: ci-only-test-secret
+      - if: always()
+        run: docker rm -f arduhub-http-test || true
   check:
     runs-on: ubuntu-latest
     env:
       SITE_URL: http://127.0.0.1:3100
       NEXT_TELEMETRY_DISABLED: "1"
+      # Browser auth failures are intercepted by tests; no real account keys.
+      NEXT_PUBLIC_SUPABASE_URL: https://ci-auth.example.invalid
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ci-public-placeholder
+      COMPILER_URL: http://127.0.0.1:8081/compile
+      COMPILER_SECRET: ci-only-test-secret
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -24,6 +36,11 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint && pnpm lint:type && pnpm format:check && pnpm test && pnpm test:db && pnpm test:coverage && pnpm test:learning:coverage && pnpm build && pnpm test:secrets
+      - run: docker build -f compiler-service/Dockerfile.http -t arduhub-compiler-http compiler-service
+      - run: docker run -d --name arduhub-e2e-compiler --read-only --cap-drop=ALL --security-opt=no-new-privileges --pids-limit=128 --memory=1g --cpus=2 --tmpfs /tmp:rw,nosuid,nodev,size=256m -p 8081:8081 -e COMPILER_SECRET=ci-only-test-secret arduhub-compiler-http
+      - run: node scripts/test-compiler-http.mjs
+        env:
+          COMPILER_TEST_SECRET: ci-only-test-secret
       - run: pnpm exec playwright install --with-deps chrome
       - run: pnpm test:e2e
       - run: pnpm start --port 3100 &
@@ -31,6 +48,8 @@ jobs:
       - run: pnpm test:lighthouse:cabinet
       - run: pnpm test:lighthouse:learning
       - run: pnpm test:lighthouse:dashboard
+      - if: always()
+        run: docker rm -f arduhub-e2e-compiler || true
       - uses: actions/upload-artifact@v4
         if: always()
         with:

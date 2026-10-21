@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { polishRu } from "@/content/ru";
 import { EditorState } from "@codemirror/state";
 import {
   EditorView,
@@ -27,6 +28,7 @@ export default function CodePanel({
   diagnostics?: Diagnostic[];
 }) {
   const [tooLarge, setTooLarge] = useState(false);
+  const [codeFontSize, setCodeFontSize] = useState(14);
   const root = useRef<HTMLDivElement>(null),
     view = useRef<EditorView | null>(null),
     callback = useRef(onChange),
@@ -79,7 +81,7 @@ export default function CodePanel({
           ),
           EditorView.theme({
             "&": {
-              fontSize: "var(--lesson-code, 16px)",
+              fontSize: "var(--code-font-size, var(--lesson-code, 14px))",
               backgroundColor: "var(--white)",
               color: "var(--text-dark)",
             },
@@ -130,7 +132,35 @@ export default function CodePanel({
       );
   }, [diagnostics]);
   return (
-    <div className="l2-code">
+    <div
+      className="l2-code"
+      style={{ "--code-font-size": `${codeFontSize}px` } as CSSProperties}
+    >
+      <div className="cab-row" aria-label={polishRu.codeSize}>
+        <button
+          className="cab-btn cab-btn-secondary"
+          aria-label={polishRu.codeSmaller}
+          disabled={codeFontSize <= 12}
+          onClick={() => {
+            setCodeFontSize((n) => Math.max(12, n - 1));
+            view.current?.requestMeasure();
+          }}
+        >
+          A−
+        </button>
+        <span>{codeFontSize}</span>
+        <button
+          className="cab-btn cab-btn-secondary"
+          aria-label={polishRu.codeLarger}
+          disabled={codeFontSize >= 20}
+          onClick={() => {
+            setCodeFontSize((n) => Math.min(20, n + 1));
+            view.current?.requestMeasure();
+          }}
+        >
+          A+
+        </button>
+      </div>
       <div ref={root} />
       {tooLarge && (
         <p className="l2-error" role="alert">

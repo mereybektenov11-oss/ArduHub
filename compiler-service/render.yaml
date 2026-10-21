@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: arduhub-compiler
+    runtime: docker
+    dockerfilePath: ./compiler-service/Dockerfile.http
+    dockerContext: ./compiler-service
+    healthCheckPath: /health
+    envVars:
+      - key: COMPILER_CONTAINER
+        value: "true"
+      - key: COMPILER_SECRET
+        generateValue: true

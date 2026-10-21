@@ -1,4 +1,5 @@
 "use client";
+import RewardIcon from "@/components/icons/RewardIcon";
 import { useRef, useState } from "react";
 import { dashboardRu as c } from "@/content/dashboard.ru";
 import { shopItems, buyLocal } from "@/domain/shop";
@@ -34,11 +35,12 @@ export default function ShopPage() {
   return (
     <div className="cab-stack">
       <div>
-        <p className="cab-eyebrow">ArduHub / {c.groups[3].title}</p>
+        <p className="cab-eyebrow">ArduHub / {c.groups[2].title}</p>
         <h1>{c.shop}</h1>
         <p>{c.shopNote}</p>
         <p className="cab-muted">
-          ◆ {p.sparks} {c.sparkUnits} · {!p.account?.userId && c.guestEconomy}
+          <RewardIcon kind="spark" /> {p.sparks} {c.sparkUnits} ·{" "}
+          {!p.account?.userId && c.guestEconomy}
         </p>
       </div>
       {c.shopKinds.map((title, index) => (
@@ -52,12 +54,16 @@ export default function ShopPage() {
                 return (
                   <Card key={item.id} className="dash-shop-item">
                     <span className="dash-item-symbol" aria-hidden="true">
-                      {index === 0 ? "ϟ" : index === 1 ? "◇" : "◎"}
+                      <RewardIcon
+                        kind={
+                          index === 0 ? "token" : index === 1 ? "level" : "xp"
+                        }
+                      />
                     </span>
                     <h3>{item.title}</h3>
                     <p>{item.description}</p>
                     <strong>
-                      ◆ {item.price} {c.sparkUnits}
+                      <RewardIcon kind="spark" /> {item.price} {c.sparkUnits}
                     </strong>
                     <Action
                       disabled={!!busy || bought || p.sparks < item.price}

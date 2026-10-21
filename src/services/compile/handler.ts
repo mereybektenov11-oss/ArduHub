@@ -1,8 +1,8 @@
 import { createRateLimiter } from "@/lib/rateLimit";
 import fixtures from "./fixtures.json" with { type: "json" };
 import type { CompileResult } from "./client";
-export const normalizeCode = (code: string) =>
-  code.replace(/\r\n/g, "\n").trim();
+import { normalizeCode } from "./normalize";
+export { normalizeCode } from "./normalize";
 export function createCompileHandler(
   config: { url?: string; key?: string; fetcher?: typeof fetch } = {},
 ) {
@@ -70,9 +70,23 @@ export function createCompileHandler(
             Authorization: `Bearer ${config.key}`,
           },
           body: JSON.stringify(body),
-          signal: AbortSignal.timeout(22500),
+          signal: AbortSignal.timeout(30000),
         });
+        if (response.status === 429)
+          return reply(503, { error: "compiler_busy" });
+        if (response.status === 401 || response.status === 403)
+          return reply(503, { error: "compiler_unauthorized" });
+        if (response.status === 504 || response.status === 408)
+          return reply(503, { error: "compiler_timeout" });
         const data = await response.json();
+        if (
+          [
+            "compiler_timeout",
+            "compiler_busy",
+            "compiler_unreachable",
+          ].includes(data.error)
+        )
+          return reply(503, { error: data.error });
         if (
           response.ok &&
           typeof data.hex === "string" &&
@@ -91,10 +105,16 @@ export function createCompileHandler(
             diagnostics: data.diagnostics,
           });
         return reply(503, { error: "compiler_unavailable" });
-      } catch {
-        return reply(503, { error: "compiler_unavailable" });
+      } catch (error) {
+        return reply(503, {
+          error:
+            error instanceof Error &&
+            ["TimeoutError", "AbortError"].includes(error.name)
+              ? "compiler_timeout"
+              : "compiler_unreachable",
+        });
       }
     }
-    return reply(503, { error: "compiler_unavailable" });
+    return reply(503, { error: "compiler_unconfigured" });
   };
 }

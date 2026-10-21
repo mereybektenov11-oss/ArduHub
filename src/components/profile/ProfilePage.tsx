@@ -1,4 +1,7 @@
 "use client";
+import RewardIcon from "@/components/icons/RewardIcon";
+import LevelBadge from "@/components/icons/LevelBadge";
+import StreakCalendar from "@/components/icons/StreakCalendar";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -86,12 +89,16 @@ export default function ProfilePage() {
           </div>
         </div>
         <p>
-          {c.level} {p.profile.level + 1} · {p.xp} XP · {activeStreak(p.streak)}{" "}
+          <LevelBadge value={p.profile.level + 1} />
+          {c.level} {p.profile.level + 1} · <RewardIcon kind="xp" /> {p.xp} XP ·{" "}
+          <RewardIcon kind="flame" /> {activeStreak(p.streak)}{" "}
           {c.streak.toLowerCase()}
         </p>
         <p>
-          ◆ {p.sparks} {c.sparkUnits} · ϟ {p.mentor.tokens} {c.tokenUnits}
+          <RewardIcon kind="spark" /> {p.sparks} {c.sparkUnits} ·{" "}
+          <RewardIcon kind="token" /> {p.mentor.tokens} {c.tokenUnits}
         </p>
+        <StreakCalendar />
         {!p.account?.userId && (
           <p>
             {c.guest} · <Link href="/sign-in">{c.register}</Link>

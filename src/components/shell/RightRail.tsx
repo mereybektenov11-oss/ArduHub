@@ -1,5 +1,6 @@
 "use client";
 import { dashboardRu as c } from "@/content/dashboard.ru";
+import { polishRu } from "@/content/ru";
 import { useProgress } from "@/lib/useProgress";
 import { activeStreak } from "@/domain/progress/streak";
 import Link from "next/link";
@@ -10,19 +11,40 @@ import { dailyState } from "@/domain/missions";
 import { usePathname } from "next/navigation";
 import Schedule from "@/components/cabinet/Schedule";
 import { useState, useEffect } from "react";
+import RewardIcon, { type RewardKind } from "@/components/icons/RewardIcon";
+import AnimatedCount from "@/components/icons/AnimatedCount";
+import LevelBadge from "@/components/icons/LevelBadge";
 export function StatBar() {
   const { progress: p } = useProgress();
   return (
     <div className="dash-statbar">
       {[
-        [c.streak, activeStreak(p.streak), "↗"],
-        [c.sparks, p.sparks, "◆"],
-        [c.tokens, p.mentor.tokens, "ϟ"],
+        [c.streak, activeStreak(p.streak), "flame"],
+        [c.sparks, p.sparks, "spark"],
+        [c.tokens, p.mentor.tokens, "token"],
       ].map(([label, value, icon]) => (
-        <div key={label}>
-          <span aria-hidden="true">{icon}</span>
-          <strong>{value}</strong>
+        <div
+          role="group"
+          key={label}
+          tabIndex={0}
+          title={`${label}: ${value}`}
+          aria-label={`${label}: ${value}`}
+          aria-describedby={`stat-${icon}`}
+        >
+          <span
+            className={`polish-stat-icon ${icon} ${!value ? "inactive" : ""}`}
+          >
+            <RewardIcon kind={icon as RewardKind} />
+          </span>
+          <AnimatedCount value={Number(value)} />
           <small>{label}</small>
+          <span
+            className="polish-stat-tooltip"
+            role="tooltip"
+            id={`stat-${icon}`}
+          >
+            {label}: {value}
+          </span>
         </div>
       ))}
     </div>
@@ -45,9 +67,12 @@ export default function RightRail() {
       <StatBar />
       <Card tour="progress">
         <h2>
+          <LevelBadge value={p.profile.level + 1} />
           {c.level} {p.profile.level + 1}
         </h2>
-        <p>{p.xp} XP</p>
+        <p>
+          <RewardIcon kind="xp" /> {p.xp} XP
+        </p>
         <progress value={p.xp % 150} max={150} aria-label="XP" />
       </Card>
       <Card className="dash-fact">
@@ -72,11 +97,27 @@ export default function RightRail() {
       <Card tour="missions">
         <div className="cab-row">
           <h2>{c.missions}</h2>
-          <Link href="/app/missions">↗</Link>
+          <Link href="/app/missions">{polishRu.allMissions}</Link>
         </div>
         {c.missionTitles.map((title, i) => (
           <div key={title} className="dash-mission">
-            <span>{title}</span>
+            <span>
+              <RewardIcon
+                kind={
+                  (
+                    i === 0
+                      ? daily.lessonIds.length >= 1
+                      : i === 1
+                        ? daily.xp >= 50
+                        : daily.perfect
+                  )
+                    ? "check"
+                    : "mission"
+                }
+                className="polish-mission-icon"
+              />{" "}
+              {title}
+            </span>
             <progress
               aria-label={title}
               value={

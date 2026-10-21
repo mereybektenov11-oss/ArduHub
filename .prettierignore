@@ -19,3 +19,5 @@ docs/ArduHub_learning_v2_tasks.md
 
 # User-supplied specification: preserve the original bytes.
 docs/ArduHub_dashboard_auth_spec.md
+docs/ArduHub_polish_plan.md
+compiler-service/normalize-code.mjs

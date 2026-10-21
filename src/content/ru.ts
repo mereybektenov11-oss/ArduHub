@@ -1,4 +1,5 @@
 export { cabinetRu } from "./cabinet.ru";
+export { polishRu } from "./polish.ru";
 export type Step = {
   id: string;
   title: string;

@@ -1,6 +1,6 @@
 "use client";
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { browserSupabase } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { dashboardRu as d, lessonExpected } from "@/content/dashboard.ru";
@@ -32,7 +32,10 @@ import { lessonQuizzes } from "@/content/lesson-quiz.ru";
 import { prepareLessonDraft, canOpenLessonStep } from "@/domain/lessons/quiz";
 import VideoStep from "./VideoStep";
 import PartView from "@/components/workspace/PartView";
-import MentorChat from "@/components/cabinet/MentorChat";
+import { openMentor } from "@/components/mentor/openMentor";
+import CabinetArt, { type ArtName } from "@/components/cabinet/CabinetArt";
+import { polishRu } from "@/content/ru";
+import RewardIcon from "@/components/icons/RewardIcon";
 const Workspace = dynamic(() => import("@/components/workspace/Workspace"), {
   ssr: false,
   loading: () => <Card>{c.workspace}…</Card>,
@@ -83,8 +86,7 @@ function LessonFlow({
 }) {
   const router = useRouter();
   const [showHints, setShowHints] = useState(false);
-  const [showTheory, setShowTheory] = useState(false),
-    [showMentor, setShowMentor] = useState(false);
+  const [showTheory, setShowTheory] = useState(false);
   const { progress, update, refreshAccount } = useProgress(),
     { id } = lesson,
     index = learningLessons.indexOf(lesson),
@@ -137,6 +139,32 @@ function LessonFlow({
     [report, setReport] = useState<CheckResult[]>([]),
     [notice, setNotice] = useState("");
   const [compileErrors, setCompileErrors] = useState<string[]>([]);
+  const mentorContext = {
+    lessonId: id,
+    context: {
+      step: c.steps[draft.step],
+      code: draft.code,
+      scene: JSON.stringify(draft.scene),
+      errors: [...errors.map((e) => e.message), ...compileErrors],
+      level: progress.profile.level,
+    },
+  };
+  function ask() {
+    openMentor(mentorContext);
+  }
+  useEffect(() => {
+    window.dispatchEvent(
+      new CustomEvent("arduhub:mentor-context", { detail: mentorContext }),
+    );
+  });
+  useEffect(
+    () => () => {
+      window.dispatchEvent(
+        new CustomEvent("arduhub:mentor-context", { detail: {} }),
+      );
+    },
+    [],
+  );
   function save(next: Draft) {
     next = { ...next, updatedAt: new Date().toISOString() };
     setDraft(next);
@@ -210,7 +238,8 @@ function LessonFlow({
         </button>
         <span>{copy.title}</span>
         <span>
-          ◆ {progress.sparks} · ϟ {progress.mentor.tokens}
+          <RewardIcon kind="spark" /> {progress.sparks} ·{" "}
+          <RewardIcon kind="token" /> {progress.mentor.tokens}
         </span>
       </div>
       <nav className="dash-focus-tools" aria-label={d.theory}>
@@ -230,8 +259,13 @@ function LessonFlow({
         >
           ?
         </button>
-        <button aria-label={d.askAI} onClick={() => setShowMentor(true)}>
-          ϟ
+        <button aria-label={d.askAI} onClick={() => ask()}>
+          <CabinetArt
+            name={progress.mentor.selectedId as ArtName}
+            alt=""
+            size={28}
+          />
+          <span>{polishRu.mentor}</span>
         </button>
       </nav>
       <div className="cab-row">
@@ -346,7 +380,7 @@ function LessonFlow({
                 <Action secondary onClick={() => setShowTheory(true)}>
                   {d.theory}
                 </Action>
-                <Action secondary onClick={() => setShowMentor(true)}>
+                <Action secondary onClick={() => ask()}>
                   {d.explain}
                 </Action>
               </div>
@@ -469,7 +503,7 @@ function LessonFlow({
             solution={hint.code >= 3 ? lesson.code.solution : undefined}
             actions={
               <>
-                <Action secondary onClick={() => setShowMentor(true)}>
+                <Action secondary onClick={() => ask()}>
                   {d.askAI}
                 </Action>
                 <Action
@@ -551,20 +585,6 @@ function LessonFlow({
               </section>
             ))}
           </div>
-        </Modal>
-      )}
-      {showMentor && (
-        <Modal title={d.askAI} onClose={() => setShowMentor(false)}>
-          <MentorChat
-            lessonId={id}
-            context={{
-              step: c.steps[draft.step],
-              scene: `${draft.scene.components.length} ${c.partsCount}; ${draft.scene.components.map((p) => `${p.id}:${p.type}`).join(", ")}; ${draft.scene.wires.map((w) => `${w.from.componentId}:${w.from.pin}>${w.to.componentId}:${w.to.pin}`).join(", ")}`,
-              code: draft.code,
-              errors: [...errors.map((e) => e.message), ...compileErrors],
-              level: progress.profile.level,
-            }}
-          />
         </Modal>
       )}
     </div>

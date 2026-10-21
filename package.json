@@ -8,6 +8,7 @@
     "node": "24.x"
   },
   "scripts": {
+    "hex:build": "node scripts/build-hex-cache.mjs",
     "videos:resolve": "node --env-file-if-exists=.env.local scripts/resolve-videos.mjs",
     "parts:build": "node scripts/build-parts-catalog.mjs",
     "dev": "next dev --webpack --hostname 127.0.0.1",

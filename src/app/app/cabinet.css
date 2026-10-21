@@ -1,4 +1,18 @@
 .cabinet {
+  --type-page-title: 1.75rem;
+  --type-section-title: 1.25rem;
+  --type-card-title: 1rem;
+  --type-body: 0.9375rem;
+  --type-body-small: 0.875rem;
+  --type-caption: 0.8125rem;
+  --type-group-label: 0.75rem;
+  --type-button: 0.875rem;
+  --type-stat: 0.9375rem;
+  --type-reading: 1.125rem;
+  --type-task: 1rem;
+  --line-page: 2.25rem;
+  --line-section: 1.75rem;
+  --line-body: 1.375rem;
   --cab-sidebar: 244px;
   --cab-sea: #1b4b5a;
   --cab-sea-light: #2a7f8f;
@@ -968,9 +982,10 @@
   color: var(--amber-500);
 }
 .cab-island-caption strong {
-  font:
-    800 clamp(1.5rem, 3vw, 2.5rem)/1.15 var(--font-manrope),
-    sans-serif;
+  font-family: var(--font-manrope), sans-serif;
+  font-size: var(--type-page-title);
+  line-height: var(--line-page);
+  font-weight: 700;
   letter-spacing: -0.05em;
 }
 .cab-map-path {

@@ -71,7 +71,7 @@ test("v2 complete first lesson, gates, real worker blink, reward once and resume
   ).toBeVisible();
   await page.getByRole("button", { name: /^Запустить/ }).click();
   await expect(
-    page.getByText("Проверенная учебная прошивка:", { exact: false }),
+    page.getByText("Запущена проверенная учебная прошивка", { exact: false }),
   ).toBeVisible();
   await expect(page.getByRole("button", { name: /^Запустить/ })).toBeEnabled({
     timeout: 30000,
@@ -185,7 +185,7 @@ test("serial, missing compiler preserves code and mentor has three honest sectio
     .fill("void setup() {}\nvoid loop() {}");
   await page.getByRole("button", { name: /^Запустить/ }).click();
   await expect(page.locator(".l2-error[role=alert]")).toContainText(
-    "Сервис компиляции сейчас недоступен",
+    "Сервис компиляции недоступен",
   );
   await page.reload();
   await page.getByRole("tab", { name: "Код", exact: true }).click();

@@ -25,6 +25,9 @@ export default function HomeView() {
           <Link className="cab-text-link" href="/app/test">
             {c.diagnostic} ↗
           </Link>
+          <Link className="cab-btn" href="/app/lessons">
+            {c.allLessons}
+          </Link>
         </div>
       </StaggerItem>
       <StaggerItem>

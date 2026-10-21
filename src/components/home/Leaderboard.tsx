@@ -6,6 +6,7 @@ import { browserSupabase } from "@/lib/supabase/client";
 import type { LeaderboardRow } from "@/lib/supabase/types";
 import { useProgress } from "@/lib/useProgress";
 import { Card } from "@/components/cabinet/ui";
+import RewardIcon from "@/components/icons/RewardIcon";
 export default function Leaderboard({
   compact = false,
 }: {
@@ -38,7 +39,10 @@ export default function Leaderboard({
         <ol className="dash-leaders">
           {visible.map((row) => (
             <li key={row.rank} className={row.is_self ? "self" : ""}>
-              <strong>{row.rank}</strong>
+              <strong className={`polish-medal rank-${row.rank}`}>
+                {row.rank <= 3 && <RewardIcon kind="medal" />}
+                {row.rank}
+              </strong>
               <span
                 className={`cab-avatar frame-${row.avatar_frame ?? "none"}`}
               >

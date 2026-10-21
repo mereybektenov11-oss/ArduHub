@@ -8,7 +8,8 @@ async function scan(dir) {
       const s = await readFile(p, "utf8");
       if (
         /text-\[[^\]]*(?:px|rem)/.test(s) ||
-        /font-size:\s*(?!var\()[\d.]/.test(s)
+        /font-size:\s*(?!var\()[\d.]/.test(s) ||
+        /\bfont:\s*(?!inherit)[^;}]*\d(?:px|rem)/.test(s)
       )
         errors.push(p);
     }
@@ -17,6 +18,12 @@ async function scan(dir) {
 for (const d of [
   "src/components/cabinet",
   "src/components/shell",
+  "src/components/lesson",
+  "src/components/mentor",
+  "src/components/icons",
+  "src/components/home",
+  "src/components/profile",
+  "src/components/shop",
   "src/app/app",
 ])
   await scan(d);

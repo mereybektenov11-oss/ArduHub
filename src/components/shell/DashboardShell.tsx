@@ -1,20 +1,18 @@
 "use client";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import SpotlightTour from "@/components/tour/SpotlightTour";
 import LevelUp from "@/components/cabinet/LevelUp";
 import { interfaceCopy } from "@/content/cabinet.ru";
-const MentorChat = dynamic(() => import("@/components/cabinet/MentorChat"), {
-  ssr: false,
-});
+import MentorAssistant from "@/components/mentor/MentorAssistant";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type ReactNode, type CSSProperties } from "react";
 import { dashboardRu as c } from "@/content/dashboard.ru";
 import { useProgress } from "@/lib/useProgress";
-import CabinetIcon from "@/components/cabinet/CabinetIcon";
+import CabinetIcon from "@/components/icons/NavigationIcon";
 import { Modal } from "@/components/cabinet/ui";
 import RightRail, { StatBar } from "./RightRail";
 import CommandPalette from "./CommandPalette";
+import RewardToast from "@/components/icons/RewardToast";
 
 export default function DashboardShell({ children }: { children: ReactNode }) {
   const path = usePathname();
@@ -27,7 +25,6 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
     corrupt,
     reset,
   } = useProgress();
-  const [chat, setChat] = useState(false);
   const [collapsed, setCollapsed] = useState<string[]>([]),
     [more, setMore] = useState(false),
     [search, setSearch] = useState(false);
@@ -183,7 +180,13 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
       )}
       {more && (
         <Modal title={c.more} onClose={() => setMore(false)}>
-          {menu(true)}
+          <nav className="cab-stack" aria-label={c.more}>
+            {c.groups[2].items.map(([label, href]) => (
+              <Link key={href} href={href} onClick={() => setMore(false)}>
+                {label}
+              </Link>
+            ))}
+          </nav>
           <button
             className="cab-btn"
             onClick={() => {
@@ -206,21 +209,10 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
       >
         ?
       </button>
-      <button
-        className="cab-mentor-float"
-        data-tour="mentor"
-        aria-label={c.askMentor}
-        onClick={() => setChat(true)}
-      >
-        ϟ
-      </button>
-      {chat && (
-        <Modal title={c.askMentor} onClose={() => setChat(false)}>
-          <MentorChat compact />
-        </Modal>
-      )}
+      <MentorAssistant />
       <SpotlightTour key={path} />
       <LevelUp />
+      <RewardToast />
       {corrupt && (
         <div className="cab-storage-warning" role="alert">
           {interfaceCopy.text008}
@@ -234,7 +226,7 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
           {interfaceCopy.text007}
         </div>
       )}
-      {(offline || toast) && (
+      {(toast || (offline && !unavailable)) && (
         <div className="cab-toast" role="status">
           {toast || c.offline}
         </div>
