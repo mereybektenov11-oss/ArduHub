@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   canOpenStage,
@@ -12,7 +12,8 @@ export function useStageGate(flow: LessonFlowState, skipTest = false) {
   const router = useRouter(),
     path = usePathname(),
     params = useSearchParams();
-  const resolved = resolveStage(flow, params.get("stage"));
+  const [entryStage] = useState(() => resolveStage(flow, params.get("stage")));
+  const resolved = resolveStage(flow, params.get("stage") ?? entryStage);
   const active = skipTest && resolved === "test" ? "practice" : resolved;
   useEffect(() => {
     if (params.get("stage") !== active) {

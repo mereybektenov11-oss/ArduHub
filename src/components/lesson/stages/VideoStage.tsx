@@ -27,7 +27,7 @@ export default function VideoStage({
       />
       <section className="flow-theory l2-theory" aria-label={c.summary}>
         <h2>{c.summary}</h2>
-        <Stagger interval={motionTokens.lessonFlow.stagger}>
+        <Stagger eager interval={motionTokens.lessonFlow.stagger}>
           {lesson.theory.slice(0, 5).map((block, i) => (
             <StaggerItem key={block.title}>
               <section className="flow-note-block">

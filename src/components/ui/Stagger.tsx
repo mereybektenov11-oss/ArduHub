@@ -17,15 +17,20 @@ export function Stagger({
   className = "",
   delay = 0,
   interval = motionTokens.stagger,
+  eager = false,
 }: {
   children: ReactNode;
   className?: string;
   delay?: number;
   interval?: number;
+  eager?: boolean;
 }) {
-  const { ref } = useInViewOnce<HTMLDivElement>();
+  const { ref } = useInViewOnce<HTMLDivElement>({ enabled: !eager });
   return (
-    <div ref={ref} className={`stagger ${className}`}>
+    <div
+      ref={ref}
+      className={`stagger ${eager ? "stagger-eager" : ""} ${className}`}
+    >
       {Children.toArray(children).map((child, index) => (
         <ItemDelay.Provider
           key={isValidElement(child) ? child.key : index}
