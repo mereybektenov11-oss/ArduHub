@@ -47,6 +47,10 @@ import {
   recordCompileAttempt,
 } from "@/domain/lessons/solutions";
 import { compileRunRu } from "@/content/compile-run.ru";
+import { kidsWorkspaceRu as k, kidsMentorRu } from "@/content/ru";
+import { useMentorNudge } from "@/lib/useMentorNudge";
+import { playSfx } from "@/lib/sfx";
+import HintIcon from "@/components/icons/HintIcon";
 const Workspace = dynamic(() => import("@/components/workspace/Workspace"), {
   ssr: false,
   loading: () => <Skeleton shape="practice" />,
@@ -139,6 +143,11 @@ function LessonFlow({
       stages: computeStageState(lesson, draft.flow!),
     },
     gate = useStageGate(flow);
+  const nudge = useMentorNudge({
+    stageKey: `${progress.account?.userId ?? "local"}:${id}:practice`,
+    active: gate.active === "practice",
+    enabled: progress.settings?.mentorHints !== false,
+  });
   const [errors, setErrors] = useState<
       { message: string; componentIds: string[] }[]
     >([]),
@@ -261,6 +270,8 @@ function LessonFlow({
   };
   function verify() {
     const found = checkScene(draft.scene, lesson.circuit.referenceScene);
+    nudge.recordCheck(found.length === 0);
+    playSfx(found.length ? "retry" : "success");
     setErrors(found);
     const issue = codeIssue(draft.code),
       code =
@@ -299,6 +310,8 @@ function LessonFlow({
     setReport(result);
     const pass =
       !found.length && !codeIssue(draft.code) && result.every((r) => r.pass);
+    nudge.recordCheck(pass);
+    playSfx(pass ? "success" : "retry");
     save({
       ...draft,
       flow: {
@@ -385,6 +398,22 @@ function LessonFlow({
       }
       onVideo={() => navigate("video")}
       onReference={() => setShowReference(true)}
+      nudge={
+        nudge.visible ? (
+          <aside className="kids-mentor-nudge" role="status">
+            <button className="kids-nudge-open" onClick={ask}>
+              {kidsMentorRu.nudge}
+            </button>
+            <button
+              className="cab-icon-btn"
+              aria-label={kidsMentorRu.dismissNudge}
+              onClick={nudge.dismiss}
+            >
+              ×
+            </button>
+          </aside>
+        ) : undefined
+      }
     >
       {store.unavailable && (
         <p className="l2-error" role="alert">
@@ -415,6 +444,7 @@ function LessonFlow({
         )}
         {gate.active === "test" && (
           <QuizStage
+            lessonId={lesson.id}
             questions={lesson.quiz?.questions ?? []}
             passPercent={lesson.quiz?.passPercent}
             value={flow.quiz}
@@ -426,6 +456,7 @@ function LessonFlow({
         )}
         {gate.active === "practice" && (
           <PracticeStage
+            onActivity={nudge.recordActivity}
             lesson={lesson}
             flow={flow}
             expected={expected}
@@ -486,14 +517,20 @@ function LessonFlow({
               onRun={run}
               actions={
                 <>
-                  <Action secondary onClick={ask}>
-                    {c.ask}
-                  </Action>
-                  <Action secondary onClick={addHint}>
-                    {c.hint}
-                  </Action>
                   <Action secondary onClick={verify}>
-                    {c.check}
+                    {k.check}
+                  </Action>
+                  <Action
+                    secondary
+                    onClick={addHint}
+                    disabled={hint[hintKind] >= 3}
+                    aria-label={`${k.hint}: ${k.hintsLeft} ${Math.max(0, 3 - hint[hintKind])}`}
+                  >
+                    <HintIcon />
+                    {k.hint} {Math.max(0, 3 - hint[hintKind])}
+                  </Action>
+                  <Action secondary onClick={ask}>
+                    {k.ask}
                   </Action>
                   {serverFailures >= 3 && (
                     <div role="status">

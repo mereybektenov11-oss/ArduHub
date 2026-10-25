@@ -3,6 +3,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { createProgress } from "../../src/domain/seed";
 import { dayInZone } from "../../src/domain/missions";
 import { passLessonQuiz } from "./helpers/lessonQuiz";
+import { progressEvidence } from "../helpers/progressEvidence";
 async function guest(
   page: Page,
   mutate?: (p: ReturnType<typeof createProgress>) => void,
@@ -13,6 +14,7 @@ async function guest(
       { name: "arduhub-guest", value: "1", domain: "127.0.0.1", path: "/" },
     ]);
   const p = createProgress();
+  p.profile.name = "Тестер";
   p.tourSeen = {
     "/app": true,
     "/app/map": true,
@@ -23,6 +25,10 @@ async function guest(
   await page.addInitScript((p) => {
     if (!localStorage.getItem("arduhub.progress.v1"))
       localStorage.setItem("arduhub.progress.v1", JSON.stringify(p));
+    localStorage.setItem(
+      "arduhub.save-prompt.v1:local",
+      JSON.stringify({ firstShownAt: Date.now(), shown: 2 }),
+    );
   }, p);
 }
 test("unauthorized access redirects, guest can enter", async ({ page }) => {
@@ -36,7 +42,7 @@ test("unauthorized access redirects, guest can enter", async ({ page }) => {
   ).toBeDisabled();
   await page.getByRole("button", { name: "Продолжить как гость" }).click();
   await expect(
-    page.getByRole("heading", { name: "Твой путь в электронику" }),
+    page.getByRole("heading", { name: /Привет, .+!/ }),
   ).toBeVisible();
 });
 test("registration validates passwords and nickname before requests", async ({
@@ -66,15 +72,23 @@ test("registration validates passwords and nickname before requests", async ({
     "text",
   );
 });
-test("grouped menu persists collapsed state and path shows 3 of 6", async ({
-  page,
-}) => {
+test("grouped menu stays expanded and path shows 3 of 6", async ({ page }) => {
   await guest(page, (p) => {
     p.profile.level = 1;
-    for (let i = 1; i <= 3; i++) p.lessons["lesson-" + i].status = "done";
+    for (let i = 1; i <= 3; i++) {
+      const id = "lesson-" + i;
+      p.lessons[id] = {
+        ...p.lessons[id],
+        ...progressEvidence(id),
+        status: "done",
+      };
+    }
     p.lessons["lesson-4"].status = "current";
   });
   await page.goto("/app");
+  const prompt = page.getByRole("dialog", { name: "Сохрани прогресс" });
+  if (await prompt.isVisible())
+    await prompt.getByRole("button", { name: "Закрыть", exact: true }).click();
   await expect(page.locator(".dash-segments")).toHaveAttribute(
     "aria-valuenow",
     "3",
@@ -85,16 +99,18 @@ test("grouped menu persists collapsed state and path shows 3 of 6", async ({
   await expect(
     page
       .locator(".dash-sidebar")
-      .getByRole("button", { name: "УЧЁБА", exact: true }),
+      .getByRole("heading", { name: "УЧЁБА", exact: true }),
   ).toBeVisible();
-  await page
-    .locator(".dash-sidebar")
-    .getByRole("button", { name: /ПРОЕКТЫ/ })
-    .click();
+  await expect(
+    page.locator(".dash-sidebar").getByRole("button", { name: /ПРОЕКТЫ/ }),
+  ).toHaveCount(0);
+  await page.evaluate(() =>
+    localStorage.setItem("arduhub.menu", JSON.stringify(["ПРОЕКТЫ"])),
+  );
   await page.reload();
   await expect(
     page.locator(".dash-sidebar").getByRole("link", { name: "Мои проекты" }),
-  ).toHaveCount(0);
+  ).toBeVisible();
   await page.locator(".dash-node.locked").first().click();
   await expect(page.locator(".flow-node-popover")).toContainText(
     "Пройди предыдущий урок, чтобы открыть этот",

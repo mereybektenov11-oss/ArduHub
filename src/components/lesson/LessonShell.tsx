@@ -9,6 +9,8 @@ import RewardIcon from "@/components/icons/RewardIcon";
 import { openMentor } from "@/components/mentor/openMentor";
 import { lessonFlowRu as c, learningRu } from "@/content/ru";
 import TopProgressLine from "./TopProgressLine";
+import SettingsIcon from "@/components/icons/SettingsIcon";
+import { kidsWorkspaceRu as k } from "@/content/kids-workspace.ru";
 export default function LessonShell({
   children,
   title = c.course,
@@ -17,6 +19,7 @@ export default function LessonShell({
   indicator,
   onVideo,
   onReference,
+  nudge,
 }: {
   children: ReactNode;
   title?: string;
@@ -25,6 +28,7 @@ export default function LessonShell({
   indicator?: ReactNode;
   onVideo?: () => void;
   onReference?: () => void;
+  nudge?: ReactNode;
 }) {
   const { progress: p, update } = useProgress();
   return (
@@ -50,17 +54,6 @@ export default function LessonShell({
             <RewardIcon kind="token" />
             {p.mentor.tokens}
           </span>
-          <button
-            className="flow-mentor-portrait"
-            aria-label={c.mentor}
-            onClick={() => openMentor()}
-          >
-            <CabinetArt
-              name={p.mentor.selectedId as ArtName}
-              alt=""
-              size={32}
-            />
-          </button>
         </div>
       </header>
       <TopProgressLine loading={loading} value={progress} />
@@ -98,30 +91,36 @@ export default function LessonShell({
         >
           <CabinetArt name={p.mentor.selectedId as ArtName} alt="" size={28} />
         </button>
+        {nudge}
       </nav>
       <div className="flow-stage-content" aria-busy={loading}>
-        <label className="l2-text-size flow-text-size">
-          Аа
-          <select
-            aria-label={learningRu.textSize}
-            value={p.settings?.textScale ?? 1}
-            onChange={(e) =>
-              update((x) => ({
-                ...x,
-                settings: {
-                  ...x.settings,
-                  textScale: Number(e.target.value) as 1 | 1.15 | 1.3,
-                },
-              }))
-            }
-          >
-            {learningRu.textSizes.map((name, i) => (
-              <option key={name} value={[1, 1.15, 1.3][i]}>
-                {name}
-              </option>
-            ))}
-          </select>
-        </label>
+        <details className="kids-lesson-settings">
+          <summary className="cab-icon-btn" aria-label={k.settings}>
+            <SettingsIcon />
+          </summary>
+          <label className="l2-text-size flow-text-size kids-options-panel">
+            {learningRu.textSize}
+            <select
+              aria-label={learningRu.textSize}
+              value={p.settings?.textScale ?? 1}
+              onChange={(e) =>
+                update((x) => ({
+                  ...x,
+                  settings: {
+                    ...x.settings,
+                    textScale: Number(e.target.value) as 1 | 1.15 | 1.3,
+                  },
+                }))
+              }
+            >
+              {learningRu.textSizes.map((name, i) => (
+                <option key={name} value={[1, 1.15, 1.3][i]}>
+                  {name}
+                </option>
+              ))}
+            </select>
+          </label>
+        </details>
         {children}
       </div>
     </div>

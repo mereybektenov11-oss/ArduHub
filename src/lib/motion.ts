@@ -28,6 +28,7 @@ export const motionTokens = {
     islandDrift: 28,
   },
   stagger: 0.11,
+  kids: { feedback: 0.08, led: 1, nudge: 0.2 },
   bankStagger: 0.07,
   lessonFlow: {
     prefetch: 150,
@@ -55,6 +56,12 @@ export const motionTokens = {
 } as const;
 
 export const motionCssVars = {
+  ...Object.fromEntries(
+    Object.entries(motionTokens.kids).map(([key, value]) => [
+      `--kids-motion-${key}`,
+      `${value}s`,
+    ]),
+  ),
   ...Object.fromEntries(
     Object.entries(motionTokens.lessonFlow).map(([key, value]) => [
       `--flow-${key.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`)}`,

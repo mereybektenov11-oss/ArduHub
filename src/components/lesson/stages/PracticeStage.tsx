@@ -3,8 +3,9 @@ import { useEffect, useState, type ReactNode } from "react";
 import { lessonFlowRu as c } from "@/content/ru";
 import type { LearningLesson } from "@/domain/lessons/content";
 import type { LessonFlowState } from "@/domain/lessons/flow";
-import { Action, Card, Pill } from "@/components/cabinet/ui";
+import { Action, Card } from "@/components/cabinet/ui";
 import RewardIcon from "@/components/icons/RewardIcon";
+import { kidsWorkspaceRu as k } from "@/content/kids-workspace.ru";
 export default function PracticeStage({
   lesson,
   flow,
@@ -12,11 +13,11 @@ export default function PracticeStage({
   children,
   onExplain,
   onTheory,
-  onHint,
   hint,
   notice,
   errors,
   report,
+  onActivity,
 }: {
   lesson: LearningLesson;
   flow: LessonFlowState;
@@ -29,6 +30,7 @@ export default function PracticeStage({
   notice?: string;
   errors: readonly { message: string }[];
   report: readonly { pass: boolean; message: string }[];
+  onActivity?: () => void;
 }) {
   const [showTask, setShowTask] = useState(false),
     [expectedOutput, setExpectedOutput] = useState(false);
@@ -39,7 +41,12 @@ export default function PracticeStage({
     return () => cancelAnimationFrame(frame);
   }, [errorKey]);
   return (
-    <div className="flow-practice">
+    <div
+      className="flow-practice"
+      onPointerDown={onActivity}
+      onPointerMove={onActivity}
+      onKeyDown={onActivity}
+    >
       <button
         className="cab-btn cab-btn-secondary flow-task-toggle"
         aria-expanded={showTask}
@@ -53,19 +60,31 @@ export default function PracticeStage({
         className={`flow-task l2-lesson-guide ${showTask ? "is-open" : ""}`}
       >
         <Card>
-          <Pill>{c.difficulty}</Pill>
           <h1>{lesson.title}</h1>
-          <p>{lesson.task}</p>
-          <div className="dash-guide-actions">
-            <Action secondary onClick={onExplain}>
-              {c.explain}
-            </Action>
-            <Action secondary onClick={onTheory}>
-              {c.theory}
-            </Action>
-          </div>
+          <p className="kids-task-summary">{lesson.task}</p>
+          <details className="kids-full-task">
+            <summary>{k.fullTask}</summary>
+            <p>{lesson.task}</p>
+            <div className="dash-guide-actions">
+              <Action secondary onClick={onExplain}>
+                {c.explain}
+              </Action>
+              <Action secondary onClick={onTheory}>
+                {c.theory}
+              </Action>
+            </div>
+          </details>
           <section className="dash-expected">
             <h2>{c.expected}</h2>
+            {lesson.run.checks.some((check) => check.kind === "pinBlinks") && (
+              <span
+                className="kids-expected-led"
+                role="img"
+                aria-label={k.exampleAnimation}
+              >
+                <span />
+              </span>
+            )}
             <p>{expected}</p>
           </section>
           <ol className="flow-checklist">
@@ -80,12 +99,7 @@ export default function PracticeStage({
             ))}
           </ol>
         </Card>
-        <Card>
-          <Action secondary onClick={onHint}>
-            {c.hint}
-          </Action>
-          {hint}
-        </Card>
+        {hint && <Card>{hint}</Card>}
         {notice && (
           <p role="status" className="cab-card">
             {notice}
@@ -113,14 +127,25 @@ export default function PracticeStage({
           </div>
           {expectedOutput ? (
             <p>{expected}</p>
+          ) : report.length &&
+            report.every((r) => r.pass) &&
+            flow.practice.circuit ? (
+            <p className="kids-run-success" role="status">
+              {lesson.run.checks.some((check) => check.kind === "pinBlinks")
+                ? k.success
+                : k.successOther}
+            </p>
           ) : report.length ? (
-            report.map((r, i) => (
-              <p key={i}>
-                {r.pass ? "✓" : "↻"} {r.message}
-              </p>
-            ))
+            <>
+              <p>{k.retry}</p>
+              {report.map((r, i) => (
+                <p key={i}>
+                  {r.pass ? "✓" : "↻"} {r.message}
+                </p>
+              ))}
+            </>
           ) : (
-            <p className="cab-muted">{c.checklist[2]}</p>
+            <p className="cab-muted">{k.beforeRun}</p>
           )}
         </section>
       </div>

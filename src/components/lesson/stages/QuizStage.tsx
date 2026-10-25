@@ -8,13 +8,17 @@ import {
   type FlowQuestion,
 } from "@/domain/lessons/flow";
 import { Action } from "@/components/cabinet/ui";
+import { openMentor } from "@/components/mentor/openMentor";
+import { kidsMentorRu } from "@/content/kids-mentor.ru";
 export default function QuizStage({
+  lessonId,
   questions,
   passPercent = 70,
   value,
   onChange,
   onContinue,
 }: {
+  lessonId?: string;
   questions: readonly FlowQuestion[];
   passPercent?: number;
   value: FlowQuiz;
@@ -178,6 +182,22 @@ export default function QuizStage({
                 {answer === current.correctIndex ? c.correct : c.incorrect}
               </strong>
               <p>{current.explanation}</p>
+              {answer !== current.correctIndex && (
+                <Action
+                  secondary
+                  onClick={() =>
+                    openMentor({
+                      lessonId,
+                      prompt: kidsMentorRu.explainQuestion(
+                        current.text,
+                        current.options[answer],
+                      ),
+                    })
+                  }
+                >
+                  {kidsMentorRu.explain}
+                </Action>
+              )}
               <Action onClick={advance}>{c.next} →</Action>
             </div>
           )}

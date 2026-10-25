@@ -1,4 +1,8 @@
 export { cabinetRu } from "./cabinet.ru";
+export { kidsHomeRu } from "./kids-home.ru";
+export { kidsPagesRu } from "./kids-pages.ru";
+export { kidsMentorRu } from "./kids-mentor.ru";
+export { kidsWorkspaceRu } from "./kids-workspace.ru";
 export { polishRu } from "./polish.ru";
 export type Step = {
   id: string;

@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { kidsPagesRu as k } from "@/content/kids-pages.ru";
+import CabinetArt from "@/components/cabinet/CabinetArt";
 import { dashboardRu as c } from "@/content/dashboard.ru";
 import { browserSupabase } from "@/lib/supabase/client";
 import type { LeaderboardRow } from "@/lib/supabase/types";
@@ -56,16 +58,19 @@ export default function Leaderboard({
       ) : (
         <div className="leaderboard-empty">
           <span className="leaderboard-podium" aria-hidden="true">
-            <span>🥈</span>
-            <span>🥇</span>
-            <span>🥉</span>
+            {(["oma", "volt", "rezik"] as const).map((name) => (
+              <span className="kids-podium-step" key={name}>
+                <CabinetArt name={name} alt="" size={80} />
+              </span>
+            ))}
           </span>
           <p>{c.emptyLeaders}</p>
         </div>
       )}
-      {!compact && own && own.rank > 20 && (
-        <p>
-          {own.rank}. {own.display_name} · {own.xp} XP
+      {!compact && own && (
+        <p className="kids-own-rank">
+          <RewardIcon kind="medal" />
+          {k.ownRank(own.rank)}
         </p>
       )}
       {!compact && !p.account?.userId && (

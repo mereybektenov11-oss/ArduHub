@@ -1,0 +1,149 @@
+.kids-games > .cab-gradient {
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: var(--space-sm);
+  border-radius: var(--radius-card);
+}
+.kids-games .cab-btn {
+  margin-top: auto;
+  min-height: 48px;
+}
+.kids-game-icon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border: 1px solid currentColor;
+  border-radius: var(--radius-card);
+}
+.kids-game-icon svg {
+  width: 32px;
+  height: 32px;
+}
+.kids-project-empty {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: var(--space-sm);
+  padding: var(--space-xl);
+}
+.kids-project-empty h2,
+.kids-project-empty p {
+  margin: 0;
+}
+.kids-required-parts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin-block: var(--space-sm);
+}
+.kids-required-parts > span {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-sm);
+  background: var(--cream-100);
+}
+.kids-difficulty {
+  display: flex;
+  gap: var(--space-xs);
+  color: var(--line-dark);
+  font-size: var(--type-card-title);
+}
+.kids-difficulty .filled {
+  color: var(--amber-600);
+}
+.dash-profile-form .kids-setting-switch {
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+.dash-profile-form .kids-setting-switch input {
+  width: 44px;
+  height: 44px;
+  accent-color: var(--forest-700);
+  cursor: pointer;
+}
+.kids-topic-groups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-lg);
+}
+.kids-topic-score {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+.kids-topic-score .cab-skill {
+  flex: 1;
+  min-width: 0;
+}
+.kids-sparks,
+.kids-own-rank {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+.leaderboard-podium > .kids-podium-step {
+  min-width: 92px;
+  height: 112px;
+  align-items: start;
+  padding: var(--space-xs);
+  border-radius: var(--radius-card) var(--radius-card) 0 0;
+}
+.leaderboard-podium > .kids-podium-step:nth-child(2) {
+  height: 148px;
+}
+.leaderboard-podium > .kids-podium-step:nth-child(3) {
+  height: 96px;
+}
+.polish-practice-tabs a,
+.project-actions > summary {
+  min-height: 44px;
+  min-width: 44px;
+}
+.project-actions input[hidden] {
+  display: none;
+}
+@media (max-width: 700px) {
+  .kids-topic-groups {
+    grid-template-columns: 1fr;
+  }
+  .kids-project-empty {
+    padding: var(--space-md);
+  }
+}
+
+.kids-mentor-picker > summary {
+  min-height: 48px;
+  cursor: pointer;
+}
+.kids-mentor-choices {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+.kids-mentor-choices > div {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm);
+  border: 1px solid var(--line-dark);
+  border-radius: var(--radius-card);
+}
+
+.kids-projects .cab-btn,
+.kids-profile .cab-btn,
+.kids-shop .cab-btn,
+.kids-projects .cab-tabs button,
+.kids-shop .cab-tabs button {
+  min-height: 48px;
+  min-width: 44px;
+  border-radius: var(--radius-card);
+}

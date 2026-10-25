@@ -1,0 +1,323 @@
+.cabinet {
+  --kids-touch: 44px;
+  --kids-answer: 56px;
+  --kids-control-radius: 16px;
+  --kids-task-width: 232px;
+  --kids-palette-width: 168px;
+  --kids-canvas-height: 60svh;
+}
+.cabinet :is(button, .cab-btn, summary):active:not(:disabled) {
+  transform: translateY(1px);
+}
+.cabinet :is(button, .cab-btn, summary) {
+  transition:
+    transform var(--kids-motion-feedback) var(--motion-ease),
+    opacity var(--kids-motion-feedback) var(--motion-ease);
+}
+.kids-workspace-circuit {
+  display: grid;
+  grid-template-columns: var(--kids-palette-width) minmax(0, 1fr);
+  align-items: start;
+}
+.kids-circuit-area,
+.kids-palette-panel {
+  min-width: 0;
+}
+.kids-palette-panel {
+  padding: var(--space-xs);
+  border-right: 1px solid var(--cab-border);
+  max-height: calc(var(--kids-canvas-height) + 5rem);
+  overflow: auto;
+}
+.kids-palette-panel .l2-tools {
+  padding: 0 0 var(--space-xs);
+}
+.kids-palette-panel .l2-tools input {
+  width: 100%;
+}
+.kids-palette-group {
+  border-bottom: 1px solid var(--cab-border);
+}
+.kids-palette-group > summary {
+  min-height: var(--kids-touch);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-xs);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: var(--type-body-small);
+}
+.kids-palette-group .l2-palette {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  max-height: none;
+  padding: var(--space-xs) 0;
+}
+.kids-palette-group .l2-palette button {
+  min-height: 112px;
+  width: 100%;
+  border-radius: var(--kids-control-radius);
+  gap: var(--space-xs);
+}
+.kids-palette-group .l2-palette small {
+  font-size: var(--type-caption);
+}
+.kids-canvas-controls {
+  display: flex;
+  gap: var(--space-xs);
+  align-items: center;
+  padding: var(--space-xs);
+  background: var(--white);
+  position: relative;
+}
+.kids-circuit-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  flex: 1;
+}
+.kids-circuit-toolbar :is(button, .cab-btn) {
+  min-height: var(--kids-touch);
+  min-width: var(--kids-touch);
+  border-radius: var(--kids-control-radius);
+  font-size: var(--type-caption);
+  padding: var(--space-xs);
+  justify-content: center;
+}
+.kids-canvas-menu,
+.kids-lesson-settings,
+.kids-code-settings {
+  position: relative;
+}
+.kids-canvas-menu > summary,
+.kids-lesson-settings > summary,
+.kids-code-settings > summary {
+  list-style: none;
+  min-width: var(--kids-touch);
+  min-height: var(--kids-touch);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  border-radius: var(--kids-control-radius);
+}
+.kids-canvas-menu > summary::-webkit-details-marker,
+.kids-lesson-settings > summary::-webkit-details-marker,
+.kids-code-settings > summary::-webkit-details-marker {
+  display: none;
+}
+.kids-options-panel {
+  position: absolute;
+  z-index: 12;
+  top: 100%;
+  right: 0;
+  padding: var(--space-sm);
+  background: var(--white);
+  border: 1px solid var(--cab-border);
+  border-radius: var(--kids-control-radius);
+  box-shadow: var(--shadow-card);
+  min-width: 200px;
+  max-width: min(320px, 85vw);
+  display: grid;
+  gap: var(--space-xs);
+}
+.kids-options-panel label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-xs);
+}
+.kids-options-panel :is(input, select) {
+  min-height: var(--kids-touch);
+}
+.kids-lesson-settings {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: var(--space-xs);
+}
+.kids-lesson-settings > summary {
+  margin-left: auto;
+}
+.kids-lesson-settings:not([open]) > label,
+.kids-code-settings:not([open]) > div {
+  display: none;
+}
+.kids-code-settings {
+  margin: var(--space-xs);
+  display: flex;
+  justify-content: flex-end;
+}
+.kids-code-settings > summary {
+  margin-left: auto;
+}
+.kids-code-settings .kids-options-panel {
+  display: flex;
+  align-items: center;
+}
+.kids-circuit-area .l2-canvas-scroll {
+  height: var(--kids-canvas-height);
+  min-height: var(--kids-canvas-height);
+  max-height: none;
+}
+.flow-practice {
+  grid-template-columns: var(--kids-task-width) minmax(0, 1fr);
+  gap: var(--space-sm);
+}
+.flow-task .cab-card {
+  padding: var(--space-sm);
+}
+.kids-task-summary {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  margin-top: var(--space-xs) !important;
+}
+.kids-full-task {
+  margin-top: var(--space-xs);
+}
+.kids-full-task > summary {
+  min-height: var(--kids-touch);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: var(--type-body-small);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.kids-full-task .dash-guide-actions {
+  display: grid;
+}
+.kids-expected-led {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--kids-touch);
+  margin-block: var(--space-xs);
+}
+.kids-expected-led > span {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--amber-500);
+  border: 2px solid var(--amber-600);
+  animation: kids-led var(--kids-motion-led) steps(1, end) infinite;
+}
+.flow-practice .l2-workbar .kids-run-action {
+  min-height: var(--kids-answer);
+  padding-inline: var(--space-md);
+  border-radius: var(--kids-control-radius);
+  font-weight: 700;
+}
+.flow-practice .l2-workbar > .cab-row {
+  align-items: center;
+  gap: var(--space-xs);
+}
+.flow-practice .l2-workbar .cab-btn:not(.kids-run-action) {
+  min-height: var(--kids-touch);
+  border-radius: var(--kids-control-radius);
+}
+.flow-answer {
+  min-height: var(--kids-answer);
+  border-radius: var(--kids-control-radius);
+}
+.flow-video-stage .polish-video-frame {
+  aspect-ratio: 16/9;
+}
+.kids-run-success {
+  color: var(--success-ink);
+  font-weight: 600;
+}
+.flow-side-tools {
+  overflow: visible;
+}
+.flow-side-tools .kids-mentor-nudge {
+  position: absolute;
+  left: calc(100% + var(--space-xs));
+  top: calc(var(--space-md) + var(--kids-touch) * 2 + var(--space-sm) * 2);
+  bottom: auto;
+  width: 260px;
+  box-shadow: var(--shadow-card);
+}
+.kids-nudge-open {
+  background: transparent;
+  color: inherit;
+  text-align: start;
+  padding: 0;
+}
+.flow-side-tools .kids-mentor-nudge .kids-nudge-open {
+  flex: 1;
+  width: auto;
+  height: auto;
+  min-height: var(--kids-touch);
+  display: block;
+  background: transparent;
+}
+@keyframes kids-led {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0.2;
+  }
+}
+@media (max-width: 1100px) {
+  .flow-practice {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .flow-task-toggle {
+    display: flex;
+  }
+  .flow-task:not(.is-open) {
+    display: none;
+  }
+}
+@media (max-width: 650px) {
+  .kids-workspace-circuit {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .kids-palette-panel {
+    max-height: none;
+    border-right: 0;
+    border-bottom: 1px solid var(--cab-border);
+  }
+  .kids-palette-group .l2-palette {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .kids-palette-group .l2-palette button {
+    min-height: 120px;
+    padding: 4px;
+    font-size: var(--type-caption);
+  }
+  .kids-palette-group .l2-palette button > span:first-child {
+    max-width: 100%;
+    overflow: hidden;
+  }
+  .kids-circuit-toolbar {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .kids-canvas-menu {
+    align-self: start;
+  }
+  .flow-stage-indicator button {
+    min-height: var(--kids-touch);
+  }
+  .flow-side-tools .kids-mentor-nudge {
+    left: var(--space-xs);
+    bottom: calc(100% + var(--space-xs));
+    top: auto;
+    width: min(320px, 90vw);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cabinet :is(button, .cab-btn, summary) {
+    transition: none;
+  }
+  .kids-expected-led > span {
+    animation: none;
+  }
+}

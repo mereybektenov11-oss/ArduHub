@@ -131,7 +131,11 @@ export type Progress = {
   };
   version: 1;
   curriculumVersion?: 2;
-  settings?: { textScale: 1 | 1.15 | 1.3 };
+  settings?: {
+    textScale: 1 | 1.15 | 1.3;
+    sounds?: boolean;
+    mentorHints?: boolean;
+  };
   profile: { name: string; avatar: string; level: number };
   diagnostic: {
     status: "none" | "inprogress" | "done";

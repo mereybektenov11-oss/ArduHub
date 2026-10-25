@@ -132,7 +132,9 @@ test("full lesson, real AVR, reward once, next node and review", async ({
     await page.getByRole("button", { name: a, exact: true }).click();
     await page.getByRole("button", { name: b, exact: true }).click();
   }
-  await page.getByRole("button", { name: "Проверить", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Проверить схему", exact: true })
+    .click();
   await page.getByRole("button", { name: /^Запустить/ }).click();
   const dialog = page.getByRole("dialog", { name: "Урок пройден!" });
   await expect(dialog).toBeVisible({ timeout: 30000 });
@@ -197,8 +199,9 @@ test("skeleton minimum, timeout, retry and offline shell", async ({ page }) => {
     page.getByRole("heading", { name: /Не получилось открыть урок|Нет связи/ }),
   ).toBeVisible({ timeout: 10000 });
   await page.unroute("**/api/lessons/lesson-1");
-  await page.getByRole("button", { name: "Повторить", exact: true }).click();
+  // Measure from the action, including Playwright's post-click settling time.
   const start = Date.now();
+  await page.getByRole("button", { name: "Повторить", exact: true }).click();
   await expect(page.locator(".flow-video-stage")).toBeVisible();
   expect(Date.now() - start).toBeGreaterThanOrEqual(300);
   await expect(page).toHaveURL(/stage=video/);

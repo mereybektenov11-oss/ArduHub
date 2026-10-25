@@ -31,6 +31,7 @@ import LessonShell from "@/components/lesson/LessonShell";
 import LessonSkeleton from "@/components/lesson/LessonSkeleton";
 import { lessonFlowRu } from "@/content/ru";
 import { motionTokens } from "@/lib/motion";
+import { configureSfx, playSfx } from "@/lib/sfx";
 type Context = {
   progress: Progress;
   update: (fn: (p: Progress) => Progress) => void;
@@ -50,6 +51,25 @@ const ProgressContext = createContext<Context | null>(null);
 export function ProgressProvider({ children }: { children: ReactNode }) {
   const [progress, setProgress] = useState(createProgress);
   const [ready, setReady] = useState(false);
+  useEffect(() => {
+    configureSfx({ enabled: progress.settings?.sounds !== false });
+  }, [progress.settings?.sounds]);
+  useEffect(() => {
+    const feedback = (event: MouseEvent) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const control = target.closest(
+        "button,a,summary,input[type=checkbox],input[type=radio]",
+      );
+      if (
+        control?.closest(".cabinet") &&
+        !control.matches(":disabled,[aria-disabled=true]")
+      )
+        playSfx("tap");
+    };
+    document.addEventListener("click", feedback);
+    return () => document.removeEventListener("click", feedback);
+  }, []);
   const [loadError, setLoadError] = useState(false);
   const path = usePathname();
   useEffect(() => {

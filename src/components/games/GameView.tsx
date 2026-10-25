@@ -13,6 +13,8 @@ import {
   diagnosticDeck,
 } from "@/content/cabinet.ru";
 import { Action, Card, Pill, ProgressBar } from "@/components/cabinet/ui";
+import { openMentor } from "@/components/mentor/openMentor";
+import { kidsMentorRu } from "@/content/kids-mentor.ru";
 type Result = { score: number; errors: string[] };
 export default function GameView({ id }: { id: string }) {
   const { update, notify } = useProgress();
@@ -58,6 +60,26 @@ export default function GameView({ id }: { id: string }) {
       <h1>{game.title}</h1>
       {result ? (
         <Card className="cab-stack">
+          {(result.errors.length > 0 || result.score === 0) && (
+            <div data-mentor-game-result="true">
+              <Action
+                secondary
+                onClick={() =>
+                  openMentor({
+                    prompt: kidsMentorRu.explainGame(game.title),
+                    context: {
+                      errors: result.errors.map(
+                        (error) => c.errorLabels[error] ?? c.matchError,
+                      ),
+                      step: game.title,
+                    },
+                  })
+                }
+              >
+                {kidsMentorRu.reviewErrors}
+              </Action>
+            </div>
+          )}
           <h2>{c.result}</h2>
           <div className="cab-row">
             <Pill>

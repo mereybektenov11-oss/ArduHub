@@ -10,6 +10,8 @@ import NodePopover from "./NodePopover";
 import CurrentNodeLabel from "./CurrentNodeLabel";
 import { motionTokens } from "@/lib/motion";
 import { computeCourseState } from "@/domain/progress/courseState";
+import { kidsHomeRu as k } from "@/content/kids-home.ru";
+import CabinetIcon from "@/components/icons/NavigationIcon";
 function Node({
   lesson,
   index,
@@ -54,18 +56,18 @@ function Node({
           onBlur={cancel}
           onClick={() => setOpen((v) => !v)}
         >
-          {status === "done" ? "✓" : status === "locked" ? "⊟" : index + 1}
+          {status === "done" ? (
+            "✓"
+          ) : status === "locked" ? (
+            <CabinetIcon name="lock" />
+          ) : (
+            index + 1
+          )}
         </button>
       </div>
       <div className="dash-node-title">
         <strong>{lesson.title}</strong>
-        <small>
-          {status === "current"
-            ? `${c.continue} →`
-            : status === "done"
-              ? c.completed
-              : `+${lesson.xp} XP`}
-        </small>
+        <small>{status === "done" ? c.completed : `+${lesson.xp} XP`}</small>
       </div>
       {open && (
         <NodePopover
@@ -82,6 +84,10 @@ function Node({
 export default function LessonPathV2() {
   const { progress: p } = useProgress();
   const states = computeCourseState(lessons, p);
+  const currentIndex = states.findIndex((state) => state.status === "current");
+  const currentChapter = Math.floor(
+    (currentIndex < 0 ? lessons.length - 1 : currentIndex) / 6,
+  );
   const [recent, setRecent] = useState<string | null>(null);
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
@@ -94,22 +100,41 @@ export default function LessonPathV2() {
   }, []);
   return (
     <div className="dash-path" data-tour="path">
-      {lessons.map((l, i) => (
-        <div key={l.id}>
-          {i % 6 === 0 && (
-            <h2>
-              {c.chapter} {Math.floor(i / 6) + 1} ·{" "}
-              {c.chapterNames[Math.floor(i / 6)]}
-            </h2>
-          )}
-          <Node
-            lesson={l}
-            index={i}
-            status={states[i].status}
-            recent={recent === l.id}
-          />
-        </div>
-      ))}
+      {c.chapterNames.map((name, chapter) => {
+        const chapterLessons = lessons.slice(chapter * 6, chapter * 6 + 6);
+        const done = chapterLessons.filter(
+          (lesson) =>
+            states.find((state) => state.id === lesson.id)?.status === "done",
+        ).length;
+        return (
+          <details
+            className="kids-path-chapter"
+            key={name}
+            open={chapter === currentChapter}
+          >
+            <summary>
+              <span>
+                {c.chapter} {chapter + 1} · {name}
+              </span>
+              <small>{k.chapterProgress(done, chapterLessons.length)}</small>
+            </summary>
+            <div className="kids-path-nodes">
+              {chapterLessons.map((lesson, offset) => {
+                const index = chapter * 6 + offset;
+                return (
+                  <Node
+                    key={lesson.id}
+                    lesson={lesson}
+                    index={index}
+                    status={states[index].status}
+                    recent={recent === lesson.id}
+                  />
+                );
+              })}
+            </div>
+          </details>
+        );
+      })}
     </div>
   );
 }

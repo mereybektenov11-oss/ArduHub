@@ -93,6 +93,8 @@ export class BrowserProgressStore implements ProgressStore {
         ...createProgress(),
         ...data,
         settings: {
+          sounds: data.settings?.sounds !== false,
+          mentorHints: data.settings?.mentorHints !== false,
           textScale: [1, 1.15, 1.3].includes(data.settings?.textScale ?? 0)
             ? data.settings!.textScale
             : 1,

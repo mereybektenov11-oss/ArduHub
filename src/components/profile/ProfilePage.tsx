@@ -2,18 +2,33 @@
 import { levelFromXp } from "@/domain/progress/levels";
 import { onboardingRu } from "@/content/ru";
 import RewardIcon from "@/components/icons/RewardIcon";
+import PartView from "@/components/workspace/PartView";
+import { catalog } from "@/domain/parts/catalog";
+import type { PartType } from "@/domain/parts/catalog";
 import LevelBadge from "@/components/icons/LevelBadge";
 import StreakCalendar from "@/components/icons/StreakCalendar";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { kidsPagesRu as k } from "@/content/kids-pages.ru";
 import { dashboardRu as c } from "@/content/dashboard.ru";
 import { topics } from "@/domain/types";
+import { mentors } from "@/domain/seed";
+import { mentorCopy } from "@/content/cabinet.ru";
+import CabinetArt, { type ArtName } from "@/components/cabinet/CabinetArt";
 import { topicNames } from "@/domain/seed";
 import { useProgress } from "@/lib/useProgress";
 import { browserSupabase } from "@/lib/supabase/client";
 import { Card, Action, SkillBar } from "@/components/cabinet/ui";
 import { activeStreak } from "@/domain/progress/streak";
+const topicParts: Record<(typeof topics)[number], PartType> = {
+  leds: "led",
+  buttons: "button",
+  sensors: "pot",
+  motors: "servo",
+  display: "lcd",
+  projects: "uno",
+};
 export default function ProfilePage() {
   const { progress: p, update, notify, refreshAccount } = useProgress();
   const router = useRouter();
@@ -75,7 +90,7 @@ export default function ProfilePage() {
     router.refresh();
   }
   return (
-    <div className="cab-stack">
+    <div className="cab-stack kids-profile">
       <h1>{c.profile}</h1>
       <Card>
         <div className="cab-row">
@@ -100,16 +115,10 @@ export default function ProfilePage() {
           <RewardIcon kind="token" /> {p.mentor.tokens} {c.tokenUnits}
         </p>
         <StreakCalendar />
-        {!p.account?.userId && (
-          <p>
-            <Link className="cab-btn" href="/register">
-              {onboardingRu.saveProgress}
-            </Link>
-          </p>
-        )}
       </Card>
       <Card>
         <form
+          id="profile-settings"
           className="dash-profile-form"
           onSubmit={(e) => {
             e.preventDefault();
@@ -156,6 +165,43 @@ export default function ProfilePage() {
             />
             {c.hide}
           </label>
+          <h2>{k.settings}</h2>
+          <label className="kids-setting-switch">
+            {k.sounds}
+            <input
+              type="checkbox"
+              role="switch"
+              checked={p.settings?.sounds !== false}
+              onChange={(e) =>
+                update((x) => ({
+                  ...x,
+                  settings: {
+                    ...x.settings,
+                    textScale: x.settings?.textScale ?? 1,
+                    sounds: e.target.checked,
+                  },
+                }))
+              }
+            />
+          </label>
+          <label className="kids-setting-switch">
+            {k.mentorHints}
+            <input
+              type="checkbox"
+              role="switch"
+              checked={p.settings?.mentorHints !== false}
+              onChange={(e) =>
+                update((x) => ({
+                  ...x,
+                  settings: {
+                    ...x.settings,
+                    textScale: x.settings?.textScale ?? 1,
+                    mentorHints: e.target.checked,
+                  },
+                }))
+              }
+            />
+          </label>
           <label>
             {c.textSize}
             <select
@@ -165,6 +211,7 @@ export default function ProfilePage() {
                 update((x) => ({
                   ...x,
                   settings: {
+                    ...x.settings,
                     textScale: Number(e.target.value) as 1 | 1.15 | 1.3,
                   },
                 }))
@@ -177,23 +224,92 @@ export default function ProfilePage() {
               ))}
             </select>
           </label>
+          <details className="kids-mentor-picker">
+            <summary className="cab-btn cab-btn-secondary">
+              {k.changeMentor}
+            </summary>
+            <div className="kids-mentor-choices">
+              {mentors.map((mentor) => (
+                <div key={mentor.id}>
+                  <CabinetArt name={mentor.id as ArtName} alt="" size={72} />
+                  <strong>{mentor.name}</strong>
+                  {p.mentor.unlockedIds.includes(mentor.id) ? (
+                    <Action
+                      type="button"
+                      secondary
+                      disabled={p.mentor.selectedId === mentor.id}
+                      onClick={() =>
+                        update((prev) => ({
+                          ...prev,
+                          mentor: { ...prev.mentor, selectedId: mentor.id },
+                        }))
+                      }
+                    >
+                      {p.mentor.selectedId === mentor.id
+                        ? mentorCopy.selected
+                        : mentorCopy.select}
+                    </Action>
+                  ) : (
+                    <Link
+                      className="cab-btn cab-btn-secondary"
+                      href="/app/shop"
+                    >
+                      {mentorCopy.unlock}
+                    </Link>
+                  )}
+                </div>
+              ))}
+            </div>
+          </details>
           <Action disabled={busy} type="submit">
             {c.save}
           </Action>
         </form>
       </Card>
       <Card>
-        <h2>{c.strengths}</h2>
-        <div className="cab-skills">
-          {topics.map((t) => (
-            <SkillBar
-              key={t}
-              title={topicNames[t]}
-              value={p.diagnostic.skillScores[t]}
-            />
-          ))}
-        </div>
+        {p.diagnostic.status !== "done" &&
+        !topics.some((t) => p.diagnostic.skillScores[t] > 0) ? (
+          <p>{k.noTopics}</p>
+        ) : (
+          <div className="kids-topic-groups">
+            {[true, false].map((strong) => (
+              <div key={String(strong)}>
+                <h2>{strong ? k.strengths : k.weaknesses}</h2>
+                <div className="cab-skills">
+                  {topics
+                    .filter((t) =>
+                      strong
+                        ? p.diagnostic.skillScores[t] >= 70
+                        : p.diagnostic.skillScores[t] < 70,
+                    )
+                    .map((t) => (
+                      <div className="kids-topic-score" key={t}>
+                        <PartView
+                          type={topicParts[t]}
+                          scale={Math.min(
+                            32 / catalog[topicParts[t]].width,
+                            32 / catalog[topicParts[t]].height,
+                          )}
+                        />
+                        <SkillBar
+                          title={topicNames[t]}
+                          value={p.diagnostic.skillScores[t]}
+                        />
+                      </div>
+                    ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </Card>
+      {p.account?.userId ? (
+        <Action disabled={busy} onClick={save}>
+          {onboardingRu.saveProgress}
+        </Action>
+      ) : (
+        <Action href="/register">{onboardingRu.saveProgress}</Action>
+      )}
       <Action secondary onClick={logout}>
         {c.logout}
       </Action>

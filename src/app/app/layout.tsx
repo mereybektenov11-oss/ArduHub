@@ -4,6 +4,10 @@ import "./cabinet.css";
 import "./learning.css";
 import "./dashboard.css";
 import "./lesson-flow.css";
+import "./kids-pages.css";
+import "./kids-mentor.css";
+import "./kids-workspace.css";
+import "./kids-home.css";
 export const metadata: Metadata = {
   title: "Кабинет ученика · ArduHub",
   robots: { index: false, follow: false },

@@ -10,7 +10,8 @@ import { thumbnail, type Project } from "@/domain/projects/storage";
 import { Action, Card, Modal } from "@/components/cabinet/ui";
 import { askMentor } from "@/services/mentor/client";
 import { exportProject } from "@/domain/projects/export";
-import MentorChat from "@/components/cabinet/MentorChat";
+import { openMentor } from "@/components/mentor/openMentor";
+import { kidsMentorRu } from "@/content/kids-mentor.ru";
 import { reviewSections } from "@/services/mentor/review";
 const Workspace = dynamic(() => import("@/components/workspace/Workspace"), {
   ssr: false,
@@ -26,6 +27,7 @@ export default function ProjectWorkspace({ id }: { id: string }) {
     [fallback, setFallback] = useState(false),
     [observed, setObserved] = useState(false);
   const [savedAt, setSavedAt] = useState(0);
+  const [reviewOpen, setReviewOpen] = useState(false);
   useEffect(() => {
     if (!savedAt) return;
     const timer = setTimeout(() => setSavedAt(0), 1000);
@@ -61,6 +63,7 @@ export default function ProjectWorkspace({ id }: { id: string }) {
   async function review() {
     if (!project || busy || progress.mentor.tokens <= 0) return;
     setBusy(true);
+    setReviewOpen(true);
     const result = await askMentor({
       mentorId: progress.mentor.selectedId,
       mode: "project_review",
@@ -133,49 +136,61 @@ export default function ProjectWorkspace({ id }: { id: string }) {
         onScene={(scene) => save({ scene })}
         onCode={(code) => save({ code })}
         onRun={() => setObserved(true)}
-      />
-      <Card>
-        <div className="cab-row">
-          <h2>{c.review}</h2>
-          <Action
-            secondary
-            disabled={busy || progress.mentor.tokens <= 0}
-            onClick={review}
-          >
-            {busy ? c.reviewBusy : c.review}
-          </Action>
-        </div>
-        {fallback && <p className="l2-note">{c.reviewTemplate}</p>}
-        {reply && (
-          <div role="status" className="l2-project-review">
-            {reviewSections(reply).map((section) => (
-              <section key={section.title}>
-                <h3>{section.title}</h3>
-                <p>{section.text}</p>
-              </section>
-            ))}
+        actions={
+          <div className="cab-row kids-mentor-project-actions">
+            <Action
+              secondary
+              onClick={() =>
+                openMentor({
+                  context: {
+                    scene:
+                      project.scene.components
+                        .map((part) => `${part.id}:${part.type}`)
+                        .join(", ") +
+                      "; " +
+                      project.scene.wires
+                        .map(
+                          (wire) =>
+                            `${wire.from.componentId}:${wire.from.pin}>${wire.to.componentId}:${wire.to.pin}`,
+                        )
+                        .join(", "),
+                    code: project.code,
+                    errors: compileErrors,
+                    level: progress.profile.level,
+                  },
+                })
+              }
+            >
+              {kidsMentorRu.ask}
+            </Action>
+            <Action
+              secondary
+              disabled={busy || progress.mentor.tokens <= 0}
+              onClick={review}
+            >
+              {kidsMentorRu.review}
+            </Action>
           </div>
-        )}
-      </Card>
-      <MentorChat
-        context={{
-          scene:
-            `${project.scene.components.length} ${c.partsCount}; ` +
-            project.scene.components
-              .map((p) => `${p.id}:${p.type}`)
-              .join(", ") +
-            "; " +
-            project.scene.wires
-              .map(
-                (w) =>
-                  `${w.from.componentId}:${w.from.pin}>${w.to.componentId}:${w.to.pin}`,
-              )
-              .join(", "),
-          code: project.code,
-          errors: compileErrors,
-          level: progress.profile.level,
-        }}
+        }
       />
+      {reviewOpen && (
+        <Modal title={kidsMentorRu.review} onClose={() => setReviewOpen(false)}>
+          <div className="cab-row">
+            {busy && <p role="status">{c.reviewBusy}</p>}
+          </div>
+          {fallback && <p className="l2-note">{c.reviewTemplate}</p>}
+          {reply && (
+            <div role="status" className="l2-project-review">
+              {reviewSections(reply).map((section) => (
+                <section key={section.title}>
+                  <h3>{section.title}</h3>
+                  <p>{section.text}</p>
+                </section>
+              ))}
+            </div>
+          )}
+        </Modal>
+      )}
       {confirm && (
         <Modal title={c.deleteConfirm} onClose={() => setConfirm(false)}>
           <p>{c.deleteNote}</p>

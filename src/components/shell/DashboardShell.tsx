@@ -11,6 +11,7 @@ import { useProgress } from "@/lib/useProgress";
 import CabinetIcon from "@/components/icons/NavigationIcon";
 import { Modal } from "@/components/cabinet/ui";
 import RightRail, { StatBar } from "./RightRail";
+import { kidsHomeRu as k } from "@/content/kids-home.ru";
 import CommandPalette from "./CommandPalette";
 import NameDialog from "@/components/onboarding/NameDialog";
 import SavePrompt from "@/components/onboarding/SavePrompt";
@@ -27,18 +28,9 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
     corrupt,
     reset,
   } = useProgress();
-  const [collapsed, setCollapsed] = useState<string[]>([]),
-    [more, setMore] = useState(false),
+  const [more, setMore] = useState(false),
     [search, setSearch] = useState(false),
     [introduced, setIntroduced] = useState(false);
-  useEffect(() => {
-    const id = requestAnimationFrame(() => {
-      try {
-        setCollapsed(JSON.parse(localStorage.getItem("arduhub.menu") || "[]"));
-      } catch {}
-    });
-    return () => cancelAnimationFrame(id);
-  }, []);
   useEffect(() => {
     function key(e: KeyboardEvent) {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
@@ -57,40 +49,24 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
     >
       {c.groups.map((group) => (
         <section className="dash-nav-group" key={group.title}>
-          <button
-            className="group-label"
-            aria-expanded={sheet || !collapsed.includes(group.title)}
-            onClick={() => {
-              const next = collapsed.includes(group.title)
-                ? collapsed.filter((x) => x !== group.title)
-                : [...collapsed, group.title];
-              setCollapsed(next);
-              localStorage.setItem("arduhub.menu", JSON.stringify(next));
-            }}
-          >
-            {group.title}
-            <span aria-hidden="true">
-              {collapsed.includes(group.title) ? "+" : "−"}
-            </span>
-          </button>
-          {(sheet || !collapsed.includes(group.title)) &&
-            group.items.map(([label, href, icon]) => (
-              <Link
-                key={href}
-                title={label}
-                href={href}
-                prefetch={false}
-                onClick={() => setMore(false)}
-                aria-current={
-                  (href === "/app" ? path === href : path.startsWith(href))
-                    ? "page"
-                    : undefined
-                }
-              >
-                <CabinetIcon name={icon} />
-                <span>{label}</span>
-              </Link>
-            ))}
+          <h2 className="group-label">{group.title}</h2>
+          {group.items.map(([label, href, icon]) => (
+            <Link
+              key={href}
+              title={label}
+              href={href}
+              prefetch={false}
+              onClick={() => setMore(false)}
+              aria-current={
+                (href === "/app" ? path === href : path.startsWith(href))
+                  ? "page"
+                  : undefined
+              }
+            >
+              <CabinetIcon name={icon} />
+              <span>{label}</span>
+            </Link>
+          ))}
         </section>
       ))}
     </nav>
@@ -101,7 +77,7 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
       style={{ "--lesson-scale": p.settings?.textScale ?? 1 } as CSSProperties}
     >
       <a className="skip-link" href="#cab-main">
-        {c.continue}
+        {k.skip}
       </a>
       {!focus && (
         <aside className="dash-sidebar">
@@ -110,7 +86,7 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
           </Link>
           <div className="dash-nav-scroll">{menu()}</div>
           <div className="dash-sidebar-foot">
-            <button onClick={() => setSearch(true)}>
+            <button aria-label={c.search} onClick={() => setSearch(true)}>
               <CabinetIcon name="book" />
               <span>{c.search}</span>
               <kbd>Ctrl K</kbd>
@@ -131,6 +107,24 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
       )}
       <div className="dash-page">
         {!focus && (
+          <button
+            className="kids-mobile-search cab-icon-btn"
+            aria-label={c.search}
+            onClick={() => setSearch(true)}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <circle cx="10" cy="10" r="6" />
+              <path d="m15 15 6 6" />
+            </svg>
+          </button>
+        )}
+        {!focus && path !== "/app" && (
           <div className="dash-mobile-stats">
             <StatBar />
           </div>

@@ -27,6 +27,7 @@ import { projectCopy } from "@/content/projects.ru";
 import { freePosition, snap } from "@/domain/scene/placement";
 import { useProgress } from "@/lib/useProgress";
 import { askMentor } from "@/services/mentor/client";
+import { kidsWorkspaceRu as k } from "@/content/kids-workspace.ru";
 const CodePanel = dynamic(() => import("./CodePanel"), {
   ssr: false,
   loading: () => <p>{c.code}…</p>,
@@ -268,7 +269,10 @@ export default function Workspace({
         { type: "module" },
       );
       worker.current = next;
-      if (scene.components.some((p) => p.type === "buzzer")) {
+      if (
+        progress.settings?.sounds !== false &&
+        scene.components.some((p) => p.type === "buzzer")
+      ) {
         sound.current = new AudioContext();
         await sound.current.resume();
         if (muted.current) await sound.current.suspend();
@@ -435,22 +439,28 @@ export default function Workspace({
           ))}
         </div>
         <div className="cab-row">
-          {practiceMode && actions}
           {
-            <Action onClick={run} disabled={busy || !canRun}>
-              {status === "compiling" ? c.compiling : c.run} ▶
+            <Action
+              className="kids-run-action"
+              onClick={run}
+              disabled={busy || !canRun}
+              aria-label={status === "compiling" ? c.compiling : k.run}
+            >
+              ▶ {status === "compiling" ? c.compiling : k.run}
             </Action>
           }
-          <Action
-            secondary
-            onClick={() => {
-              stop();
-              setMessage(c.stopped);
-            }}
-            disabled={!busy}
-          >
-            {c.stop} ■
-          </Action>
+          {actions}
+          {busy && (
+            <Action
+              secondary
+              onClick={() => {
+                stop();
+                setMessage(c.stopped);
+              }}
+            >
+              {c.stop} ■
+            </Action>
+          )}
           {scene.components.some((p) => p.type === "buzzer") && (
             <button
               className="cab-btn cab-btn-secondary"
@@ -468,205 +478,224 @@ export default function Workspace({
         </div>
       </div>
       {tab === "circuit" && (
-        <>
-          <Palette
-            types={allowedParts}
-            busy={busy}
-            atLimit={scene.components.length >= 60}
-            hasBoard={scene.components.some((p) => p.type === "uno")}
-            onAdd={addPart}
-          />
-          <div className="l2-tools">
-            <Action
-              secondary
-              onClick={undo}
-              disabled={busy || !historyCounts.undo}
-            >
-              {c.undo}
-            </Action>
-            <Action
-              secondary
-              onClick={redo}
-              disabled={busy || !historyCounts.redo}
-            >
-              {c.redo}
-            </Action>
-            <Action secondary onClick={remove} disabled={busy || !selected}>
-              {c.remove}
-            </Action>
-            <label>
-              {c.color}
-              <input
-                type="color"
-                value={color}
-                onChange={(e) => {
-                  setColor(e.target.value);
-                  if (scene.wires.some((w) => w.id === selected))
-                    change({
-                      ...scene,
-                      wires: scene.wires.map((w) =>
-                        w.id === selected ? { ...w, color: e.target.value } : w,
-                      ),
-                    });
-                }}
-              />
-            </label>
-          </div>
-          <Canvas
-            onRemove={remove}
-            onView={updateView}
-            inputs={sample?.inputs ?? inputStates}
-            devices={sample?.devices}
-            onAdd={addPart}
-            scene={scene}
-            onChange={change}
-            levels={levels}
-            selected={selected}
-            onSelect={setSelected}
-            color={color}
-            disabled={busy}
-            errors={errors}
-          />
-          {part && (
-            <div className="l2-properties">
-              <strong>{catalog[part.type].name}</strong>
-              {(part.type === "lcd" || part.type === "lcd2004") && (
-                <label>
-                  {projectCopy.lcdInterface}
-                  <select
-                    aria-label={projectCopy.lcdInterface}
-                    disabled={busy}
-                    value={part.attrs.pins ?? "full"}
-                    onChange={(e) =>
-                      change({
-                        ...scene,
-                        components: scene.components.map((p) =>
-                          p.id === part.id
-                            ? {
-                                ...p,
-                                attrs: { ...p.attrs, pins: e.target.value },
-                              }
-                            : p,
-                        ),
-                        wires: scene.wires.filter(
-                          (w) =>
-                            w.from.componentId !== part.id &&
-                            w.to.componentId !== part.id,
-                        ),
-                      })
-                    }
+        <div className="kids-workspace-circuit">
+          <aside className="kids-palette-panel">
+            <Palette
+              types={allowedParts}
+              busy={busy}
+              atLimit={scene.components.length >= 60}
+              hasBoard={scene.components.some((p) => p.type === "uno")}
+              onAdd={addPart}
+            />
+          </aside>
+          <div className="kids-circuit-area">
+            <Canvas
+              tools={
+                <>
+                  <Action
+                    secondary
+                    onClick={undo}
+                    disabled={busy || !historyCounts.undo}
                   >
-                    <option value="full">{projectCopy.parallel}</option>
-                    <option value="i2c">{projectCopy.i2c}</option>
-                  </select>
-                </label>
-              )}
-              {part.type === "breadboard" && <p>{projectCopy.ownBreadboard}</p>}
-              <Action
-                secondary
-                disabled={busy}
-                onClick={() =>
-                  change({
-                    ...scene,
-                    components: scene.components.map((p) =>
-                      p.id === part.id
-                        ? { ...p, rotation: (p.rotation + 90) % 360 }
-                        : p,
-                    ),
-                  })
-                }
-              >
-                {c.rotate}
-              </Action>
-              {part.type === "resistor" && (
-                <label>
-                  {c.resistance}
-                  <input
-                    type="number"
-                    min="1"
-                    max="10000000"
-                    value={Number(part.attrs.value ?? 220)}
-                    disabled={busy}
-                    onChange={(e) =>
-                      change({
-                        ...scene,
-                        components: scene.components.map((p) =>
-                          p.id === part.id
-                            ? {
-                                ...p,
-                                attrs: {
-                                  ...p.attrs,
-                                  value: Math.max(
-                                    1,
-                                    Math.min(10000000, Number(e.target.value)),
-                                  ),
-                                },
-                              }
-                            : p,
-                        ),
-                      })
-                    }
-                  />
-                </label>
-              )}
-              {part.type === "led" && (
+                    {c.undo}
+                  </Action>
+                  <Action
+                    secondary
+                    onClick={redo}
+                    disabled={busy || !historyCounts.redo}
+                  >
+                    {c.redo}
+                  </Action>
+                  <Action
+                    secondary
+                    onClick={remove}
+                    disabled={busy || !selected}
+                  >
+                    {c.remove}
+                  </Action>
+                </>
+              }
+              wireOptions={
                 <label>
                   {c.color}
                   <input
                     type="color"
-                    value={
-                      String(part.attrs.color).startsWith("#")
-                        ? String(part.attrs.color)
-                        : "#ff0000"
-                    }
-                    disabled={busy}
-                    onChange={(e) =>
-                      change({
-                        ...scene,
-                        components: scene.components.map((p) =>
-                          p.id === part.id
-                            ? {
-                                ...p,
-                                attrs: { ...p.attrs, color: e.target.value },
-                              }
-                            : p,
-                        ),
-                      })
-                    }
+                    value={color}
+                    onChange={(e) => {
+                      setColor(e.target.value);
+                      if (scene.wires.some((w) => w.id === selected))
+                        change({
+                          ...scene,
+                          wires: scene.wires.map((w) =>
+                            w.id === selected
+                              ? { ...w, color: e.target.value }
+                              : w,
+                          ),
+                        });
+                    }}
                   />
                 </label>
-              )}
-              {!catalog[part.type].simulated && (
-                <small>{c.appearanceOnly}</small>
-              )}
-            </div>
-          )}
-          <details className="l2-wire-list">
-            <summary>
-              {c.circuit} · {scene.wires.length}
-            </summary>
-            {scene.wires.map((w) => (
-              <div className="cab-row" key={w.id}>
-                <span>
-                  {w.from.componentId} {w.from.pin} → {w.to.componentId}{" "}
-                  {w.to.pin}
-                </span>
-                <button
+              }
+              onRemove={remove}
+              onView={updateView}
+              inputs={sample?.inputs ?? inputStates}
+              devices={sample?.devices}
+              onAdd={addPart}
+              scene={scene}
+              onChange={change}
+              levels={levels}
+              selected={selected}
+              onSelect={setSelected}
+              color={color}
+              disabled={busy}
+              errors={errors}
+            />
+            {part && (
+              <div className="l2-properties">
+                <strong>{catalog[part.type].name}</strong>
+                {(part.type === "lcd" || part.type === "lcd2004") && (
+                  <label>
+                    {projectCopy.lcdInterface}
+                    <select
+                      aria-label={projectCopy.lcdInterface}
+                      disabled={busy}
+                      value={part.attrs.pins ?? "full"}
+                      onChange={(e) =>
+                        change({
+                          ...scene,
+                          components: scene.components.map((p) =>
+                            p.id === part.id
+                              ? {
+                                  ...p,
+                                  attrs: { ...p.attrs, pins: e.target.value },
+                                }
+                              : p,
+                          ),
+                          wires: scene.wires.filter(
+                            (w) =>
+                              w.from.componentId !== part.id &&
+                              w.to.componentId !== part.id,
+                          ),
+                        })
+                      }
+                    >
+                      <option value="full">{projectCopy.parallel}</option>
+                      <option value="i2c">{projectCopy.i2c}</option>
+                    </select>
+                  </label>
+                )}
+                {part.type === "breadboard" && (
+                  <p>{projectCopy.ownBreadboard}</p>
+                )}
+                <Action
+                  secondary
                   disabled={busy}
-                  aria-label={`${c.remove} ${w.id}`}
                   onClick={() =>
                     change({
                       ...scene,
-                      wires: scene.wires.filter((v) => v.id !== w.id),
+                      components: scene.components.map((p) =>
+                        p.id === part.id
+                          ? { ...p, rotation: (p.rotation + 90) % 360 }
+                          : p,
+                      ),
                     })
                   }
                 >
-                  {c.remove}
-                </button>
+                  {c.rotate}
+                </Action>
+                {part.type === "resistor" && (
+                  <label>
+                    {c.resistance}
+                    <input
+                      type="number"
+                      min="1"
+                      max="10000000"
+                      value={Number(part.attrs.value ?? 220)}
+                      disabled={busy}
+                      onChange={(e) =>
+                        change({
+                          ...scene,
+                          components: scene.components.map((p) =>
+                            p.id === part.id
+                              ? {
+                                  ...p,
+                                  attrs: {
+                                    ...p.attrs,
+                                    value: Math.max(
+                                      1,
+                                      Math.min(
+                                        10000000,
+                                        Number(e.target.value),
+                                      ),
+                                    ),
+                                  },
+                                }
+                              : p,
+                          ),
+                        })
+                      }
+                    />
+                  </label>
+                )}
+                {part.type === "led" && (
+                  <label>
+                    {c.color}
+                    <input
+                      type="color"
+                      value={
+                        String(part.attrs.color).startsWith("#")
+                          ? String(part.attrs.color)
+                          : "#ff0000"
+                      }
+                      disabled={busy}
+                      onChange={(e) =>
+                        change({
+                          ...scene,
+                          components: scene.components.map((p) =>
+                            p.id === part.id
+                              ? {
+                                  ...p,
+                                  attrs: { ...p.attrs, color: e.target.value },
+                                }
+                              : p,
+                          ),
+                        })
+                      }
+                    />
+                  </label>
+                )}
+                {!catalog[part.type].simulated && (
+                  <small>{c.appearanceOnly}</small>
+                )}
               </div>
-            ))}
-          </details>
-        </>
+            )}
+            <details className="l2-wire-list">
+              <summary>
+                {c.circuit} · {scene.wires.length}
+              </summary>
+              {scene.wires.map((w) => (
+                <div className="cab-row" key={w.id}>
+                  <span>
+                    {w.from.componentId} {w.from.pin} → {w.to.componentId}{" "}
+                    {w.to.pin}
+                  </span>
+                  <button
+                    disabled={busy}
+                    aria-label={`${c.remove} ${w.id}`}
+                    onClick={() =>
+                      change({
+                        ...scene,
+                        wires: scene.wires.filter((v) => v.id !== w.id),
+                      })
+                    }
+                  >
+                    {c.remove}
+                  </button>
+                </div>
+              ))}
+            </details>
+          </div>
+        </div>
       )}
       {tab === "code" && (
         <CodePanel
@@ -702,9 +731,6 @@ export default function Workspace({
           {solution ? <pre>{solution}</pre> : <p>{c.hint} 3/3</p>}
         </div>
       )}
-      {actions && !practiceMode && (
-        <div className="dash-focus-actions">{actions}</div>
-      )}
       <InputControls scene={scene} states={inputStates} onInput={input} />
       <div className="l2-run-status" role="status">
         <span className={busy ? "l2-active-dot" : ""} />
@@ -714,7 +740,7 @@ export default function Workspace({
             ? c.running
             : status === "paused"
               ? c.paused
-              : c.ready}
+              : k.beforeRun}
         {sample && ` · ${(sample.time / 1000).toFixed(1)} ${c.seconds}`}
       </div>
       {source && <p className="l2-note">{source}</p>}

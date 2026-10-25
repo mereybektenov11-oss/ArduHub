@@ -116,7 +116,7 @@ export function createProgress(): Progress {
   return {
     version: 1,
     curriculumVersion: 2,
-    settings: { textScale: 1 },
+    settings: { textScale: 1, sounds: true, mentorHints: true },
     profile: { name: cabinetRu.profile, avatar: "Ю", level: 1 },
     diagnostic: {
       status: "none",
