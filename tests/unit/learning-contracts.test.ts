@@ -23,7 +23,7 @@ function storage(value: unknown) {
   };
 }
 describe("curriculum migration contracts", () => {
-  it("keeps completed lessons, moves button/pot progress, and preserves unrelated circuits", () => {
+  it("resets legacy completions without evidence, moves button/pot receipts, and preserves unrelated circuits", () => {
     const old = createProgress();
     delete old.curriculumVersion;
     delete old.settings;
@@ -42,8 +42,11 @@ describe("curriculum migration contracts", () => {
       next = store.load();
     expect(next.curriculumVersion).toBe(2);
     expect(next.settings?.textScale).toBe(1);
-    expect(next.lessons["lesson-3"].status).toBe("done");
-    expect(next.lessons["lesson-6"].status).toBe("done");
+    expect(next.lessons["lesson-1"].status).toBe("current");
+    expect(next.lessons["lesson-3"].status).toBe("locked");
+    expect(next.lessons["lesson-6"].status).toBe("locked");
+    expect(next.lessons["lesson-3"].rewarded).toBe(true);
+    expect(next.lessons["lesson-6"].rewarded).toBe(true);
     expect(next.lessons["lesson-2"].status).toBe("locked");
     expect(Object.keys(next.circuits)).toEqual([
       "lesson-1",

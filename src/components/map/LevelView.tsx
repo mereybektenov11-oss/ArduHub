@@ -3,7 +3,7 @@ import { interfaceCopy as uiCopy } from "@/content/cabinet.ru";
 import { useRouter } from "next/navigation";
 import { levels, lessons } from "@/domain/seed";
 import { useProgress } from "@/lib/useProgress";
-import { lessonOpen } from "@/domain/progress/xp";
+import { computeCourseState } from "@/domain/progress/courseState";
 import { Card, Action, Pill, ProgressBar } from "@/components/cabinet/ui";
 import CabinetArt from "@/components/cabinet/CabinetArt";
 import Reveal from "@/components/ui/Reveal";
@@ -11,8 +11,11 @@ export default function LevelView({ id }: { id: number }) {
   const { progress: p, notify } = useProgress(),
     router = useRouter();
   const level = levels[id];
+  const states = Object.fromEntries(
+    computeCourseState(lessons, p).map((s) => [s.id, s.status]),
+  );
   if (!level) return <h1>{uiCopy.text079}</h1>;
-  if (id > p.profile.level)
+  if (!lessons.some((l) => l.levelId === id && states[l.id] !== "locked"))
     return (
       <Card>
         <h1>{uiCopy.text072}</h1>
@@ -20,7 +23,7 @@ export default function LevelView({ id }: { id: number }) {
       </Card>
     );
   const list = lessons.filter((l) => l.levelId === id),
-    done = list.filter((l) => p.lessons[l.id].status === "done").length;
+    done = list.filter((l) => states[l.id] === "done").length;
   return (
     <div className="cab-stack">
       <Action href="/app/map" secondary>
@@ -62,8 +65,8 @@ export default function LevelView({ id }: { id: number }) {
             <div className="cab-lesson-path">
               {unit.lessonIds.map((lessonId, n) => {
                 const lesson = lessons.find((l) => l.id === lessonId)!,
-                  done = p.lessons[lessonId].status === "done",
-                  open = lessonOpen(p, lessonId);
+                  done = states[lessonId] === "done",
+                  open = states[lessonId] !== "locked";
                 return (
                   <div
                     key={lessonId}

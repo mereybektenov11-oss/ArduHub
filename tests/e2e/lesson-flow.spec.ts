@@ -13,6 +13,7 @@ async function setup(page: Page, practice = false) {
       { name: "arduhub-guest", value: "1", domain: "127.0.0.1", path: "/" },
     ]);
   const p = createProgress();
+  p.profile.name = "Проверка";
   p.tourSeen = {
     "/app": true,
     "/app/lesson/lesson-1": true,
@@ -161,20 +162,19 @@ test("full lesson, real AVR, reward once, next node and review", async ({
   expect((await getProgress()).xp).toBe(awarded.xp);
 });
 
-test("old draft migration retains scene/code, direct stages stay gated", async ({
+test("old draft migration retains scene/code, resets unconfirmed stages and protects direct links", async ({
   page,
 }) => {
   await setup(page, true);
   await page.goto("/app/lesson/lesson-1");
-  await expect(page.locator(".flow-practice")).toBeVisible();
-  await expect(
-    page.getByRole("textbox", { name: "Код", exact: true }),
-  ).toContainText("void setup");
+  await expect(page.locator(".flow-video-stage")).toBeVisible();
   const state = await page.evaluate(() =>
     JSON.parse(localStorage.getItem("arduhub.drafts.v1")!),
   );
   expect(state.version).toBe(2);
-  expect(state.drafts["lesson-1"].flow.stages.test).toBe(true);
+  expect(state.drafts["lesson-1"].flow.stages.test).toBe(false);
+  expect(state.drafts["lesson-1"].code).toContain("void setup");
+  expect(state.drafts["lesson-1"].scene.wires.length).toBeGreaterThan(0);
   await page.goto("/app/lesson/lesson-2?stage=practice");
   await expect(
     page.getByText("Пройди предыдущий урок, чтобы открыть этот"),
@@ -221,8 +221,9 @@ for (const reduce of [false, true])
     });
     await audit(page);
     await page
-      .getByRole("button", { name: "Продолжить без видео →", exact: true })
+      .getByRole("button", { name: "Я посмотрел", exact: true })
       .click();
+    await page.getByRole("button", { name: "К тесту →", exact: true }).click();
     await expect(page.locator(".flow-quiz")).toBeVisible();
     await audit(page);
     await passLessonQuiz(page);
@@ -323,7 +324,7 @@ test("offline metadata error retains shell and retry recovers", async ({
   await expect(page.locator(".flow-video-stage")).toBeVisible();
 });
 
-test("lesson without quiz skips the test and permits practice after video", async ({
+test("missing quiz data does not automatically complete test or unlock practice", async ({
   page,
 }) => {
   await setup(page);
@@ -331,11 +332,10 @@ test("lesson without quiz skips the test and permits practice after video", asyn
     r.fulfill({ json: { ...learningLessons[0], quiz: undefined } }),
   );
   await page.goto("/app/lesson/lesson-1");
-  await page
-    .getByRole("button", { name: "Продолжить без видео →", exact: true })
-    .click();
-  await expect(page.locator(".flow-practice")).toBeVisible();
-  await expect(page).toHaveURL(/stage=practice/);
+  await expect(
+    page.getByRole("heading", { name: "Не получилось открыть урок" }),
+  ).toBeVisible();
+  await expect(page.locator(".flow-practice")).toHaveCount(0);
   await page.goto("/app/lesson/lesson-1?stage=test");
-  await expect(page).toHaveURL(/stage=practice/);
+  await expect(page.locator(".flow-practice")).toHaveCount(0);
 });

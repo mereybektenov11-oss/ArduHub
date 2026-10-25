@@ -35,12 +35,10 @@ export default function ShopPage() {
   return (
     <div className="cab-stack">
       <div>
-        <p className="cab-eyebrow">ArduHub / {c.groups[2].title}</p>
         <h1>{c.shop}</h1>
         <p>{c.shopNote}</p>
         <p className="cab-muted">
-          <RewardIcon kind="spark" /> {p.sparks} {c.sparkUnits} ·{" "}
-          {!p.account?.userId && c.guestEconomy}
+          <RewardIcon kind="spark" /> {p.sparks} {c.sparkUnits}
         </p>
       </div>
       {c.shopKinds.map((title, index) => (

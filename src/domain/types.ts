@@ -91,6 +91,9 @@ export type Mentor = {
   unlockCost: number;
 };
 export type LessonProgress = {
+  rewarded?: boolean;
+  completionSource?: "lesson" | "lesson_fallback";
+  video?: { confirmed?: boolean; watchedRatio?: number };
   flowUpdatedAt?: string;
   stages?: import("./lessons/flow").LessonFlowState["stages"];
   practice?: import("./lessons/flow").LessonFlowState["practice"];
@@ -108,6 +111,7 @@ export type LessonProgress = {
   };
 };
 export type Progress = {
+  progressEvidenceVersion?: 1;
   account?: {
     userId?: string;
     role: "student" | "teacher";

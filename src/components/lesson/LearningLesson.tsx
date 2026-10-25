@@ -41,6 +41,12 @@ import PracticeStage from "./stages/PracticeStage";
 import Link from "next/link";
 import CompletionModal from "./CompletionModal";
 import { catalog } from "@/domain/parts/catalog";
+import { computeStageState } from "@/domain/progress/courseState";
+import {
+  matchesSolution,
+  recordCompileAttempt,
+} from "@/domain/lessons/solutions";
+import { compileRunRu } from "@/content/compile-run.ru";
 const Workspace = dynamic(() => import("@/components/workspace/Workspace"), {
   ssr: false,
   loading: () => <Skeleton shape="practice" />,
@@ -50,7 +56,7 @@ export default function LearningLesson({ id }: { id: string }) {
     { store, mutate } = useLearningStore(),
     data = useLessonData(id);
   const legacy = lessons.find((l) => l.id === id);
-  if (data.error)
+  if (data.error || (data.lesson && !data.lesson.quiz?.questions.length))
     return (
       <LessonShell title={legacy?.title}>
         <div className="flow-load-error" role="alert">
@@ -108,7 +114,10 @@ function LessonFlow({
     };
     const saved = progress.lessons[id];
     const flow = migrateLessonFlow(
-      !old.flow && saved?.stages && saved?.practice && saved?.quiz
+      (!old.flow || (saved?.flowUpdatedAt ?? "") > (old.updatedAt ?? "")) &&
+        saved?.stages &&
+        saved?.practice &&
+        saved?.quiz
         ? {
             ...old,
             flow: {
@@ -117,15 +126,19 @@ function LessonFlow({
               stages: saved.stages,
               practice: saved.practice,
               quiz: saved.quiz,
+              video: saved.video,
             },
           }
         : old,
+      id,
     );
-    if (!lesson.quiz?.questions.length) flow.stages.test = true;
     return { ...old, flow };
   });
-  const flow = draft.flow!,
-    gate = useStageGate(flow, !lesson.quiz?.questions.length);
+  const flow = {
+      ...draft.flow!,
+      stages: computeStageState(lesson, draft.flow!),
+    },
+    gate = useStageGate(flow);
   const [errors, setErrors] = useState<
       { message: string; componentIds: string[] }[]
     >([]),
@@ -135,7 +148,11 @@ function LessonFlow({
     [showTheory, setShowTheory] = useState(false),
     [showReference, setShowReference] = useState(false),
     [hint, setHint] = useState({ circuit: 0, code: 0 });
-  const [complete, setComplete] = useState<null | { rewarded: boolean }>(null);
+  const [complete, setComplete] = useState<null | {
+    rewarded: boolean;
+    halfReward?: boolean;
+  }>(null);
+  const [serverFailures, setServerFailures] = useState(0);
   const initialized = useRef(false);
   const save = useCallback(
     (next: Draft, xp = 0) => {
@@ -172,11 +189,16 @@ function LessonFlow({
           ...p.lessons,
           [id]: {
             ...p.lessons[id],
-            steps: next.steps,
-            flowUpdatedAt: next.updatedAt,
-            stages: f.stages,
-            practice: f.practice,
-            quiz: f.quiz,
+            ...(p.lessons[id].status === "done"
+              ? {}
+              : {
+                  steps: next.steps,
+                  flowUpdatedAt: next.updatedAt,
+                  stages: f.stages,
+                  practice: f.practice,
+                  quiz: f.quiz,
+                  video: f.video,
+                }),
           },
         },
       }));
@@ -187,8 +209,6 @@ function LessonFlow({
     const frame = requestAnimationFrame(() => {
       if (!initialized.current) {
         initialized.current = true;
-        if (!lesson.quiz?.questions.length)
-          console.warn(`Lesson ${id} has no quiz; skipping test stage`);
         if (!store.drafts[id]?.flow) save(draft);
       }
     });
@@ -225,11 +245,18 @@ function LessonFlow({
     [],
   );
   const ask = () => openMentor(mentorContext);
-  const unlockVideo = () => {
+  const unlockVideo = (evidence: {
+    confirmed?: boolean;
+    watchedRatio?: number;
+  }) => {
     if (!flow.stages.video)
       save({
         ...draft,
-        flow: { ...flow, stages: { ...flow.stages, video: true } },
+        flow: {
+          ...flow,
+          video: evidence,
+          stages: { ...flow.stages, video: true },
+        },
       });
   };
   function verify() {
@@ -286,7 +313,7 @@ function LessonFlow({
       },
     });
     if (pass) {
-      const rewarded = progress.lessons[id]?.status !== "done";
+      const rewarded = !progress.lessons[id]?.rewarded;
       update((p) => awardLesson(p, id));
       if (rewarded) {
         try {
@@ -295,6 +322,29 @@ function LessonFlow({
       }
       setComplete({ rewarded });
     }
+  }
+  function checkByExample() {
+    if (serverFailures < 3 || !flow.stages.test) return;
+    if (
+      !matchesSolution(id, draft.code) ||
+      checkScene(draft.scene, lesson.circuit.referenceScene).length
+    ) {
+      setNotice(compileRunRu.mismatch);
+      return;
+    }
+    const rewarded = !progress.lessons[id]?.rewarded;
+    const next = {
+      ...draft,
+      flow: {
+        ...flow,
+        stages: { ...flow.stages, practice: true },
+        practice: { circuit: true, code: true, run: true },
+      },
+    };
+    save(next);
+    update((p) => awardLesson(p, id, "lesson_fallback"));
+    setComplete({ rewarded, halfReward: true });
+    setServerFailures(0);
   }
   const hintKind = flow.tab === "code" ? "code" : "circuit";
   const addHint = () =>
@@ -327,6 +377,7 @@ function LessonFlow({
       progress={flowPercent(flow)}
       indicator={
         <StageIndicator
+          lesson={lesson}
           flow={flow}
           active={gate.active}
           onStage={(stage) => navigate(stage)}
@@ -429,6 +480,9 @@ function LessonFlow({
               }
               errors={errors.flatMap((e) => e.componentIds)}
               onDiagnostics={setCompileErrors}
+              onCompileResult={(result) =>
+                setServerFailures((n) => recordCompileAttempt(n, result))
+              }
               onRun={run}
               actions={
                 <>
@@ -441,6 +495,14 @@ function LessonFlow({
                   <Action secondary onClick={verify}>
                     {c.check}
                   </Action>
+                  {serverFailures >= 3 && (
+                    <div role="status">
+                      <p>{compileRunRu.fallbackNote}</p>
+                      <Action secondary onClick={checkByExample}>
+                        {compileRunRu.fallback}
+                      </Action>
+                    </div>
+                  )}
                 </>
               }
               onScene={(scene) => {
@@ -515,6 +577,7 @@ function LessonFlow({
       {complete && (
         <CompletionModal
           rewarded={complete.rewarded}
+          halfReward={complete.halfReward}
           nextId={
             lessons.find(
               (l) =>

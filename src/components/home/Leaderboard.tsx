@@ -54,7 +54,14 @@ export default function Leaderboard({
           ))}
         </ol>
       ) : (
-        <p>{c.emptyLeaders}</p>
+        <div className="leaderboard-empty">
+          <span className="leaderboard-podium" aria-hidden="true">
+            <span>🥈</span>
+            <span>🥇</span>
+            <span>🥉</span>
+          </span>
+          <p>{c.emptyLeaders}</p>
+        </div>
       )}
       {!compact && own && own.rank > 20 && (
         <p>

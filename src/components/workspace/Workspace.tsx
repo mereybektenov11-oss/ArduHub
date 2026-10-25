@@ -14,7 +14,8 @@ import { catalog, partTypes, type PartType } from "@/domain/parts/catalog";
 import { makePart, type SceneDoc } from "@/domain/scene/scene";
 import { shorted } from "@/domain/scene/netlist";
 import { codeIssue } from "@/domain/lessons/codeChecks";
-import { compile } from "@/services/compile/client";
+import { compile, type CompileResult } from "@/services/compile/client";
+import { compileRunRu } from "@/content/compile-run.ru";
 import type { Diagnostic } from "@/services/compile/explain";
 import type { Sample, Trace } from "@/domain/sim/runner";
 import { outputLevels, buzzerFrequency } from "@/domain/sim/glue/outputs";
@@ -31,6 +32,7 @@ const CodePanel = dynamic(() => import("./CodePanel"), {
   loading: () => <p>{c.code}…</p>,
 });
 type Props = {
+  onCompileResult?: (result: CompileResult) => void;
   practiceMode?: boolean;
   onTabChange?: (tab: "circuit" | "code" | "serial") => void;
   tests?: ReactNode;
@@ -51,6 +53,7 @@ type Props = {
   onDiagnostics?: (errors: string[]) => void;
 };
 export default function Workspace({
+  onCompileResult,
   practiceMode = false,
   onTabChange,
   scene,
@@ -212,6 +215,7 @@ export default function Workspace({
     if (status !== "idle" || !canRun) return;
     const issue = codeIssue(code);
     if (issue) {
+      onCompileResult?.({ error: "compile_error" });
       setMessage(issue);
       setTab("code");
       return;
@@ -234,7 +238,8 @@ export default function Workspace({
     setStatus("compiling");
     const result = await compile(code);
     if (current !== generation.current) return;
-    if (!result.hex) {
+    onCompileResult?.(result);
+    if (!result.hex && result.interpreterCode === undefined) {
       setStatus("idle");
       setDiagnostics(result.diagnostics ?? []);
       onDiagnostics?.(
@@ -249,14 +254,12 @@ export default function Workspace({
               ? c.compilerPolicy
               : result.error === "compile_error"
                 ? c.compileFailed
-                : (polishRu.compiler[
-                    result.error as keyof typeof polishRu.compiler
-                  ] ?? c.unavailable),
+                : compileRunRu.unavailable,
       );
       if (result.diagnostics?.length) setTab("code");
       return;
     }
-    setSource(result.source === "precompiled" ? c.cached : c.compiled);
+    setSource(result.source === "service" ? c.compiled : c.cached);
     if (scene.components.some((p) => !catalog[p.type].simulated))
       setMessage(c.unsupported);
     try {
@@ -342,6 +345,7 @@ export default function Workspace({
       next.postMessage({
         type: "start",
         hex: result.hex,
+        interpreterCode: result.interpreterCode,
         scene,
         durationMs,
         autoButton,

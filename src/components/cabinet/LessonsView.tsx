@@ -3,7 +3,7 @@ import { interfaceCopy as uiCopy } from "@/content/cabinet.ru";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { lessons, topicNames } from "@/domain/seed";
-import { lessonOpen } from "@/domain/progress/xp";
+import { computeCourseState } from "@/domain/progress/courseState";
 import { useProgress } from "@/lib/useProgress";
 import { lessonsCopy as c } from "@/content/cabinet.ru";
 import { Card, Pill, Tabs } from "./ui";
@@ -13,8 +13,11 @@ export default function LessonsView() {
   const { progress: p, notify } = useProgress(),
     router = useRouter();
   const [filter, setFilter] = useState("all");
+  const states = Object.fromEntries(
+    computeCourseState(lessons, p).map((s) => [s.id, s.status]),
+  );
   const visible = lessons.filter(
-    (l) => filter === "all" || p.lessons[l.id].status === filter,
+    (l) => filter === "all" || states[l.id] === filter,
   );
   return (
     <div className="cab-stack">
@@ -41,7 +44,7 @@ export default function LessonsView() {
       </div>
       <div className="cab-stack">
         {visible.map((l) => (
-          <Card key={l.id} className="cab-lesson-list-row">
+          <Card key={l.id} className={`cab-lesson-list-row ${states[l.id]}`}>
             <span className="cab-list-number">
               {String(lessons.indexOf(l) + 1).padStart(2, "0")}
             </span>
@@ -53,17 +56,17 @@ export default function LessonsView() {
                 {topicNames[l.topic]} · {c.level} {l.levelId} · +{l.xp} XP
               </p>
             </div>
-            <Pill>{c.status[p.lessons[l.id].status]}</Pill>
+            <Pill>{c.status[states[l.id]]}</Pill>
             <button
               className="cab-btn cab-btn-secondary"
               onClick={() =>
-                lessonOpen(p, l.id)
+                states[l.id] !== "locked"
                   ? router.push(`/app/lesson/${l.id}`)
                   : notify(c.lockedNote)
               }
               aria-label={`${c.open}: ${l.title}`}
             >
-              {p.lessons[l.id].status === "done" ? "↺" : "→"}
+              {states[l.id] === "done" ? "↺" : "→"}
             </button>
           </Card>
         ))}

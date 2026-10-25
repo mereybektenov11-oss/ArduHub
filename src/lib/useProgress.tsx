@@ -15,6 +15,7 @@ import { SupabaseProgressStore } from "@/domain/progress/supabaseStore";
 import { browserSupabase } from "@/lib/supabase/client";
 import {
   queueAwards,
+  importAwardEvents,
   flushAwards,
   type AwardEvent,
 } from "@/domain/progress/awardQueue";
@@ -83,7 +84,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
         profile: {
           ...current.current.profile,
           name: loaded.profile.name,
-          level: Math.max(current.current.profile.level, loaded.profile.level),
+          level: xpLevel(loaded.xp),
         },
       };
       current.current = next;
@@ -141,6 +142,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
       }
       if (cancelled) return;
       store.current = selected;
+      loaded = syncLessonStates(loaded);
       current.current = loaded;
       selected.save(loaded);
       setProgress(loaded);
@@ -195,12 +197,16 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     return () => clearTimeout(timer);
   }, [toast]);
   function update(fn: (p: Progress) => Progress) {
-    let next = recordDaily(current.current, fn(current.current));
+    let next = recordDaily(
+      current.current,
+      syncLessonStates(fn(current.current)),
+    );
     const before = current.current;
     if (before.account?.userId) {
       const completed = lessons.filter(
         (l) =>
-          before.lessons[l.id]?.status !== "done" &&
+          !before.lessons[l.id]?.rewarded &&
+          next.lessons[l.id]?.rewarded === true &&
           next.lessons[l.id]?.status === "done",
       );
       const gameDelta =
@@ -235,9 +241,12 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
         const events: AwardEvent[] = [
           ...quizEvents,
           ...completed.map((l) => ({
-            source: "lesson" as const,
+            source: next.lessons[l.id]?.completionSource ?? "lesson",
             refId: l.id,
-            amount: l.xp,
+            amount:
+              next.lessons[l.id]?.completionSource === "lesson_fallback"
+                ? l.xp / 2
+                : l.xp,
           })),
           ...(gameDelta
             ? [
@@ -266,14 +275,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
           .catch(() => setOffline(true));
       }
     }
-    if (!before.account?.userId && next.xp > before.xp)
-      next = syncLessonStates({
-        ...next,
-        profile: {
-          ...next.profile,
-          level: Math.max(next.profile.level, xpLevel(next.xp)),
-        },
-      });
+    next = syncLessonStates(next);
     if (
       next.profile.level > current.current.profile.level &&
       next.xp > current.current.xp
@@ -347,19 +349,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
                 setProgress(next);
                 if (next.account?.userId) {
                   const accountId = next.account.userId;
-                  queueAwards(
-                    localStorage,
-                    accountId,
-                    lessons.flatMap((lesson) =>
-                      (next.lessons[lesson.id]?.quiz?.awarded ?? []).map(
-                        (question) => ({
-                          source: "lesson_quiz" as const,
-                          refId: `${lesson.id}:${question}`,
-                          amount: 1,
-                        }),
-                      ),
-                    ),
-                  );
+                  queueAwards(localStorage, accountId, importAwardEvents(next));
                   sessionStorage.setItem(
                     "arduhub.import:" + next.account.userId,
                     "1",

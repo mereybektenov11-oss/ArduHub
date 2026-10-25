@@ -1,69 +1,48 @@
 import type { Progress } from "../types";
-import { lessons, levels, mentors } from "../seed";
+import { lessons, mentors } from "../seed";
 import { recordActivity } from "./streak";
+import {
+  computeCourseState,
+  computeStageState,
+  normalizeProgress,
+} from "./courseState";
 import { learningLessons } from "@/domain/lessons/content";
-export const xpLevel = (xp: number) =>
-  [0, 150, 400, 800, 1400].filter((n) => xp >= n).length - 1;
-export function syncLessonStates(p: Progress): Progress {
-  return {
-    ...p,
-    lessons: Object.fromEntries(
-      lessons.map((l) => [
-        l.id,
-        {
-          ...p.lessons[l.id],
-          status:
-            p.lessons[l.id].status === "done"
-              ? "done"
-              : lessonOpen(p, l.id)
-                ? "current"
-                : "locked",
-        },
-      ]),
-    ),
-  };
-}
+export { levelFromXp as xpLevel } from "./levels";
+export const syncLessonStates = normalizeProgress;
 export function lessonOpen(p: Progress, id: string): boolean {
-  const l = lessons.find((l) => l.id === id);
-  if (!l) return false;
-  if (!learningLessons.find((l) => l.id === id)?.available) return false;
-  const inLevel = lessons.filter((x) => x.levelId === l.levelId);
-  const i = inLevel.findIndex((x) => x.id === id);
-  return (
-    l.levelId <= p.profile.level &&
-    (i === 0 || p.lessons[inLevel[i - 1].id].status === "done")
-  );
+  if (!learningLessons.find((lesson) => lesson.id === id)?.available)
+    return false;
+  const state = computeCourseState(lessons, p).find((l) => l.id === id);
+  return Boolean(state && state.status !== "locked");
 }
-export function awardLesson(p: Progress, id: string): Progress {
+export function awardLesson(
+  p: Progress,
+  id: string,
+  source: "lesson" | "lesson_fallback" = "lesson",
+): Progress {
   const lesson = lessons.find((l) => l.id === id);
-  if (!lesson || !lessonOpen(p, id) || p.lessons[id].status === "done")
+  if (
+    !lesson ||
+    !lessonOpen(p, id) ||
+    p.lessons[id].status === "done" ||
+    !computeStageState(lesson, p).practice
+  )
     return p;
   const next = structuredClone(p);
+  const claimed = Boolean(p.lessons[id].rewarded);
   next.lessons[id].status = "done";
-  next.xp += lesson.xp;
-  next.sparks += 10;
+  next.lessons[id].rewarded = true;
+  next.lessons[id].completionSource = source;
+  if (!claimed) {
+    next.xp += source === "lesson_fallback" ? lesson.xp / 2 : lesson.xp;
+    next.sparks += source === "lesson_fallback" ? 5 : 10;
+  }
   next.streak = recordActivity(p.streak);
   next.diagnostic.skillScores[lesson.topic] = Math.min(
     100,
     next.diagnostic.skillScores[lesson.topic] + 15,
   );
-  const finished = levels
-    .filter((l) => lessons.some((lesson) => lesson.levelId === l.id))
-    .filter((l) =>
-      lessons
-        .filter((x) => x.levelId === l.id)
-        .every((x) => next.lessons[x.id].status === "done"),
-    )
-    .map((l) => Math.min(4, l.id + 1));
-  next.profile.level = Math.max(
-    next.profile.level,
-    xpLevel(next.xp),
-    ...finished,
-  );
-  for (const l of lessons)
-    if (next.lessons[l.id].status !== "done")
-      next.lessons[l.id].status = lessonOpen(next, l.id) ? "current" : "locked";
-  return next;
+  return normalizeProgress(next);
 }
 export function unlockMentor(p: Progress, id: string): Progress {
   const mentor = mentors.find((m) => m.id === id);

@@ -1,4 +1,6 @@
 "use client";
+import { levelFromXp } from "@/domain/progress/levels";
+import { onboardingRu } from "@/content/ru";
 import RewardIcon from "@/components/icons/RewardIcon";
 import LevelBadge from "@/components/icons/LevelBadge";
 import StreakCalendar from "@/components/icons/StreakCalendar";
@@ -80,17 +82,16 @@ export default function ProfilePage() {
           <span
             className={`cab-avatar frame-${p.account?.avatarFrame ?? "none"}`}
           >
-            {p.profile.name.slice(0, 1)}
+            {p.profile.avatar || p.profile.name.slice(0, 1)}
           </span>
           <div>
             <h2>{p.profile.name}</h2>
             <p>{p.account?.role === "teacher" ? c.teacher : c.student}</p>
-            {p.account?.role === "teacher" && <p>{c.teacherSoon}</p>}
           </div>
         </div>
         <p>
-          <LevelBadge value={p.profile.level + 1} />
-          {c.level} {p.profile.level + 1} · <RewardIcon kind="xp" /> {p.xp} XP ·{" "}
+          <LevelBadge value={levelFromXp(p.xp)} />
+          {c.level} {levelFromXp(p.xp)} · <RewardIcon kind="xp" /> {p.xp} XP ·{" "}
           <RewardIcon kind="flame" /> {activeStreak(p.streak)}{" "}
           {c.streak.toLowerCase()}
         </p>
@@ -101,7 +102,9 @@ export default function ProfilePage() {
         <StreakCalendar />
         {!p.account?.userId && (
           <p>
-            {c.guest} · <Link href="/sign-in">{c.register}</Link>
+            <Link className="cab-btn" href="/register">
+              {onboardingRu.saveProgress}
+            </Link>
           </p>
         )}
       </Card>

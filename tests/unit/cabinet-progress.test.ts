@@ -27,6 +27,7 @@ import { answerDiagnostic } from "@/domain/diagnostic";
 import { homeworkStatus } from "@/domain/homework";
 import { forgottenTerms } from "@/domain/review";
 import { diagnosticDeck } from "@/content/cabinet.ru";
+import { progressEvidence } from "../helpers/progressEvidence";
 describe("curriculum and progress", () => {
   it("has consistent references and three valid first schematics", () => {
     expect(lessons.length).toBeGreaterThanOrEqual(12);
@@ -69,17 +70,27 @@ describe("curriculum and progress", () => {
     expect(lessonOpen(p, "lesson-4")).toBe(false);
     expect(awardLesson(p, "missing")).toBe(p);
     expect(awardLesson(p, "lesson-4")).toBe(p);
+    expect(awardLesson(p, "lesson-1")).toBe(p);
+    p.lessons["lesson-1"] = {
+      ...p.lessons["lesson-1"],
+      ...progressEvidence("lesson-1"),
+    };
     p = awardLesson(p, "lesson-1");
     expect(p.xp).toBe(30);
     expect(p.sparks).toBe(10);
     expect(p.diagnostic.skillScores.leds).toBe(15);
     expect(awardLesson(p, "lesson-1")).toBe(p);
     expect(p.lessons["lesson-2"].status).toBe("current");
-    for (const l of lessons) p = awardLesson(p, l.id);
-    expect(p.profile.level).toBe(4);
+    for (const l of lessons) {
+      p.lessons[l.id] = { ...p.lessons[l.id], ...progressEvidence(l.id) };
+      p = awardLesson(p, l.id);
+    }
+    expect(p.profile.level).toBe(3);
     expect(p.lessons["lesson-12"].status).toBe("done");
-    expect(xpLevel(1400)).toBe(4);
-    expect(xpLevel(149)).toBe(0);
+    expect(xpLevel(1400)).toBe(6);
+    expect(xpLevel(149)).toBe(2);
+    expect(xpLevel(55)).toBe(1);
+    expect(xpLevel(700)).toBe(5);
     const synced = syncLessonStates(p);
     expect(synced.lessons["lesson-1"].status).toBe("done");
     expect(syncLessonStates(createProgress()).lessons["lesson-2"].status).toBe(
@@ -105,7 +116,8 @@ describe("curriculum and progress", () => {
     expect(p.diagnostic.answers).toHaveLength(3);
     for (let i = 3; i < 8; i++)
       p = answerDiagnostic(p, diagnosticDeck[i].correct);
-    expect(p.profile.level).toBe(4);
+    expect(p.profile.level).toBe(1);
+    expect(lessonOpen(p, "lesson-2")).toBe(false);
     expect(Object.values(p.diagnostic.skillScores)).toEqual([
       100, 100, 100, 100, 100, 100,
     ]);
@@ -115,7 +127,7 @@ describe("curriculum and progress", () => {
     let wrong = createProgress();
     for (let i = 0; i < 8; i++)
       wrong = answerDiagnostic(wrong, (diagnosticDeck[i].correct + 1) % 4);
-    expect(wrong.profile.level).toBe(0);
+    expect(wrong.profile.level).toBe(1);
   });
   it("keeps overdue homework accessible and derives forgotten terms", () => {
     const p = createProgress(),

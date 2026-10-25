@@ -359,15 +359,6 @@ export default function AuthCard({
         )}
         {(mode === "login" || mode === "register") && (
           <>
-            <p className="auth-subtitle">{c.other}</p>
-            <div className="auth-providers">
-              {["Google", "GitHub", "Apple"].map((p) => (
-                <button disabled key={p}>
-                  {p}
-                  <small>{c.soon}</small>
-                </button>
-              ))}
-            </div>
             <p className="auth-caption">
               {mode === "login" ? c.needAccount : c.haveAccount}{" "}
               <button

@@ -35,6 +35,7 @@ export async function compileJob(
         {
           shell: false,
           windowsHide: true,
+          detached: process.platform !== "win32",
           env: environment,
         },
       );
@@ -59,7 +60,12 @@ export async function compileJob(
           });
           killer.once("close", () => finish(-1));
         } else {
-          child.kill("SIGKILL");
+          // Arduino CLI spawns avr-g++; kill the process group on timeout too.
+          try {
+            if (child.pid) process.kill(-child.pid, "SIGKILL");
+          } catch {
+            child.kill("SIGKILL");
+          }
           finish(-1);
         }
       }, 20000);
@@ -68,13 +74,14 @@ export async function compileJob(
       };
       child.stdout.on("data", collect);
       child.stderr.on("data", collect);
-      child.on("error", () => finish(-1));
+      child.on("error", () => finish(-2));
       child.on("close", finish);
     });
     if (result.exit === -1) return { error: "compiler_timeout" };
+    if (result.exit === -2) return { error: "compiler_unavailable" };
     if (result.exit !== 0)
       return {
-        error: result.exit === -1 ? "compiler_unavailable" : "compile_error",
+        error: "compile_error",
         diagnostics: parseDiagnostics(result.output),
       };
     return {

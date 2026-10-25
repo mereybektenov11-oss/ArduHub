@@ -1,7 +1,8 @@
 "use client";
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { onboardingRu } from "@/content/ru";
 import { learningRu as c } from "@/content/learning.ru";
 import { useLearningStore } from "@/lib/useLearningStore";
 import { useProgress } from "@/lib/useProgress";
@@ -24,6 +25,12 @@ export default function ProjectWorkspace({ id }: { id: string }) {
     [reply, setReply] = useState(""),
     [fallback, setFallback] = useState(false),
     [observed, setObserved] = useState(false);
+  const [savedAt, setSavedAt] = useState(0);
+  useEffect(() => {
+    if (!savedAt) return;
+    const timer = setTimeout(() => setSavedAt(0), 1000);
+    return () => clearTimeout(timer);
+  }, [savedAt]);
   const [compileErrors, setCompileErrors] = useState<string[]>([]);
   const project = store?.projects.find((p) => p.id === id);
   if (!store) return <p>{c.workspace}…</p>;
@@ -35,6 +42,7 @@ export default function ProjectWorkspace({ id }: { id: string }) {
       </Card>
     );
   const save = (patch: Partial<Project>) => {
+    setSavedAt(Date.now());
     setObserved(false);
     setReply("");
     mutate((s) => {
@@ -75,7 +83,6 @@ export default function ProjectWorkspace({ id }: { id: string }) {
     <div className="cab-stack">
       <div className="cab-row">
         <div>
-          <p className="cab-eyebrow">ARDUHUB LAB</p>
           <h1>{project.title}</h1>
         </div>
         <Action secondary href="/app/projects" prefetch={false}>
@@ -102,14 +109,22 @@ export default function ProjectWorkspace({ id }: { id: string }) {
       </div>
       <div className="cab-row">
         <p className={store.unavailable ? "l2-error" : "l2-note"} role="status">
-          {store.unavailable ? c.unsaved : c.saved}
+          {store.unavailable ? c.unsaved : savedAt > 0 ? c.saved : ""}
         </p>
-        <Action secondary onClick={() => exportProject(project)}>
-          {c.export}
-        </Action>
-        <Action secondary onClick={() => setConfirm(true)}>
-          {c.remove}
-        </Action>
+        <details className="project-actions">
+          <summary
+            className="cab-icon-btn"
+            aria-label={onboardingRu.projectMenu}
+          >
+            ⋯
+          </summary>
+          <Action secondary onClick={() => exportProject(project)}>
+            {c.export}
+          </Action>
+          <Action secondary onClick={() => setConfirm(true)}>
+            {c.remove}
+          </Action>
+        </details>
       </div>
       <Workspace
         onDiagnostics={setCompileErrors}

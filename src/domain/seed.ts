@@ -117,7 +117,7 @@ export function createProgress(): Progress {
     version: 1,
     curriculumVersion: 2,
     settings: { textScale: 1 },
-    profile: { name: cabinetRu.profile, avatar: "Ю", level: 0 },
+    profile: { name: cabinetRu.profile, avatar: "Ю", level: 1 },
     diagnostic: {
       status: "none",
       answers: [],

@@ -3,6 +3,7 @@ import { topics } from "./types";
 import { diagnosticDeck } from "@/content/cabinet.ru";
 import { lessons } from "./seed";
 import { lessonOpen } from "./progress/xp";
+import { levelFromXp } from "./progress/levels";
 export function diagnosticResult(answers: number[]) {
   const scores = Object.fromEntries(
     topics.map((topic) => {
@@ -39,7 +40,7 @@ export function answerDiagnostic(p: Progress, answer: number): Progress {
     ...p,
     profile: {
       ...p.profile,
-      level: done ? Math.max(p.profile.level, result.level) : p.profile.level,
+      level: levelFromXp(p.xp),
     },
     diagnostic: {
       status: done ? "done" : "inprogress",

@@ -1,17 +1,34 @@
 import type { Progress } from "@/domain/types";
 import { syncLessonStates } from "./xp";
+import { computeStageState } from "./courseState";
 export function mergeProgress(guest: Progress, account: Progress): Progress {
   const merged = structuredClone(account);
   for (const [id, value] of Object.entries(guest.lessons)) {
     const own = merged.lessons[id];
     if (!own) continue;
+    const ownDone =
+      own.status === "done" && computeStageState({ id }, own).practice;
+    const importedDone =
+      value.status === "done" && computeStageState({ id }, value).practice;
+    const preferImported =
+      !ownDone &&
+      (importedDone ||
+        (value.flowUpdatedAt ?? "") > (own.flowUpdatedAt ?? "") ||
+        (!own.stages && Boolean(value.stages)));
     merged.lessons[id] = {
       ...own,
-      ...((value.flowUpdatedAt ?? "") > (own.flowUpdatedAt ?? "")
+      rewarded:
+        own.rewarded ||
+        value.rewarded ||
+        own.status === "done" ||
+        value.status === "done",
+      ...(preferImported
         ? {
             stages: value.stages,
             practice: value.practice,
             quiz: value.quiz,
+            video: value.video,
+            completionSource: value.completionSource,
             flowUpdatedAt: value.flowUpdatedAt,
           }
         : {}),
@@ -33,7 +50,7 @@ export function mergeProgress(guest: Progress, account: Progress): Progress {
     };
   }
   merged.xp = Math.max(account.xp, guest.xp);
-  merged.profile.level = Math.max(account.profile.level, guest.profile.level);
+  // Level is recalculated from XP by syncLessonStates below.
   merged.collection = [
     ...new Set([...account.collection, ...guest.collection]),
   ];

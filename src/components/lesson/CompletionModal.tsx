@@ -8,10 +8,12 @@ export default function CompletionModal({
   rewarded,
   nextId,
   onClose,
+  halfReward = false,
 }: {
   rewarded: boolean;
   nextId?: string;
   onClose: () => void;
+  halfReward?: boolean;
 }) {
   const [fraction, setFraction] = useState(0);
   useEffect(() => {
@@ -47,12 +49,13 @@ export default function CompletionModal({
         <p>{c.successNote}</p>
         {rewarded ? (
           <div className="flow-rewards" aria-label={c.rewardLabel}>
-            <strong aria-label="30 XP">
-              <RewardIcon kind="xp" />+{Math.round(30 * fraction)} {c.rewardXp}
+            <strong aria-label={`${halfReward ? 15 : 30} XP`}>
+              <RewardIcon kind="xp" />+
+              {Math.round((halfReward ? 15 : 30) * fraction)} {c.rewardXp}
             </strong>
-            <strong aria-label="10 искр">
-              <RewardIcon kind="spark" />+{Math.round(10 * fraction)}{" "}
-              {c.rewardSparks}
+            <strong aria-label={`${halfReward ? 5 : 10} ${c.rewardSparks}`}>
+              <RewardIcon kind="spark" />+
+              {Math.round((halfReward ? 5 : 10) * fraction)} {c.rewardSparks}
             </strong>
           </div>
         ) : (

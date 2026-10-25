@@ -8,6 +8,8 @@
     "node": "24.x"
   },
   "scripts": {
+    "compile:smoke": "node scripts/compile-smoke.mjs",
+    "lint:copy": "node scripts/lint-copy.mjs",
     "hex:build": "node scripts/build-hex-cache.mjs",
     "videos:resolve": "node --env-file-if-exists=.env.local scripts/resolve-videos.mjs",
     "parts:build": "node scripts/build-parts-catalog.mjs",

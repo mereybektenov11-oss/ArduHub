@@ -153,7 +153,7 @@ export default function VideoStep({
 }: {
   lessonId: string;
   onDone: () => void;
-  onUnlock?: () => void;
+  onUnlock?: (evidence: { confirmed?: boolean; watchedRatio?: number }) => void;
   completed?: boolean;
   nextLabel?: string;
 }) {
@@ -191,7 +191,7 @@ export default function VideoStep({
   }
   const video = videos[index];
   useEffect(() => {
-    if (watched >= 0.8 && !completed) onUnlock?.();
+    if (watched >= 0.8 && !completed) onUnlock?.({ watchedRatio: watched });
   }, [watched, completed, onUnlock]);
   return (
     <Card className="polish-video-step">
@@ -238,11 +238,11 @@ export default function VideoStep({
         </div>
       )}
       {onUnlock && (
-        <Action secondary onClick={onUnlock}>
+        <Action secondary onClick={() => onUnlock({ confirmed: true })}>
           {flowCopy.watched}
         </Action>
       )}
-      {(!onUnlock || !video) && (
+      {!onUnlock && (
         <Action secondary onClick={onDone}>
           {c.withoutVideo} →
         </Action>

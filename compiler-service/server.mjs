@@ -24,7 +24,7 @@ const cacheDir =
   process.env.COMPILER_CACHE_DIR || join(tmpdir(), "arduhub-hex-cache");
 const key = process.env.COMPILER_SECRET || process.env.COMPILER_API_KEY;
 if (!key)
-  throw Error("Set COMPILER_API_KEY before starting the compiler gateway");
+  throw Error("Set COMPILER_SECRET before starting the compiler service");
 function authorized(value) {
   const a = Buffer.from(value ?? ""),
     b = Buffer.from(`Bearer ${key}`);
@@ -208,6 +208,8 @@ createServer(async (req, res) => {
     console.log(
       local
         ? "ArduHub local development compiler ready (loopback only)"
-        : "ArduHub isolated compiler gateway ready",
+        : container
+          ? "ArduHub container compiler service ready"
+          : "ArduHub Docker-job compiler gateway ready",
     ),
 );

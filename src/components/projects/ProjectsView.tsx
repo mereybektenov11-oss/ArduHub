@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { onboardingRu } from "@/content/ru";
 import { learningRu as c } from "@/content/learning.ru";
 import sketches from "@/content/sketches.json" with { type: "json" };
 import { emptyScene } from "@/domain/scene/scene";
@@ -55,7 +56,6 @@ export default function ProjectsView({
     <div className="cab-stack">
       <div className="cab-row">
         <div>
-          <p className="cab-eyebrow">ARDUHUB LAB</p>
           <h1>{c.projects}</h1>
           <p className="cab-lead">{c.projectsIntro}</p>
         </div>
@@ -89,33 +89,42 @@ export default function ProjectsView({
             { id: "ideas", title: c.ideas },
           ]}
         />
-        <label className="l2-import">
-          {c.import}
-          <input
-            type="file"
-            accept=".json,application/json"
-            disabled={!store || store.projects.length >= 20 || store.corrupt}
-            onChange={async (e) => {
-              const file = e.target.files?.[0];
-              e.target.value = "";
-              if (!file) return;
-              if (file.size > 200 * 1024) {
-                setMessage(c.importBad);
-                return;
-              }
-              const imported = importProject(await file.text());
-              if (!imported) {
-                setMessage(c.importBad);
-                return;
-              }
-              let ok = false;
-              mutate((s) => {
-                ok = s.add(imported);
-              });
-              setMessage(ok ? "" : c.limit);
-            }}
-          />
-        </label>
+        <details className="project-actions">
+          <summary
+            className="cab-icon-btn"
+            aria-label={onboardingRu.projectMenu}
+          >
+            ⋯
+          </summary>
+          <label className="l2-import">
+            {c.import}
+            <input
+              type="file"
+              aria-label={c.import}
+              accept=".json,application/json"
+              disabled={!store || store.projects.length >= 20 || store.corrupt}
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                e.target.value = "";
+                if (!file) return;
+                if (file.size > 200 * 1024) {
+                  setMessage(c.importBad);
+                  return;
+                }
+                const imported = importProject(await file.text());
+                if (!imported) {
+                  setMessage(c.importBad);
+                  return;
+                }
+                let ok = false;
+                mutate((s) => {
+                  ok = s.add(imported);
+                });
+                setMessage(ok ? "" : c.limit);
+              }}
+            />
+          </label>
+        </details>
       </div>
       {message && (
         <p role="alert" className="l2-error">
@@ -150,9 +159,17 @@ export default function ProjectsView({
                 </p>
                 <div className="cab-row">
                   <Action href={`/app/projects/${p.id}`}>{c.open} →</Action>
-                  <Action secondary onClick={() => exportProject(p)}>
-                    {c.export}
-                  </Action>
+                  <details className="project-actions">
+                    <summary
+                      className="cab-icon-btn"
+                      aria-label={onboardingRu.projectMenu}
+                    >
+                      ⋯
+                    </summary>
+                    <Action secondary onClick={() => exportProject(p)}>
+                      {c.export}
+                    </Action>
+                  </details>
                 </div>
               </Card>
             ))

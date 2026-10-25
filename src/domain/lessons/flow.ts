@@ -1,4 +1,5 @@
 import type { Draft } from "@/domain/projects/storage";
+import { computeStageState } from "@/domain/progress/courseState";
 export const lessonStages = ["video", "test", "practice"] as const;
 export type LessonStage = (typeof lessonStages)[number];
 export type FlowQuestion = {
@@ -21,6 +22,7 @@ export type FlowQuiz = {
   awardedAnswers?: Record<string, number>;
 };
 export type LessonFlowState = {
+  video?: { confirmed?: boolean; watchedRatio?: number };
   tab?: "circuit" | "code" | "serial";
   version: 2;
   stage: LessonStage;
@@ -73,13 +75,21 @@ export function flowPercent(flow: LessonFlowState) {
       100,
   );
 }
-export function migrateLessonFlow(draft: Draft): LessonFlowState {
-  if (isLessonFlow(draft.flow)) return structuredClone(draft.flow);
+export function migrateLessonFlow(
+  draft: Draft,
+  lessonId = "",
+): LessonFlowState {
+  if (isLessonFlow(draft.flow)) {
+    const flow = structuredClone(draft.flow);
+    flow.stages = computeStageState({ id: lessonId }, flow);
+    flow.stage = canOpenStage(flow, flow.stage)
+      ? flow.stage
+      : firstUnfinished(flow);
+    return flow;
+  }
   const s = draft.steps;
-  const test = Boolean(s.quiz ?? (s.circuit || s.code || s.run));
-  const video = Boolean(
-    (s.video && s.theory) || test || s.circuit || s.code || s.run,
-  );
+  const test = false;
+  const video = false;
   const quiz = initialFlowQuiz();
   if (draft.quiz) {
     draft.quiz.answers.forEach((a, i) => {

@@ -9,6 +9,7 @@ import type { Lesson } from "@/domain/types";
 import NodePopover from "./NodePopover";
 import CurrentNodeLabel from "./CurrentNodeLabel";
 import { motionTokens } from "@/lib/motion";
+import { computeCourseState } from "@/domain/progress/courseState";
 function Node({
   lesson,
   index,
@@ -80,6 +81,7 @@ function Node({
 }
 export default function LessonPathV2() {
   const { progress: p } = useProgress();
+  const states = computeCourseState(lessons, p);
   const [recent, setRecent] = useState<string | null>(null);
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
@@ -103,7 +105,7 @@ export default function LessonPathV2() {
           <Node
             lesson={l}
             index={i}
-            status={p.lessons[l.id]?.status ?? "locked"}
+            status={states[i].status}
             recent={recent === l.id}
           />
         </div>

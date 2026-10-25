@@ -12,6 +12,8 @@ import CabinetIcon from "@/components/icons/NavigationIcon";
 import { Modal } from "@/components/cabinet/ui";
 import RightRail, { StatBar } from "./RightRail";
 import CommandPalette from "./CommandPalette";
+import NameDialog from "@/components/onboarding/NameDialog";
+import SavePrompt from "@/components/onboarding/SavePrompt";
 import RewardToast from "@/components/icons/RewardToast";
 
 export default function DashboardShell({ children }: { children: ReactNode }) {
@@ -27,7 +29,8 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
   } = useProgress();
   const [collapsed, setCollapsed] = useState<string[]>([]),
     [more, setMore] = useState(false),
-    [search, setSearch] = useState(false);
+    [search, setSearch] = useState(false),
+    [introduced, setIntroduced] = useState(false);
   useEffect(() => {
     const id = requestAnimationFrame(() => {
       try {
@@ -116,7 +119,7 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
               <span
                 className={`cab-avatar frame-${p.account?.avatarFrame || "none"}`}
               >
-                {p.profile.name.slice(0, 1)}
+                {p.profile.avatar || p.profile.name.slice(0, 1)}
               </span>
               <span>
                 {p.profile.name}
@@ -132,22 +135,12 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
             <StatBar />
           </div>
         )}
-        <div className={`dash-guest ${sessionExpired ? "dash-expired" : ""}`}>
-          <span>
-            {sessionExpired
-              ? c.sessionExpired
-              : p.account?.userId
-                ? p.account.role === "teacher"
-                  ? c.teacherSoon
-                  : p.profile.name
-                : c.guest}
-          </span>
-          {sessionExpired ? (
+        {sessionExpired && (
+          <div className="dash-expired" role="status">
+            <span>{c.sessionExpired}</span>
             <Link href="/sign-in">{c.signIn}</Link>
-          ) : (
-            !p.account?.userId && <Link href="/register">{c.register} ↗</Link>
-          )}
-        </div>
+          </div>
+        )}
         <div className="dash-columns">
           <main className="cab-main" id="cab-main">
             {children}
@@ -210,7 +203,9 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
         ?
       </button>
       <MentorAssistant />
-      <SpotlightTour key={path} />
+      {introduced && <SpotlightTour key={path} />}
+      <NameDialog onReady={() => setIntroduced(true)} />
+      {introduced && <SavePrompt />}
       <LevelUp />
       <RewardToast />
       {corrupt && (

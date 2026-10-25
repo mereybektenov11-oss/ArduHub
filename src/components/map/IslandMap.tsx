@@ -7,6 +7,7 @@ import { cabinetRu as c } from "@/content/cabinet.ru";
 import CabinetArt, { type ArtName } from "@/components/cabinet/CabinetArt";
 import CabinetIcon from "@/components/cabinet/CabinetIcon";
 import { Pill } from "@/components/cabinet/ui";
+import { computeCourseState } from "@/domain/progress/courseState";
 const positions = [
   [17, 68],
   [35, 43],
@@ -17,6 +18,7 @@ const positions = [
 export default function IslandMap() {
   const { progress: p, notify } = useProgress(),
     router = useRouter();
+  const states = computeCourseState(lessons, p);
   return (
     <div className="cab-stack cab-map">
       <div className="cab-row">
@@ -26,8 +28,8 @@ export default function IslandMap() {
           <p className="cab-lead">{c.mapIntro}</p>
         </div>
         <Pill>
-          {lessons.filter((l) => p.lessons[l.id].status === "done").length}{" "}
-          {uiCopy.text065} {lessons.length} {uiCopy.text066}
+          {states.filter((l) => l.status === "done").length} {uiCopy.text065}{" "}
+          {lessons.length} {uiCopy.text066}
         </Pill>
       </div>
       <div className="cab-island" data-tour="island">
@@ -92,9 +94,11 @@ export default function IslandMap() {
         {levels.map((level, i) => {
           const total = lessons.filter((l) => l.levelId === i),
             done = total.filter(
-              (l) => p.lessons[l.id].status === "done",
+              (l) => states.find((s) => s.id === l.id)?.status === "done",
             ).length,
-            locked = i > p.profile.level;
+            locked = !total.some(
+              (l) => states.find((s) => s.id === l.id)?.status !== "locked",
+            );
           return (
             <button
               key={i}

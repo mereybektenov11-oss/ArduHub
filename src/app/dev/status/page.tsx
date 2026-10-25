@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { serviceHealth, showDevStatus } from "@/lib/env";
 import { compilerHealth } from "@/services/compile/health";
 import { polishRu as c } from "@/content/ru";
+import { CompilerProbe } from "@/components/dev/CompilerProbe";
 export const dynamic = "force-dynamic";
 export default async function Page() {
   if (!showDevStatus()) notFound();
@@ -25,6 +26,7 @@ export default async function Page() {
           : c.statusMissing}{" "}
         · {compiler.ms} ms
       </p>
+      <CompilerProbe />
     </main>
   );
 }

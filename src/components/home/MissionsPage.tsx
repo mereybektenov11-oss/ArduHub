@@ -66,7 +66,6 @@ export default function MissionsPage() {
   return (
     <div className="cab-stack">
       <div>
-        <p className="cab-eyebrow">ArduHub / {c.groups[2].title}</p>
         <h1>{c.missions}</h1>
         <p className="cab-muted">
           {c.remaining}: <time>{remaining}</time>

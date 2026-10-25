@@ -65,7 +65,7 @@ export const partCategories = {
 export const paletteCopy = {
   search: "Найти деталь",
   all: "Все категории",
-  working: "Работает в симуляции",
+  working: "Можно запустить",
   empty: "Ничего не найдено",
   library: "Для кода нужна библиотека",
   unavailableLibrary: "Эта библиотека пока не подключена к компилятору",

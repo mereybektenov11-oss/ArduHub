@@ -1,15 +1,19 @@
 import type { Diagnostic } from "./explain";
 import { cachedHex } from "./cache";
+import { canInterpretArduino } from "@/domain/sim/interpreter";
 export type CompileResult = {
   hex?: string;
   warnings?: Diagnostic[];
   diagnostics?: Diagnostic[];
   error?: string;
-  source?: "precompiled" | "service";
+  source?: "precompiled" | "service" | "interpreter";
+  interpreterCode?: string;
 };
 export async function compile(code: string): Promise<CompileResult> {
   const cached = await cachedHex(code);
   if (cached) return { hex: cached, warnings: [], source: "precompiled" };
+  if (canInterpretArduino(code))
+    return { interpreterCode: code, source: "interpreter", warnings: [] };
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
       const response = await fetch("/api/compile", {

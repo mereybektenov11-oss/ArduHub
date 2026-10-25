@@ -1876,3 +1876,57 @@
   border-radius: var(--radius-card);
   background: var(--ink-800);
 }
+
+.onboarding-avatars {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  border: 0;
+  padding: 0;
+}
+.onboarding-avatars legend {
+  margin-bottom: var(--space-xs);
+}
+.onboarding-avatars button {
+  min-width: 44px;
+  min-height: 44px;
+}
+.onboarding-avatars button[aria-pressed="true"] {
+  outline: 2px solid var(--amber-500);
+  outline-offset: 2px;
+}
+
+.project-actions summary {
+  list-style: none;
+  cursor: pointer;
+  min-width: 44px;
+  min-height: 44px;
+}
+.project-actions summary::-webkit-details-marker {
+  display: none;
+}
+.project-actions .l2-import input {
+  max-width: 100%;
+}
+.leaderboard-empty {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-xs);
+}
+.leaderboard-podium {
+  display: flex;
+  align-items: end;
+  gap: var(--space-xs);
+}
+.leaderboard-podium > span {
+  display: grid;
+  place-items: start center;
+  min-width: 44px;
+  min-height: 44px;
+  background: var(--cream-100);
+  border-radius: var(--radius-sm);
+}
+.leaderboard-podium > span:nth-child(2) {
+  min-height: 70px;
+  background: var(--amber-500);
+}

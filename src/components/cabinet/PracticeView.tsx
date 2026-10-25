@@ -31,9 +31,7 @@ export default function PracticeView({ review = false }: { review?: boolean }) {
     <div className="cab-stack">
       <div className="cab-row">
         <div>
-          <p className="cab-eyebrow">{uiCopy.text039}</p>
           <h1>{c.title}</h1>
-          <p className="cab-lead">{c.intro}</p>
         </div>
         <Pill>
           {p.reviewQueue.length} {c.review}

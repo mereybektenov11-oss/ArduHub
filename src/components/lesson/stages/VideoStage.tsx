@@ -12,7 +12,7 @@ export default function VideoStage({
 }: {
   lesson: LearningLesson;
   completed: boolean;
-  onUnlock: () => void;
+  onUnlock: (evidence: { confirmed?: boolean; watchedRatio?: number }) => void;
   onContinue: () => void;
 }) {
   return (

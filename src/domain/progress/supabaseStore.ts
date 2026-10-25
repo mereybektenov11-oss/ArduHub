@@ -4,6 +4,7 @@ import { BrowserProgressStore, isProgress } from "./storage";
 import { createProgress } from "@/domain/seed";
 import { mergeProgress } from "./merge";
 import { xpLevel } from "./xp";
+import { normalizeProgress } from "./courseState";
 export function scopedStorage(storage: Storage, userId?: string) {
   return {
     getItem: (key: string) =>
@@ -54,7 +55,7 @@ export class SupabaseProgressStore extends BrowserProgressStore {
       profile: {
         ...p.profile,
         name: row.display_name,
-        level: Math.max(p.profile.level, xpLevel(xp)),
+        level: xpLevel(xp),
       },
       sparks: row.sparks,
       mentor: {
@@ -77,10 +78,11 @@ export class SupabaseProgressStore extends BrowserProgressStore {
       inventory: row.inventory ?? [],
       boosts: { freeze: row.freeze_count ?? 0, hints: row.hint_count ?? 0 },
     } as Progress;
-    super.save(next);
+    const normalized = normalizeProgress(next);
+    super.save(normalized);
     this.offline = false;
     this.onConnection(false);
-    return next;
+    return normalized;
   }
   override save(p: Progress) {
     super.save(p);
@@ -89,7 +91,7 @@ export class SupabaseProgressStore extends BrowserProgressStore {
       crypto.randomUUID(),
     );
     clearTimeout(this.timer);
-    this.timer = setTimeout(() => void this.flush(), 1500);
+    this.timer = setTimeout(() => void this.flush().catch(() => {}), 1500);
   }
   async flush() {
     clearTimeout(this.timer);
@@ -108,9 +110,10 @@ export class SupabaseProgressStore extends BrowserProgressStore {
         localStorage.removeItem("arduhub.pending-progress:" + this.userId);
       this.offline = false;
       this.onConnection(false);
-    } catch {
+    } catch (error) {
       this.offline = true;
       this.onConnection(true);
+      throw error;
     }
   }
   override reset() {

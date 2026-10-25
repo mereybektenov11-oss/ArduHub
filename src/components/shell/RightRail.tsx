@@ -1,15 +1,12 @@
 "use client";
+import { levelFromXp, XP_THRESHOLDS } from "@/domain/progress/levels";
 import { dashboardRu as c } from "@/content/dashboard.ru";
 import { polishRu } from "@/content/ru";
 import { useProgress } from "@/lib/useProgress";
 import { activeStreak } from "@/domain/progress/streak";
 import Link from "next/link";
-import Leaderboard from "@/components/home/Leaderboard";
-import { dailyFacts } from "@/content/dashboard.ru";
 import { Card } from "@/components/cabinet/ui";
 import { dailyState } from "@/domain/missions";
-import { usePathname } from "next/navigation";
-import Schedule from "@/components/cabinet/Schedule";
 import { useState, useEffect } from "react";
 import RewardIcon, { type RewardKind } from "@/components/icons/RewardIcon";
 import AnimatedCount from "@/components/icons/AnimatedCount";
@@ -52,48 +49,39 @@ export function StatBar() {
 }
 export default function RightRail() {
   const { progress: p } = useProgress();
-  const [open, setOpen] = useState(false);
-  const path = usePathname();
+  const level = levelFromXp(p.xp);
+  const start = XP_THRESHOLDS[level - 1];
+  const next = XP_THRESHOLDS[level];
+  const levelProgress = next === undefined ? 1 : p.xp - start;
+  const levelTarget = next === undefined ? 1 : next - start;
   const [now, setNow] = useState(() => new Date());
   useEffect(() => {
     const timer = setInterval(() => setNow(new Date()), 30000);
     return () => clearInterval(timer);
   }, []);
-  const fact =
-    dailyFacts[Math.floor(now.getTime() / 86400000) % dailyFacts.length];
   const daily = dailyState(p, now);
   return (
     <aside className="dash-rail">
       <StatBar />
       <Card tour="progress">
         <h2>
-          <LevelBadge value={p.profile.level + 1} />
-          {c.level} {p.profile.level + 1}
+          <LevelBadge value={level} />
+          {c.level} {level}
         </h2>
         <p>
           <RewardIcon kind="xp" /> {p.xp} XP
         </p>
-        <progress value={p.xp % 150} max={150} aria-label="XP" />
+        <progress
+          value={levelProgress}
+          max={levelTarget}
+          aria-label={next === undefined ? c.maxLevel : c.nextLevel}
+        />
+        <small>
+          {next === undefined
+            ? c.maxLevel
+            : `${c.nextLevel}: ${next - p.xp} XP`}
+        </small>
       </Card>
-      <Card className="dash-fact">
-        <div className="cab-row">
-          <h2>{c.fact}</h2>
-          <button
-            className="cab-text-link"
-            aria-expanded={open}
-            onClick={() => setOpen(!open)}
-          >
-            {c.open}
-          </button>
-        </div>
-        <p>{open ? fact : fact.split(" ").slice(0, 5).join(" ") + "…"}</p>
-      </Card>
-      <Card className="dash-pro">
-        <h2>ArduHub Pro</h2>
-        <p>{c.proNote}</p>
-        <span className="cab-pill">{c.soon}</span>
-      </Card>
-      <Leaderboard compact />
       <Card tour="missions">
         <div className="cab-row">
           <h2>{c.missions}</h2>
@@ -134,7 +122,6 @@ export default function RightRail() {
           </div>
         ))}
       </Card>
-      {path === "/app/lessons" && <Schedule />}
     </aside>
   );
 }
