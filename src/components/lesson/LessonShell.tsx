@@ -5,7 +5,9 @@ import { useProgress } from "@/lib/useProgress";
 import { activeStreak } from "@/domain/progress/streak";
 import CabinetArt, { type ArtName } from "@/components/cabinet/CabinetArt";
 import CabinetIcon from "@/components/icons/NavigationIcon";
-import RewardIcon from "@/components/icons/RewardIcon";
+import StreakIcon from "@/components/icons/StreakIcon";
+import ValueIcon from "@/components/icons/ValueIcon";
+import AnimatedCount from "@/components/icons/AnimatedCount";
 import { openMentor } from "@/components/mentor/openMentor";
 import { lessonFlowRu as c, learningRu } from "@/content/ru";
 import TopProgressLine from "./TopProgressLine";
@@ -43,16 +45,16 @@ export default function LessonShell({
         </div>
         <div className="flow-counters">
           <span title={c.course}>
-            <RewardIcon kind="flame" />
+            <StreakIcon />
             {activeStreak(p.streak)}
           </span>
-          <span>
-            <RewardIcon kind="spark" />
-            {p.sparks}
+          <span data-reward-target="sparks">
+            <ValueIcon name="sparks" value={p.sparks} />
+            <AnimatedCount value={p.sparks} />
           </span>
-          <span>
-            <RewardIcon kind="token" />
-            {p.mentor.tokens}
+          <span data-reward-target="tokens">
+            <ValueIcon name="tokens" value={p.mentor.tokens} />
+            <AnimatedCount value={p.mentor.tokens} />
           </span>
         </div>
       </header>

@@ -3,11 +3,7 @@
   "project": {
     "name": "arduhub-landing",
     "productType": "Educational Arduino learning dashboard for schoolchildren",
-    "stack": [
-      "nextjs",
-      "react",
-      "tailwind-v4"
-    ]
+    "stack": ["nextjs", "react", "tailwind-v4"]
   },
   "sources": {
     "tokens": [
@@ -15,13 +11,9 @@
       "src/app/app/cabinet.css",
       "src/lib/motion.ts"
     ],
-    "components": [
-      "src/components/ui"
-    ],
+    "components": ["src/components/ui"],
     "assets": [],
-    "instructions": [
-      "AGENTS.md"
-    ]
+    "instructions": ["AGENTS.md"]
   },
   "design": {
     "colorMode": "light",
@@ -205,7 +197,9 @@
       "Decorative gradients and unrelated visual redesigns."
     ]
   },
-  "decisions": [],
+  "decisions": [
+    "G3 preserves the existing dashboard palette; thematic SVG icons use the flame, ice, spark and chip colors specified in docs/ArduHub_G3_motion_sound_icons.md. Event motion has bounded lifetimes and a reduced-motion alternative."
+  ],
   "evidence": [
     {
       "fact": "components.installed",

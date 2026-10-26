@@ -21,6 +21,10 @@ import { useProgress } from "@/lib/useProgress";
 import { browserSupabase } from "@/lib/supabase/client";
 import { Card, Action, SkillBar } from "@/components/cabinet/ui";
 import { activeStreak } from "@/domain/progress/streak";
+import { useSound } from "@/lib/useSound";
+import { motionSoundRu } from "@/content/motion-sound.ru";
+import Icon from "@/components/icons/Icon";
+import { streakVisualState } from "@/lib/streakState";
 const topicParts: Record<(typeof topics)[number], PartType> = {
   leds: "led",
   buttons: "button",
@@ -30,6 +34,7 @@ const topicParts: Record<(typeof topics)[number], PartType> = {
   projects: "uno",
 };
 export default function ProfilePage() {
+  const sound = useSound();
   const { progress: p, update, notify, refreshAccount } = useProgress();
   const router = useRouter();
   const [name, setName] = useState(p.profile.name),
@@ -107,7 +112,7 @@ export default function ProfilePage() {
         <p>
           <LevelBadge value={levelFromXp(p.xp)} />
           {c.level} {levelFromXp(p.xp)} · <RewardIcon kind="xp" /> {p.xp} XP ·{" "}
-          <RewardIcon kind="flame" /> {activeStreak(p.streak)}{" "}
+          <Icon name="streak" state={streakVisualState(p, new Date())} value={p.streak.count} /> {activeStreak(p.streak)}{" "}
           {c.streak.toLowerCase()}
         </p>
         <p>
@@ -166,22 +171,25 @@ export default function ProfilePage() {
             {c.hide}
           </label>
           <h2>{k.settings}</h2>
+          <label>
+            {motionSoundRu.volume}
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.05"
+              value={sound.volume}
+              onChange={(e) => sound.setVolume(Number(e.target.value))}
+            />
+            <output>{Math.round(sound.volume * 100)}%</output>
+          </label>
           <label className="kids-setting-switch">
             {k.sounds}
             <input
               type="checkbox"
               role="switch"
-              checked={p.settings?.sounds !== false}
-              onChange={(e) =>
-                update((x) => ({
-                  ...x,
-                  settings: {
-                    ...x.settings,
-                    textScale: x.settings?.textScale ?? 1,
-                    sounds: e.target.checked,
-                  },
-                }))
-              }
+              checked={sound.enabled}
+              onChange={sound.toggle}
             />
           </label>
           <label className="kids-setting-switch">

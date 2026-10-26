@@ -23,15 +23,21 @@ import { xpLevel, syncLessonStates } from "@/domain/progress/xp";
 import { mergeProgress } from "@/domain/progress/merge";
 import { dashboardRu as d } from "@/content/dashboard.ru";
 import { Modal } from "@/components/cabinet/ui";
-import { freezeStreak } from "@/domain/progress/streak";
-import { recordDaily } from "@/domain/missions";
+import { settleStreak } from "@/domain/progress/streak";
+import { motionSoundRu } from "@/content/motion-sound.ru";
+import {
+  recordDaily,
+  dailyState,
+  missionsDone,
+  claimDaily,
+} from "@/domain/missions";
 import { lessons } from "@/domain/seed";
 import { usePathname } from "next/navigation";
 import LessonShell from "@/components/lesson/LessonShell";
 import LessonSkeleton from "@/components/lesson/LessonSkeleton";
 import { lessonFlowRu } from "@/content/ru";
 import { motionTokens } from "@/lib/motion";
-import { configureSfx, playSfx } from "@/lib/sfx";
+import { configureSfx, playSfx, unlockSfx } from "@/lib/sfx";
 type Context = {
   progress: Progress;
   update: (fn: (p: Progress) => Progress) => void;
@@ -46,15 +52,22 @@ type Context = {
   levelUp: number | null;
   dismissLevelUp: () => void;
   refreshAccount: () => Promise<void>;
+  claimMissions: () => Promise<boolean>;
 };
 const ProgressContext = createContext<Context | null>(null);
 export function ProgressProvider({ children }: { children: ReactNode }) {
   const [progress, setProgress] = useState(createProgress);
   const [ready, setReady] = useState(false);
   useEffect(() => {
-    configureSfx({ enabled: progress.settings?.sounds !== false });
-  }, [progress.settings?.sounds]);
+    configureSfx({
+      enabled: progress.settings?.sounds !== false,
+      volume: progress.settings?.soundVolume ?? 0.5,
+    });
+  }, [progress.settings?.sounds, progress.settings?.soundVolume]);
   useEffect(() => {
+    const activate = (event: Event) => {
+      if (event.isTrusted) unlockSfx();
+    };
     const feedback = (event: MouseEvent) => {
       const target = event.target;
       if (!(target instanceof Element)) return;
@@ -67,8 +80,14 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
       )
         playSfx("tap");
     };
+    document.addEventListener("pointerdown", activate, true);
+    document.addEventListener("keydown", activate, true);
     document.addEventListener("click", feedback);
-    return () => document.removeEventListener("click", feedback);
+    return () => {
+      document.removeEventListener("pointerdown", activate, true);
+      document.removeEventListener("keydown", activate, true);
+      document.removeEventListener("click", feedback);
+    };
   }, []);
   const [loadError, setLoadError] = useState(false);
   const path = usePathname();
@@ -90,6 +109,60 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
   const [offline, setOffline] = useState(false);
   const [sessionExpired, setSessionExpired] = useState(false);
   const awards = useRef(Promise.resolve());
+  const missionPending = useRef(false);
+  async function claimMissions() {
+    const before = current.current;
+    if (
+      missionPending.current ||
+      dailyState(before).claimed ||
+      !missionsDone(before)
+    )
+      return false;
+    missionPending.current = true;
+    try {
+      const userId = before.account?.userId;
+      if (userId) {
+        const day = dailyState(before).day;
+        const task = awards.current
+          .catch(() => {})
+          .then(async () => {
+            await flushAwards(
+              localStorage,
+              userId,
+              () => current.current.account?.userId,
+              async () => {
+                if (store.current instanceof SupabaseProgressStore)
+                  await store.current.flush();
+              },
+            );
+            if (current.current.account?.userId !== userId) throw Error();
+            const response = await fetch("/api/award", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                source: "mission",
+                refId: day,
+                amount: 5,
+              }),
+            });
+            if (!response.ok && response.status !== 409) throw Error();
+            await refreshAccount();
+            update((x) => ({
+              ...x,
+              daily: { ...dailyState(x), claimed: true },
+            }));
+          });
+        awards.current = task;
+        await task;
+      } else update((x) => claimDaily(x));
+      return true;
+    } catch {
+      setOffline(true);
+      return false;
+    } finally {
+      missionPending.current = false;
+    }
+  }
   const refreshAccount = useCallback(async () => {
     if (store.current instanceof SupabaseProgressStore) {
       const loaded = await store.current.hydrate();
@@ -122,7 +195,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
       const local = new BrowserProgressStore(storage);
       const guest = local.load();
       let selected: BrowserProgressStore = local;
-      let loaded = freezeStreak(guest);
+      let loaded = guest;
       try {
         const client = browserSupabase();
         if (client) {
@@ -161,6 +234,23 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
         setOffline(true);
       }
       if (cancelled) return;
+      const settled = settleStreak(loaded);
+      loaded = settled.progress;
+      const streakEvent =
+        settled.event ??
+        (selected instanceof SupabaseProgressStore && selected.streakWasFrozen
+          ? "frozen"
+          : null);
+      if (streakEvent) {
+        setToast(
+          streakEvent === "frozen"
+            ? motionSoundRu.streakSaved
+            : motionSoundRu.streakLost,
+        );
+        try {
+          sessionStorage.setItem("arduhub.streak.event", streakEvent);
+        } catch {}
+      }
       store.current = selected;
       loaded = syncLessonStates(loaded);
       current.current = loaded;
@@ -222,6 +312,30 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
       syncLessonStates(fn(current.current)),
     );
     const before = current.current;
+    if (next.streak.count > before.streak.count) {
+      playSfx("streak_ignite");
+      setToast(motionSoundRu.streak(next.streak.count));
+    }
+    if (next.xp > before.xp || next.sparks > before.sparks)
+      playSfx("spark_gain");
+    const openedLevel = lessons.find(
+      (l) =>
+        l.levelId > 0 &&
+        before.lessons[l.id]?.status === "locked" &&
+        next.lessons[l.id]?.status !== "locked" &&
+        !lessons.some(
+          (other) =>
+            other.levelId === l.levelId &&
+            before.lessons[other.id]?.status !== "locked",
+        ),
+    );
+    if (openedLevel)
+      try {
+        sessionStorage.setItem(
+          "arduhub.map.unlock",
+          String(openedLevel.levelId),
+        );
+      } catch {}
     if (before.account?.userId) {
       const completed = lessons.filter(
         (l) =>
@@ -299,8 +413,10 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     if (
       next.profile.level > current.current.profile.level &&
       next.xp > current.current.xp
-    )
+    ) {
       setLevelUp(next.profile.level);
+      playSfx("level_up");
+    }
     current.current = next;
     store.current?.save(next);
     setProgress(next);
@@ -327,6 +443,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
         levelUp,
         dismissLevelUp: () => setLevelUp(null),
         refreshAccount,
+        claimMissions,
       }}
     >
       {ready ? (

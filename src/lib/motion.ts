@@ -28,6 +28,19 @@ export const motionTokens = {
     islandDrift: 28,
   },
   stagger: 0.11,
+  events: {
+    correct: 0.3,
+    wrong: 0.3,
+    drop: 0.4,
+    wire: 0.2,
+    check: 0.4,
+    flight: 0.7,
+    confetti: 1.5,
+    count: 0.7,
+    purchase: 0.6,
+    unlock: 0.7,
+    level: 1,
+  },
   kids: { feedback: 0.08, led: 1, nudge: 0.2 },
   bankStagger: 0.07,
   lessonFlow: {
@@ -56,6 +69,12 @@ export const motionTokens = {
 } as const;
 
 export const motionCssVars = {
+  ...Object.fromEntries(
+    Object.entries(motionTokens.events).map(([key, value]) => [
+      `--event-${key}`,
+      `${value}s`,
+    ]),
+  ),
   ...Object.fromEntries(
     Object.entries(motionTokens.kids).map(([key, value]) => [
       `--kids-motion-${key}`,

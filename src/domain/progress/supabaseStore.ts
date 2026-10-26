@@ -16,6 +16,7 @@ export function scopedStorage(storage: Storage, userId?: string) {
   };
 }
 export class SupabaseProgressStore extends BrowserProgressStore {
+  streakWasFrozen = false;
   private timer: ReturnType<typeof setTimeout> | undefined;
   offline = false;
   constructor(
@@ -27,7 +28,8 @@ export class SupabaseProgressStore extends BrowserProgressStore {
   }
   async hydrate(): Promise<Progress> {
     const local = this.load();
-    await this.client.rpc("consume_boost", { kind: "freeze" });
+    const consumed = await this.client.rpc("consume_boost", { kind: "freeze" });
+    this.streakWasFrozen = consumed.data?.used === true;
     const [stored, profile, events] = await Promise.all([
       this.client
         .from("progress")
@@ -51,6 +53,19 @@ export class SupabaseProgressStore extends BrowserProgressStore {
       events.data?.reduce((sum, event) => sum + Number(event.amount), 0) ?? 0;
     const next = {
       ...p,
+      ...(this.streakWasFrozen && p.streak.lastActiveDate
+        ? {
+            streak: {
+              ...p.streak,
+              frozenDates: [
+                ...new Set([
+                  ...(p.streak.frozenDates ?? []),
+                  p.streak.lastActiveDate,
+                ]),
+              ],
+            },
+          }
+        : {}),
       xp,
       profile: {
         ...p.profile,

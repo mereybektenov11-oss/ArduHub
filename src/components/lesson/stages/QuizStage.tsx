@@ -10,6 +10,8 @@ import {
 import { Action } from "@/components/cabinet/ui";
 import { openMentor } from "@/components/mentor/openMentor";
 import { kidsMentorRu } from "@/content/kids-mentor.ru";
+import { playSfx } from "@/lib/sfx";
+import { CheckDraw } from "@/components/feedback/EventFeedback";
 export default function QuizStage({
   lessonId,
   questions,
@@ -59,6 +61,7 @@ export default function QuizStage({
         : value.awardedAnswers,
     };
     onChange(next, false, newAward);
+    playSfx(correct ? "correct" : "wrong");
   }
   function advance() {
     const last = review
@@ -168,7 +171,13 @@ export default function QuizStage({
                 disabled={answer !== undefined}
                 onClick={() => choose(i)}
               >
-                <span aria-hidden="true">{i + 1}</span>
+                <span aria-hidden="true">
+                  {answer === i && i === current.correctIndex ? (
+                    <CheckDraw />
+                  ) : (
+                    i + 1
+                  )}
+                </span>
                 {option}
               </button>
             ))}

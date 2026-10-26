@@ -134,6 +134,7 @@ export type Progress = {
   settings?: {
     textScale: 1 | 1.15 | 1.3;
     sounds?: boolean;
+    soundVolume?: number;
     mentorHints?: boolean;
   };
   profile: { name: string; avatar: string; level: number };
@@ -144,7 +145,12 @@ export type Progress = {
   };
   lessons: Record<string, LessonProgress>;
   reviewQueue: { termOrLessonId: string; errorCode: string; addedAt: string }[];
-  streak: { count: number; lastActiveDate: string | null };
+  streak: {
+    count: number;
+    lastActiveDate: string | null;
+    frozenDates?: string[];
+    activityDates?: string[];
+  };
   sparks: number;
   xp: number;
   mentor: { selectedId: string; unlockedIds: string[]; tokens: number };

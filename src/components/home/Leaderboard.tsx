@@ -8,7 +8,7 @@ import { browserSupabase } from "@/lib/supabase/client";
 import type { LeaderboardRow } from "@/lib/supabase/types";
 import { useProgress } from "@/lib/useProgress";
 import { Card } from "@/components/cabinet/ui";
-import RewardIcon from "@/components/icons/RewardIcon";
+import Icon from "@/components/icons/Icon";
 export default function Leaderboard({
   compact = false,
 }: {
@@ -42,7 +42,17 @@ export default function Leaderboard({
           {visible.map((row) => (
             <li key={row.rank} className={row.is_self ? "self" : ""}>
               <strong className={`polish-medal rank-${row.rank}`}>
-                {row.rank <= 3 && <RewardIcon kind="medal" />}
+                {row.rank <= 3 && (
+                  <Icon
+                    name={
+                      row.rank === 1
+                        ? "gold"
+                        : row.rank === 2
+                          ? "silver"
+                          : "bronze"
+                    }
+                  />
+                )}
                 {row.rank}
               </strong>
               <span
@@ -69,7 +79,11 @@ export default function Leaderboard({
       )}
       {!compact && own && (
         <p className="kids-own-rank">
-          <RewardIcon kind="medal" />
+          <Icon
+            name={
+              own.rank === 1 ? "gold" : own.rank === 2 ? "silver" : "bronze"
+            }
+          />
           {k.ownRank(own.rank)}
         </p>
       )}

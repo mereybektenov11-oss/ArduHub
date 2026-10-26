@@ -560,3 +560,6 @@ export const onboardingRu = {
   greeting: "Привет",
   didYouKnow: "Знаешь ли ты?",
 } as const;
+export { motionSoundRu } from "./motion-sound.ru";
+export { iconsRu } from "./icons.ru";
+export { mapRu } from "./map.ru";

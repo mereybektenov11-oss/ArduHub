@@ -95,6 +95,15 @@ export class BrowserProgressStore implements ProgressStore {
         settings: {
           sounds: data.settings?.sounds !== false,
           mentorHints: data.settings?.mentorHints !== false,
+          ...(typeof data.settings?.soundVolume === "number" &&
+          Number.isFinite(data.settings.soundVolume)
+            ? {
+                soundVolume: Math.max(
+                  0,
+                  Math.min(1, data.settings.soundVolume),
+                ),
+              }
+            : {}),
           textScale: [1, 1.15, 1.3].includes(data.settings?.textScale ?? 0)
             ? data.settings!.textScale
             : 1,

@@ -15,6 +15,7 @@ import { learningRu as c } from "@/content/learning.ru";
 import PartView from "./PartView";
 import { fitSceneToViewport } from "@/domain/scene/viewport";
 import { kidsWorkspaceRu as k } from "@/content/kids-workspace.ru";
+import { playSfx } from "@/lib/sfx";
 export default function Canvas({
   scene,
   onChange,
@@ -148,6 +149,12 @@ export default function Canvas({
     })),
   };
   const [hovered, setHovered] = useState<PinRef | null>(null);
+  const [flash, setFlash] = useState<string | null>(null);
+  useEffect(() => {
+    if (!flash) return;
+    const timer = setTimeout(() => setFlash(null), 400);
+    return () => clearTimeout(timer);
+  }, [flash]);
   const linked = hovered ? connections(scene) : null;
   function wire(p: PinRef) {
     if (disabled) return;
@@ -157,6 +164,8 @@ export default function Canvas({
       return;
     }
     if (canWire(scene, pending, p)) {
+      playSfx("wire_snap");
+      setFlash(pinKey(p));
       onChange({
         ...scene,
         wires: [
@@ -405,8 +414,9 @@ export default function Canvas({
                 if (!a || !b) return null;
                 const points = [a, ...w.bends, b];
                 return (
-                  <g key={w.id}>
+                  <g key={w.id} className="g3-wire-connected">
                     <polyline
+                      pathLength="1"
                       points={points.map((p) => `${p.x},${p.y}`).join(" ")}
                       fill="none"
                       stroke={w.color}
@@ -571,7 +581,7 @@ export default function Canvas({
                       setHovered({ componentId: part.id, pin: pin.name })
                     }
                     onPointerLeave={() => setHovered(null)}
-                    className={`l2-pin ${pending && pinKey(pending) === `${part.id}:${pin.name}` ? "pending" : ""}`}
+                    className={`l2-pin ${pending && pinKey(pending) === `${part.id}:${pin.name}` ? "pending" : ""} ${flash === `${part.id}:${pin.name}` ? "g3-pin-connected" : ""}`}
                     aria-label={`${part.id} ${pin.name}`}
                     disabled={disabled}
                     style={{

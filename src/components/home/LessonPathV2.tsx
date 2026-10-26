@@ -11,17 +11,30 @@ import CurrentNodeLabel from "./CurrentNodeLabel";
 import { motionTokens } from "@/lib/motion";
 import { computeCourseState } from "@/domain/progress/courseState";
 import { kidsHomeRu as k } from "@/content/kids-home.ru";
-import CabinetIcon from "@/components/icons/NavigationIcon";
+import Icon, { type IconName } from "@/components/icons/Icon";
+import type { Topic } from "@/domain/types";
+import { playSfx } from "@/lib/sfx";
+import { NodeLightUp } from "@/components/feedback/EventFeedback";
+const topicIcons: Record<Topic, IconName> = {
+  leds: "led",
+  buttons: "button",
+  sensors: "sensor",
+  motors: "motor",
+  display: "display",
+  projects: "rocket",
+};
 function Node({
   lesson,
   index,
   status,
   recent,
+  unlock,
 }: {
   lesson: Lesson;
   index: number;
   status: string;
   recent: boolean;
+  unlock: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const anchor = useRef<HTMLButtonElement>(null),
@@ -56,13 +69,30 @@ function Node({
           onBlur={cancel}
           onClick={() => setOpen((v) => !v)}
         >
-          {status === "done" ? (
-            "✓"
-          ) : status === "locked" ? (
-            <CabinetIcon name="lock" />
-          ) : (
-            index + 1
+          {unlock && (
+            <svg
+              className="g3-unlock-lock"
+              viewBox="0 0 24 24"
+              width="24"
+              height="24"
+              aria-hidden="true"
+            >
+              <path d="M6 10h12v11H6Zm2 0V7a4 4 0 0 1 8 0v3" />
+            </svg>
           )}
+          <NodeLightUp active={recent || unlock}>
+            <Icon
+              name={topicIcons[lesson.topic]}
+              state={
+                status === "done"
+                  ? "done"
+                  : status === "locked"
+                    ? "locked"
+                    : "current"
+              }
+              size={32}
+            />
+          </NodeLightUp>
         </button>
       </div>
       <div className="dash-node-title">
@@ -92,11 +122,17 @@ export default function LessonPathV2() {
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
       try {
-        setRecent(sessionStorage.getItem("arduhub.lesson.completed"));
+        const completed = sessionStorage.getItem("arduhub.lesson.completed");
+        setRecent(completed);
+        if (completed) playSfx("unlock");
         sessionStorage.removeItem("arduhub.lesson.completed");
       } catch {}
     });
-    return () => cancelAnimationFrame(frame);
+    const timer = setTimeout(() => setRecent(null), 1400);
+    return () => {
+      cancelAnimationFrame(frame);
+      clearTimeout(timer);
+    };
   }, []);
   return (
     <div className="dash-path" data-tour="path">
@@ -128,6 +164,7 @@ export default function LessonPathV2() {
                     index={index}
                     status={states[index].status}
                     recent={recent === lesson.id}
+                    unlock={!!recent && lessons[index - 1]?.id === recent}
                   />
                 );
               })}

@@ -271,7 +271,7 @@ function LessonFlow({
   function verify() {
     const found = checkScene(draft.scene, lesson.circuit.referenceScene);
     nudge.recordCheck(found.length === 0);
-    playSfx(found.length ? "retry" : "success");
+    playSfx(found.length ? "wrong" : "correct");
     setErrors(found);
     const issue = codeIssue(draft.code),
       code =
@@ -311,7 +311,7 @@ function LessonFlow({
     const pass =
       !found.length && !codeIssue(draft.code) && result.every((r) => r.pass);
     nudge.recordCheck(pass);
-    playSfx(pass ? "success" : "retry");
+    playSfx(pass ? "correct" : "wrong");
     save({
       ...draft,
       flow: {
@@ -360,8 +360,10 @@ function LessonFlow({
     setServerFailures(0);
   }
   const hintKind = flow.tab === "code" ? "code" : "circuit";
-  const addHint = () =>
+  const addHint = () => {
+    playSfx("hint");
     setHint((h) => ({ ...h, [hintKind]: Math.min(3, h[hintKind] + 1) }));
+  };
   const expected = lessonExpected[index] ?? lesson.task ?? "";
   function changeQuiz(quiz: FlowQuiz, passed: boolean, newAward?: string) {
     const valid =

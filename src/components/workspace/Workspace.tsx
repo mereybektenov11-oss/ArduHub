@@ -28,6 +28,7 @@ import { freePosition, snap } from "@/domain/scene/placement";
 import { useProgress } from "@/lib/useProgress";
 import { askMentor } from "@/services/mentor/client";
 import { kidsWorkspaceRu as k } from "@/content/kids-workspace.ru";
+import { playSfx } from "@/lib/sfx";
 const CodePanel = dynamic(() => import("./CodePanel"), {
   ssr: false,
   loading: () => <p>{c.code}…</p>,
@@ -214,6 +215,7 @@ export default function Workspace({
   }
   async function run() {
     if (status !== "idle" || !canRun) return;
+    playSfx("run_start");
     const issue = codeIssue(code);
     if (issue) {
       onCompileResult?.({ error: "compile_error" });
@@ -392,6 +394,7 @@ export default function Workspace({
       ],
     });
     setSelected(id);
+    playSfx("part_drop");
   }
   return (
     <section
@@ -441,12 +444,12 @@ export default function Workspace({
         <div className="cab-row">
           {
             <Action
-              className="kids-run-action"
+              className={`kids-run-action ${status === "running" ? "g3-running" : ""}`}
               onClick={run}
               disabled={busy || !canRun}
               aria-label={status === "compiling" ? c.compiling : k.run}
             >
-              ▶ {status === "compiling" ? c.compiling : k.run}
+              {busy ? "⏸" : "▶"} {status === "compiling" ? c.compiling : k.run}
             </Action>
           }
           {actions}

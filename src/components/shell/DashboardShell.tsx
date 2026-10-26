@@ -16,6 +16,9 @@ import CommandPalette from "./CommandPalette";
 import NameDialog from "@/components/onboarding/NameDialog";
 import SavePrompt from "@/components/onboarding/SavePrompt";
 import RewardToast from "@/components/icons/RewardToast";
+import SoundToggle from "./SoundToggle";
+import Chest from "@/components/feedback/Chest";
+import Icon from "@/components/icons/Icon";
 
 export default function DashboardShell({ children }: { children: ReactNode }) {
   const path = usePathname();
@@ -106,6 +109,7 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
         </aside>
       )}
       <div className="dash-page">
+        <SoundToggle />
         {!focus && (
           <button
             className="kids-mobile-search cab-icon-btn"
@@ -202,6 +206,7 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
       {introduced && <SavePrompt />}
       <LevelUp />
       <RewardToast />
+      <Chest />
       {corrupt && (
         <div className="cab-storage-warning" role="alert">
           {interfaceCopy.text008}
@@ -217,6 +222,7 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
       )}
       {(toast || (offline && !unavailable)) && (
         <div className="cab-toast" role="status">
+          {toast === c.saved && <Icon name="saved" state="done" />}
           {toast || c.offline}
         </div>
       )}

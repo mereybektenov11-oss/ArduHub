@@ -8,8 +8,11 @@ import { streakCalendar } from "@/domain/progress/streakCalendar";
 import { Card } from "@/components/cabinet/ui";
 import { dailyState } from "@/domain/missions";
 import { useState, useEffect } from "react";
-import RewardIcon, { type RewardKind } from "@/components/icons/RewardIcon";
 import AnimatedCount from "@/components/icons/AnimatedCount";
+import Icon from "@/components/icons/Icon";
+import { streakVisualState } from "@/lib/streakState";
+import StreakIcon from "@/components/icons/StreakIcon";
+import ValueIcon from "@/components/icons/ValueIcon";
 
 export function StatBar({ includeLevel = false }: { includeLevel?: boolean }) {
   const { progress: p } = useProgress();
@@ -32,11 +35,21 @@ export function StatBar({ includeLevel = false }: { includeLevel?: boolean }) {
           key={label}
           title={label + ": " + value}
           aria-label={label + ": " + value}
+          data-reward-target={
+            icon === "spark" ? "sparks" : icon === "token" ? "tokens" : "streak"
+          }
         >
           <span
             className={"polish-stat-icon " + icon + (!value ? " inactive" : "")}
           >
-            <RewardIcon kind={icon as RewardKind} />
+            {icon === "flame" ? (
+              <StreakIcon />
+            ) : (
+              <ValueIcon
+                name={icon === "spark" ? "sparks" : "tokens"}
+                value={Number(value)}
+              />
+            )}
           </span>
           <AnimatedCount value={Number(value)} />
           <small>{label}</small>
@@ -93,8 +106,9 @@ export default function RightRail() {
           return (
             <div key={title} className="dash-mission">
               <span>
-                <RewardIcon
-                  kind={value >= max ? "check" : "mission"}
+                <Icon
+                  name={i === 0 ? "book" : i === 1 ? "xp" : "target"}
+                  state={value >= max ? "done" : "idle"}
                   className="polish-mission-icon"
                 />
                 {title}
@@ -110,7 +124,12 @@ export default function RightRail() {
       </Card>
       <Card>
         <h2>
-          <RewardIcon kind="flame" /> {k.streak}
+          <Icon
+            name="streak"
+            state={streakVisualState(p, now)}
+            value={p.streak.count}
+          />{" "}
+          {k.streak}
         </h2>
         <div className="kids-streak-week">
           {streakCalendar(p.streak, now).map((day) => (
@@ -126,7 +145,13 @@ export default function RightRail() {
               }
             >
               <small>{k.weekdays[day.weekday]}</small>
-              <span>{day.active ? <RewardIcon kind="check" /> : day.day}</span>
+              <span>
+                <Icon
+                  name="streak"
+                  state={day.frozen ? "frozen" : day.active ? "active" : "none"}
+                />
+                <small>{day.day}</small>
+              </span>
             </div>
           ))}
         </div>

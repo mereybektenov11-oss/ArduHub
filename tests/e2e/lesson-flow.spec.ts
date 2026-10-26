@@ -138,6 +138,7 @@ test("full lesson, real AVR, reward once, next node and review", async ({
   await page.getByRole("button", { name: /^Запустить/ }).click();
   const dialog = page.getByRole("dialog", { name: "Урок пройден!" });
   await expect(dialog).toBeVisible({ timeout: 30000 });
+  await expect(dialog.locator("[data-confetti]")).toHaveCount(48);
   await expect(dialog.getByLabel("30 XP", { exact: true })).toHaveText(
     "+30 XP",
   );
@@ -151,8 +152,14 @@ test("full lesson, real AVR, reward once, next node and review", async ({
   const awarded = await getProgress();
   expect(awarded.xp).toBe(36);
   expect(awarded.sparks).toBe(10);
+  await page.waitForTimeout(2000);
+  await expect(
+    page.locator("[data-confetti],[data-reward-particle]"),
+  ).toHaveCount(0);
   await dialog.getByRole("link", { name: "К пути", exact: true }).click();
-  await expect(page.locator(".dash-node.done").first()).toHaveText("✓");
+  await expect(
+    page.locator('.dash-node.done [data-state="done"]').first(),
+  ).toBeVisible();
   await expect(page.locator(".flow-current-label").first()).toContainText(
     "Продолжить",
   );

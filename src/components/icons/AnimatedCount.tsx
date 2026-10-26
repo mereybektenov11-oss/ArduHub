@@ -1,17 +1,26 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-export default function AnimatedCount({ value }: { value: number }) {
-  const previous = useRef(value),
-    [display, setDisplay] = useState(value);
+import { motionTokens } from "@/lib/motion";
+export default function AnimatedCount({
+  value,
+  initialValue,
+}: {
+  value: number;
+  initialValue?: number;
+}) {
+  const previous = useRef(initialValue ?? value),
+    [display, setDisplay] = useState(initialValue ?? value);
   useEffect(() => {
     const from = previous.current;
-    previous.current = value;
     const start = performance.now();
     let frame = 0;
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     function tick(now: number) {
-      const t = reduced ? 1 : Math.min(1, (now - start) / 350);
-      setDisplay(Math.round(from + (value - from) * t));
+      const t = reduced
+        ? 1
+        : Math.min(1, (now - start) / (motionTokens.events.count * 1000));
+      previous.current = Math.round(from + (value - from) * t);
+      setDisplay(previous.current);
       if (t < 1) frame = requestAnimationFrame(tick);
     }
     frame = requestAnimationFrame(tick);

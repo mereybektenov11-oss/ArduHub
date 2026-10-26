@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useProgress } from "@/lib/useProgress";
 import { dashboardRu as c } from "@/content/dashboard.ru";
 import RewardIcon from "./RewardIcon";
+import { RewardFly } from "@/components/feedback/EventFeedback";
 export default function RewardToast() {
   const { progress: p, ready } = useProgress();
   const previous = useRef<{ value: number; account?: string } | null>(null),
@@ -23,6 +24,7 @@ export default function RewardToast() {
   return reward > 0 ? (
     <div className="polish-reward" role="status">
       <RewardIcon kind="spark" />+{reward} {c.sparks.toLowerCase()}
+      <RewardFly key={p.sparks} />
     </div>
   ) : null;
 }

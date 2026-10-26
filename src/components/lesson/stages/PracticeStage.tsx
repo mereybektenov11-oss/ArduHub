@@ -1,5 +1,7 @@
 "use client";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { playSfx } from "@/lib/sfx";
+import { CheckDraw } from "@/components/feedback/EventFeedback";
 import { lessonFlowRu as c } from "@/content/ru";
 import type { LearningLesson } from "@/domain/lessons/content";
 import type { LessonFlowState } from "@/domain/lessons/flow";
@@ -35,6 +37,16 @@ export default function PracticeStage({
   const [showTask, setShowTask] = useState(false),
     [expectedOutput, setExpectedOutput] = useState(false);
   const errorKey = errors.map((e) => e.message).join("|");
+  const previous = useRef(flow.practice);
+  useEffect(() => {
+    if (
+      (["circuit", "code", "run"] as const).some(
+        (key) => flow.practice[key] && !previous.current[key],
+      )
+    )
+      playSfx("check_done");
+    previous.current = flow.practice;
+  }, [flow.practice]);
   useEffect(() => {
     if (!errorKey) return;
     const frame = requestAnimationFrame(() => setShowTask(true));
@@ -90,7 +102,11 @@ export default function PracticeStage({
           <ol className="flow-checklist">
             {(["circuit", "code", "run"] as const).map((key, i) => (
               <li key={key} className={flow.practice[key] ? "is-done" : ""}>
-                <RewardIcon kind={flow.practice[key] ? "check" : "mission"} />
+                {flow.practice[key] ? (
+                  <CheckDraw />
+                ) : (
+                  <RewardIcon kind="mission" />
+                )}
                 <span>{c.checklist[i]}</span>
                 <span className="sr-only">
                   {flow.practice[key] ? c.correct : ""}

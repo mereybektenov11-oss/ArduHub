@@ -6,6 +6,7 @@ import MentorChat from "@/components/cabinet/MentorChat";
 import { Modal } from "@/components/cabinet/ui";
 import { mentorRouteAllowed } from "@/domain/mentor/entry";
 import type { MentorRequest } from "./openMentor";
+import { playSfx } from "@/lib/sfx";
 
 export default function MentorAssistant() {
   const pathname = usePathname();
@@ -26,6 +27,7 @@ export default function MentorAssistant() {
       );
     const open = (event: Event) => {
       if (!allowed()) return;
+      playSfx("mentor_open");
       setRequest({
         path: pathname,
         value: {

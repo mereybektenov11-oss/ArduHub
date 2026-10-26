@@ -115,7 +115,7 @@ test("shop switches three actual groups and empty leaderboard invents no rank", 
   await page.goto("/app/shop");
   await expect(page.locator(".kids-sparks")).toContainText("0");
   const tabs = page.getByRole("group", { name: "Магазин", exact: true });
-  await expect(tabs.getByRole("button")).toHaveCount(3);
+  await expect(tabs.getByRole("button")).toHaveCount(4);
   await tabs.getByRole("button", { name: "Бусты", exact: true }).click();
   await expect(
     page.getByRole("heading", { name: "Набор подсказок", exact: true }),

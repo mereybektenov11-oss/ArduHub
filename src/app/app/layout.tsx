@@ -8,6 +8,7 @@ import "./kids-pages.css";
 import "./kids-mentor.css";
 import "./kids-workspace.css";
 import "./kids-home.css";
+import "./event-feedback.css";
 export const metadata: Metadata = {
   title: "Кабинет ученика · ArduHub",
   robots: { index: false, follow: false },

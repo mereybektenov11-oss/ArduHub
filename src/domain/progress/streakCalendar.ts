@@ -20,7 +20,13 @@ export function streakCalendar(streak: Progress["streak"], now = new Date()) {
       day: day.getDate(),
       weekday: day.getDay(),
       today: index === 6,
-      active: ordinal <= end && ordinal > end - streak.count,
+      active: streak.activityDates
+        ? streak.activityDates.includes(date)
+        : ordinal <= end &&
+          ordinal > end - streak.count &&
+          !streak.frozenDates?.includes(date),
+      frozen: !!streak.frozenDates?.includes(date),
     };
   });
 }
+export const buildStreakCalendar = streakCalendar;
