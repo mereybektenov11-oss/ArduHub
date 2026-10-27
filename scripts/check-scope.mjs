@@ -11,6 +11,9 @@ const exact = new Set([
   "docs/ArduHub_H_small_fixes.md",
   "docs/H_NOTES.md",
   "docs/progress.md",
+  // User-requested follow-up: correct two-LED lesson completion.
+  "src/domain/checker/check.ts",
+  "src/domain/scene/check.ts",
   // Existing presentation call sites; behavior/content changes remain subject to review.
   "src/components/cabinet/ui/index.tsx",
   "src/components/cabinet/LevelUp.tsx",

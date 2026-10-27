@@ -32,8 +32,47 @@ export function checkScene(
   const linked = connections(scene, true);
   const mapping = new Map<string, string>();
   const used = new Set<string>();
+  const referenceBoard = reference.components.find((p) => p.type === "uno")!;
+  const referenceLinked = connections(reference, true);
   for (const expected of reference.components) {
+    const endpoints = reference.wires.flatMap((wire) => [wire.from, wire.to]);
+    const boardPins = [
+      ...new Set(
+        endpoints
+          .filter((p) => p.componentId === referenceBoard.id)
+          .map((p) => p.pin),
+      ),
+    ];
+    const pins = [
+      ...new Set(
+        endpoints
+          .filter((p) => p.componentId === expected.id)
+          .map((p) => p.pin),
+      ),
+    ];
+    const anchors = pins.flatMap((pin) =>
+      boardPins
+        .filter((boardPin) =>
+          referenceLinked(
+            { componentId: expected.id, pin },
+            { componentId: referenceBoard.id, pin: boardPin },
+          ),
+        )
+        .map((boardPin) => ({ pin, boardPin })),
+    );
     const actual =
+      scene.components.find(
+        (p) =>
+          !used.has(p.id) &&
+          p.type === expected.type &&
+          anchors.length > 0 &&
+          anchors.every(({ pin, boardPin }) =>
+            linked(
+              { componentId: p.id, pin },
+              { componentId: board.id, pin: boardPin },
+            ),
+          ),
+      ) ??
       scene.components.find(
         (p) =>
           !used.has(p.id) && p.type === expected.type && p.id === expected.id,

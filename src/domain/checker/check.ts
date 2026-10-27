@@ -41,8 +41,22 @@ export function check(net: Netlist, reference: Netlist): CheckError[] {
       severity: code === "extra_component" ? "warning" : "error",
     });
   };
-  const board = net.components.find((c) => c.type === "arduino"),
-    led = net.components.find((c) => c.type === "led");
+  const board = net.components.find((c) => c.type === "arduino");
+  const refBoard = reference.components.find((c) => c.type === "arduino")!;
+  const referenceSignal = reference.links
+    .flatMap((w) => [w.from, w.to])
+    .find((p) => p.componentId === refBoard.id && p.pin !== "GND")!.pin;
+  const led =
+    net.components.find(
+      (c) =>
+        c.type === "led" &&
+        board &&
+        path(
+          net,
+          { componentId: board.id, pin: referenceSignal },
+          { componentId: c.id, pin: "A" },
+        ),
+    ) ?? net.components.find((c) => c.type === "led");
   if (!board || !led) {
     add(
       "open_circuit",
@@ -50,10 +64,6 @@ export function check(net: Netlist, reference: Netlist): CheckError[] {
     );
     return result;
   }
-  const refBoard = reference.components.find((c) => c.type === "arduino")!;
-  const referenceSignal = reference.links
-    .flatMap((w) => [w.from, w.to])
-    .find((p) => p.componentId === refBoard.id && p.pin !== "GND")!.pin;
   const ground = { componentId: board.id, pin: "GND" },
     anode = { componentId: led.id, pin: "A" },
     cathode = { componentId: led.id, pin: "K" };
