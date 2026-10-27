@@ -11,6 +11,9 @@ const exact = new Set([
   "docs/ArduHub_H_small_fixes.md",
   "docs/H_NOTES.md",
   "docs/progress.md",
+  // User-authorized production release and authentication verification.
+  ".vercelignore",
+  "docs/vercel-deployment.md",
   // User-requested follow-up: correct two-LED lesson completion.
   "src/domain/checker/check.ts",
   "src/domain/scene/check.ts",
