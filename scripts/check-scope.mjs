@@ -14,6 +14,10 @@ const exact = new Set([
   // User-authorized production release and authentication verification.
   ".vercelignore",
   "docs/vercel-deployment.md",
+  "src/components/Header.tsx",
+  "src/content/ru.ts",
+  "src/components/auth/AuthCard.tsx",
+  "src/domain/auth.ts",
   // User-requested follow-up: correct two-LED lesson completion.
   "src/domain/checker/check.ts",
   "src/domain/scene/check.ts",

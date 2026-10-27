@@ -75,7 +75,11 @@ export default function Header() {
             </a>
           ))}
         </nav>
-        <Button href="/app" className="account" variant="secondary">
+        <Button
+          href={ru.header.account.href}
+          className="account"
+          variant="secondary"
+        >
           {ru.header.account.label}
           <span aria-hidden="true">↗</span>
         </Button>
@@ -103,7 +107,7 @@ export default function Header() {
               {item.label}
             </a>
           ))}
-          <a href="/app" onClick={close}>
+          <a href={ru.header.account.href} onClick={close}>
             {ru.header.account.label}
           </a>
         </nav>

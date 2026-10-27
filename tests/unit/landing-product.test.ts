@@ -14,7 +14,7 @@ describe("landing reflects the available product", () => {
     expect(html).toMatch(
       /class="button button-primary button-lg[^"]*" href="\/app"/,
     );
-    expect(ru.header.account.href).toBe("/app");
+    expect(ru.header.account.href).toBe("/sign-in");
   });
 
   it("offers only the working free access and links it to the cabinet", () => {

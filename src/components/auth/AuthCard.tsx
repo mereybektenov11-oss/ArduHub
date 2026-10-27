@@ -3,7 +3,11 @@ import Link from "next/link";
 import { useState, useRef, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { authRu as c } from "@/content/dashboard.ru";
-import { authError, validateRegistration } from "@/domain/auth";
+import {
+  authError,
+  validateRegistration,
+  normalizeAuthEmail,
+} from "@/domain/auth";
 import { motionTokens, motionCssVars } from "@/lib/motion";
 type Mode = "login" | "register" | "forgot" | "reset";
 export default function AuthCard({
@@ -89,9 +93,12 @@ export default function AuthCard({
     setBusy(true);
     try {
       if (mode === "forgot") {
-        const { error } = await client.auth.resetPasswordForEmail(email, {
-          redirectTo: location.origin + "/auth/callback?next=reset",
-        });
+        const { error } = await client.auth.resetPasswordForEmail(
+          normalizeAuthEmail(email),
+          {
+            redirectTo: location.origin + "/auth/callback?next=reset",
+          },
+        );
         if (error?.name === "AuthRetryableFetchError") setError(c.network);
         else if (error) setError(c.mailUnavailable);
         else setMessage(c.resetMail);
@@ -109,7 +116,7 @@ export default function AuthCard({
         }
       } else if (mode === "register") {
         const { data, error } = await client.auth.signUp({
-          email,
+          email: normalizeAuthEmail(email),
           password,
           options: {
             data: {
@@ -125,9 +132,11 @@ export default function AuthCard({
             setPassword("");
             setRepeat("");
             setError(c.network);
-          } else if (error.code === "user_already_exists")
+          } else if (error.code === "user_already_exists") {
+            setMode("login");
+            setRepeat("");
             setError(c.alreadyRegistered);
-          else if (
+          } else if (
             error.code === "email_address_not_authorized" ||
             error.code === "email_address_not_allowed"
           )
@@ -144,7 +153,7 @@ export default function AuthCard({
         } else setMessage(c.checkMail);
       } else {
         const { error } = await client.auth.signInWithPassword({
-          email,
+          email: normalizeAuthEmail(email),
           password,
         });
         if (error) {
@@ -172,7 +181,10 @@ export default function AuthCard({
     if (!client) return;
     setCooldown(true);
     try {
-      const { error } = await client.auth.resend({ type: "signup", email });
+      const { error } = await client.auth.resend({
+        type: "signup",
+        email: normalizeAuthEmail(email),
+      });
       if (error) setError(c.mailUnavailable);
       else setMessage(c.checkMail);
     } catch {

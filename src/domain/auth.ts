@@ -1,4 +1,5 @@
 import { authRu as c } from "@/content/dashboard.ru";
+export const normalizeAuthEmail = (email: string) => email.trim().toLowerCase();
 export function validateRegistration(data: {
   name: string;
   password: string;

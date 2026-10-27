@@ -65,7 +65,7 @@ export const ru = {
       { label: "Доступ", href: "#pricing" },
       { label: "Регистрация", href: "/register" },
     ],
-    account: { label: "В кабинет", href: "/app" },
+    account: { label: "В кабинет", href: "/sign-in" },
     openMenu: "Открыть меню",
     closeMenu: "Закрыть меню",
     navLabel: "Основная навигация",

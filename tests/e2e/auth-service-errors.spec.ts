@@ -3,8 +3,9 @@ import { test, expect } from "@playwright/test";
 test("existing account registration asks to sign in without promising an email", async ({
   page,
 }) => {
-  await page.route("**/auth/v1/signup**", (route) =>
-    route.fulfill({
+  await page.route("**/auth/v1/signup**", (route) => {
+    expect(route.request().postDataJSON().email).toBe("qa@example.org");
+    return route.fulfill({
       status: 422,
       contentType: "application/json",
       body: JSON.stringify({
@@ -12,15 +13,15 @@ test("existing account registration asks to sign in without promising an email",
         error_code: "user_already_exists",
         msg: "User already registered",
       }),
-    }),
-  );
+    });
+  });
   await page.goto("/sign-in");
   await page
     .getByRole("button", { name: "Регистрация", exact: true })
     .first()
     .click();
   await page.getByLabel("Как к тебе обращаться").fill("Проверка");
-  await page.getByLabel("Почта").fill("qa@example.org");
+  await page.getByLabel("Почта").fill("QA@Example.ORG");
   await page.getByLabel("Пароль", { exact: true }).fill("TestPassword123!");
   await page.getByLabel("Повтори пароль").fill("TestPassword123!");
   await page.getByRole("checkbox").check();
@@ -33,6 +34,12 @@ test("existing account registration asks to sign in without promising an email",
   await expect(page.getByText("Проверь почту:", { exact: false })).toHaveCount(
     0,
   );
+  await expect(
+    page.getByRole("button", { name: "Войти", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Вход", exact: true }).first(),
+  ).toHaveAttribute("aria-pressed", "true");
 });
 
 test("registration does not claim an email was sent when Supabase rejects delivery", async ({
