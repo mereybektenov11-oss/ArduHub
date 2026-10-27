@@ -8,6 +8,11 @@ const blink =
 async function setup(page: Page, code = blink) {
   const p = createProgress();
   p.profile.name = "Искра";
+  p.achievements = {
+    unlocked: ["first-light"],
+    notified: ["first-light"],
+    claimed: [],
+  };
   p.tourSeen = { "/app": true, "/app/lesson/lesson-2": true };
   p.lessons["lesson-1"] = {
     ...p.lessons["lesson-1"],

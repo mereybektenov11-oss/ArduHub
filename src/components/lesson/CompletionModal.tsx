@@ -35,7 +35,7 @@ export default function CompletionModal({
     return () => cancelAnimationFrame(frame);
   }, [rewarded]);
   return (
-    <Modal title={c.success} onClose={onClose}>
+    <Modal variant="celebration" title={c.success} onClose={onClose}>
       <div className="flow-completion">
         {rewarded && <Confetti />}
         <div className="g3-happy-mentor">

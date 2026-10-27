@@ -6,6 +6,7 @@ import MentorChat from "@/components/cabinet/MentorChat";
 import { Modal } from "@/components/cabinet/ui";
 import { mentorRouteAllowed } from "@/domain/mentor/entry";
 import type { MentorRequest } from "./openMentor";
+import "./mentor.css";
 import { playSfx } from "@/lib/sfx";
 
 export default function MentorAssistant() {
@@ -49,7 +50,7 @@ export default function MentorAssistant() {
   }, [pathname]);
   if (!request || request.path !== pathname) return null;
   return (
-    <Modal title={c.mentor} onClose={() => setRequest(null)}>
+    <Modal variant="mentor" title={c.mentor} onClose={() => setRequest(null)}>
       <MentorChat
         compact
         {...request.value}

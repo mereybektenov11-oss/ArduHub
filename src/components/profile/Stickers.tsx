@@ -10,6 +10,7 @@ import Icon from "@/components/icons/Icon";
 import { Card, Action } from "@/components/cabinet/ui";
 import { RewardFly, LevelBurst } from "@/components/feedback/EventFeedback";
 import "./stickers.css";
+import Overlay from "@/components/overlay/Overlay";
 export function StickerReward({ id }: { id: AchievementId }) {
   const { progress, collectSticker } = useProgress();
   const [busy, setBusy] = useState(false),
@@ -98,13 +99,6 @@ export function AchievementNotification() {
     pending.current = next;
     const timer = setTimeout(() => {
       setShown(next);
-      update((p) => ({
-        ...p,
-        achievements: {
-          ...achievementState(p),
-          notified: [...new Set([...achievementState(p).notified, next])],
-        },
-      }));
     }, 100);
     return () => {
       clearTimeout(timer);
@@ -114,26 +108,47 @@ export function AchievementNotification() {
   const item = achievementDeck.find((item) => item.id === shown);
   if (!item) return null;
   return (
-    <aside className="achievement-popup" role="region" aria-label={c.available}>
-      <button
-        className="cab-icon-btn"
-        aria-label={c.close}
-        onClick={() => setShown(null)}
+    <Overlay
+      title={c.available}
+      header={false}
+      variant="celebration"
+      panelClassName="h-overlay-sticker"
+      onClose={() => setShown(null)}
+      onOpen={() =>
+        update((p) => ({
+          ...p,
+          achievements: {
+            ...achievementState(p),
+            notified: [...new Set([...achievementState(p).notified, item.id])],
+          },
+        }))
+      }
+    >
+      <aside
+        className="achievement-popup"
+        role="region"
+        aria-label={c.available}
       >
-        ×
-      </button>
-      <p className="cab-eyebrow">{c.available}</p>
-      <div className="sticker-art is-new">
-        <Icon name={item.icon} size={96} state="gain" />
-      </div>
-      <h2>{item.title}</h2>
-      <p>{item.condition}</p>
-      <StickerReward key={item.id} id={item.id} />
-      {state.claimed.includes(item.id) && (
-        <div className="sticker-burst">
-          <LevelBurst value={5} />
+        <button
+          className="cab-icon-btn"
+          aria-label={c.close}
+          onClick={() => setShown(null)}
+        >
+          ×
+        </button>
+        <p className="cab-eyebrow">{c.available}</p>
+        <div className="sticker-art is-new">
+          <Icon name={item.icon} size={96} state="gain" />
         </div>
-      )}
-    </aside>
+        <h2>{item.title}</h2>
+        <p>{item.condition}</p>
+        <StickerReward key={item.id} id={item.id} />
+        {state.claimed.includes(item.id) && (
+          <div className="sticker-burst">
+            <LevelBurst value={5} />
+          </div>
+        )}
+      </aside>
+    </Overlay>
   );
 }

@@ -1,3 +1,5 @@
+import { completeEvidence } from "../helpers/progressEvidence";
+import { achievementDeck } from "../../src/content/achievements.ru";
 import { test, expect, type Page } from "@playwright/test";
 import { createProgress } from "../../src/domain/seed";
 import { learningLessons } from "../../src/domain/lessons/content";
@@ -9,11 +11,30 @@ async function lesson(page: Page) {
       { name: "arduhub-guest", value: "1", domain: "127.0.0.1", path: "/" },
     ]);
   const progress = createProgress();
+  progress.profile.name = "Искра";
+  // These feature fixtures represent a learner who has acknowledged reward notices.
+  progress.achievements = {
+    unlocked: [],
+    claimed: [],
+    notified: achievementDeck.map((item) => item.id),
+  };
+  const evidence = completeEvidence("lesson-1");
+  evidence.stages.practice = false;
+  evidence.practice.run = false;
+  progress.lessons["lesson-1"] = {
+    ...progress.lessons["lesson-1"],
+    ...evidence,
+    status: "current",
+  };
   progress.tourSeen = { "/app/lesson/lesson-1": true, "/app": true };
   await page.addInitScript(
     ({ progress, lesson }) => {
       if (localStorage.getItem("arduhub.progress.v1")) return;
       localStorage.setItem("arduhub.progress.v1", JSON.stringify(progress));
+      localStorage.setItem(
+        "arduhub.save-prompt.v1:local",
+        JSON.stringify({ firstShownAt: Date.now(), shown: 2 }),
+      );
       localStorage.setItem(
         "arduhub.drafts.v1",
         JSON.stringify({
@@ -38,7 +59,7 @@ async function lesson(page: Page) {
     },
     { progress, lesson: learningLessons[0] },
   );
-  await page.goto("/app/lesson/lesson-1");
+  await page.goto("/app/lesson/lesson-1?stage=practice");
 }
 
 test("Practice executes real AVR from the code tab and preserves results", async ({
@@ -54,7 +75,7 @@ test("Practice executes real AVR from the code tab and preserves results", async
   await expect(
     page.getByRole("tab", { name: "Код", exact: true }),
   ).toHaveAttribute("aria-selected", "true");
-  await expect(page.locator(".flow-output")).toContainText("✓");
+  await expect(page.locator(".flow-output")).toContainText("Светодиод мигает!");
 });
 
 test("wire pointer selection, visible removal, undo and Delete work without losing history", async ({
@@ -75,12 +96,13 @@ test("wire pointer selection, visible removal, undo and Delete work without losi
     return { x: screen.x, y: screen.y };
   });
   await page.mouse.click(midpoint.x, midpoint.y);
+  await page.locator(".kids-canvas-menu > summary").click();
   await page
     .getByRole("button", { name: "Удалить провод", exact: true })
     .click();
   await expect(wires).toHaveCount(count - 1);
   await page
-    .locator(".l2-tools")
+    .getByRole("toolbar", { name: "Инструменты схемы" })
     .getByRole("button", { name: "Отмена", exact: true })
     .click();
   await expect(wires).toHaveCount(count);
@@ -142,6 +164,7 @@ test("one click clears only wires, undo restores them and pending connections ar
     exact: true,
   });
   await page.getByRole("button", { name: "uno 13", exact: true }).click();
+  await page.locator(".kids-canvas-menu > summary").click();
   await clear.click();
   await expect(wires).toHaveCount(0);
   await expect(parts).toHaveCount(partCount);
@@ -149,12 +172,12 @@ test("one click clears only wires, undo restores them and pending connections ar
   await page.getByRole("button", { name: "led A", exact: true }).click();
   await expect(wires).toHaveCount(0);
   await page
-    .locator(".l2-tools")
+    .getByRole("toolbar", { name: "Инструменты схемы" })
     .getByRole("button", { name: "Отмена", exact: true })
     .click();
   await expect(wires).toHaveCount(count);
   await page
-    .locator(".l2-tools")
+    .getByRole("toolbar", { name: "Инструменты схемы" })
     .getByRole("button", { name: "Повтор", exact: true })
     .click();
   await expect(wires).toHaveCount(0);
@@ -169,7 +192,8 @@ test("edited sketch is compiled by Arduino CLI and runs in the browser", async (
   test.setTimeout(60000);
   await lesson(page);
   const code =
-    'void setup(){pinMode(13,OUTPUT);Serial.begin(9600);}\nvoid loop(){digitalWrite(13,HIGH);Serial.println("Edited 137");delay(137);digitalWrite(13,LOW);delay(251);}';
+    '#include <Arduino.h>\nvoid setup(){pinMode(13,OUTPUT);Serial.begin(9600);}\nvoid loop(){digitalWrite(13,HIGH);Serial.println("Edited 137");delay(137);digitalWrite(13,LOW);delay(251);}';
+  await page.getByRole("tab", { name: "Код", exact: true }).click();
   await page.getByRole("textbox", { name: "Код", exact: true }).fill(code);
   await page.getByRole("tab", { name: "Монитор порта", exact: true }).click();
   const compiled = page.waitForResponse(

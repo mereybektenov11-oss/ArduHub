@@ -6,6 +6,7 @@ import { lessonQuizzes } from "../../src/content/lesson-quiz.ru";
 import { createProgress } from "../../src/domain/seed";
 import { completeEvidence } from "../helpers/progressEvidence";
 import { stubExternalVideo } from "./helpers/externalVideo";
+import { dismissRewardDialogs } from "./helpers/rewardDialogs";
 test.use({ actionTimeout: 15_000 });
 
 type AudioLog = { contexts: number; notes: number[] };
@@ -181,6 +182,7 @@ for (const mode of ["service", "browser", "mobile-reduced"] as const) {
         page.locator("[data-confetti],[data-reward-particle]"),
       ).toHaveCount(0);
     await completed.getByRole("link", { name: "К пути", exact: true }).click();
+    await dismissRewardDialogs(page);
     await expect(page.locator(".dash-node.done")).toHaveCount(1);
     await expect(page.locator(".dash-node.current")).toHaveCount(1);
     await expect(page.locator(".kids-continue a")).toHaveAttribute(
@@ -290,9 +292,7 @@ test("G17 cabinet event performance and cleanup", async ({ page }) => {
   }, progress);
   await page.goto("/app/shop");
   await dismissTour(page);
-  const saveOffer = page.getByRole("dialog", { name: "Сохрани прогресс" });
-  await expect(saveOffer).toBeVisible();
-  await saveOffer.getByRole("button", { name: "Закрыть", exact: true }).click();
+  await dismissRewardDialogs(page);
   const cdp = await page.context().newCDPSession(page);
   await cdp.send("HeapProfiler.enable");
   await cdp.send("HeapProfiler.collectGarbage");
@@ -338,6 +338,7 @@ test("G17 cabinet event performance and cleanup", async ({ page }) => {
     await expect(
       item.getByRole("button", { name: "Купить", exact: true }),
     ).toBeEnabled();
+    await dismissRewardDialogs(page);
   }
   const measurement = await page.evaluate(() => {
     const root = window as typeof window & {
@@ -362,11 +363,7 @@ test("G17 cabinet event performance and cleanup", async ({ page }) => {
   });
   await page.goto("/app/profile");
   await dismissTour(page);
-  const notice = page.getByRole("region", { name: "Стикер открыт" });
-  while (await notice.isVisible()) {
-    await notice.getByRole("button", { name: "Закрыть стикер" }).click();
-    await page.waitForTimeout(150);
-  }
+  await dismissRewardDialogs(page);
   const claims: { id: string; before: number; after: number }[] = [];
   for (const id of ["first-light", "buyer"]) {
     const reward = page.locator(`[data-sticker="${id}"]`);

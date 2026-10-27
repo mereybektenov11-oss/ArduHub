@@ -1,3 +1,4 @@
+import { achievementDeck } from "../../src/content/achievements.ru";
 import { passLessonQuiz } from "./helpers/lessonQuiz";
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
@@ -6,6 +7,13 @@ import { exampleScene } from "../../src/domain/lessons/content";
 import sketches from "../../src/content/sketches.json" with { type: "json" };
 async function init(page: Page) {
   const p = createProgress();
+  p.profile.name = "Искра";
+  // These feature fixtures represent a learner who has acknowledged reward notices.
+  p.achievements = {
+    unlocked: [],
+    claimed: [],
+    notified: achievementDeck.map((item) => item.id),
+  };
   p.tourSeen = {
     "/app/lesson/lesson-1": true,
     "/app": true,
@@ -16,6 +24,10 @@ async function init(page: Page) {
   await page.addInitScript((p) => {
     if (!localStorage.getItem("arduhub.progress.v1"))
       localStorage.setItem("arduhub.progress.v1", JSON.stringify(p));
+    localStorage.setItem(
+      "arduhub.save-prompt.v1:local",
+      JSON.stringify({ firstShownAt: Date.now(), shown: 2 }),
+    );
   }, p);
 }
 async function build(page: Page) {
@@ -31,7 +43,9 @@ async function build(page: Page) {
     await pin(a).click();
     await pin(b).click();
   }
-  await page.getByRole("button", { name: "Проверить", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Проверить схему", exact: true })
+    .click();
 }
 test("v2 complete first lesson, gates, real worker blink, reward once and resume", async ({
   page,
@@ -70,7 +84,7 @@ test("v2 complete first lesson, gates, real worker blink, reward once and resume
   await expect(page.locator(".flow-practice")).toBeVisible();
   await page.getByRole("button", { name: /^Запустить/ }).click();
   await expect(
-    page.getByText("Запущена проверенная учебная прошивка", { exact: false }),
+    page.getByText("Программа запущена.", { exact: false }),
   ).toBeVisible();
   await expect(page.getByRole("button", { name: /^Запустить/ })).toBeEnabled({
     timeout: 30000,
@@ -96,12 +110,14 @@ test("project idea executes, stop clears LED, saves, renames, exports/imports an
   await page
     .locator(".l2-project-grid .cab-card")
     .first()
-    .getByRole("button", { name: /Пустой проект/ })
+    .getByRole("button", { name: "Начать →", exact: true })
     .click();
   await expect(page).toHaveURL(/\/app\/projects\/.+/);
   await page.getByLabel("Название", { exact: true }).fill("Мой маяк");
   await page.getByRole("button", { name: /^Запустить/ }).click();
-  await expect(page.getByText("Симуляция идёт", { exact: false })).toBeVisible({
+  await expect(
+    page.getByText("Программа работает", { exact: false }),
+  ).toBeVisible({
     timeout: 15000,
   });
   await expect(page.locator(".l2-canvas wokwi-led").first()).toHaveJSProperty(
@@ -116,11 +132,15 @@ test("project idea executes, stop clears LED, saves, renames, exports/imports an
   );
   await page.reload();
   await expect(page.getByRole("heading", { name: "Мой маяк" })).toBeVisible();
+  await page.locator(".project-actions > summary").click();
   const downloadEvent = page.waitForEvent("download");
-  await page.getByRole("button", { name: "Экспорт JSON", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Скачать проект", exact: true })
+    .click();
   const download = await downloadEvent;
   await download.saveAs("reports/learning-v2/project.arduhub.json");
   await page.getByRole("link", { name: /Все проекты/ }).click();
+  await page.locator(".project-actions > summary").first().click();
   await page
     .locator("input[type=file]")
     .setInputFiles("reports/learning-v2/project.arduhub.json");
@@ -130,6 +150,7 @@ test("project idea executes, stop clears LED, saves, renames, exports/imports an
     .first()
     .getByRole("link", { name: /Открыть/ })
     .click();
+  await page.locator(".project-actions > summary").click();
   await page
     .getByRole("button", { name: "Удалить", exact: true })
     .first()
@@ -181,10 +202,10 @@ test("serial, missing compiler preserves code and mentor has three honest sectio
   );
   await page
     .getByRole("textbox", { name: "Код", exact: true })
-    .fill("void setup() {}\nvoid loop() {}");
+    .fill("#include <Arduino.h>\nvoid setup() {}\nvoid loop() {}");
   await page.getByRole("button", { name: /^Запустить/ }).click();
   await expect(page.locator(".l2-error[role=alert]")).toContainText(
-    "Сервис компиляции недоступен",
+    "Не получилось запустить, попробуй ещё раз через минуту",
   );
   await page.reload();
   await page.getByRole("tab", { name: "Код", exact: true }).click();
@@ -195,7 +216,7 @@ test("serial, missing compiler preserves code and mentor has three honest sectio
     r.fulfill({ status: 503, json: { error: "mentor_unavailable" } }),
   );
   await page
-    .getByRole("button", { name: "Разбор наставника", exact: true })
+    .getByRole("button", { name: "Разбор проекта", exact: true })
     .click();
   for (const text of ["Что работает", "Что рискованно", "Следующий шаг"])
     await expect(
@@ -229,18 +250,31 @@ test("mobile workspace and all palette elements pass serious accessibility check
       ),
     ).toEqual([]);
   }
-  await page.getByRole("button", { name: "Пустой проект +" }).click();
+  await page.getByRole("button", { name: "Создать проект" }).click();
   await expect(page.locator(".l2-palette > button")).toHaveCount(51);
+  // Creation navigates before the lazy workspace mounts. Wait for the palette
+  // before enumerating its categories, then use stable group indices.
+  for (const group of await page.locator(".kids-palette-group").all()) {
+    if ((await group.getAttribute("open")) === null)
+      await group.locator("summary").click();
+    await expect(group).toHaveAttribute("open", "");
+  }
   await expect(page.locator(".l2-palette wokwi-arduino-uno")).toHaveCount(1);
   for (let i = 0; i < 51; i++) {
-    await page.locator(".l2-palette > button").nth(i).scrollIntoViewIfNeeded();
+    await page
+      .locator(".l2-palette > button")
+      .nth(i)
+      .locator("span[role=img]")
+      .scrollIntoViewIfNeeded();
     await expect
-      .poll(() =>
-        page
-          .locator(".l2-palette > button")
-          .nth(i)
-          .locator("span[role=img] > span")
-          .evaluate((e) => e.children.length),
+      .poll(
+        () =>
+          page
+            .locator(".l2-palette > button")
+            .nth(i)
+            .locator("span[role=img] > span")
+            .evaluate((e) => e.children.length),
+        { message: `Palette component ${i} loads when its preview is visible` },
       )
       .toBe(1);
   }

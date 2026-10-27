@@ -1,3 +1,4 @@
+import { createProgress } from "../../src/domain/seed";
 import { randomUUID } from "node:crypto";
 import { test, expect } from "@playwright/test";
 
@@ -41,11 +42,18 @@ test("island stays inside its column at desktop zoom and mobile widths", async (
   await page
     .context()
     .addCookies([{ name: "arduhub-guest", value: "1", url: baseURL! }]);
+  const progress = createProgress();
+  progress.profile.name = "Лис";
+  progress.tourSeen = { "/app/map": true };
+  await page.addInitScript(
+    (p) => localStorage.setItem("arduhub.progress.v1", JSON.stringify(p)),
+    progress,
+  );
   await page.goto("/app/map");
-  await expect(page.locator(".cab-island")).toBeVisible();
+  await expect(page.locator(".island-map-stage")).toBeVisible();
   for (const width of [1920, 1512, 1280, 1024, 768, 390]) {
     await page.setViewportSize({ width, height: 1000 });
-    const map = await page.locator(".cab-island").boundingBox();
+    const map = await page.locator(".island-map-stage").boundingBox();
     const main = await page.locator("#cab-main").boundingBox();
     expect(map!.x + map!.width).toBeLessThanOrEqual(main!.x + main!.width + 1);
     expect(

@@ -1,3 +1,4 @@
+import { achievementDeck } from "../../src/content/achievements.ru";
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { createProgress } from "../../src/domain/seed";
@@ -10,16 +11,26 @@ test.beforeEach(async ({ page, context }) => {
     { name: "arduhub-guest", value: "1", domain: "127.0.0.1", path: "/" },
   ]);
   const p = createProgress();
+  p.profile.name = "Искра";
+  // These feature fixtures represent a learner who has acknowledged reward notices.
+  p.achievements = {
+    unlocked: [],
+    claimed: [],
+    notified: achievementDeck.map((item) => item.id),
+  };
   p.tourSeen = { "/app": true, "/app/lesson/lesson-1": true };
   await page.addInitScript((p) => {
     if (!localStorage.getItem("arduhub.progress.v1"))
       localStorage.setItem("arduhub.progress.v1", JSON.stringify(p));
+    localStorage.setItem(
+      "arduhub.save-prompt.v1:local",
+      JSON.stringify({ firstShownAt: Date.now(), shown: 2 }),
+    );
   }, p);
   await page.route("**/api/lesson-video?*", (r) => r.fulfill({ json: {} }));
   await page.goto("/app/lesson/lesson-1");
-  await page
-    .getByRole("button", { name: "Продолжить без видео →", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Я посмотрел", exact: true }).click();
+  await page.getByRole("button", { name: "К тесту →", exact: true }).click();
 });
 
 test("70% gate, immediate feedback, saved position, one retry and reward dedup", async ({
@@ -102,6 +113,13 @@ test("mobile keyboard quiz is accessible and opens practice on success", async (
   await first.focus();
   await first.press("Space");
   await expect(page.locator(".flow-feedback")).toContainText("Верно");
+  await page.locator(".flow-feedback").evaluate(async (element) => {
+    await Promise.all(
+      element
+        .getAnimations({ subtree: true })
+        .map((animation) => animation.finished.catch(() => {})),
+    );
+  });
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,

@@ -3,11 +3,11 @@ import { useEffect, useRef, useState } from "react";
 import { useProgress } from "@/lib/useProgress";
 import { onboardingRu as c } from "@/content/ru";
 import { onboardingKey } from "@/lib/onboarding";
+import Overlay from "@/components/overlay/Overlay";
 import { Action } from "@/components/cabinet/ui";
 
 export default function NameDialog({ onReady }: { onReady: () => void }) {
   const { progress: p, ready, update } = useProgress();
-  const dialog = useRef<HTMLDialogElement>(null);
   const callback = useRef(onReady);
   const [name, setName] = useState("");
   const [avatar, setAvatar] = useState<string>(c.avatars[0]);
@@ -31,22 +31,16 @@ export default function NameDialog({ onReady }: { onReady: () => void }) {
     });
     return () => cancelAnimationFrame(frame);
   }, [ready, p.account?.userId, p.profile.name]);
-  useEffect(() => {
-    if (!open) return;
-    const element = dialog.current;
-    element?.showModal();
-    return () => element?.close();
-  }, [open]);
   if (!open) return null;
   return (
-    <dialog
-      ref={dialog}
-      className="cab-modal"
-      aria-labelledby="name-dialog-title"
-      onCancel={(e) => e.preventDefault()}
+    <Overlay
+      title={c.nameTitle}
+      dismissible={false}
+      header={false}
+      variant="default"
     >
       <form
-        className="cab-modal-content cab-stack"
+        className="cab-stack"
         onSubmit={(e) => {
           e.preventDefault();
           const nickname = name.trim();
@@ -94,6 +88,6 @@ export default function NameDialog({ onReady }: { onReady: () => void }) {
           {c.start}
         </Action>
       </form>
-    </dialog>
+    </Overlay>
   );
 }

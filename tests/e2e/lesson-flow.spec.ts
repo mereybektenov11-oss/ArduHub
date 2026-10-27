@@ -1,4 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
+import { dismissRewardDialogs } from "./helpers/rewardDialogs";
 import AxeBuilder from "@axe-core/playwright";
 import { createProgress } from "../../src/domain/seed";
 import { learningLessons } from "../../src/domain/lessons/content";
@@ -157,6 +158,7 @@ test("full lesson, real AVR, reward once, next node and review", async ({
     page.locator("[data-confetti],[data-reward-particle]"),
   ).toHaveCount(0);
   await dialog.getByRole("link", { name: "К пути", exact: true }).click();
+  await dismissRewardDialogs(page);
   await expect(
     page.locator('.dash-node.done [data-state="done"]').first(),
   ).toBeVisible();

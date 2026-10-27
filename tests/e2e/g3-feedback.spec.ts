@@ -4,6 +4,7 @@ import { dayInZone } from "../../src/domain/missions";
 import { localDate } from "../../src/domain/progress/streak";
 import { completeEvidence } from "../helpers/progressEvidence";
 import { initialFlowQuiz } from "../../src/domain/lessons/flow";
+import { dismissRewardDialogs } from "./helpers/rewardDialogs";
 type AudioLog = { contexts: number; frequencies: number[] };
 async function seed(
   page: Page,
@@ -206,6 +207,7 @@ test("expensive purchase confirms, animates intermediate balances and charges on
   );
   expect(intermediate.some((v) => v > 140 && v < 200)).toBe(true);
   expect((await progress(page)).inventory).toEqual(["oma"]);
+  await dismissRewardDialogs(page);
   await expect(
     page.getByRole("button", { name: "Мои предметы (1)" }),
   ).toBeVisible();

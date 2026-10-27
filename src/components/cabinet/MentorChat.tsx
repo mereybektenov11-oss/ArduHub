@@ -9,7 +9,8 @@ import { askMentor } from "@/services/mentor/client";
 import { mentorCopy as c } from "@/content/cabinet.ru";
 import CabinetArt, { type ArtName } from "./CabinetArt";
 import { Action, Pill, Card } from "./ui";
-import MentorCode from "./MentorCode";
+import MentorMessage from "@/components/mentor/MentorMessage";
+import { cleanMentorText, migrateMentorHistory } from "@/lib/mentorHistory";
 import { polishRu as ui } from "@/content/ru";
 export default function MentorChat({
   lessonId,
@@ -65,18 +66,13 @@ export default function MentorChat({
         const data: unknown = JSON.parse(
           localStorage.getItem(storageKey) ?? "null",
         );
+        const migrated = migrateMentorHistory(data);
         setMessages(
-          Array.isArray(data)
-            ? data
-                .filter(
-                  (m) =>
-                    m &&
-                    ["user", "assistant"].includes(m.role) &&
-                    typeof m.text === "string",
-                )
-                .slice(-24)
+          migrated.messages.length
+            ? migrated.messages
             : [{ role: "assistant", text: c.welcome }],
         );
+        localStorage.setItem(storageKey, JSON.stringify(migrated));
       } catch {
         setMessages([{ role: "assistant", text: c.welcome }]);
       }
@@ -89,6 +85,7 @@ export default function MentorChat({
   async function send(text = input) {
     if (!text.trim() || busy) return;
     const clean = text.replace(/<[^>]*>/g, "").slice(0, 500);
+    if (!clean) return;
     setBusy(true);
     setFailed(false);
     setInterrupted(false);
@@ -151,7 +148,10 @@ export default function MentorChat({
         recordAchievementEvent(p, { kind: "mentor", id: crypto.randomUUID() }),
       );
     try {
-      localStorage.setItem(storageKey, JSON.stringify(next.slice(-24)));
+      localStorage.setItem(
+        storageKey,
+        JSON.stringify(migrateMentorHistory(next.slice(-24))),
+      );
     } catch {}
     if (!result.blocked) setMode(result.fallback ? c.templateMode : c.aiMode);
     if (!result.blocked)
@@ -214,24 +214,12 @@ export default function MentorChat({
           {lessons.find((l) => l.id === lessonId)?.title}
         </p>
       )}
-      {context && (
-        <p className="cab-small">
-          {ui.context}:{" "}
-          {[
-            lessons.find((l) => l.id === lessonId)?.title ?? c.freeProject,
-            context.step,
-            context.scene?.split(";")[0],
-          ]
-            .filter(Boolean)
-            .join(" · ")}
-        </p>
-      )}
       <div
         ref={logRef}
         onScroll={() => {
           const el = logRef.current;
           if (el)
-            setAtBottom(el.scrollHeight - el.scrollTop - el.clientHeight < 40);
+            setAtBottom(el.scrollHeight - el.scrollTop - el.clientHeight <= 80);
         }}
         className="cab-chat-log"
         role="log"
@@ -244,18 +232,19 @@ export default function MentorChat({
               <CabinetArt name={mentor.id as ArtName} alt="" size={28} />
             )}
             <span>{m.role === "user" ? c.you : mentor.name}</span>
-            {m.text
-              .split(/(```[\s\S]*?```)/g)
-              .map((block, j) =>
-                block.startsWith("```") ? (
-                  <MentorCode key={j} text={block} />
-                ) : (
-                  <p key={j}>{block}</p>
-                ),
-              )}
+            {m.role === "assistant" ? (
+              <MentorMessage text={m.text} />
+            ) : (
+              <p>{cleanMentorText(m.text)}</p>
+            )}
           </div>
         ))}
         {busy && <p role="status">{c.typing}</p>}
+        <details className="polish-chat-notes cab-small cab-muted">
+          <summary>{ui.aboutMentor}</summary>
+          <p>{c.demoNote}</p>
+          <p>{c.noPersonalData}</p>
+        </details>
       </div>
       {!atBottom && (
         <Action
@@ -314,6 +303,17 @@ export default function MentorChat({
           {c.explain}
         </Action>
       )}
+      {context && (
+        <p className="cab-small">
+          {ui.context}:{" "}
+          {[
+            lessons.find((l) => l.id === lessonId)?.title ?? c.freeProject,
+            context.step,
+          ]
+            .filter(Boolean)
+            .join(" · ")}
+        </p>
+      )}
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -353,11 +353,6 @@ export default function MentorChat({
           {c.send} ↑
         </Action>
       </form>
-      <details className="polish-chat-notes cab-small cab-muted">
-        <summary>{ui.aboutMentor}</summary>
-        <p>{c.demoNote}</p>
-        <p>{c.noPersonalData}</p>
-      </details>
     </Card>
   );
 }

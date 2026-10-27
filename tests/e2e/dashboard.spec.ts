@@ -3,7 +3,10 @@ import AxeBuilder from "@axe-core/playwright";
 import { createProgress } from "../../src/domain/seed";
 import { dayInZone } from "../../src/domain/missions";
 import { passLessonQuiz } from "./helpers/lessonQuiz";
+import { answerDiagnostic } from "../../src/domain/diagnostic";
+import { diagnosticDeck } from "../../src/content/cabinet.ru";
 import { progressEvidence } from "../helpers/progressEvidence";
+import { dismissRewardDialogs } from "./helpers/rewardDialogs";
 async function guest(
   page: Page,
   mutate?: (p: ReturnType<typeof createProgress>) => void,
@@ -15,16 +18,28 @@ async function guest(
     ]);
   const p = createProgress();
   p.profile.name = "Тестер";
-  p.tourSeen = {
-    "/app": true,
-    "/app/map": true,
-    "/app/practice": true,
-    "/app/lesson/lesson-1": true,
-  };
+  p.tourSeen = Object.fromEntries(
+    [
+      "/app",
+      "/app/map",
+      "/app/practice",
+      "/app/practice/blitz",
+      "/app/practice/findbug",
+      "/app/practice/match",
+      "/app/lesson/lesson-1",
+      "/app/projects",
+      "/app/missions",
+      "/app/shop",
+      "/app/profile",
+      "/app/lessons",
+      "/app/glossary",
+    ].map((route) => [route, true] as const),
+  );
   mutate?.(p);
   await page.addInitScript((p) => {
     if (!localStorage.getItem("arduhub.progress.v1"))
       localStorage.setItem("arduhub.progress.v1", JSON.stringify(p));
+    localStorage.setItem("arduhub.onboarding.v1:local", "1");
     localStorage.setItem(
       "arduhub.save-prompt.v1:local",
       JSON.stringify({ firstShownAt: Date.now(), shown: 2 }),
@@ -37,12 +52,14 @@ test("unauthorized access redirects, guest can enter", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "Добро пожаловать" }),
   ).toBeVisible();
+  await expect(page.getByRole("button", { name: /Google/ })).toHaveCount(0);
+  await page.getByRole("button", { name: /Начать без аккаунта/ }).click();
+  const onboarding = page.getByRole("dialog", { name: "Как тебя зовут?" });
+  await expect(onboarding).toBeVisible();
+  await onboarding.getByRole("textbox", { name: "Твой ник" }).fill("ГостьТест");
+  await onboarding.getByRole("button", { name: "Начать", exact: true }).click();
   await expect(
-    page.getByRole("button", { name: "Google Скоро" }),
-  ).toBeDisabled();
-  await page.getByRole("button", { name: "Продолжить как гость" }).click();
-  await expect(
-    page.getByRole("heading", { name: /Привет, .+!/ }),
+    page.getByRole("heading", { name: "Привет, ГостьТест!", exact: true }),
   ).toBeVisible();
 });
 test("registration validates passwords and nickname before requests", async ({
@@ -148,19 +165,34 @@ test("daily missions grant once and quiz grants once", async ({ page }) => {
     };
   });
   await page.goto("/app/missions");
-  await page.getByRole("button", { name: "Забрать награду" }).click();
-  await expect(
-    page.getByRole("button", { name: "Награда получена" }),
-  ).toBeDisabled();
+  const claimed = page.getByRole("button", {
+    name: "Награда получена",
+    exact: true,
+  });
+  await expect(claimed).toBeDisabled();
+  const firstClaim = await page.evaluate(() =>
+    JSON.parse(localStorage.getItem("arduhub.progress.v1")!),
+  );
+  expect(firstClaim.daily.claimed).toBe(true);
+  expect(firstClaim.sparks).toBe(10);
+  expect(firstClaim.mentor.tokens).toBe(55);
   await page.reload();
-  await expect(
-    page.getByRole("button", { name: "Награда получена" }),
-  ).toBeDisabled();
+  await expect(claimed).toBeDisabled();
+  const afterReload = await page.evaluate(() =>
+    JSON.parse(localStorage.getItem("arduhub.progress.v1")!),
+  );
+  expect(afterReload.daily.claimed).toBe(true);
+  expect(afterReload.sparks).toBe(10);
+  expect(afterReload.mentor.tokens).toBe(55);
   await page.getByRole("button", { name: "Чтобы ограничить ток" }).click();
-  await expect(page.getByRole("status")).toContainText("Верно");
+  await expect(page.locator("main").getByRole("status")).toContainText("Верно");
+  await expect(
+    page.getByRole("button", { name: "Чтобы ограничить ток" }),
+  ).toBeDisabled();
   const p = await page.evaluate(() =>
     JSON.parse(localStorage.getItem("arduhub.progress.v1")!),
   );
+  expect(p.daily.quiz).toBe(true);
   expect(p.sparks).toBe(10);
   expect(p.mentor.tokens).toBe(55);
   expect(p.xp).toBe(5);
@@ -170,36 +202,72 @@ test("shop applies freeze and cannot buy it twice", async ({ page }) => {
     p.sparks = 100;
   });
   await page.goto("/app/shop");
+  await page.getByRole("button", { name: "Бусты", exact: true }).click();
   const item = page
     .locator(".dash-shop-item")
     .filter({ has: page.getByRole("heading", { name: "Заморозка серии" }) });
   await item.getByRole("button", { name: "Купить", exact: true }).click();
   await expect(item.getByRole("button", { name: "Куплено" })).toBeDisabled();
-  await expect(
-    page.getByRole("listitem").filter({ hasText: "Заморозка серии" }),
-  ).toBeVisible();
   const p = await page.evaluate(() =>
     JSON.parse(localStorage.getItem("arduhub.progress.v1")!),
   );
   expect(p.sparks).toBe(60);
   expect(p.boosts.freeze).toBe(1);
+  expect(p.inventory).toContain("freeze");
+  await dismissRewardDialogs(page);
+  const inventory = page.getByRole("button", {
+    name: "Мои предметы (1)",
+    exact: true,
+  });
+  await inventory.click();
+  await expect(
+    page
+      .locator(".dash-shop-item")
+      .filter({ has: page.getByRole("heading", { name: "Заморозка серии" }) }),
+  ).toBeVisible();
+  await page.reload();
+  await page.getByRole("button", { name: "Бусты", exact: true }).click();
+  const afterReloadItem = page
+    .locator(".dash-shop-item")
+    .filter({ has: page.getByRole("heading", { name: "Заморозка серии" }) });
+  await expect(
+    afterReloadItem.getByRole("button", { name: "Куплено" }),
+  ).toBeDisabled();
+  const afterReload = await page.evaluate(() =>
+    JSON.parse(localStorage.getItem("arduhub.progress.v1")!),
+  );
+  expect(afterReload.sparks).toBe(60);
+  expect(afterReload.boosts.freeze).toBe(1);
 });
-test("insufficient balance disables purchase", async ({ page }) => {
+test("insufficient balance denies purchase without deducting sparks", async ({
+  page,
+}) => {
   await guest(page, (p) => {
     p.sparks = 30;
   });
   await page.goto("/app/shop");
+  await page.getByRole("button", { name: "Бусты", exact: true }).click();
   const item = page
     .locator(".dash-shop-item")
     .filter({ has: page.getByRole("heading", { name: "Заморозка серии" }) });
-  await expect(
-    item.getByRole("button", { name: "Не хватает 10 искр" }),
-  ).toBeDisabled();
+  const buy = item.getByRole("button", { name: "Не хватает 10 искр" });
+  await expect(buy).toBeEnabled();
+  await buy.click();
+  await expect(item).toHaveClass(/g3-denied/);
+  const p = await page.evaluate(() =>
+    JSON.parse(localStorage.getItem("arduhub.progress.v1")!),
+  );
+  expect(p.sparks).toBe(30);
+  expect(p.boosts?.freeze ?? 0).toBe(0);
+  expect(p.inventory ?? []).not.toContain("freeze");
 });
 test("profile saves nickname and shows all six skill bars", async ({
   page,
 }) => {
-  await guest(page);
+  await guest(page, (p) => {
+    for (const question of diagnosticDeck)
+      Object.assign(p, answerDiagnostic(p, question.correct));
+  });
   await page.goto("/app/profile");
   await page.getByLabel("Как к тебе обращаться").fill("Мастер");
   await page.getByRole("button", { name: "Сохранить", exact: true }).click();
@@ -225,13 +293,14 @@ test("lesson focus has no sidebar and expected behavior on work steps", async ({
   await expect(
     page.getByRole("link", { name: "К пути", exact: true }),
   ).toBeVisible();
-  await page.getByRole("button", { name: "Продолжить без видео" }).click();
+  await page.getByRole("button", { name: "Я посмотрел", exact: true }).click();
+  await page.getByRole("button", { name: "К тесту →", exact: true }).click();
   await passLessonQuiz(page);
   await expect(
     page.getByRole("heading", { name: "Ожидаемое поведение" }),
   ).toBeVisible();
   await page
-    .getByRole("button", { name: "Спросить ИИ", exact: true })
+    .getByRole("button", { name: "Спросить наставника", exact: true })
     .last()
     .click();
   await expect(
@@ -287,7 +356,8 @@ for (const route of [
         const node = walker.currentNode;
         if (!node.textContent?.trim()) continue;
         const el = node.parentElement!;
-        if (!el.checkVisibility()) continue;
+        if (!el.checkVisibility() || el.closest('[aria-hidden="true"]'))
+          continue;
         const css = getComputedStyle(el);
         found.push({
           size: parseFloat(css.fontSize),

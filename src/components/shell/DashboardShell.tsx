@@ -10,6 +10,7 @@ import { dashboardRu as c } from "@/content/dashboard.ru";
 import { useProgress } from "@/lib/useProgress";
 import CabinetIcon from "@/components/icons/NavigationIcon";
 import { Modal } from "@/components/cabinet/ui";
+import TransientNotice from "@/components/overlay/TransientNotice";
 import RightRail, { StatBar } from "./RightRail";
 import { kidsHomeRu as k } from "@/content/kids-home.ru";
 import CommandPalette from "./CommandPalette";
@@ -18,7 +19,6 @@ import SavePrompt from "@/components/onboarding/SavePrompt";
 import RewardToast from "@/components/icons/RewardToast";
 import SoundToggle from "./SoundToggle";
 import Chest from "@/components/feedback/Chest";
-import Icon from "@/components/icons/Icon";
 import { AchievementNotification } from "@/components/profile/Stickers";
 
 export default function DashboardShell({ children }: { children: ReactNode }) {
@@ -222,12 +222,7 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
           {interfaceCopy.text007}
         </div>
       )}
-      {(toast || (offline && !unavailable)) && (
-        <div className="cab-toast" role="status">
-          {toast === c.saved && <Icon name="saved" state="done" />}
-          {toast || c.offline}
-        </div>
-      )}
+      <TransientNotice message={toast} offline={offline && !unavailable} />
     </div>
   );
 }

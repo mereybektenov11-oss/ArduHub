@@ -1,7 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 import { createProgress } from "../../src/domain/seed";
-import { lessonQuizzes } from "../../src/content/lesson-quiz.ru";
-import { initialFlowQuiz } from "../../src/domain/lessons/flow";
+import { completeEvidence } from "../helpers/progressEvidence";
 
 const routes = [
   "/app",
@@ -31,21 +30,14 @@ async function seed(
   if (options.completed) {
     progress.lessons["lesson-1"] = {
       ...progress.lessons["lesson-1"],
+      ...completeEvidence("lesson-1"),
       status: "done",
-      stages: { video: true, test: true, practice: true },
-      video: { confirmed: true },
-      practice: { circuit: true, code: true, run: true },
-      quiz: {
-        ...initialFlowQuiz(),
-        phase: "result",
-        lastScore: 100,
-        answers: Object.fromEntries(
-          lessonQuizzes["lesson-1"].map((question, index) => [
-            `q${index + 1}`,
-            question.correct,
-          ]),
-        ),
-      },
+      rewarded: true,
+    };
+    progress.achievements = {
+      unlocked: ["first-light"],
+      notified: ["first-light"],
+      claimed: [],
     };
   }
   await page.addInitScript((p) => {

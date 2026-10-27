@@ -1,20 +1,43 @@
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { createProgress } from "../../src/domain/seed";
-import { matchDeck } from "../../src/content/cabinet.ru";
-async function init(page: Page, sparks = 0) {
+import { diagnosticDeck, matchDeck } from "../../src/content/cabinet.ru";
+import { dismissRewardDialogs } from "./helpers/rewardDialogs";
+async function init(
+  page: Page,
+  sparks = 0,
+  { showHomeTour = false }: { showHomeTour?: boolean } = {},
+) {
   const p = createProgress();
   p.sparks = sparks;
-  p.tourSeen = {
-    "/app/lesson/lesson-1": true,
-    "/app": true,
-    "/app/map": true,
-    "/app/practice": true,
-  };
-  for (let i = 1; i <= 12; i++) p.tourSeen["/app/lesson/lesson-" + i] = true;
+  p.profile.name = "Тестовый ученик";
+  p.tourSeen = Object.fromEntries(
+    [
+      "/app",
+      "/app/map",
+      "/app/lesson/lesson-1",
+      ...Array.from({ length: 12 }, (_, i) => `/app/lesson/lesson-${i + 1}`),
+      "/app/practice",
+      "/app/practice/blitz",
+      "/app/practice/findbug",
+      "/app/practice/match",
+      "/app/projects",
+      "/app/profile",
+      "/app/shop",
+      "/app/test",
+      "/app/glossary",
+      "/app/homework",
+      "/app/lessons",
+    ].map((route) => [route, route !== "/app" || !showHomeTour] as const),
+  );
   await page.addInitScript((p) => {
     if (!localStorage.getItem("arduhub.progress.v1"))
       localStorage.setItem("arduhub.progress.v1", JSON.stringify(p));
+    localStorage.setItem("arduhub.onboarding.v1:local", "1");
+    localStorage.setItem(
+      "arduhub.save-prompt.v1:local",
+      JSON.stringify({ firstShownAt: Date.now(), shown: 1 }),
+    );
   }, p);
 }
 test("desktop axe and screenshots", async ({ page }) => {
@@ -40,7 +63,9 @@ test("desktop axe and screenshots", async ({ page }) => {
     path: "reports/cabinet/practice-desktop.png",
     fullPage: true,
   });
-  await page.goto("/app/mentor");
+  await page.goto("/app/lesson/lesson-1");
+  await page.getByRole("button", { name: "Наставник", exact: true }).click();
+  await expect(page.getByRole("dialog", { name: "Наставник" })).toBeVisible();
   await page.waitForTimeout(1000);
   await page.screenshot({
     path: "reports/cabinet/mentor-desktop.png",
@@ -76,8 +101,14 @@ test("game timer pauses while hidden", async ({ page }) => {
 test("findbug and matching games can be completed", async ({ page }) => {
   await init(page);
   await page.goto("/app/practice/findbug");
-  for (const pin of ["K", "12", "5V", "K", "12", "5V"])
-    await page.getByRole("button", { name: pin, exact: true }).click();
+  for (let question = 0; question < 6; question++) {
+    const item = diagnosticDeck[5 + (question % 3)];
+    const pin = item.options[item.correct];
+    await page
+      .locator(".cab-pin-diagram")
+      .getByRole("button", { name: pin, exact: true })
+      .click();
+  }
   await expect(
     page.getByRole("heading", { name: "Тренировка завершена" }),
   ).toBeVisible();
@@ -92,9 +123,14 @@ test("findbug and matching games can be completed", async ({ page }) => {
 });
 test("mentor unlock exact sparks, no duplicate charge", async ({ page }) => {
   await init(page, 80);
-  await page.goto("/app/mentor");
+  await page.goto("/app/lesson/lesson-1");
+  await page.getByRole("button", { name: "Наставник", exact: true }).click();
+  const mentorDialog = page.getByRole("dialog", { name: "Наставник" });
+  await expect(mentorDialog).toBeVisible();
   await expect(
-    page.getByLabel("Выбрать наставника").locator('option[value="oma"]'),
+    mentorDialog
+      .getByLabel("Выбрать наставника")
+      .locator('option[value="oma"]'),
   ).toHaveAttribute("disabled", "");
   await page.keyboard.press("Escape");
   await page.goto("/app/shop");
@@ -102,23 +138,46 @@ test("mentor unlock exact sparks, no duplicate charge", async ({ page }) => {
     .locator(".dash-shop-item")
     .filter({ has: page.getByRole("heading", { name: "Ома", exact: true }) });
   await item.getByRole("button", { name: "Купить", exact: true }).click();
-  await page.goto("/app/mentor");
-  await page.getByLabel("Выбрать наставника").selectOption("oma");
-  await expect(page.getByLabel("Выбрать наставника")).toHaveValue("oma");
-  await page.getByLabel("Выбрать наставника").selectOption("oma");
-  expect(
-    await page.evaluate(
-      () => JSON.parse(localStorage.getItem("arduhub.progress.v1")!).sparks,
-    ),
-  ).toBe(20);
+  const confirmation = page.getByRole("dialog", {
+    name: "Купить за 60 искр?",
+  });
+  await expect(confirmation).toBeVisible();
+  await confirmation
+    .getByRole("button", { name: "Купить", exact: true })
+    .click();
+  await expect(confirmation).not.toBeVisible();
+  const purchased = await page.evaluate(() =>
+    JSON.parse(localStorage.getItem("arduhub.progress.v1")!),
+  );
+  expect(purchased.sparks).toBe(20);
+  expect(purchased.inventory).toContain("oma");
+  expect(purchased.mentor.unlockedIds).toContain("oma");
+  await dismissRewardDialogs(page);
+
+  await page.goto("/app/lesson/lesson-1");
+  await page.getByRole("button", { name: "Наставник", exact: true }).click();
+  const unlockedDialog = page.getByRole("dialog", { name: "Наставник" });
+  const mentorSelect = unlockedDialog.getByLabel("Выбрать наставника");
+  await expect(mentorSelect.locator('option[value="oma"]')).not.toHaveAttribute(
+    "disabled",
+  );
+  await mentorSelect.selectOption("oma");
+  await expect(mentorSelect).toHaveValue("oma");
+  await mentorSelect.selectOption("oma");
+  const afterSelection = await page.evaluate(() =>
+    JSON.parse(localStorage.getItem("arduhub.progress.v1")!),
+  );
+  expect(afterSelection.sparks).toBe(20);
+  expect(afterSelection.mentor.selectedId).toBe("oma");
 });
 test("corrupt and unavailable storage do not crash", async ({
   page,
   browser,
 }) => {
-  await page.addInitScript(() =>
-    localStorage.setItem("arduhub.progress.v1", "{bad"),
-  );
+  await page.addInitScript(() => {
+    localStorage.setItem("arduhub.onboarding.v1:local", "1");
+    localStorage.setItem("arduhub.progress.v1", "{bad");
+  });
   await page.goto("/app");
   await expect(
     page.locator('.cab-storage-warning[role="alert"]'),
@@ -147,9 +206,9 @@ test("corrupt and unavailable storage do not crash", async ({
     });
   });
   await denied.goto("/app/test");
-  await expect(denied.getByRole("status")).toContainText(
-    "Прогресс не сохранится",
-  );
+  await expect(
+    denied.locator('.cab-storage-warning[role="status"]'),
+  ).toContainText("Прогресс не сохранится");
   await expect(
     denied.getByRole("heading", { name: "Найдём твою точку старта" }),
   ).toBeVisible();
@@ -158,12 +217,13 @@ test("corrupt and unavailable storage do not crash", async ({
 test("mobile tour skips hidden targets and help remains usable", async ({
   page,
 }) => {
+  await init(page, 0, { showHomeTour: true });
   await page.setViewportSize({ width: 360, height: 800 });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/app");
   const tour = page.getByRole("dialog", { name: "Тур по кабинету" });
   await expect(tour).toBeVisible();
-  await expect(tour.getByText("1 из 5", { exact: true })).toBeVisible();
+  await expect(tour.getByText("1 из 2", { exact: true })).toBeVisible();
   await tour.getByRole("button", { name: "Пропустить", exact: true }).click();
   await page.getByRole("button", { name: "Справка и тур" }).click();
   await expect(tour).toBeVisible();
@@ -195,11 +255,14 @@ test("project palette adds, moves and removes a component", async ({
 }) => {
   await init(page);
   await page.goto("/app/projects");
-  await page.getByRole("button", { name: "Пустой проект +" }).click();
   await page
-    .locator(".l2-palette")
-    .getByTitle("Кнопка", { exact: true })
+    .getByRole("button", { name: "Создать проект", exact: true })
     .click();
+  await dismissRewardDialogs(page);
+  const basicCategory = page
+    .locator(".kids-palette-group")
+    .filter({ hasText: "Основные" });
+  await basicCategory.getByTitle("Кнопка", { exact: true }).click();
   const added = page.locator('[data-component^="button-"]');
   await expect(added).toHaveCount(1);
   const body = added.getByRole("button", { name: /^Кнопка button/ });
@@ -214,7 +277,7 @@ test("project palette adds, moves and removes a component", async ({
     )
     .toBeLessThan(before);
   await page
-    .locator(".l2-tools")
+    .getByRole("toolbar", { name: "Инструменты схемы" })
     .getByRole("button", { name: "Удалить", exact: true })
     .click();
   await expect(added).toHaveCount(0);

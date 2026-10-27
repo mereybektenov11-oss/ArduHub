@@ -244,6 +244,7 @@ export default function ShopPage() {
       )}
       {confirm && (
         <Modal
+          variant="celebration"
           title={g.confirm(confirm.price)}
           onClose={() => {
             if (!pending.current) setConfirm(null);

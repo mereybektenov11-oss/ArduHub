@@ -8,7 +8,7 @@ export default function LevelUp() {
   const { levelUp, dismissLevelUp } = useProgress();
   if (levelUp === null) return null;
   return (
-    <Modal title={c.title} onClose={dismissLevelUp}>
+    <Modal variant="celebration" title={c.title} onClose={dismissLevelUp}>
       <div className="cab-level-up">
         <LevelBurst value={levelUp} />
         <Pill>

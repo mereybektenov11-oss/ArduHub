@@ -94,7 +94,7 @@ test("stat counter takes 1.6 seconds and step transitions do not leave a blank s
   await page.setViewportSize({ width: 1440, height: 600 });
   await page.goto("/");
   const count = page.locator(
-    '.stat strong[aria-label="60"] .animated-number > span[aria-hidden]',
+    '.stat strong[aria-label="12"] .animated-number > span[aria-hidden]',
   );
   await expect(count).toHaveText("0");
   await page.locator(".stats").scrollIntoViewIfNeeded();
@@ -104,7 +104,7 @@ test("stat counter takes 1.6 seconds and step transitions do not leave a blank s
       new Promise<number>((resolve) => {
         const start = performance.now();
         function sample() {
-          if (node.textContent === "60") resolve(performance.now() - start);
+          if (node.textContent === "12") resolve(performance.now() - start);
           else requestAnimationFrame(sample);
         }
         requestAnimationFrame(sample);
@@ -112,7 +112,7 @@ test("stat counter takes 1.6 seconds and step transitions do not leave a blank s
   );
   expect(elapsed).toBeGreaterThan(1400);
   expect(elapsed).toBeLessThan(1800);
-  await expect(count).toHaveText("60");
+  await expect(count).toHaveText("12");
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.locator("#how-it-works").scrollIntoViewIfNeeded();
   await page.waitForTimeout(1100);

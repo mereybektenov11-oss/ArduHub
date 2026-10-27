@@ -1,4 +1,5 @@
 "use client";
+import RewardPopup from "@/components/overlay/RewardPopup";
 import { useEffect, useRef, useState } from "react";
 import { useProgress } from "@/lib/useProgress";
 import { dailyState, missionsDone } from "@/domain/missions";
@@ -23,14 +24,13 @@ export default function Chest() {
       }
     });
   }, [eligible, day, claimMissions]);
-  useEffect(() => {
-    if (!open) return;
-    const timer = setTimeout(() => setOpen(false), 1800);
-    return () => clearTimeout(timer);
-  }, [open]);
   if (!open) return null;
   return (
-    <div className="g3-chest-toast" role="status">
+    <RewardPopup
+      className="g3-chest-toast"
+      duration={1800}
+      onDone={() => setOpen(false)}
+    >
       <div className="g3-chest is-open" data-chest="open">
         <svg width="80" height="70" viewBox="0 0 80 70" aria-hidden="true">
           <path
@@ -59,6 +59,6 @@ export default function Chest() {
         <Icon name="sparks" />+<AnimatedCount value={10} initialValue={0} />{" "}
         <Icon name="tokens" />+<AnimatedCount value={5} initialValue={0} />
       </p>
-    </div>
+    </RewardPopup>
   );
 }

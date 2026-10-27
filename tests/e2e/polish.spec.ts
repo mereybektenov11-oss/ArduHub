@@ -1,3 +1,5 @@
+import { completeEvidence } from "../helpers/progressEvidence";
+import { achievementDeck } from "../../src/content/achievements.ru";
 import { test, expect, type Page } from "@playwright/test";
 import { stubExternalVideo } from "./helpers/externalVideo";
 import AxeBuilder from "@axe-core/playwright";
@@ -20,6 +22,13 @@ async function init(page: Page) {
       { name: "arduhub-guest", value: "1", domain: "127.0.0.1", path: "/" },
     ]);
   const p = createProgress();
+  p.profile.name = "Искра";
+  // These feature fixtures represent a learner who has acknowledged reward notices.
+  p.achievements = {
+    unlocked: [],
+    claimed: [],
+    notified: achievementDeck.map((item) => item.id),
+  };
   p.tourSeen = Object.fromEntries(
     [...routes, ...learningLessons.map((l) => "/app/lesson/" + l.id)].map(
       (r) => [r, true],
@@ -28,11 +37,16 @@ async function init(page: Page) {
   await page.addInitScript((p) => {
     if (!localStorage.getItem("arduhub.progress.v1"))
       localStorage.setItem("arduhub.progress.v1", JSON.stringify(p));
+    localStorage.setItem(
+      "arduhub.save-prompt.v1:local",
+      JSON.stringify({ firstShownAt: Date.now(), shown: 2 }),
+    );
   }, p);
 }
 test.beforeEach(async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await init(page);
+  await stubExternalVideo(page);
 });
 test("seven menu links, practice tabs, old addresses and mobile more", async ({
   page,
@@ -41,7 +55,9 @@ test("seven menu links, practice tabs, old addresses and mobile more", async ({
   await expect(page.locator(".dash-nav-group")).toHaveCount(3);
   await expect(page.locator(".dash-nav-group a")).toHaveCount(7);
   await expect(
-    page.getByRole("link", { name: "Все уроки", exact: true }),
+    page
+      .locator(".kids-continue")
+      .getByRole("link", { name: "Продолжить", exact: true }),
   ).toBeVisible();
   await page.goto("/app/glossary?term=резистор");
   await expect(page).toHaveURL(/tab=glossary/);
@@ -99,6 +115,7 @@ test("reading 18px and 1.3 scale affects only content", async ({ page }) => {
   );
   const button = page.getByRole("button", { name: "Я посмотрел", exact: true });
   const before = await button.evaluate((el) => getComputedStyle(el).fontSize);
+  await page.getByLabel("Настройки урока", { exact: true }).click();
   await page.getByLabel("Размер текста").selectOption("1.3");
   await expect(page.locator(".l2-theory p").first()).toHaveCSS(
     "font-size",
@@ -122,9 +139,9 @@ test("central mentor, streamed reply, history, keyboard and mobile", async ({
       body: 'event: delta\ndata: {"text":"Проверь полярность светодиода."}\n\nevent: done\ndata: {"fallback":false,"tokensUsed":1}\n\n',
     }),
   );
-  await page.goto("/app");
+  await page.goto("/app/lesson/lesson-1");
   const fab = page.getByRole("button", {
-    name: "Спроси наставника",
+    name: "Наставник",
     exact: true,
   });
   await fab.click();
@@ -173,10 +190,8 @@ test("mentor stop aborts an in-flight answer", async ({ page }) => {
       })
       .catch(() => {});
   });
-  await page.goto("/app");
-  await page
-    .getByRole("button", { name: "Спроси наставника", exact: true })
-    .click();
+  await page.goto("/app/lesson/lesson-1");
+  await page.getByRole("button", { name: "Наставник", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "Наставник", exact: true });
   const input = dialog.getByRole("textbox", { name: "Твой вопрос" });
   await input.fill("Объясни ток");
@@ -190,35 +205,60 @@ test("reference sketch runs when compiler is offline, including comment changes"
   page,
 }) => {
   const l = learningLessons[0];
-  await page.addInitScript((l) => {
-    localStorage.setItem(
-      "arduhub.drafts.v1",
-      JSON.stringify({
-        version: 1,
-        curriculumVersion: 2,
-        drafts: {
-          "lesson-1": {
-            scene: l.circuit.referenceScene,
-            code: l.code.solution + "\n// same circuit",
-            step: 3,
-            steps: {
-              video: true,
-              theory: true,
-              circuit: true,
-              code: false,
-              run: false,
+  const p = createProgress();
+  p.profile.name = "Искра";
+  p.tourSeen = { "/app/lesson/lesson-1": true };
+  p.achievements = {
+    unlocked: [],
+    claimed: [],
+    notified: achievementDeck.map((item) => item.id),
+  };
+  const evidence = completeEvidence("lesson-1");
+  evidence.stages.practice = false;
+  evidence.practice.run = false;
+  await page.addInitScript(
+    ({ l, evidence, initial }) => {
+      const p =
+        JSON.parse(localStorage.getItem("arduhub.progress.v1") ?? "null") ??
+        initial;
+      p.lessons["lesson-1"] = {
+        ...p.lessons["lesson-1"],
+        ...evidence,
+        status: "current",
+      };
+      localStorage.setItem("arduhub.progress.v1", JSON.stringify(p));
+      localStorage.setItem(
+        "arduhub.drafts.v1",
+        JSON.stringify({
+          version: 1,
+          curriculumVersion: 2,
+          drafts: {
+            "lesson-1": {
+              scene: l.circuit.referenceScene,
+              code: l.code.solution + "\n// same circuit",
+              step: 3,
+              steps: {
+                video: true,
+                theory: true,
+                circuit: true,
+                code: false,
+                run: false,
+              },
             },
           },
-        },
-      }),
-    );
-  }, l);
+        }),
+      );
+    },
+    { l, evidence, initial: p },
+  );
   let calls = 0;
   await page.route("**/api/compile", (r) => {
     calls++;
     return r.fulfill({ status: 503, json: { error: "compiler_unconfigured" } });
   });
   await page.goto("/app/lesson/lesson-1");
+  await page.getByRole("tab", { name: "Код", exact: true }).click();
+  await page.getByLabel("Настройки кода", { exact: true }).click();
   const editor = page.locator(".cm-editor");
   await expect(editor).toHaveCSS("font-size", "14px");
   const larger = page.getByRole("button", { name: "Увеличить шрифт кода" });
@@ -242,12 +282,29 @@ test("lesson two keeps the type scale at all three stages", async ({
 }) => {
   const lesson = learningLessons[1];
   const p = createProgress();
+  p.profile.name = "Искра";
+  // These feature fixtures represent a learner who has acknowledged reward notices.
+  p.achievements = {
+    unlocked: [],
+    claimed: [],
+    notified: achievementDeck.map((item) => item.id),
+  };
   p.profile.level = 4;
-  for (const l of Object.values(p.lessons)) l.status = "done";
+  for (const [id, l] of Object.entries(p.lessons))
+    p.lessons[id] = {
+      ...l,
+      ...completeEvidence(id),
+      status: "done",
+      rewarded: true,
+    };
   p.tourSeen = { "/app/lesson/lesson-2": true };
   await page.addInitScript(
     ({ p, lesson }) => {
       localStorage.setItem("arduhub.progress.v1", JSON.stringify(p));
+      localStorage.setItem(
+        "arduhub.save-prompt.v1:local",
+        JSON.stringify({ firstShownAt: Date.now(), shown: 2 }),
+      );
       if (!localStorage.getItem("arduhub.drafts.v1"))
         localStorage.setItem(
           "arduhub.drafts.v1",

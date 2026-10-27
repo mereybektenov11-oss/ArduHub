@@ -1,3 +1,5 @@
+import { completeEvidence } from "../helpers/progressEvidence";
+import { achievementDeck } from "../../src/content/achievements.ru";
 import { test, expect } from "@playwright/test";
 import { createProgress } from "../../src/domain/seed";
 import {
@@ -11,11 +13,23 @@ for (const index of [2, 5])
   }) => {
     test.setTimeout(45000);
     const p = createProgress();
+    p.profile.name = "Искра";
+    // These feature fixtures represent a learner who has acknowledged reward notices.
+    p.achievements = {
+      unlocked: [],
+      claimed: [],
+      notified: achievementDeck.map((item) => item.id),
+    };
     p.profile.level = 4;
     p.tourSeen = { "/app": true, "/app/lesson/lesson-1": true };
     for (let i = 1; i <= 12; i++) p.tourSeen["/app/lesson/lesson-" + i] = true;
     for (let i = 0; i < index; i++)
-      p.lessons[`lesson-${i + 1}`].status = "done";
+      p.lessons[`lesson-${i + 1}`] = {
+        ...p.lessons[`lesson-${i + 1}`],
+        ...completeEvidence(`lesson-${i + 1}`),
+        status: "done",
+        rewarded: true,
+      };
     const scene = exampleScene(index === 2 ? "button" : "pwm");
     if (index === 2) {
       scene.components.find((c) => c.type === "button")!.id = "custombutton";
@@ -23,6 +37,14 @@ for (const index of [2, 5])
         for (const pin of [w.from, w.to])
           if (pin.componentId === "btn") pin.componentId = "custombutton";
     }
+    const evidence = completeEvidence(`lesson-${index + 1}`);
+    evidence.stages.practice = false;
+    evidence.practice = { circuit: false, code: false, run: false };
+    p.lessons[`lesson-${index + 1}`] = {
+      ...p.lessons[`lesson-${index + 1}`],
+      ...evidence,
+      status: "current",
+    };
     const id = `lesson-${index + 1}`,
       draft = {
         scene,
@@ -41,6 +63,10 @@ for (const index of [2, 5])
       ({ p, id, draft }) => {
         localStorage.setItem("arduhub.progress.v1", JSON.stringify(p));
         localStorage.setItem(
+          "arduhub.save-prompt.v1:local",
+          JSON.stringify({ firstShownAt: Date.now(), shown: 2 }),
+        );
+        localStorage.setItem(
           "arduhub.drafts.v1",
           JSON.stringify({
             version: 1,
@@ -52,7 +78,9 @@ for (const index of [2, 5])
       { p, id, draft },
     );
     await page.goto(`/app/lesson/${id}`);
-    await page.getByRole("button", { name: "Проверить", exact: true }).click();
+    await page
+      .getByRole("button", { name: "Проверить схему", exact: true })
+      .click();
     await page.getByRole("tab", { name: "Код", exact: true }).click();
     await page
       .getByRole("textbox", { name: "Код", exact: true })
@@ -68,8 +96,23 @@ test("constant high never passes blink and compiler diagnostics mark the code", 
 }) => {
   test.setTimeout(45000);
   const p = createProgress();
+  p.profile.name = "Искра";
+  // These feature fixtures represent a learner who has acknowledged reward notices.
+  p.achievements = {
+    unlocked: [],
+    claimed: [],
+    notified: achievementDeck.map((item) => item.id),
+  };
   p.tourSeen = { "/app": true, "/app/lesson/lesson-1": true };
   for (let i = 1; i <= 12; i++) p.tourSeen["/app/lesson/lesson-" + i] = true;
+  const evidence = completeEvidence("lesson-1");
+  evidence.stages.practice = false;
+  evidence.practice.run = false;
+  p.lessons["lesson-1"] = {
+    ...p.lessons["lesson-1"],
+    ...evidence,
+    status: "current",
+  };
   const draft = {
     scene: exampleScene(),
     code: sketches[4].code,
@@ -80,6 +123,10 @@ test("constant high never passes blink and compiler diagnostics mark the code", 
     ({ p, draft }) => {
       if (!localStorage.getItem("arduhub.progress.v1")) {
         localStorage.setItem("arduhub.progress.v1", JSON.stringify(p));
+        localStorage.setItem(
+          "arduhub.save-prompt.v1:local",
+          JSON.stringify({ firstShownAt: Date.now(), shown: 2 }),
+        );
         localStorage.setItem(
           "arduhub.drafts.v1",
           JSON.stringify({ version: 1, drafts: { "lesson-1": draft } }),
@@ -113,7 +160,9 @@ test("constant high never passes blink and compiler diagnostics mark the code", 
   await page.getByRole("tab", { name: "Код", exact: true }).click();
   await page
     .getByRole("textbox", { name: "Код", exact: true })
-    .fill("void setup() {\n  pinMode(13, OUTPUT)\n}\nvoid loop() {}");
+    .fill(
+      "#include <Arduino.h>\nvoid setup() {\n  pinMode(13, OUTPUT)\n}\nvoid loop() {}",
+    );
   await page.getByRole("button", { name: /^Запустить/ }).click();
   await expect(
     page
@@ -121,7 +170,7 @@ test("constant high never passes blink and compiler diagnostics mark the code", 
       .filter({ hasText: "Похоже, в конце команды нет точки с запятой." }),
   ).toBeVisible();
   await expect(page.locator(".cm-lintRange-error")).toHaveCount(1);
-  await expect(page.getByRole("button", { name: /^Стоп/ })).toBeDisabled();
+  await expect(page.getByRole("button", { name: /^Стоп/ })).toHaveCount(0);
 });
 
 // Cabinet regression scenarios use the explicit guest session.

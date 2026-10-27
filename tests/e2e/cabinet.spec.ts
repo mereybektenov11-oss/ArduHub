@@ -3,21 +3,64 @@ import { stubExternalVideo } from "./helpers/externalVideo";
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { createProgress } from "../../src/domain/seed";
+import { learningLessons } from "../../src/domain/lessons/content";
 import { diagnosticDeck } from "../../src/content/cabinet.ru";
-async function seed(page: Page) {
+async function seed(page: Page, { showHomeTour = false } = {}) {
   const p = createProgress();
-  p.tourSeen = {
-    "/app/lesson/lesson-1": true,
-    "/app": true,
-    "/app/map": true,
-    "/app/practice": true,
-  };
-  for (let i = 1; i <= 12; i++) p.tourSeen["/app/lesson/lesson-" + i] = true;
+  p.profile.name = "Тестовый ученик";
+  p.tourSeen = Object.fromEntries(
+    [
+      "/app",
+      "/app/map",
+      "/app/lesson/lesson-1",
+      ...Array.from({ length: 12 }, (_, i) => `/app/lesson/lesson-${i + 1}`),
+      "/app/practice",
+      "/app/practice/blitz",
+      "/app/practice/findbug",
+      "/app/practice/match",
+      "/app/projects",
+      "/app/profile",
+      "/app/shop",
+      "/app/test",
+      "/app/glossary",
+      "/app/homework",
+      "/app/lessons",
+    ].map((route) => [route, route !== "/app" || !showHomeTour] as const),
+  );
   await page.addInitScript((p) => {
     if (!localStorage.getItem("arduhub.progress.v1"))
       localStorage.setItem("arduhub.progress.v1", JSON.stringify(p));
+    localStorage.setItem("arduhub.onboarding.v1:local", "1");
+    localStorage.setItem(
+      "arduhub.save-prompt.v1:local",
+      JSON.stringify({ firstShownAt: Date.now(), shown: 1 }),
+    );
   }, p);
+  await page.route("**/api/lesson-video?*", (route) =>
+    route.fulfill({ json: {} }),
+  );
 }
+// Feature journeys acknowledge real earned notices through their visible controls.
+async function dismissRewardDialogs(page: Page) {
+  await page.waitForTimeout(150);
+  for (let i = 0; i < 12; i++) {
+    const reward = page.getByRole("dialog", {
+      name: /^(Новый уровень!|Стикер открыт|Сохрани прогресс)$/,
+    });
+    if (!(await reward.isVisible())) return;
+    const close = reward.getByRole("button", {
+      name: /^(Закрыть|Закрыть стикер)$/,
+    });
+    const current = await reward.elementHandle();
+    await close.click();
+    await expect
+      .poll(() => current!.evaluate((element) => element.isConnected))
+      .toBe(false);
+    await page.waitForTimeout(150);
+  }
+  throw new Error("Reward queue did not drain");
+}
+
 test("lesson checkpoint: wiring alone never awards XP in v2", async ({
   page,
 }) => {
@@ -26,32 +69,44 @@ test("lesson checkpoint: wiring alone never awards XP in v2", async ({
   await page.getByRole("button", { name: "Я посмотрел", exact: true }).click();
   await page.getByRole("button", { name: "К тесту →", exact: true }).click();
   await passLessonQuiz(page);
+  await dismissRewardDialogs(page);
   const pin = (name: string) => page.getByRole("button", { name, exact: true });
   await pin("uno 13").click();
   await pin("led A").click();
   await pin("led C").click();
   await pin("uno GND.2").click();
-  await page.getByRole("button", { name: "Проверить", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Проверить схему", exact: true })
+    .click();
   await expect(
     page.locator(".l2-error").filter({ hasText: "Нет резистора" }),
   ).toBeVisible();
   for (let i = 0; i < 3; i++)
     await page
-      .locator(".l2-lesson-guide")
-      .getByRole("button", { name: /^Подсказка/ })
+      .getByRole("button", { name: /^Подсказка: Осталось подсказок/ })
       .click();
   await expect(
-    page.getByText("13 → резистор 1; резистор 2 → LED A; LED C → GND.2."),
+    page
+      .locator(".flow-task")
+      .getByText(learningLessons[0].circuit.hints[2], { exact: true }),
   ).toBeVisible();
+  const wrongWire = page.getByRole("button", {
+    name: "Цвет провода: uno 13 → led A",
+    exact: true,
+  });
+  await wrongWire.focus();
+  await wrongWire.press("Enter");
   await page
-    .getByRole("button", { name: "Цвет провода: uno 13 → led A", exact: true })
+    .getByRole("toolbar", { name: "Инструменты схемы" })
+    .getByRole("button", { name: "Удалить", exact: true })
     .click();
-  await page.getByRole("button", { name: "Удалить", exact: true }).click();
   await pin("uno 13").click();
   await pin("r 1").click();
   await pin("r 2").click();
   await pin("led A").click();
-  await page.getByRole("button", { name: "Проверить", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Проверить схему", exact: true })
+    .click();
   await page.getByRole("tab", { name: "Код", exact: true }).click();
   await expect(
     page.getByRole("textbox", { name: "Код", exact: true }),
@@ -102,7 +157,7 @@ test("landing, diagnosis, map, lesson and reward", async ({ page }) => {
   await page.goto("/");
   await page.locator(".account").click();
   await expect(page).toHaveURL(/\/app$/);
-  await page.getByRole("link", { name: /Пройти тест/ }).click();
+  await page.getByRole("link", { name: "Начать тест", exact: true }).click();
   for (const q of diagnosticDeck) {
     await page
       .locator(".cab-main")
@@ -113,14 +168,22 @@ test("landing, diagnosis, map, lesson and reward", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "Твой маршрут готов!" }),
   ).toBeVisible();
+  expect(
+    await page.evaluate(() => {
+      const p = JSON.parse(localStorage.getItem("arduhub.progress.v1")!);
+      return { xp: p.xp, level: p.profile.level };
+    }),
+  ).toEqual({ xp: 0, level: 1 });
   await page.getByRole("link", { name: /На остров электроники/ }).click();
-  await page.getByRole("button", { name: /^Уровень 0:/ }).click();
+  await dismissRewardDialogs(page);
+  await page.locator('.island-level-list a[href="/app/map/0"]').click();
   await page
     .getByRole("button", { name: "Первый огонёк", exact: true })
     .click();
   await page.getByRole("button", { name: "Я посмотрел", exact: true }).click();
   await page.getByRole("button", { name: "К тесту →", exact: true }).click();
   await passLessonQuiz(page);
+  await dismissRewardDialogs(page);
   await expect(
     page.getByRole("button", { name: "uno 13", exact: true }),
   ).toBeVisible();
@@ -141,14 +204,26 @@ test("diagnosis resumes at question four and banner disappears after completion"
   await expect(
     page.getByText("Ответы сохранены. Продолжай с того же места."),
   ).toBeVisible();
+  for (let i = 3; i < diagnosticDeck.length; i++) {
+    await page
+      .getByRole("button", {
+        name: diagnosticDeck[i].options[diagnosticDeck[i].correct],
+      })
+      .click();
+    await page.getByRole("button", { name: /^Ответить/ }).click();
+  }
+  await page.goto("/app");
+  await expect(page.locator(".kids-diagnostic")).toHaveCount(0);
 });
 test("locked map node and screenshots", async ({ page }) => {
   await seed(page);
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/app/map");
-  await page.getByRole("button", { name: /^Уровень 2:/ }).click();
+  const locked = page.locator('[data-map-level="2"]');
+  await expect(locked).toHaveAttribute("data-status", "locked");
+  await expect(locked).toHaveAttribute("aria-disabled", "true");
+  await locked.dispatchEvent("click");
   await expect(page).toHaveURL(/\/app\/map$/);
-  await expect(page.getByRole("status")).toContainText("Сначала пройди");
   await page.waitForTimeout(3500);
   await page.screenshot({
     path: "reports/cabinet/map-desktop.png",
@@ -168,15 +243,16 @@ test("locked map node and screenshots", async ({ page }) => {
     fullPage: true,
   });
 });
-test("tour: seven desktop steps, remembers completion and replays", async ({
+test("tour: five current desktop steps, remembers completion and replays", async ({
   page,
 }) => {
+  await seed(page, { showHomeTour: true });
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/app");
   const tour = page.getByRole("dialog", { name: "Тур по кабинету" });
   await expect(tour).toBeVisible();
-  await expect(tour.getByText("1 из 7", { exact: true })).toBeVisible();
-  for (let i = 0; i < 6; i++)
+  await expect(tour.getByText("1 из 5", { exact: true })).toBeVisible();
+  for (let i = 0; i < 4; i++)
     await tour.getByRole("button", { name: /^Далее/ }).click();
   await tour.getByRole("button", { name: /^Понятно/ }).click();
   await expect(tour).not.toBeVisible();
@@ -206,27 +282,28 @@ test("glossary search and persisted collection", async ({ page }) => {
     page.getByRole("heading", { name: "Резистор", exact: true }),
   ).toBeVisible();
 });
-test("mentor fallback, demo balance and quick chat", async ({ page }) => {
+test("mentor fallback, token balance and quick chat", async ({ page }) => {
   await page.route("**/api/mentor", (route) =>
     route.fulfill({ status: 503, json: { error: "mentor_unavailable" } }),
   );
   await seed(page);
-  await page.goto("/app/mentor?lesson=lesson-1&error=missing_resistor");
-  await page
-    .getByRole("button", { name: "Помоги разобраться в ошибке", exact: true })
-    .click();
-  await expect(page.getByRole("log")).toContainText("Что ограничивает ток");
-  await expect(
-    page.getByText("50 демо-токенов", { exact: true }),
-  ).toBeVisible();
-  await page.goto("/app/lessons");
-  await page.getByRole("button", { name: "Спроси наставника" }).click();
-  const dialog = page.getByRole("dialog");
+  await page.goto("/app/lesson/lesson-1");
+  await page.getByRole("button", { name: "Наставник", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "Наставник" });
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toContainText("50 токенов");
   await dialog.getByRole("textbox").fill("Зачем резистор?");
   await dialog.getByRole("button", { name: /Отправить/ }).click();
   await expect(dialog.getByRole("log")).toContainText(
     "Резистор ограничивает ток",
   );
+  await expect(dialog).toContainText("50 токенов");
+  expect(
+    await page.evaluate(
+      () =>
+        JSON.parse(localStorage.getItem("arduhub.progress.v1")!).mentor.tokens,
+    ),
+  ).toBe(50);
 });
 test("blitz loses third life and queues mistakes", async ({ page }) => {
   await seed(page);
@@ -264,7 +341,7 @@ test("all routes at 360, reduced motion and touch pin connections", async ({
     "/app/practice/blitz",
     "/app/practice/findbug",
     "/app/practice/match",
-    "/app/mentor",
+    "/app/profile",
     "/app/glossary",
     "/app/homework",
     "/app/lessons",
@@ -279,10 +356,15 @@ test("all routes at 360, reduced motion and touch pin connections", async ({
       ),
     ).toBe(true);
   }
+  await page.goto("/app/lesson/lesson-1");
+  await page.getByRole("button", { name: "Наставник", exact: true }).click();
+  const mentorDialog = page.getByRole("dialog", { name: "Наставник" });
+  await expect(mentorDialog).toBeVisible();
+  await expect(mentorDialog.getByRole("textbox")).toBeVisible();
   await page.goto("/app/map");
   expect(
     await page
-      .locator(".is-current .cab-node-orb")
+      .locator(".island-map-node.is-current .island-node-orb")
       .evaluate((el) => getComputedStyle(el).animationName),
   ).toBe("none");
   const context = await browser.newContext({
@@ -298,6 +380,7 @@ test("all routes at 360, reduced motion and touch pin connections", async ({
   await touch.getByRole("button", { name: "Я посмотрел", exact: true }).tap();
   await touch.getByRole("button", { name: "К тесту →", exact: true }).tap();
   await passLessonQuiz(touch);
+  await dismissRewardDialogs(touch);
   await touch.getByRole("button", { name: "uno 13", exact: true }).tap();
   await touch.getByRole("button", { name: "led A", exact: true }).tap();
   await expect(
@@ -316,6 +399,7 @@ test("keyboard editor undo/redo and no duplicate/self wire", async ({
   await page.getByRole("button", { name: "Я посмотрел", exact: true }).click();
   await page.getByRole("button", { name: "К тесту →", exact: true }).click();
   await passLessonQuiz(page);
+  await dismissRewardDialogs(page);
   const first = page.getByRole("button", { name: "uno 13", exact: true }),
     second = page.getByRole("button", { name: "led A", exact: true });
   await first.press("Enter");

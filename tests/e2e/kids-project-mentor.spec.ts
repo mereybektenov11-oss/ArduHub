@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { createProgress } from "../../src/domain/seed";
+import { dismissRewardDialogs } from "./helpers/rewardDialogs";
 test("project mentor actions live in the editor panel and open centered chat", async ({
   page,
 }) => {
@@ -20,6 +21,7 @@ test("project mentor actions live in the editor panel and open centered chat", a
     .getByRole("button", { name: "Создать проект", exact: true })
     .click();
   await expect(page).toHaveURL(/\/app\/projects\/[\w-]+$/);
+  await dismissRewardDialogs(page);
   const panel = page.locator(".l2-workbar");
   await expect(
     panel.getByRole("button", { name: "Спросить наставника", exact: true }),
