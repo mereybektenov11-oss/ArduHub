@@ -18,6 +18,7 @@ const exact = new Set([
   "src/content/ru.ts",
   "src/components/auth/AuthCard.tsx",
   "src/domain/auth.ts",
+  "src/lib/supabase/client.ts",
   // User-requested follow-up: correct two-LED lesson completion.
   "src/domain/checker/check.ts",
   "src/domain/scene/check.ts",

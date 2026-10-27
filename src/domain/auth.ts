@@ -1,5 +1,12 @@
 import { authRu as c } from "@/content/dashboard.ru";
 export const normalizeAuthEmail = (email: string) => email.trim().toLowerCase();
+export function recoverySession(hash: string) {
+  const params = new URLSearchParams(hash.replace(/^#/, ""));
+  if (params.get("type") !== "recovery") return null;
+  const access_token = params.get("access_token");
+  const refresh_token = params.get("refresh_token");
+  return access_token && refresh_token ? { access_token, refresh_token } : null;
+}
 export function validateRegistration(data: {
   name: string;
   password: string;

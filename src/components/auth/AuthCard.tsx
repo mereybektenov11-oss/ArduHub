@@ -1,12 +1,13 @@
 "use client";
 import Link from "next/link";
-import { useState, useRef, type FormEvent } from "react";
+import { useState, useRef, useEffect, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { authRu as c } from "@/content/dashboard.ru";
 import {
   authError,
   validateRegistration,
   normalizeAuthEmail,
+  recoverySession,
 } from "@/domain/auth";
 import { motionTokens, motionCssVars } from "@/lib/motion";
 type Mode = "login" | "register" | "forgot" | "reset";
@@ -32,6 +33,42 @@ export default function AuthCard({
     [show, setShow] = useState(false),
     [cooldown, setCooldown] = useState(false);
   const card = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const session = recoverySession(location.hash);
+    if (!session) return;
+    // Fragments never reach the callback server. Consume them here and remove
+    // credentials from browser history before loading the auth client.
+    let cancelled = false;
+    async function restore() {
+      try {
+        const { browserSupabase } = await import("@/lib/supabase/client");
+        if (cancelled) return;
+        history.replaceState(null, "", location.pathname + location.search);
+        setBusy(true);
+        const client = browserSupabase();
+        if (!client) throw Error();
+        const { error } = await client.auth.setSession(session!);
+        if (error) throw error;
+        if (!cancelled) {
+          setMode("reset");
+          setError("");
+          setMessage("");
+          history.replaceState(null, "", "/auth/reset");
+        }
+      } catch {
+        if (!cancelled) {
+          setMode("forgot");
+          setError(c.expired);
+        }
+      } finally {
+        if (!cancelled) setBusy(false);
+      }
+    }
+    void restore();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
   function changeMode(next: Mode) {
     const height = card.current?.offsetHeight;
     requestAnimationFrame(() => {
@@ -84,8 +121,10 @@ export default function AuthCard({
       setError(password.length < 8 ? c.short : c.mismatch);
       return;
     }
-    const { browserSupabase } = await import("@/lib/supabase/client");
-    const client = browserSupabase();
+    const { browserSupabase, passwordRecoveryClient } =
+      await import("@/lib/supabase/client");
+    const client =
+      mode === "forgot" ? passwordRecoveryClient() : browserSupabase();
     if (!client) {
       setError(c.unavailable);
       return;
