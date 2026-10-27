@@ -6,6 +6,7 @@ import { completeEvidence } from "../helpers/progressEvidence";
 
 test("two LEDs complete with recreated components in reverse order", async ({
   page,
+  baseURL,
 }) => {
   const progress = createProgress();
   progress.profile.name = "Лис";
@@ -41,7 +42,7 @@ test("two LEDs complete with recreated components in reverse order", async ({
   await page
     .context()
     .addCookies([
-      { name: "arduhub-guest", value: "1", domain: "127.0.0.1", path: "/" },
+      { name: "arduhub-guest", value: "1", url: baseURL! },
     ]);
   await page.addInitScript(
     ({ progress, scene, code }) => {
