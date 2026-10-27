@@ -121,6 +121,15 @@ export type Progress = {
   };
   boosts?: { freeze: number; hints: number };
   inventory?: string[];
+  achievements?: { unlocked: string[]; notified: string[]; claimed: string[] };
+  achievementStats?: {
+    projectIds?: string[];
+    mentorQuestionIds?: string[];
+    topics?: Topic[];
+    blitzCurrent?: number;
+    blitzBest?: number;
+    bestWeeklyRank?: number;
+  };
   daily?: {
     day: string;
     lessonIds: string[];

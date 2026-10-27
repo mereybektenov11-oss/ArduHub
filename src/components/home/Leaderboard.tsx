@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { recordAchievementEvent } from "@/domain/achievements";
 import Link from "next/link";
 import { kidsPagesRu as k } from "@/content/kids-pages.ru";
 import CabinetArt from "@/components/cabinet/CabinetArt";
@@ -14,7 +15,11 @@ export default function Leaderboard({
 }: {
   compact?: boolean;
 }) {
-  const { progress: p } = useProgress();
+  const { progress: p, update } = useProgress();
+  const updateRef = useRef(update);
+  useEffect(() => {
+    updateRef.current = update;
+  }, [update]);
   const [rows, setRows] = useState<LeaderboardRow[]>([]),
     [offline, setOffline] = useState(false);
   useEffect(() => {
@@ -26,7 +31,16 @@ export default function Leaderboard({
       .then(({ data, error }) => {
         if (cancelled) return;
         if (error) setOffline(true);
-        else setRows((data ?? []) as LeaderboardRow[]);
+        else {
+          setRows((data ?? []) as LeaderboardRow[]);
+          const self = (data as LeaderboardRow[] | null)?.find(
+            (row) => row.is_self,
+          );
+          if (self)
+            updateRef.current((p) =>
+              recordAchievementEvent(p, { kind: "ranking", rank: self.rank }),
+            );
+        }
       });
     return () => {
       cancelled = true;

@@ -142,7 +142,7 @@ test("form rejects invalid email, sends once and succeeds with mocked backend", 
     await route.fulfill({ status: 201, json: { ok: true } });
   });
   await page.getByLabel("Твоя электронная почта").fill("abc");
-  await page.getByRole("button", { name: "Получить доступ" }).click();
+  await page.getByRole("button", { name: "Подписаться" }).click();
   await expect(page.locator("#waitlist-error")).toHaveText(
     "Проверь адрес электронной почты",
   );
@@ -152,7 +152,7 @@ test("form rejects invalid email, sends once and succeeds with mocked backend", 
     form.requestSubmit();
     form.requestSubmit();
   });
-  await expect(page.getByText("Готово, мы напишем вам")).toBeVisible();
+  await expect(page.getByText("Адрес сохранён")).toBeVisible();
   expect(count).toBe(1);
 });
 test("form preserves email on rate limit and offline failures", async ({
@@ -163,7 +163,7 @@ test("form preserves email on rate limit and offline failures", async ({
     r.fulfill({ status: 429, json: { ok: false, error: "rate_limited" } }),
   );
   await page.getByLabel("Твоя электронная почта").fill("test@example.com");
-  await page.getByRole("button", { name: "Получить доступ" }).click();
+  await page.getByRole("button", { name: "Подписаться" }).click();
   await expect(page.locator("#waitlist-error")).toHaveText(
     "Попробуйте через минуту",
   );
@@ -176,22 +176,14 @@ test("form preserves email on rate limit and offline failures", async ({
     "Не удалось отправить",
   );
 });
-test("school CTA forwards school role", async ({ page }) => {
+test("only working free plan opens the cabinet", async ({ page }) => {
   await page.goto("/");
-  let role = "";
-  await page.route("**/api/waitlist", (r) => {
-    role = r.request().postDataJSON().role;
-    return r.fulfill({ status: 201, json: { ok: true } });
-  });
-  await page
-    .locator(".plan-school")
-    .getByRole("link", { name: "Связаться" })
-    .click();
-  await expect(page.getByLabel("Твоя электронная почта")).toBeFocused();
-  await page.getByLabel("Твоя электронная почта").fill("school@example.com");
-  await page.getByRole("button", { name: "Получить доступ" }).click();
-  await expect(page.getByText("Готово, мы напишем вам")).toBeVisible();
-  expect(role).toBe("school");
+  await expect(page.locator("#pricing .plan")).toHaveCount(1);
+  await expect(page.locator("#pricing .plan a")).toHaveAttribute(
+    "href",
+    "/app",
+  );
+  await expect(page.locator(".plan-school,.plan-pro")).toHaveCount(0);
 });
 test("blitz loses lives, increments streak and restarts", async ({ page }) => {
   await page.goto("/");
@@ -290,9 +282,14 @@ test("scheme opens in a dialog and Escape restores focus", async ({ page }) => {
   await expect(page.getByRole("dialog")).not.toBeVisible();
   await expect(button).toBeFocused();
 });
-test("lesson CTA focuses email and native anchors respect the header", async ({
+test("lesson CTA opens lessons and native anchors respect the header", async ({
   page,
 }) => {
+  await page
+    .context()
+    .addCookies([
+      { name: "arduhub-guest", value: "1", domain: "127.0.0.1", path: "/" },
+    ]);
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
@@ -308,7 +305,7 @@ test("lesson CTA focuses email and native anchors respect the header", async ({
     .first()
     .getByRole("link", { name: "Открыть уроки" })
     .click();
-  await expect(page.getByLabel("Твоя электронная почта")).toBeFocused();
+  await expect(page).toHaveURL(/\/app\/lessons/);
 });
 test("unconfigured backend error is honest and keeps email", async ({
   page,
@@ -318,9 +315,9 @@ test("unconfigured backend error is honest and keeps email", async ({
     r.fulfill({ status: 500, json: { ok: false, error: "server_error" } }),
   );
   await page.getByLabel("Твоя электронная почта").fill("test@example.com");
-  await page.getByRole("button", { name: "Получить доступ" }).click();
+  await page.getByRole("button", { name: "Подписаться" }).click();
   await expect(page.locator("#waitlist-error")).toContainText(
-    "Приём заявок пока не подключён",
+    "Не удалось сохранить адрес",
   );
   await expect(page.getByLabel("Твоя электронная почта")).toHaveValue(
     "test@example.com",

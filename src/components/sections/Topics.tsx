@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, type ReactNode } from "react";
 import { ru } from "@/content/ru";
-import AccessLink from "../ui/AccessLink";
+import Link from "next/link";
 import { SectionShell, SectionTitle } from "../ui/primitives";
 import { Stagger, StaggerItem } from "../ui/Stagger";
 function TopicSurface({
@@ -57,10 +57,10 @@ export default function Topics() {
               <p>{t.text}</p>
               <span className="topic-lessons">{ru.ui.lessonCount}</span>
               <div className="topic-actions">
-                <AccessLink className="text-button">
+                <Link href="/app/lessons" className="text-button">
                   {ru.ui.openLessons}
                   <span aria-hidden="true">↗</span>
-                </AccessLink>
+                </Link>
                 <a
                   className="text-button"
                   href="#bank"

@@ -1,6 +1,7 @@
 export const lessonFlowRu = {
   stages: ["Видео", "Тест", "Практика"],
   continue: "Продолжить",
+  currentLesson: "Текущий урок",
   overview: "Обзор",
   locked: "Заблокировано",
   lockedNote: "Пройди предыдущий урок, чтобы открыть этот",

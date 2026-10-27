@@ -1,4 +1,5 @@
 "use client";
+import { recordAchievementEvent } from "@/domain/achievements";
 import { useEffect, useRef, useState } from "react";
 import { useProgress } from "@/lib/useProgress";
 import { mentors, lessons } from "@/domain/seed";
@@ -140,6 +141,15 @@ export default function MentorChat({
     setInterrupted(!!result.interrupted);
     setFailed(result.fallback && !result.interrupted);
     if (!result.fallback && !result.interrupted) setInput("");
+    if (
+      result.reply &&
+      !result.fallback &&
+      !result.blocked &&
+      !result.interrupted
+    )
+      update((p) =>
+        recordAchievementEvent(p, { kind: "mentor", id: crypto.randomUUID() }),
+      );
     try {
       localStorage.setItem(storageKey, JSON.stringify(next.slice(-24)));
     } catch {}

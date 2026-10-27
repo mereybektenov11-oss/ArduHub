@@ -161,7 +161,7 @@ test("full lesson, real AVR, reward once, next node and review", async ({
     page.locator('.dash-node.done [data-state="done"]').first(),
   ).toBeVisible();
   await expect(page.locator(".flow-current-label").first()).toContainText(
-    "Продолжить",
+    "Текущий урок",
   );
   await page.goto("/app/lesson/lesson-1?stage=practice");
   await page.getByRole("button", { name: /^Запустить/ }).click();

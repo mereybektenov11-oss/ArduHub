@@ -5,7 +5,7 @@ import ts from "typescript";
 // Inspect text nodes and string values rather than identifiers (JSON.parse,
 // guest routes and source filenames are implementation details).
 const forbidden =
-  /гост[а-яё]*|демо[а-яё-]*|демонстрац[а-яё]*|скоро(?![а-яё])|в\s+разработке|заглушк[а-яё]*|учебная\s+модель|симуляци[а-яё]*|кэш[а-яё]*|\bJSON\b/iu;
+  /гост[а-яё]*|демо[а-яё-]*|демонстрац[а-яё]*|скоро(?![а-яё])|в\s+разработке|ранн[а-яё]*\s+доступ[а-яё]*|заглушк[а-яё]*|учебная\s+модель|симуляци[а-яё]*|кэш[а-яё]*|\bJSON\b/iu;
 if (process.argv[2] === "--check-text") {
   process.exitCode = forbidden.test(process.argv.slice(3).join(" ")) ? 1 : 0;
 } else {

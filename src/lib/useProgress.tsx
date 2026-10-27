@@ -38,6 +38,13 @@ import LessonSkeleton from "@/components/lesson/LessonSkeleton";
 import { lessonFlowRu } from "@/content/ru";
 import { motionTokens } from "@/lib/motion";
 import { configureSfx, playSfx, unlockSfx } from "@/lib/sfx";
+import { flushGameAttempts } from "@/services/achievements/gameQueue";
+import {
+  unlockAchievements,
+  achievementState,
+  claimAchievement,
+  type AchievementId,
+} from "@/domain/achievements";
 type Context = {
   progress: Progress;
   update: (fn: (p: Progress) => Progress) => void;
@@ -53,6 +60,7 @@ type Context = {
   dismissLevelUp: () => void;
   refreshAccount: () => Promise<void>;
   claimMissions: () => Promise<boolean>;
+  collectSticker: (id: AchievementId) => Promise<boolean>;
 };
 const ProgressContext = createContext<Context | null>(null);
 export function ProgressProvider({ children }: { children: ReactNode }) {
@@ -110,6 +118,62 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
   const [sessionExpired, setSessionExpired] = useState(false);
   const awards = useRef(Promise.resolve());
   const missionPending = useRef(false);
+  const stickersPending = useRef(new Set<AchievementId>());
+  async function collectSticker(id: AchievementId): Promise<boolean> {
+    if (stickersPending.current.has(id)) return false;
+    const before = current.current,
+      state = achievementState(before);
+    if (state.claimed.includes(id)) return true;
+    if (!state.unlocked.includes(id)) return false;
+    stickersPending.current.add(id);
+    let newlyClaimed = true;
+    try {
+      const userId = before.account?.userId;
+      if (userId) {
+        const task = awards.current
+          .catch(() => {})
+          .then(async () => {
+            if (id === "speed" || id === "explorer")
+              await flushGameAttempts(userId);
+            await flushAwards(
+              localStorage,
+              userId,
+              () => current.current.account?.userId,
+              async () => {
+                if (store.current instanceof SupabaseProgressStore)
+                  await store.current.flush();
+              },
+            );
+            if (current.current.account?.userId !== userId) throw Error();
+            const response = await fetch("/api/achievements/claim", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ id }),
+            });
+            if (!response.ok || current.current.account?.userId !== userId)
+              throw Error();
+            const result = await response.json();
+            newlyClaimed = result.claimed === true;
+            await refreshAccount();
+            update((p) => ({
+              ...p,
+              achievements: {
+                ...achievementState(p),
+                claimed: [...new Set([...achievementState(p).claimed, id])],
+              },
+            }));
+          });
+        awards.current = task;
+        await task;
+      } else update((p) => claimAchievement(p, id));
+      if (newlyClaimed) playSfx("level_up");
+      return true;
+    } catch {
+      return false;
+    } finally {
+      stickersPending.current.delete(id);
+    }
+  }
   async function claimMissions() {
     const before = current.current;
     if (
@@ -165,9 +229,23 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
   }
   const refreshAccount = useCallback(async () => {
     if (store.current instanceof SupabaseProgressStore) {
-      const loaded = await store.current.hydrate();
-      const next = {
+      const selectedStore = store.current;
+      const userId = current.current.account?.userId;
+      const loaded = await selectedStore.hydrate();
+      if (
+        store.current !== selectedStore ||
+        current.current.account?.userId !== userId
+      )
+        return;
+      const previous = achievementState(current.current);
+      const received = achievementState(loaded);
+      const next = unlockAchievements({
         ...current.current,
+        achievements: {
+          unlocked: [...new Set([...previous.unlocked, ...received.unlocked])],
+          notified: [...new Set([...previous.notified, ...received.notified])],
+          claimed: received.claimed,
+        },
         sparks: loaded.sparks,
         xp: loaded.xp,
         mentor: loaded.mentor,
@@ -179,9 +257,9 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
           name: loaded.profile.name,
           level: xpLevel(loaded.xp),
         },
-      };
+      });
       current.current = next;
-      store.current.save(next);
+      selectedStore.save(next);
       setProgress(next);
     }
   }, []);
@@ -252,7 +330,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
         } catch {}
       }
       store.current = selected;
-      loaded = syncLessonStates(loaded);
+      loaded = unlockAchievements(syncLessonStates(loaded));
       current.current = loaded;
       selected.save(loaded);
       setProgress(loaded);
@@ -307,9 +385,8 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     return () => clearTimeout(timer);
   }, [toast]);
   function update(fn: (p: Progress) => Progress) {
-    let next = recordDaily(
-      current.current,
-      syncLessonStates(fn(current.current)),
+    let next = unlockAchievements(
+      recordDaily(current.current, syncLessonStates(fn(current.current))),
     );
     const before = current.current;
     if (next.streak.count > before.streak.count) {
@@ -444,6 +521,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
         dismissLevelUp: () => setLevelUp(null),
         refreshAccount,
         claimMissions,
+        collectSticker,
       }}
     >
       {ready ? (

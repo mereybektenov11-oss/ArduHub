@@ -6,7 +6,7 @@
   --kids-palette-width: 168px;
   --kids-canvas-height: 60svh;
 }
-.cabinet :is(button, .cab-btn, summary):active:not(:disabled) {
+.cabinet :is(button, .cab-btn, summary):active:not(:disabled):not(.l2-pin) {
   transform: translateY(1px);
 }
 .cabinet :is(button, .cab-btn, summary) {

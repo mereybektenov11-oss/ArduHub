@@ -1,4 +1,5 @@
 "use client";
+import { recordAchievementEvent } from "@/domain/achievements";
 import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -72,6 +73,15 @@ export default function ProjectWorkspace({ id }: { id: string }) {
     });
     setReply(result.reply);
     setFallback(result.fallback);
+    if (
+      result.reply &&
+      !result.fallback &&
+      !result.blocked &&
+      !result.interrupted
+    )
+      update((p) =>
+        recordAchievementEvent(p, { kind: "mentor", id: crypto.randomUUID() }),
+      );
     if (!result.blocked)
       update((p) => ({
         ...p,

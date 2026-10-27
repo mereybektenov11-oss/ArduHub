@@ -1,6 +1,7 @@
 import type { Progress } from "@/domain/types";
 import { syncLessonStates } from "./xp";
 import { computeStageState } from "./courseState";
+import { achievementState } from "../achievements";
 export function mergeProgress(guest: Progress, account: Progress): Progress {
   const merged = structuredClone(account);
   for (const [id, value] of Object.entries(guest.lessons)) {
@@ -57,5 +58,39 @@ export function mergeProgress(guest: Progress, account: Progress): Progress {
   merged.circuits = { ...guest.circuits, ...account.circuits };
   merged.sparks = account.sparks;
   merged.mentor = account.mentor;
+  const ownAchievements = achievementState(account),
+    imported = achievementState(guest);
+  merged.achievements = {
+    unlocked: [...new Set([...ownAchievements.unlocked, ...imported.unlocked])],
+    notified: [...new Set([...ownAchievements.notified, ...imported.notified])],
+    claimed: ownAchievements.claimed,
+  };
+  const ownStats = account.achievementStats,
+    importedStats = guest.achievementStats;
+  merged.achievementStats = {
+    ...ownStats,
+    projectIds: [
+      ...new Set([
+        ...(ownStats?.projectIds ?? []),
+        ...(importedStats?.projectIds ?? []),
+      ]),
+    ].slice(-20),
+    mentorQuestionIds: [
+      ...new Set([
+        ...(ownStats?.mentorQuestionIds ?? []),
+        ...(importedStats?.mentorQuestionIds ?? []),
+      ]),
+    ].slice(-10),
+    topics: [
+      ...new Set([
+        ...(ownStats?.topics ?? []),
+        ...(importedStats?.topics ?? []),
+      ]),
+    ],
+    blitzBest: Math.max(
+      ownStats?.blitzBest ?? 0,
+      importedStats?.blitzBest ?? 0,
+    ),
+  };
   return syncLessonStates(merged);
 }

@@ -21,11 +21,14 @@ import PartView from "@/components/workspace/PartView";
 import CabinetArt from "@/components/cabinet/CabinetArt";
 import { catalog } from "@/domain/parts/catalog";
 import { exportProject } from "@/domain/projects/export";
+import { useProgress } from "@/lib/useProgress";
+import { recordAchievementEvent } from "@/domain/achievements";
 export default function ProjectsView({
   initialTab = "mine",
 }: {
   initialTab?: string;
 }) {
+  const { update } = useProgress();
   const { store, mutate } = useLearningStore(),
     router = useRouter(),
     [tab, setTab] = useState(initialTab),
@@ -52,8 +55,12 @@ export default function ProjectsView({
     mutate((s) => {
       added = s.add(project);
     });
-    if (added) router.push(`/app/projects/${project.id}`);
-    else setMessage(c.limit);
+    if (added) {
+      update((p) =>
+        recordAchievementEvent(p, { kind: "project", id: project.id }),
+      );
+      router.push(`/app/projects/${project.id}`);
+    } else setMessage(c.limit);
   }
   return (
     <div className="cab-stack kids-projects">

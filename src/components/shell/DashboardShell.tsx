@@ -19,6 +19,7 @@ import RewardToast from "@/components/icons/RewardToast";
 import SoundToggle from "./SoundToggle";
 import Chest from "@/components/feedback/Chest";
 import Icon from "@/components/icons/Icon";
+import { AchievementNotification } from "@/components/profile/Stickers";
 
 export default function DashboardShell({ children }: { children: ReactNode }) {
   const path = usePathname();
@@ -207,6 +208,7 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
       <LevelUp />
       <RewardToast />
       <Chest />
+      <AchievementNotification />
       {corrupt && (
         <div className="cab-storage-warning" role="alert">
           {interfaceCopy.text008}

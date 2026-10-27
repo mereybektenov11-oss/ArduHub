@@ -71,23 +71,29 @@ export default function Canvas({
     return () => observer.disconnect();
   }, [reportView]);
   const manuallyZoomed = useRef(false);
-  const fit = useCallback(() => {
-    if (viewport.current) {
-      setZoom(
-        fitSceneToViewport(
-          { width: extent.width, height: extent.height },
-          {
-            width: viewport.current.clientWidth,
-            height: viewport.current.clientHeight,
-          },
-        ),
-      );
-      viewport.current.scrollTo(0, 0);
-    }
-  }, [extent.width, extent.height]);
-  const fitRef = useRef(fit);
+  const fit = useCallback(
+    (editing = false) => {
+      if (viewport.current) {
+        setZoom(
+          Math.max(
+            editing && viewport.current.clientWidth < 600 ? 0.8 : 0.01,
+            fitSceneToViewport(
+              { width: extent.width, height: extent.height },
+              {
+                width: viewport.current.clientWidth,
+                height: viewport.current.clientHeight,
+              },
+            ),
+          ),
+        );
+        viewport.current.scrollTo(0, 0);
+      }
+    },
+    [extent.width, extent.height],
+  );
+  const fitRef = useRef(() => fit(true));
   useEffect(() => {
-    fitRef.current = fit;
+    fitRef.current = () => fit(true);
   }, [fit]);
   useEffect(() => {
     const element = viewport.current;
@@ -193,7 +199,7 @@ export default function Canvas({
           <button
             className="cab-btn cab-btn-secondary"
             onClick={() => {
-              manuallyZoomed.current = false;
+              manuallyZoomed.current = true;
               fit();
             }}
           >

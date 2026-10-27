@@ -25,6 +25,7 @@ import { useSound } from "@/lib/useSound";
 import { motionSoundRu } from "@/content/motion-sound.ru";
 import Icon from "@/components/icons/Icon";
 import { streakVisualState } from "@/lib/streakState";
+import Stickers from "./Stickers";
 const topicParts: Record<(typeof topics)[number], PartType> = {
   leds: "led",
   buttons: "button",
@@ -112,8 +113,12 @@ export default function ProfilePage() {
         <p>
           <LevelBadge value={levelFromXp(p.xp)} />
           {c.level} {levelFromXp(p.xp)} · <RewardIcon kind="xp" /> {p.xp} XP ·{" "}
-          <Icon name="streak" state={streakVisualState(p, new Date())} value={p.streak.count} /> {activeStreak(p.streak)}{" "}
-          {c.streak.toLowerCase()}
+          <Icon
+            name="streak"
+            state={streakVisualState(p, new Date())}
+            value={p.streak.count}
+          />{" "}
+          {activeStreak(p.streak)} {c.streak.toLowerCase()}
         </p>
         <p>
           <RewardIcon kind="spark" /> {p.sparks} {c.sparkUnits} ·{" "}
@@ -311,6 +316,7 @@ export default function ProfilePage() {
           </div>
         )}
       </Card>
+      <Stickers />
       {p.account?.userId ? (
         <Action disabled={busy} onClick={save}>
           {onboardingRu.saveProgress}

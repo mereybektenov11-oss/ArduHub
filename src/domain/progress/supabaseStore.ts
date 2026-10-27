@@ -30,7 +30,7 @@ export class SupabaseProgressStore extends BrowserProgressStore {
     const local = this.load();
     const consumed = await this.client.rpc("consume_boost", { kind: "freeze" });
     this.streakWasFrozen = consumed.data?.used === true;
-    const [stored, profile, events] = await Promise.all([
+    const [stored, profile, events, receipts] = await Promise.all([
       this.client
         .from("progress")
         .select("data")
@@ -38,8 +38,12 @@ export class SupabaseProgressStore extends BrowserProgressStore {
         .maybeSingle(),
       this.client.from("profiles").select("*").eq("id", this.userId).single(),
       this.client.from("xp_events").select("amount").eq("user_id", this.userId),
+      this.client
+        .from("user_achievements")
+        .select("achievement_id,awarded_at")
+        .eq("user_id", this.userId),
     ]);
-    if (stored.error || profile.error || events.error) {
+    if (stored.error || profile.error || events.error || receipts.error) {
       this.offline = true;
       this.onConnection(true);
       return local;
@@ -53,6 +57,24 @@ export class SupabaseProgressStore extends BrowserProgressStore {
       events.data?.reduce((sum, event) => sum + Number(event.amount), 0) ?? 0;
     const next = {
       ...p,
+      achievements: {
+        unlocked: [
+          ...new Set([
+            ...(p.achievements?.unlocked ?? []),
+            ...(local.achievements?.unlocked ?? []),
+            ...(receipts.data ?? []).map((r) => r.achievement_id),
+          ]),
+        ],
+        notified: [
+          ...new Set([
+            ...(p.achievements?.notified ?? []),
+            ...(local.achievements?.notified ?? []),
+          ]),
+        ],
+        claimed: (receipts.data ?? [])
+          .filter((r) => r.awarded_at !== null)
+          .map((r) => r.achievement_id),
+      },
       ...(this.streakWasFrozen && p.streak.lastActiveDate
         ? {
             streak: {

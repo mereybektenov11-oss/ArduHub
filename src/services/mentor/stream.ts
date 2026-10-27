@@ -16,6 +16,7 @@ export function createStreamingMentorHandler(
     account?: (mentorId: string) => Promise<{
       remaining: number;
       spend: (n: number) => Promise<void>;
+      onSuccess?: () => Promise<void>;
     } | null>;
   } = {},
 ) {
@@ -96,6 +97,7 @@ export function createStreamingMentorHandler(
     let account: {
       remaining: number;
       spend: (n: number) => Promise<void>;
+      onSuccess?: () => Promise<void>;
     } | null = null;
     try {
       account = (await config.account?.(mentor.id)) ?? null;
@@ -176,6 +178,8 @@ export function createStreamingMentorHandler(
               cached?.text ??
               (safety ? templateReply(message) : fallbackReply());
             emit("delta", { text });
+            if (cached && !controller.signal.aborted)
+              await account?.onSuccess?.().catch(() => {});
             emit("done", {
               tokensUsed: 0,
               fallback: !cached,
@@ -239,6 +243,8 @@ export function createStreamingMentorHandler(
               if (cache.size >= 500) cache.delete(cache.keys().next().value!);
               cache.set(cacheKey, { text, expires: now + 86400000 });
             }
+            if (!controller.signal.aborted)
+              await account?.onSuccess?.().catch(() => {});
             emit("done", { tokensUsed, usage, fallback: false });
             finished = true;
           }

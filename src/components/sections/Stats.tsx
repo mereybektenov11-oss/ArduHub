@@ -18,7 +18,6 @@ export default function Stats() {
                   active={inView}
                   duration={motionTokens.duration.counter}
                 />
-                <span aria-hidden="true">+</span>
               </strong>
               <p>{s.label}</p>
             </div>
