@@ -75,7 +75,18 @@ test("two LEDs complete with recreated components in reverse order", async ({
         JSON.stringify({ firstShownAt: Date.now(), shown: 2 }),
       );
     },
-    { progress, scene, code: lesson.code.solution },
+    {
+      progress,
+      scene,
+      code: `const int ledPin1 = 13;
+const int ledPin2 = 12;
+const int delayTime = 1000;
+void setup() { pinMode(ledPin1, OUTPUT); pinMode(ledPin2, OUTPUT); }
+void loop() {
+ digitalWrite(ledPin1, HIGH); digitalWrite(ledPin2, LOW); delay(delayTime);
+ digitalWrite(ledPin1, LOW); digitalWrite(ledPin2, HIGH); delay(delayTime);
+}`,
+    },
   );
   await page.goto("/app/lesson/lesson-4?stage=practice");
   await page.getByRole("button", { name: /^Запустить/ }).click();

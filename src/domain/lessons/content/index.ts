@@ -232,8 +232,8 @@ export const learningLessons: LearningLesson[] = courseCopy.map(
       [{ kind: "pinBlinks", pin: 13, minToggles: 8, withinMs: 3200 }],
       legacyLearningLessons[1].run.checks,
       [
-        { kind: "pinBlinks", pin: 13, minToggles: 4, withinMs: 3200 },
-        { kind: "pinBlinks", pin: 12, minToggles: 4, withinMs: 3200 },
+        { kind: "pinBlinks", pin: 13, minToggles: 2, withinMs: 3200 },
+        { kind: "pinBlinks", pin: 12, minToggles: 2, withinMs: 3200 },
       ],
       [{ kind: "pwmLevel", pin: 9, min: 120, max: 136 }],
       legacyLearningLessons[2].run.checks,
