@@ -1,5 +1,17 @@
 import type { Draft } from "@/domain/projects/storage";
 import { computeStageState } from "@/domain/progress/courseState";
+import type { LearningLesson } from "./content";
+export function practiceAfterQuiz(
+  lesson: Pick<LearningLesson, "id" | "quiz">,
+  flow: LessonFlowState,
+): LessonFlowState | null {
+  if (!["result", "reviewResult"].includes(flow.quiz.phase)) return null;
+  const stages = computeStageState(lesson, {
+    ...flow,
+    stages: { ...flow.stages, test: true },
+  });
+  return stages.test ? { ...flow, stages, stage: "practice" } : null;
+}
 export const lessonStages = ["video", "test", "practice"] as const;
 export type LessonStage = (typeof lessonStages)[number];
 export type FlowQuestion = {

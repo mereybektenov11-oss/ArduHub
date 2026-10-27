@@ -23,6 +23,8 @@ const exact = new Set([
   "src/domain/checker/check.ts",
   "src/domain/scene/check.ts",
   "src/domain/lessons/content/index.ts",
+  "src/domain/lessons/flow.ts",
+  "src/components/lesson/LearningLesson.tsx",
   // Existing presentation call sites; behavior/content changes remain subject to review.
   "src/components/cabinet/ui/index.tsx",
   "src/components/cabinet/LevelUp.tsx",

@@ -20,6 +20,7 @@ import {
   flowPercent,
   resolveStage,
   flowQuizResult,
+  practiceAfterQuiz,
   type LessonStage,
   type FlowQuiz,
 } from "@/domain/lessons/flow";
@@ -452,7 +453,8 @@ function LessonFlow({
             value={flow.quiz}
             onChange={changeQuiz}
             onContinue={() => {
-              if (flow.stages.test) navigate("practice");
+              const next = practiceAfterQuiz(lesson, flow);
+              if (next) navigate("practice", next);
             }}
           />
         )}
