@@ -4,6 +4,7 @@ import Script from "next/script";
 import { siteUrl } from "@/lib/site";
 import { ru } from "@/content/ru";
 import { motionCssVars } from "@/lib/motion";
+import GlassFilters from "@/components/ui/GlassFilters";
 import "./globals.css";
 
 const inter = localFont({
@@ -51,6 +52,7 @@ export default function RootLayout({
         className={`${inter.variable} ${manrope.variable} antialiased`}
         style={motionCssVars}
       >
+        <GlassFilters />
         {children}
         {process.env.NEXT_PUBLIC_ENABLE_ANALYTICS === "true" && (
           <Script

@@ -77,6 +77,17 @@
   --shadow-ink: #0006;
   --shadow-ink-soft: #0003;
   --shadow-card: 0 20px 60px #06120b1a;
+  --glass-light: #f6f3eac9;
+  --glass-dark: #14241dd9;
+  --glass-amber: #ffb932ed;
+  --glass-amber-hover: #ffc34aef;
+  --glass-edge: #fffdf77a;
+  --glass-nav: #14241d8f;
+  --glass-nav-border: #fffdf73d;
+  --glass-nav-inset: 1rem;
+  --glass-nav-radius: 999px;
+  --glass-shadow: inset 0 1px 1px #fffdf7a6, inset 0 -1px 2px #fffdf733,
+    inset 0 0 12px #fffdf71f, 0 6px 20px #06120b1a;
 }
 
 html {
@@ -3030,8 +3041,7 @@ main#main > .section {
     box-shadow var(--motion-state);
 }
 .header[data-scrolled="true"] {
-  background: var(--white);
-  box-shadow: 0 6px 25px var(--shadow-ink-soft);
+  --glass-nav: #14241da3;
 }
 .button {
   transition:
@@ -3445,4 +3455,134 @@ main#main > .modes-section,
 main#main > #topics {
   content-visibility: visible;
   contain: layout paint style;
+}
+
+/* Liquid glass: refract only the backdrop; labels and focus rings stay sharp. */
+.glass-filter-definitions {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.header,
+.mobile-menu,
+.button {
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+  box-shadow: var(--glass-shadow);
+}
+
+.header,
+.mobile-menu {
+  background: var(--glass-light);
+  border-color: var(--glass-edge);
+}
+
+.button {
+  border-color: var(--glass-edge);
+  background-image: linear-gradient(155deg, #fffdf72e, transparent 48%, #fffdf70d);
+}
+
+.button-primary {
+  background-color: var(--glass-amber);
+}
+
+.button-primary:hover {
+  background: linear-gradient(155deg, #fffdf72e, transparent 48%, #fffdf70d),
+    var(--glass-amber-hover);
+}
+
+.button-secondary {
+  background-color: var(--glass-dark);
+  color: var(--text-light);
+}
+
+.tone-cream .button-secondary {
+  background-color: var(--glass-light);
+  color: var(--text-dark);
+}
+
+@supports (backdrop-filter: url("#arduhub-glass")) {
+  .header,
+  .mobile-menu,
+  .button {
+    backdrop-filter: url("#arduhub-glass") blur(3px) saturate(1.2);
+  }
+}
+
+@media (forced-colors: active) {
+  .header,
+  .mobile-menu,
+  .button {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background-image: none;
+    border: 1px solid ButtonText;
+  }
+}
+
+.mobile-menu {
+  background: #f6f3eae8;
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  backdrop-filter: blur(20px) saturate(1.2);
+}
+
+/* Floating navbar keeps a visible glass edge over both section tones. */
+.header {
+  top: var(--glass-nav-inset);
+  width: min(calc(100% - var(--glass-nav-inset) * 2), 80rem);
+  height: 4.25rem;
+  margin: var(--glass-nav-inset) auto;
+  border: 1px solid var(--glass-nav-border);
+  border-radius: var(--glass-nav-radius);
+  background: linear-gradient(120deg, #fffdf717, transparent 48%, #fffdf709),
+    var(--glass-nav);
+  color: var(--text-light);
+  color-scheme: dark;
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  backdrop-filter: blur(12px) saturate(1.4);
+  box-shadow: var(--glass-shadow), 0 12px 36px #06120b24;
+}
+
+.header-inner {
+  padding-inline: var(--space-lg);
+}
+
+.header :focus-visible {
+  outline-color: var(--amber-500);
+}
+
+.header .account {
+  background-color: #fffdf714;
+  border-color: var(--glass-nav-border);
+}
+
+.header .mobile-menu {
+  top: calc(100% + var(--space-xs));
+  border: 1px solid var(--glass-nav-border);
+  border-radius: var(--radius-card);
+  background: var(--ink-800);
+  color: var(--text-light);
+}
+
+@media (max-width: 767px) {
+  .header {
+    --glass-nav-inset: 0.75rem;
+    --glass-nav-radius: 999px;
+    height: 3.75rem;
+  }
+  .header-inner {
+    padding-inline: var(--space-sm);
+  }
+}
+
+@media (forced-colors: active) {
+  .header {
+    background: Canvas;
+    color: CanvasText;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
 }
