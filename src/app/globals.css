@@ -32,8 +32,8 @@
   --success: #3fb37f;
 
   --content-width: 75rem;
-  --space-page: clamp(1rem, 4vw, 3rem);
-  --space-section: clamp(4rem, 8vw, 7.5rem);
+  --space-page: clamp(1.25rem, 4vw, 4rem);
+  --space-section: clamp(5.5rem, 10vw, 9rem);
   --space-stack: 1.5rem;
   --radius-card: 1.5rem;
   --radius-pill: 999px;
@@ -210,7 +210,7 @@ main#main > .section {
   outline-color: var(--text-dark);
 }
 .section-heading {
-  margin-bottom: var(--space-xl);
+  margin-bottom: clamp(3.5rem, 6vw, 5rem);
   max-width: 48rem;
 }
 .section-heading h2,
@@ -219,7 +219,7 @@ main#main > .section {
 }
 .section-heading p {
   color: var(--text-muted-dark);
-  margin-top: var(--space-md);
+  margin-top: 1.75rem;
   max-width: 39rem;
 }
 .tone-dark .section-heading p {
@@ -421,7 +421,7 @@ main#main > .section {
 /* Hero: original circuit illustrations, reference composition. */
 .hero {
   min-height: 760px;
-  padding: 58px var(--space-page) 52px;
+  padding: 72px var(--space-page) 68px;
   background: var(--ink-900);
   position: relative;
   isolation: isolate;
@@ -443,7 +443,7 @@ main#main > .section {
   gap: 0.6rem;
   align-items: center;
   justify-content: center;
-  margin-bottom: 25px;
+  margin-bottom: 32px;
 }
 .hero-eyebrow > span {
   color: var(--amber-500);
@@ -459,7 +459,7 @@ main#main > .section {
   justify-content: center;
   align-items: baseline;
   gap: var(--space-sm);
-  margin-top: 12px;
+  margin-top: 18px;
 }
 .hero-result strong {
   color: var(--amber-500);
@@ -477,7 +477,7 @@ main#main > .section {
   letter-spacing: -0.025em;
 }
 .segment-wrap {
-  margin: 4px auto 23px;
+  margin: 8px auto 30px;
   max-width: 455px;
 }
 .segment-bar {
@@ -523,9 +523,9 @@ main#main > .section {
 }
 .hero-buttons {
   display: flex;
-  gap: var(--space-xs);
+  gap: 0.75rem;
   justify-content: center;
-  margin-top: 27px;
+  margin-top: 32px;
 }
 .hero-footnote {
   margin-top: 16px;
@@ -811,16 +811,16 @@ main#main > .section {
 .features-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 22px;
+  gap: 30px;
 }
 .feature {
   border: 1px solid var(--line-dark);
   border-radius: var(--radius-card);
   overflow: hidden;
-  padding: var(--space-lg) var(--space-lg) 0;
+  padding: 2.5rem 2.5rem 0;
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 42px;
   min-width: 0;
 }
 .feature-0 {
@@ -1151,7 +1151,7 @@ main#main > .section {
 .how-layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 90px;
+  gap: clamp(4rem, 8vw, 7.5rem);
   align-items: start;
 }
 .step-navigation {
@@ -1163,7 +1163,7 @@ main#main > .section {
   align-items: start;
   gap: var(--space-md);
   width: 100%;
-  padding: 20px 0;
+  padding: 26px 0;
   border: 0;
   text-align: left;
   color: var(--text-muted-light);
@@ -1265,6 +1265,7 @@ main#main > .section {
   border-radius: var(--radius-card);
   overflow: hidden;
   background: var(--white);
+  box-shadow: 0 24px 70px #06120b0d;
 }
 .browser-bar {
   padding: 20px 26px;
@@ -1284,12 +1285,12 @@ main#main > .section {
   font-size: 1.25rem;
 }
 .filter-panel {
-  padding: 24px 26px;
+  padding: 30px 32px;
   background: var(--cream-50);
   border-bottom: 1px solid var(--line-dark);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 18px;
 }
 .filter-group {
   border: 0;
@@ -1326,8 +1327,8 @@ main#main > .section {
 .scheme-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  padding: 0 26px 26px;
+  gap: 24px;
+  padding: 0 32px 32px;
 }
 .scheme-item {
   padding: 0;
@@ -1445,7 +1446,7 @@ main#main > .section {
 .modes-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 26px;
+  gap: 36px;
 }
 .mode {
   min-width: 0;
@@ -1488,13 +1489,13 @@ main#main > .section {
 }
 .mode h3 {
   font-size: 1.25rem;
-  margin-top: 24px;
+  margin-top: 30px;
 }
 .mode > p {
   font-size: 0.85rem;
   color: var(--text-muted-dark);
   line-height: 1.65;
-  margin-top: 10px;
+  margin-top: 14px;
 }
 .blitz-preview {
   background: var(--ink-900);
@@ -1704,7 +1705,7 @@ main#main > .section {
 .plan {
   display: flex;
   flex-direction: column;
-  padding: 30px;
+  padding: 40px;
   border: 1px solid var(--line-dark);
   border-radius: var(--radius-card);
   min-width: 0;
@@ -1733,7 +1734,7 @@ main#main > .section {
   font-weight: 700;
   font-size: 2rem;
   letter-spacing: -0.04em;
-  margin-top: 32px;
+  margin-top: 40px;
 }
 .plan-school .plan-price {
   font-size: 1.65rem;
@@ -1744,7 +1745,7 @@ main#main > .section {
   margin-top: 2px;
 }
 .plan .button {
-  margin-top: 26px;
+  margin-top: 32px;
   font-size: 0.75rem;
   min-height: 46px;
   padding-inline: 12px;
@@ -1752,7 +1753,7 @@ main#main > .section {
 .plan ul {
   list-style: none;
   padding: 0;
-  margin: 26px 0 0;
+  margin: 32px 0 0;
 }
 .plan li {
   display: flex;
@@ -1779,7 +1780,7 @@ main#main > .section {
 }
 .tokens-note {
   max-width: 710px;
-  margin: 28px auto 0;
+  margin: 40px auto 0;
   display: flex;
   gap: 14px;
   justify-content: center;
@@ -1797,8 +1798,8 @@ main#main > .section {
 .faq-layout {
   display: grid;
   grid-template-columns: 0.85fr 1.15fr;
-  gap: 65px;
-  padding-top: 40px;
+  gap: clamp(4rem, 8vw, 7rem);
+  padding-top: 56px;
   border-top: 1px solid var(--line-dark);
 }
 .faq-layout h2 {
@@ -1819,7 +1820,7 @@ main#main > .section {
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  padding: 22px 0;
+  padding: 28px 0;
   width: 100%;
   text-align: left;
 }
@@ -1832,7 +1833,7 @@ main#main > .section {
   font-size: 0.8rem;
   line-height: 1.8;
   color: var(--text-muted-dark);
-  padding-bottom: 22px;
+  padding-bottom: 28px;
   max-width: 34rem;
 }
 .final-section {
@@ -1860,10 +1861,10 @@ main#main > .section {
   color: var(--text-muted-light);
   font-size: 0.85rem;
   max-width: 430px;
-  margin-top: 24px;
+  margin-top: 30px;
 }
 .waitlist {
-  margin-top: 34px;
+  margin-top: 42px;
   max-width: 580px;
 }
 .waitlist label {
@@ -3251,14 +3252,14 @@ main#main > .section {
 
 /* Task 22: mouse and keyboard share a clear, gentle topic focus. */
 .topics-grid {
-  gap: 16px;
+  gap: 24px;
 }
 .topics-grid > .stagger-item {
   min-width: 0;
 }
 .topics-grid .topic {
   height: 100%;
-  padding: 26px;
+  padding: 34px;
   border: 1px solid var(--line-light);
   border-radius: var(--radius-card);
   position: relative;
