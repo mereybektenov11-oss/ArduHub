@@ -9,7 +9,8 @@
     "tokens": [
       "src/app/globals.css",
       "src/app/app/cabinet.css",
-      "src/lib/motion.ts"
+      "src/lib/motion.ts",
+      "src/app/landing-cobalt.css"
     ],
     "components": ["src/components/ui"],
     "assets": [],
@@ -198,7 +199,8 @@
     ]
   },
   "decisions": [
-    "G3 preserves the existing dashboard palette; thematic SVG icons use the flame, ice, spark and chip colors specified in docs/ArduHub_G3_motion_sound_icons.md. Event motion has bounded lifetimes and a reduced-motion alternative."
+    "G3 preserves the existing dashboard palette; thematic SVG icons use the flame, ice, spark and chip colors specified in docs/ArduHub_G3_motion_sound_icons.md. Event motion has bounded lifetimes and a reduced-motion alternative.",
+    "2026-11-08: public homepage only uses Cobalt Mono scoped tokens, local Inter/EB Garamond, transparent generated Arduino renders animated without cursor tracking; cabinet and auth retain existing styling. Neuralese reference guides motion and product storytelling, no copied media."
   ],
   "evidence": [
     {

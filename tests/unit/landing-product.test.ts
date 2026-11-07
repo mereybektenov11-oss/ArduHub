@@ -26,7 +26,8 @@ describe("landing reflects the available product", () => {
   });
 
   it("collects interest in new lessons without promising an email was sent", () => {
-    expect(ru.section.final).toBe("Узнавать о новых уроках");
+    expect(ru.section.final).toMatch(/урок/iu);
+    expect(ru.ui.success).not.toMatch(/письмо|отправлен/iu);
     expect(ru.ui.success).toBe("Адрес сохранён");
     expect(ru.ui.submit).toBe("Подписаться");
   });

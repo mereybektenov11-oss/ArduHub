@@ -14,9 +14,19 @@ import FinalCta from "@/components/sections/FinalCta";
 import AnchorScroll from "@/components/ui/AnchorScroll";
 import DeferredMotion from "@/components/ui/DeferredMotion";
 import HeroBackground from "@/components/sections/HeroBackground";
+import ProductDemo from "@/components/sections/ProductDemo";
+import localFont from "next/font/local";
+import "./landing-cobalt.css";
+
+const editorial = localFont({
+  src: "../fonts/EBGaramond-Cyrillic.ttf",
+  weight: "400 800",
+  display: "swap",
+  variable: "--font-editorial",
+});
 export default function Home() {
   return (
-    <>
+    <div className={`landing-cobalt ${editorial.variable}`}>
       <AnchorScroll />
       <a className="skip-link" href="#main">
         {ru.ui.skip}
@@ -25,6 +35,7 @@ export default function Home() {
       <DeferredMotion>
         <main id="main">
           <Hero background={<HeroBackground />} />
+          <ProductDemo />
           <Stats />
           <Features />
           <HowItWorks />
@@ -37,6 +48,6 @@ export default function Home() {
         </main>
       </DeferredMotion>
       <Footer />
-    </>
+    </div>
   );
 }

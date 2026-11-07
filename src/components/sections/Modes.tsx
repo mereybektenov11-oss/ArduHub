@@ -151,6 +151,7 @@ export default function Modes() {
           </article>
         </StaggerItem>
       </Stagger>
+      <p className="landing-example-note">{ru.landing.exampleNote}</p>
     </SectionShell>
   );
 }

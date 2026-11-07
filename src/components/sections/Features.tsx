@@ -7,6 +7,7 @@ import CircuitIcon from "../ui/CircuitIcon";
 export default function Features() {
   return (
     <SectionShell id="features">
+      <p className="landing-kicker">{ru.landing.featureLabel}</p>
       <AnimatedSectionTitle
         title={ru.section.features}
         sub={ru.section.featuresSub}
@@ -19,6 +20,9 @@ export default function Features() {
                 <span className="feature-icon" aria-hidden="true">
                   {i === 0 ? <CircuitIcon /> : ["⌘", "✳", "▷", "↻"][i]}
                 </span>
+                <span className="feature-index" aria-hidden="true">
+                  0{i + 1}
+                </span>
                 <h3>{f.title}</h3>
                 <p>{f.text}</p>
               </div>
@@ -27,6 +31,7 @@ export default function Features() {
           </StaggerItem>
         ))}
       </Stagger>
+      <p className="landing-example-note">{ru.landing.exampleNote}</p>
     </SectionShell>
   );
 }

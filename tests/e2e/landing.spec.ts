@@ -199,13 +199,14 @@ test("blitz loses lives, increments streak and restarts", async ({ page }) => {
   await blitz.getByRole("button", { name: "Начать заново" }).click();
   await expect(blitz.getByLabel("Жизни: 3")).toBeVisible();
 });
-test("reduced motion shows finished circuit and no running animations", async ({
+test("reduced motion shows a static hero and no running animations", async ({
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  await expect(page.locator(".hero .float-left .circuit")).toHaveClass(
-    /phase-fixed/,
+  await expect(page.locator(".hero-component-motion").first()).toHaveCSS(
+    "animation-name",
+    "none",
   );
   const runningAnimations = await page.evaluate(() =>
     document

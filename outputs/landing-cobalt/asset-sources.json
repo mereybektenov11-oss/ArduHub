@@ -1,0 +1,32 @@
+[
+  {
+    "id": "uno",
+    "source": "C:\\Users\\User\\.codex\\generated_images\\01a1b7be-a9b6-7c43-8df8-46f7e3907ae1\\exec-ce641296-67af-4e73-a398-57d4389f712a.png",
+    "prompt": "Use case: product-mockup. Asset: transparent cutout for an elegant Arduino educational website. Subject: one Arduino Uno R3 style development board, cobalt blue PCB, realistic black pin headers, USB-B connector and barrel jack; view from upper right, board tilted diagonally. ONE component only, fully visible, centered with 15% clear margin, no cropping. High-end realistic 3D product rendering, crisp accurate plausible electronic detail, soft studio key light from top left, delicate ambient occlusion inside object, physically realistic materials, calm polished editorial style, matching a white-and-cobalt-blue website. Transparent background with genuine alpha, no ground plane, no background, no cast shadow outside object, no checkerboard painted in. No captions, no UI, no watermark, no extra objects. Square image."
+  },
+  {
+    "id": "breadboard",
+    "source": "C:\\Users\\User\\.codex\\generated_images\\01a1b7be-a9b6-7c43-8df8-46f7e3907ae1\\exec-22770181-4e49-4045-9cf0-f0a60d4b2554.png",
+    "prompt": "Use case: product-mockup. Asset: transparent cutout for an elegant Arduino educational website. Subject: one compact white 400-point solderless breadboard, realistic hole pattern, pale blue and red power rail markings, diagonal three-quarter view. ONE component only, fully visible, centered with 15% clear margin, no cropping. High-end realistic 3D product rendering, crisp accurate plausible electronic detail, soft studio key light from top left, delicate ambient occlusion inside object, physically realistic materials, calm polished editorial style, matching a white-and-cobalt-blue website. Transparent background with genuine alpha, no ground plane, no background, no cast shadow outside object, no checkerboard painted in. No captions, no UI, no watermark, no extra objects. Square image."
+  },
+  {
+    "id": "sensor",
+    "source": "C:\\Users\\User\\.codex\\generated_images\\01a1b7be-a9b6-7c43-8df8-46f7e3907ae1\\exec-cf014410-89c7-41e1-b43f-44770ef90ec5.png",
+    "prompt": "Use case: product-mockup. Asset: transparent cutout for an elegant Arduino educational website. Subject: one HC-SR04 ultrasonic sensor, cobalt blue circuit board with two realistic round brushed metal transducers, four straight pins, frontal three-quarter view. ONE component only, fully visible, centered with 15% clear margin, no cropping. High-end realistic 3D product rendering, crisp accurate plausible electronic detail, soft studio key light from top left, delicate ambient occlusion inside object, physically realistic materials, calm polished editorial style, matching a white-and-cobalt-blue website. Transparent background with genuine alpha, no ground plane, no background, no cast shadow outside object, no checkerboard painted in. No captions, no UI, no watermark, no extra objects. Square image."
+  },
+  {
+    "id": "servo",
+    "source": "C:\\Users\\User\\.codex\\generated_images\\01a1b7be-a9b6-7c43-8df8-46f7e3907ae1\\exec-818f10eb-86e3-406b-9707-20bf5617255a.png",
+    "prompt": "Use case: product-mockup. Asset: transparent cutout for an elegant Arduino educational website. Subject: one SG90 micro servo, translucent royal blue plastic body, white single cross horn and short neatly curved three-color cable, three-quarter view. ONE component only, fully visible, centered with 15% clear margin, no cropping. High-end realistic 3D product rendering, crisp accurate plausible electronic detail, soft studio key light from top left, delicate ambient occlusion inside object, physically realistic materials, calm polished editorial style, matching a white-and-cobalt-blue website. Transparent background with genuine alpha, no ground plane, no background, no cast shadow outside object, no checkerboard painted in. No captions, no UI, no watermark, no extra objects. Square image."
+  },
+  {
+    "id": "led",
+    "source": "C:\\Users\\User\\.codex\\generated_images\\01a1b7be-a9b6-7c43-8df8-46f7e3907ae1\\exec-04397ea2-942f-4bfd-9738-e53c363d8285.png",
+    "prompt": "Use case: product-mockup. Asset: transparent cutout for an elegant Arduino educational website. Subject: one red translucent through-hole LED, glossy rounded lens and two silver legs, diagonally positioned, studio macro three-quarter view. ONE component only, fully visible, centered with 15% clear margin, no cropping. High-end realistic 3D product rendering, crisp accurate plausible electronic detail, soft studio key light from top left, delicate ambient occlusion inside object, physically realistic materials, calm polished editorial style, matching a white-and-cobalt-blue website. Transparent background with genuine alpha, no ground plane, no background, no cast shadow outside object, no checkerboard painted in. No captions, no UI, no watermark, no extra objects. Square image."
+  },
+  {
+    "id": "resistor",
+    "source": "C:\\Users\\User\\.codex\\generated_images\\01a1b7be-a9b6-7c43-8df8-46f7e3907ae1\\exec-ad5cbe3c-41c1-45a1-959d-c52a6d0bc65f.png",
+    "prompt": "Use case: product-mockup. Asset: transparent cutout for an elegant Arduino educational website. Subject: one beige axial resistor with red black gold colored bands and two clean straight silver leads, diagonally positioned, studio macro three-quarter view. ONE component only, fully visible, centered with 15% clear margin, no cropping. High-end realistic 3D product rendering, crisp accurate plausible electronic detail, soft studio key light from top left, delicate ambient occlusion inside object, physically realistic materials, calm polished editorial style, matching a white-and-cobalt-blue website. Transparent background with genuine alpha, no ground plane, no background, no cast shadow outside object, no checkerboard painted in. No captions, no UI, no watermark, no extra objects. Square image."
+  }
+]
