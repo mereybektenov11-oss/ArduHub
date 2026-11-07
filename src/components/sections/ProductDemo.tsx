@@ -61,7 +61,7 @@ export default function ProductDemo() {
                   <span>{ru.landing.canvasLabel}</span>
                   <span aria-hidden="true">＋ − ⤢</span>
                 </div>
-                <CircuitScene phase={phase} />
+                <CircuitScene phase={phase} teachingDemo />
                 <div
                   className={`product-feedback product-feedback-${phase}`}
                   role="status"

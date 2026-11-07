@@ -174,10 +174,12 @@ export default function CircuitScene({
   phase = "fixed",
   decorative = false,
   compact = false,
+  teachingDemo = false,
 }: {
   phase?: Phase;
   decorative?: boolean;
   compact?: boolean;
+  teachingDemo?: boolean;
 }) {
   return (
     <svg
@@ -195,15 +197,41 @@ export default function CircuitScene({
           <Board />
         </>
       )}
-      <Wire d="M142 81V35Q142 27 150 27H314Q326 27 326 39V103" />
-      <Wire
-        d="M112 196V237Q112 246 123 246H365Q376 246 376 234V156"
-        tone="var(--board-line)"
-      />
-      <Wire d="M298 156V130H326" />
-      <Wire d="M340 131V146H358" />
+      {teachingDemo ? (
+        <>
+          <Wire d="M142 81V35H276V65H283" />
+          <g className="teaching-resistor" transform="translate(0 -91)">
+            <Resistor />
+          </g>
+          <Wire d="M363 65H391V125H326" />
+          <Wire d="M340 131H410V237H112V196" tone="var(--board-line)" />
+        </>
+      ) : (
+        <>
+          <Wire d="M142 81V35Q142 27 150 27H314Q326 27 326 39V103" />
+          <Wire
+            d="M112 196V237Q112 246 123 246H365Q376 246 376 234V156"
+            tone="var(--board-line)"
+          />
+          <Wire d="M298 156V130H326" />
+          <Wire d="M340 131V146H358" />
+        </>
+      )}
       <g className="led-color">
-        <Led />
+        {teachingDemo ? (
+          <g
+            className="teaching-led"
+            transform={
+              phase === "fixed"
+                ? "translate(0 0)"
+                : "translate(666 0) scale(-1 1)"
+            }
+          >
+            <Led />
+          </g>
+        ) : (
+          <Led />
+        )}
         <Pin x={340} y={131} />
       </g>
     </svg>

@@ -19,14 +19,22 @@ export default function HeroBackground() {
       {heroAssets.map((asset) => (
         <div className={`hero-component ${asset.className}`} key={asset.id}>
           <div className="hero-component-motion">
-            <Image
-              src={asset.src}
-              width={asset.width}
-              height={asset.height}
-              alt=""
-              unoptimized
-              loading="eager"
-            />
+            <picture>
+              <source
+                media="(max-width: 767px)"
+                srcSet={`/images/landing/cobalt/${asset.id}-256.webp`}
+              />
+              <Image
+                src={asset.src}
+                width={asset.width}
+                height={asset.height}
+                alt=""
+                unoptimized
+                loading="eager"
+                decoding={asset.id === "uno" ? "sync" : "async"}
+                fetchPriority={asset.id === "uno" ? "high" : "auto"}
+              />
+            </picture>
           </div>
         </div>
       ))}

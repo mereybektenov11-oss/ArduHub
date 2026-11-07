@@ -36,7 +36,7 @@ test("floating components stop for reduced motion and outside viewport", async (
     .toBe("none");
 });
 
-for (const width of [360, 390, 768, 1440, 1920]) {
+for (const width of [360, 390, 768, 901, 920, 1281, 1300, 1440, 1920]) {
   test(`hero copy and decoration do not overlap at ${width}px`, async ({
     page,
   }) => {
@@ -72,9 +72,46 @@ test("product example can switch between an error and a corrected circuit", asyn
   const demo = page.locator("#product-demo");
   await demo.getByRole("button", { name: "Найти ошибку" }).click();
   await expect(demo.locator(".circuit")).toHaveClass(/phase-error/);
+  const incorrect = await demo
+    .locator(".teaching-led")
+    .getAttribute("transform");
+  await expect(demo.locator(".teaching-resistor")).toHaveCount(1);
   await demo.getByRole("button", { name: "Исправить соединение" }).click();
   await expect(demo.locator(".circuit")).toHaveClass(/phase-fixed/);
+  expect(
+    await demo.locator(".teaching-led").getAttribute("transform"),
+  ).not.toBe(incorrect);
 });
+
+for (const width of [360, 768, 1440]) {
+  test(`enlarged text remains clear of hero decoration at ${width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    await page.evaluate(() => {
+      document.documentElement.style.fontSize = "200%";
+    });
+    const c = await page.locator(".hero-content").boundingBox();
+    expect(c).not.toBeNull();
+    for (const im of await page.locator(".hero-component img:visible").all()) {
+      const b = await im.boundingBox();
+      if (!b || !c) continue;
+      expect(
+        b.x < c.x + c.width &&
+          b.x + b.width > c.x &&
+          b.y < c.y + c.height &&
+          b.y + b.height > c.y,
+      ).toBe(false);
+    }
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+  });
+}
 
 test("headline and navigation survive disabled JavaScript", async ({
   browser,

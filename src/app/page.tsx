@@ -19,7 +19,7 @@ import localFont from "next/font/local";
 import "./landing-cobalt.css";
 
 const editorial = localFont({
-  src: "../fonts/EBGaramond-Cyrillic.ttf",
+  src: "../fonts/EBGaramond-Cyrillic.woff2",
   weight: "400 800",
   display: "swap",
   variable: "--font-editorial",
@@ -27,6 +27,20 @@ const editorial = localFont({
 export default function Home() {
   return (
     <div className={`landing-cobalt ${editorial.variable}`}>
+      <link
+        rel="preload"
+        as="image"
+        href="/images/landing/cobalt/uno-256.webp"
+        media="(max-width: 767px)"
+        fetchPriority="high"
+      />
+      <link
+        rel="preload"
+        as="image"
+        href="/images/landing/cobalt/uno-640.webp"
+        media="(min-width: 768px)"
+        fetchPriority="high"
+      />
       <AnchorScroll />
       <a className="skip-link" href="#main">
         {ru.ui.skip}
