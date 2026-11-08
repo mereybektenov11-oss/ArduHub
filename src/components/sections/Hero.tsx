@@ -22,19 +22,8 @@ export default function Hero({ background }: { background: ReactNode }) {
             {ru.hero.primary}
             <span aria-hidden="true">↗</span>
           </Button>
-          <Button href="#product-demo" size="lg" variant="secondary">
-            {ru.hero.secondary}
-            <span aria-hidden="true">↓</span>
-          </Button>
         </div>
         <p className="hero-footnote">{ru.hero.footnote}</p>
-      </div>
-      <div className="hero-bottom-note" aria-hidden="true">
-        <span>{ru.landing.sceneLabel}</span>
-        <span>
-          {ru.landing.scroll}
-          <span>↓</span>
-        </span>
       </div>
     </section>
   );
