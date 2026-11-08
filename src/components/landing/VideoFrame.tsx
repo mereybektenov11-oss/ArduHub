@@ -36,6 +36,17 @@ export default function VideoFrame({
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    // A new system preference invalidates an earlier play gesture. A fresh
+    // explicit play remains available after motion has been reduced.
+    const changed = () => {
+      if (media.matches) setMode("paused");
+    };
+    media.addEventListener("change", changed);
+    return () => media.removeEventListener("change", changed);
+  }, []);
+
+  useEffect(() => {
     const element = root.current;
     if (!element || !window.IntersectionObserver) return;
     const nearby = new IntersectionObserver(

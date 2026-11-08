@@ -3,7 +3,7 @@
 
 ## Public landing: Cobalt Mono (2026-11-08)
 
-The `/` route uses scoped `.landing-cobalt` tokens from `src/app/landing-cobalt.css`: porcelain white, cobalt blue, pale lavender and Inter throughout, including headings. User correction on 2026-11-08 removes serif and italic heading styling; preserve all existing animations. Floating transparent electronic component renders animate with CSS, without cursor tracking. Cabinet, authentication, lessons and editor retain their current design. Neuralese informs motion and product presentation; no source or media is copied. Existing project primitives are reused.
+The `/` route now uses `src/app/landing-video.css` and the scoped `.landing-video` container. Latest user instruction replaces the previous floating-component hero and long galleries with a Neuralese-inspired compact video structure: blue-to-white dotted hero, large overview video, three alternating video rows with blue/pink/green frames, four colorful benefit cards, centered FAQ and final CTA. Inter and Cobalt Mono remain. Only own local ArduHub recordings are published, explicitly labeled as example interfaces. VideoFrame owns lazy sources, user pause, visibility, errors and reduced motion. Cabinet, authentication, lessons and editor retain their current design. Existing FAQ, header, footer and Reveal primitives are reused.
 
 Generated from project sources at 2026-10-25T17:46:57.451Z.
 

@@ -93,6 +93,32 @@ test("reduced motion retains posters and allows explicit playback", async ({
     .toBe(false);
 });
 
+test("enabling reduced motion stops an earlier play gesture but allows a fresh one", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/");
+  const frame = page.locator(".video-frame").first();
+  const video = frame.locator("video");
+  await frame.scrollIntoViewIfNeeded();
+  await expect
+    .poll(() => video.evaluate((v: HTMLVideoElement) => v.paused))
+    .toBe(false);
+  await frame.getByRole("button", { name: "Приостановить видео" }).click();
+  await frame.getByRole("button", { name: "Воспроизвести видео" }).click();
+  await expect
+    .poll(() => video.evaluate((v: HTMLVideoElement) => v.paused))
+    .toBe(false);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect
+    .poll(() => video.evaluate((v: HTMLVideoElement) => v.paused))
+    .toBe(true);
+  await frame.getByRole("button", { name: "Воспроизвести видео" }).click();
+  await expect
+    .poll(() => video.evaluate((v: HTMLVideoElement) => v.paused))
+    .toBe(false);
+});
+
 test("media failures leave a poster and a readable fallback", async ({
   page,
 }) => {
