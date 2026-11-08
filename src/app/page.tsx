@@ -15,18 +15,10 @@ import AnchorScroll from "@/components/ui/AnchorScroll";
 import DeferredMotion from "@/components/ui/DeferredMotion";
 import HeroBackground from "@/components/sections/HeroBackground";
 import ProductDemo from "@/components/sections/ProductDemo";
-import localFont from "next/font/local";
 import "./landing-cobalt.css";
-
-const editorial = localFont({
-  src: "../fonts/EBGaramond-Cyrillic.woff2",
-  weight: "400 800",
-  display: "swap",
-  variable: "--font-editorial",
-});
 export default function Home() {
   return (
-    <div className={`landing-cobalt ${editorial.variable}`}>
+    <div className="landing-cobalt">
       <link
         rel="preload"
         as="image"

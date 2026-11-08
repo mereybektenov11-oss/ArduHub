@@ -3,6 +3,9 @@ body:has(> .landing-cobalt) {
   min-width: 320px;
 }
 .landing-cobalt {
+  --font-manrope: var(--font-inter);
+  --ink-900: #09090b;
+  --ink-800: #18181b;
   --landing-primary: #1460ff;
   --landing-primary-hover: #104ed1;
   --landing-background: #fcfcff;
@@ -10,7 +13,7 @@ body:has(> .landing-cobalt) {
   --landing-secondary: #edeaff;
   --landing-muted: #f2f2f8;
   --landing-border: #e1e2ee;
-  --landing-text: #111827;
+  --landing-text: #09090b;
   --landing-text-muted: #536078;
   --landing-radius: 1.4rem;
   --landing-section-space: clamp(4.5rem, 8vw, 8rem);
@@ -22,7 +25,7 @@ body:has(> .landing-cobalt) {
   --cream-50: var(--landing-background);
   --cream-100: var(--landing-muted);
   --text-dark: var(--landing-text);
-  --text-light: var(--landing-text);
+  --text-light: var(--landing-card);
   --text-muted-dark: var(--landing-text-muted);
   --text-muted-light: var(--landing-text-muted);
   --line-dark: var(--landing-border);
@@ -43,16 +46,16 @@ body:has(> .landing-cobalt) {
   background: var(--landing-background);
   font-family: var(--font-inter), sans-serif;
   min-height: 100vh;
-  --landing-nav-edge: #ffffffc9;
-  --landing-nav-surface: #ffffffc7;
+  --landing-nav-edge: var(--landing-border);
+  --landing-nav-surface: var(--landing-card);
   --landing-nav-shadow: #26366707;
   --landing-nav-inset: #e1e2ee66;
-  --landing-nav-scrolled: #fffffff0;
+  --landing-nav-scrolled: var(--landing-card);
   --landing-nav-scrolled-shadow: #2636670d;
   --landing-button-shadow: #1460ff18;
-  --landing-secondary-button: #ffffffb3;
-  --landing-hero-glow: #f5f7ff;
-  --landing-hero-edge: #eaf0ff;
+  --landing-secondary-button: var(--landing-secondary);
+  --landing-hero-glow: var(--landing-background);
+  --landing-hero-edge: var(--landing-background);
   --landing-orbit: #1460ff0b;
   --landing-object-shadow: #24417216;
   --landing-window-shadow: #2c467512;
@@ -73,19 +76,19 @@ body:has(> .landing-cobalt) {
   --landing-mentor-frame: #ece9fa;
   --landing-video-frame: #e3f0fb;
   --landing-repeat-frame: #e9edf5;
-  --landing-steps-surface: #f2f5ff;
+  --landing-steps-surface: var(--landing-muted);
   --landing-steps-shadow: #243d750a;
   --landing-badge-ink: #334b94;
   --landing-browser-bar: #f4f6fc;
   --landing-thumbnail: #f1f4fd;
   --landing-practice-surface: #f6f7fc;
-  --landing-access-surface: #f0f4ff;
+  --landing-access-surface: var(--landing-secondary);
   --landing-access-divider: #d6dff3;
   --landing-check-ink: #196f56;
   --landing-input-border: #c6d2ed;
   --landing-form-error: #a82a3f;
   --landing-plus: #b3c8f6;
-  --landing-footer-surface: #f6f8ff;
+  --landing-footer-surface: var(--landing-background);
   --landing-mobile-nav: #fffffff5;
 }
 .landing-cobalt .tone-dark,
@@ -95,6 +98,10 @@ body:has(> .landing-cobalt) {
   background: var(--landing-background);
   color: var(--landing-text);
   color-scheme: light;
+}
+.landing-cobalt
+  :is(h2, h3, h4, .brand, .stat strong, .mini-brand, .topic-letter) {
+  font-family: var(--font-inter), sans-serif;
 }
 .landing-cobalt :focus-visible {
   outline: 2px solid var(--landing-primary);
@@ -224,18 +231,18 @@ body:has(> .landing-cobalt) {
   background: var(--landing-primary);
 }
 .landing-cobalt .hero h1 {
-  font-family: var(--font-editorial), Georgia, serif;
-  font-size: clamp(4.5rem, 6.5vw, 6.3rem);
-  font-weight: 400;
-  line-height: 0.96;
-  letter-spacing: -0.045em;
+  font-family: var(--font-inter), sans-serif;
+  font-size: clamp(3.25rem, 5.3vw, 4.75rem);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.06em;
   color: var(--landing-text);
   text-wrap: balance;
 }
 .landing-cobalt .hero h1 em {
-  color: var(--landing-primary);
-  font-weight: 400;
-  font-style: italic;
+  color: inherit;
+  font-weight: inherit;
+  font-style: normal;
 }
 .landing-cobalt .hero-description {
   max-width: 470px;
@@ -395,10 +402,10 @@ body:has(> .landing-cobalt) {
 .landing-cobalt .product-demo-intro h2,
 .landing-cobalt .section-heading h2,
 .landing-cobalt .final-content h2 {
-  font-family: var(--font-editorial), Georgia, serif;
-  font-size: clamp(2.8rem, 4.5vw, 4.3rem);
-  font-weight: 400;
-  line-height: 1.03;
+  font-family: var(--font-inter), sans-serif;
+  font-size: clamp(2rem, 3.6vw, 3rem);
+  font-weight: 600;
+  line-height: 1.12;
   letter-spacing: -0.04em;
 }
 .landing-cobalt .product-demo-intro > p:last-child {
@@ -788,6 +795,10 @@ body:has(> .landing-cobalt) {
   background: var(--landing-secondary);
   color: var(--landing-badge-ink);
 }
+.landing-cobalt .mini-action {
+  background: var(--landing-primary);
+  color: var(--landing-card);
+}
 .landing-cobalt .chip {
   background: white;
   color: var(--landing-text-muted);
@@ -837,6 +848,7 @@ body:has(> .landing-cobalt) {
   background: var(--landing-practice-surface);
 }
 .landing-cobalt .mode-preview {
+  color: var(--landing-text);
   background: white;
   border: 1px solid var(--landing-border);
   border-radius: 18px;
@@ -1196,8 +1208,8 @@ body:has(> .landing-cobalt) {
     max-width: 480px;
   }
   .landing-cobalt .hero h1 {
-    font-size: clamp(3.5rem, 11vw, 5.2rem);
-    line-height: 1;
+    font-size: clamp(2.5rem, 10vw, 3.5rem);
+    line-height: 1.1;
   }
   .landing-cobalt .hero-eyebrow {
     font-size: 9px;

@@ -3,7 +3,7 @@
 
 ## Public landing: Cobalt Mono (2026-11-08)
 
-The `/` route uses scoped `.landing-cobalt` tokens from `src/app/landing-cobalt.css`: porcelain white, cobalt blue, pale lavender, Inter UI and locally hosted EB Garamond headings. Floating transparent electronic component renders animate with CSS, without cursor tracking. Large product examples and alternating feature rows replace dense card layouts. Cabinet, authentication, lessons and editor retain their current design. Neuralese informs motion and product presentation; no source or media is copied. Existing project primitives are reused; 21st search results were reviewed as metadata and did not provide a better fit than those primitives.
+The `/` route uses scoped `.landing-cobalt` tokens from `src/app/landing-cobalt.css`: porcelain white, cobalt blue, pale lavender and Inter throughout, including headings. User correction on 2026-11-08 removes serif and italic heading styling; preserve all existing animations. Floating transparent electronic component renders animate with CSS, without cursor tracking. Cabinet, authentication, lessons and editor retain their current design. Neuralese informs motion and product presentation; no source or media is copied. Existing project primitives are reused.
 
 Generated from project sources at 2026-10-25T17:46:57.451Z.
 

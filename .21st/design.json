@@ -200,7 +200,8 @@
   },
   "decisions": [
     "G3 preserves the existing dashboard palette; thematic SVG icons use the flame, ice, spark and chip colors specified in docs/ArduHub_G3_motion_sound_icons.md. Event motion has bounded lifetimes and a reduced-motion alternative.",
-    "2026-11-08: public homepage only uses Cobalt Mono scoped tokens, local Inter/EB Garamond, transparent generated Arduino renders animated without cursor tracking; cabinet and auth retain existing styling. Neuralese reference guides motion and product storytelling, no copied media."
+    "2026-11-08: public homepage only uses Cobalt Mono scoped tokens, local Inter/EB Garamond, transparent generated Arduino renders animated without cursor tracking; cabinet and auth retain existing styling. Neuralese reference guides motion and product storytelling, no copied media.",
+    "2026-11-08 user correction: apply Cobalt Mono reference with Inter for all landing text and headings, white background, cobalt actions and pale lavender surfaces. Remove editorial serif/italic styling. Preserve all existing animations, durations, phase delays and interactions. This supersedes the earlier serif choice."
   ],
   "evidence": [
     {
