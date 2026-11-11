@@ -7,6 +7,8 @@ import { applyPrefs, loadPrefs, savePrefs, type Prefs } from "./prefs";
 import { navigate, route, useLocation } from "./router";
 import { playSfx } from "./sound/sfx";
 import Icon from "./icons/Icon";
+import MentorGreeting from "./mentor/MentorGreeting";
+import { selectedMentor, type MentorId } from "./mentor/mentors";
 
 const LearningArea = lazy(() => import("./learning/LearningArea"));
 
@@ -200,7 +202,9 @@ function Menu({
   onSettings: () => void;
 }) {
   const [name, setName] = useState<string | null>(null);
+  const [nameReady, setNameReady] = useState(false);
   const [done, setDone] = useState<number | null>(null);
+  const [mentor, setMentor] = useState<MentorId | null>(null);
 
   useEffect(() => {
     const sb = supabase();
@@ -211,15 +215,20 @@ function Menu({
       .select("display_name")
       .eq("id", id)
       .maybeSingle()
-      .then(({ data }) => setName(data?.display_name ?? null));
+      .then(({ data }) => {
+        setName(data?.display_name ?? null);
+        setNameReady(true);
+      });
     void sb
       .from("progress")
       .select("data")
       .eq("user_id", id)
       .maybeSingle()
-      .then(({ data, error }) =>
-        setDone(error ? null : countDone(data?.data, total)),
-      );
+      .then(({ data, error }) => {
+        setDone(error ? null : countDone(data?.data, total));
+        // The AI mentor chosen in the account greets the learner.
+        setMentor(selectedMentor(error ? null : data?.data));
+      });
   }, [session.user.id]);
 
   return (
@@ -243,11 +252,19 @@ function Menu({
       </header>
       <main className="menu">
         <section className="hero">
-          <h1>
-            {t.menu.greeting(name ?? t.menu.fallbackName)}
-            <br />
-            {t.menu.question}
-          </h1>
+          {mentor && nameReady ? (
+            <MentorGreeting
+              key={`${mentor}:${name}`}
+              mentor={mentor}
+              text={`${t.menu.greeting(name ?? t.menu.fallbackName)} ${t.menu.question}`}
+            />
+          ) : (
+            <div className="mentor-placeholder" aria-busy="true">
+              <h1 className="sr-only">
+                {t.menu.greeting(name ?? t.menu.fallbackName)} {t.menu.question}
+              </h1>
+            </div>
+          )}
           <p className="muted lead">{t.menu.intro}</p>
         </section>
         <section className="cards">

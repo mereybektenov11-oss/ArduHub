@@ -273,7 +273,7 @@ export function createSfxEngine(runtime: Runtime) {
     volume = 0.5,
     unlocked = false,
     active = 0;
-  const last = new Map<SfxId, number>();
+  const last = new Map<string, number>();
 
   function graph() {
     if (context && context.state !== "closed" && master && echoIn)
@@ -388,21 +388,25 @@ export function createSfxEngine(runtime: Runtime) {
       }
     },
     play(id: SfxId) {
+      return this.playLayers(id, soundDesign[id]);
+    },
+    /** Plays arbitrary layers; `key` throttles repeats like a sound id. */
+    playLayers(key: string, layers: Layer[], gapMs = 80) {
       if (!enabled || !volume || !unlocked || active >= 6) return false;
       const now = runtime.now();
-      if (now - (last.get(id) ?? -Infinity) < 80) return false;
+      if (now - (last.get(key) ?? -Infinity) < gapMs) return false;
       try {
         const { audio, master: out, echoIn: echo } = graph();
         if (audio.state === "suspended") void audio.resume().catch(() => {});
-        last.set(id, now);
+        last.set(key, now);
         active++;
-        const cleanups = soundDesign[id].map((l) => layer(audio, out, echo, l));
+        const cleanups = layers.map((l) => layer(audio, out, echo, l));
         runtime.later(
           () => {
             cleanups.forEach((c) => c());
             active--;
           },
-          soundLength(id) * 1000 + 60,
+          Math.max(...layers.map((l) => l.at + l.dur)) * 1000 + 60,
         );
         return true;
       } catch {
@@ -431,3 +435,31 @@ export function playSfx(id: SfxId) {
   return engine.play(id);
 }
 export const sfxState = () => engine.state();
+
+// A mentor "speaking": a short pitched blip in the mentor's own voice,
+// slightly varied so a sentence sounds like chatter, not a beep train.
+const voices: Record<string, { pitch: number; wave: OscillatorType }> = {
+  volt: { pitch: 880, wave: "triangle" },
+  oma: { pitch: 520, wave: "sine" },
+  rezik: { pitch: 660, wave: "square" },
+  shina: { pitch: 760, wave: "triangle" },
+};
+export function voiceLayers(mentor: string, variation = Math.random()) {
+  const v = voices[mentor] ?? voices.volt;
+  const f = v.pitch * (0.9 + variation * 0.25);
+  return [
+    {
+      kind: "tone",
+      wave: v.wave,
+      freq: f,
+      to: f * 1.06,
+      at: 0,
+      dur: 0.055,
+      gain: v.wave === "square" ? 0.1 : 0.18,
+      cutoff: 2400,
+    },
+  ] satisfies Layer[];
+}
+export function playVoice(mentor: string) {
+  return engine.playLayers(`voice:${mentor}`, voiceLayers(mentor), 60);
+}
