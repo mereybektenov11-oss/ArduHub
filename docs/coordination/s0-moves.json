@@ -1,0 +1,377 @@
+[
+  {
+    "from": "src/content/course.ru.ts",
+    "to": "packages/curriculum/src/course.ru.ts",
+    "sha256": "509f9289a023843712e8b542a04ee0af438e1ce0de2e0e482fa363ebeb684bc2"
+  },
+  {
+    "from": "src/content/learning.ru.ts",
+    "to": "packages/curriculum/src/learning.ru.ts",
+    "sha256": "eb782e8980c3a941ac3affe3934da726331de17519a40d74567486465ea990c3"
+  },
+  {
+    "from": "src/content/lesson-quiz.ru.ts",
+    "to": "packages/curriculum/src/lesson-quiz.ru.ts",
+    "sha256": "0e403332fe3058188284cbba89bc9283cfb7ca6e5793878c309b495cd8e109a3"
+  },
+  {
+    "from": "src/content/lesson-flow.ru.ts",
+    "to": "packages/curriculum/src/lesson-flow.ru.ts",
+    "sha256": "64ccc7f63b85b0b0dc65f394c1f6db758a35f3f6cbf7bab9dc55cf7405882b21"
+  },
+  {
+    "from": "src/content/lesson-flow-options.ru.ts",
+    "to": "packages/curriculum/src/lesson-flow-options.ru.ts",
+    "sha256": "b2e33dc0bc4fb67916a30840b7d2897566d7b8457a95c88443ea3d684607dfb2"
+  },
+  {
+    "from": "src/content/parts.ru.ts",
+    "to": "packages/curriculum/src/parts.ru.ts",
+    "sha256": "517143dc95f5665570a435b7934211949cfd2169dc6eab2df87ffa6e99114718"
+  },
+  {
+    "from": "src/content/inputs.ru.ts",
+    "to": "packages/curriculum/src/inputs.ru.ts",
+    "sha256": "ee1f215d6ecb3dae52d5ab38a0acbd0a88480fd2c10a82dbcbb5642df7e95848"
+  },
+  {
+    "from": "src/content/compile-run.ru.ts",
+    "to": "packages/curriculum/src/compile-run.ru.ts",
+    "sha256": "8dc3a54b94a75eefbd6d6dc639fba4eee6c9ab84c7ecadee7efc4bcdf5824a4f"
+  },
+  {
+    "from": "src/content/compiler.ts",
+    "to": "packages/curriculum/src/compiler.ts",
+    "sha256": "84cfe67299f183508d2cc89d3d48796f0e57b477baacd122bae6a39dc02267fc"
+  },
+  {
+    "from": "src/content/sketches.json",
+    "to": "packages/curriculum/src/sketches.json",
+    "sha256": "8befddf29df268dc254ecbed5b200d22f93bd873e79a1907dba0299f4d8b016c"
+  },
+  {
+    "from": "src/content/course-sketches.json",
+    "to": "packages/curriculum/src/course-sketches.json",
+    "sha256": "a78795a310c14ec9b143c3ee19cd85a168504f53ce7f666312661851a1f3879c"
+  },
+  {
+    "from": "src/content/project-sketches.json",
+    "to": "packages/curriculum/src/project-sketches.json",
+    "sha256": "d8ce81f9d0fbae57d544c02ce285e50b56bd2baca633a04dd91298a4339a0cea"
+  },
+  {
+    "from": "src/content/hardware-examples.json",
+    "to": "packages/curriculum/src/hardware-examples.json",
+    "sha256": "1ef1cadb228796c497ef5a213c9b0962d934c6f4e0a10694f112ab50e148c12a"
+  },
+  {
+    "from": "content/lesson-video-queries.json",
+    "to": "packages/curriculum/src/lesson-video-queries.json",
+    "sha256": "105ddab16f67a3e5822cc787873f1af2dde32443414461216d1a07f03455103f"
+  },
+  {
+    "from": "content/lesson-videos.json",
+    "to": "packages/curriculum/src/lesson-videos.json",
+    "sha256": "9eb9163263f1e8c0185822041cf5df66354cf638d94d99eb3f9150ca56e05406"
+  },
+  {
+    "from": "src/domain/scene/check.ts",
+    "to": "packages/arduino-core/src/scene/check.ts",
+    "sha256": "03df5bb1feac4070b216851eef247b5d997347df61a127c988d8acffcbbe4896"
+  },
+  {
+    "from": "src/domain/scene/migrate.ts",
+    "to": "packages/arduino-core/src/scene/migrate.ts",
+    "sha256": "b4e4bfc25e63d212d4e8d481b34eb768ace254138214285a611e51824de51d88"
+  },
+  {
+    "from": "src/domain/scene/netlist.ts",
+    "to": "packages/arduino-core/src/scene/netlist.ts",
+    "sha256": "e6286c193a848651e434e9edff5b3e39795b61db97cc9b43dc665b5a8440fa51"
+  },
+  {
+    "from": "src/domain/scene/placement.ts",
+    "to": "packages/arduino-core/src/scene/placement.ts",
+    "sha256": "8a1edcb6932433a6e02ea7233b4eebfb2fe8a87a94cd91dc971cba735cc3ca19"
+  },
+  {
+    "from": "src/domain/scene/scene.ts",
+    "to": "packages/arduino-core/src/scene/scene.ts",
+    "sha256": "946e04ebd0de5fb810349e468a2b2b878b05e8ede48ff582d6a18877151a537e"
+  },
+  {
+    "from": "src/domain/scene/viewport.ts",
+    "to": "packages/arduino-core/src/scene/viewport.ts",
+    "sha256": "2c965a003f301ed7aa81006a5babe78ce2c4e244a56e6f0a3719f2c1b85ce1a9"
+  },
+  {
+    "from": "src/domain/checker/check.ts",
+    "to": "packages/arduino-core/src/checker/check.ts",
+    "sha256": "0f1c9d5dac5b56bf074bb223953ac1c8001e8f13bad5d0124c37baf71d329671"
+  },
+  {
+    "from": "src/domain/checker/errors.ru.ts",
+    "to": "packages/arduino-core/src/checker/errors.ru.ts",
+    "sha256": "0e27c3ca12eb371c0e3ed148076dcbc558c4590ca3c286caaf8e3ca3d5d5d67f"
+  },
+  {
+    "from": "src/domain/checker/netlist.ts",
+    "to": "packages/arduino-core/src/checker/netlist.ts",
+    "sha256": "28c836a2daa777652766f11ed7adf69e5e856ce3392a3c955f508a418d4fe93b"
+  },
+  {
+    "from": "src/domain/parts/breadboard.ts",
+    "to": "packages/arduino-core/src/parts/breadboard.ts",
+    "sha256": "a72fc8291b1c0724cebbd93fea704788e57954a6c3fbf40126398df9e2368bdd"
+  },
+  {
+    "from": "src/domain/parts/catalog.generated.json",
+    "to": "packages/arduino-core/src/parts/catalog.generated.json",
+    "sha256": "5348ca7790a6eea8ccf18717c69238b09fa75c94bcfcb495da3d904e043c8ad6"
+  },
+  {
+    "from": "src/domain/parts/catalog.overrides.ts",
+    "to": "packages/arduino-core/src/parts/catalog.overrides.ts",
+    "sha256": "65e33fe956a2fd77c6b98303e8be5b401e651b452d9ef40e672d2d600791093d"
+  },
+  {
+    "from": "src/domain/parts/catalog.ts",
+    "to": "packages/arduino-core/src/parts/catalog.ts",
+    "sha256": "6ea50d91f3647696353dad70fd522304ee4c829053490a4af65f141006a62716"
+  },
+  {
+    "from": "src/domain/parts/pins.ts",
+    "to": "packages/arduino-core/src/parts/pins.ts",
+    "sha256": "ce19fc5d91e509462be947a904c900707722d8170d4ab4fd263ddcf9a696db54"
+  },
+  {
+    "from": "src/domain/parts/wokwi-pins.json",
+    "to": "packages/arduino-core/src/parts/wokwi-pins.json",
+    "sha256": "da742e661ae213d94bf13ccb17f09b37a39185c94cc1477ba096bcdc22ae1310"
+  },
+  {
+    "from": "src/domain/sim/checks.ts",
+    "to": "packages/arduino-core/src/sim/checks.ts",
+    "sha256": "4040d01a1f327d5038cd9df659c7fb3876bf457a72fea341843b3dd4b7e51e16"
+  },
+  {
+    "from": "src/domain/sim/glue/buses.ts",
+    "to": "packages/arduino-core/src/sim/glue/buses.ts",
+    "sha256": "0f9ae3fdaacb4079d28eadc6caad2a9ef6f555c3fd61fc5968767459f75fe226"
+  },
+  {
+    "from": "src/domain/sim/glue/inputs.ts",
+    "to": "packages/arduino-core/src/sim/glue/inputs.ts",
+    "sha256": "be01ee820bd65379630e94a31073aea28e58966dbe8a4e15dd1059c8b24f4b9d"
+  },
+  {
+    "from": "src/domain/sim/glue/lcd.ts",
+    "to": "packages/arduino-core/src/sim/glue/lcd.ts",
+    "sha256": "a143d59aa458f089c7f122dd3a45b9348267d59ea792744d41c1c5fe95b31528"
+  },
+  {
+    "from": "src/domain/sim/glue/outputs.ts",
+    "to": "packages/arduino-core/src/sim/glue/outputs.ts",
+    "sha256": "b371d8029cc25263224a5a4d129004f0f8f42ffe1f10a017878825a251ec74dd"
+  },
+  {
+    "from": "src/domain/sim/glue/timed.ts",
+    "to": "packages/arduino-core/src/sim/glue/timed.ts",
+    "sha256": "04e757de6ad9d8df0d8aedb1269f12edaab4a25bd4372f90b580771235753296"
+  },
+  {
+    "from": "src/domain/sim/hex.ts",
+    "to": "packages/arduino-core/src/sim/hex.ts",
+    "sha256": "d43ccea0cb331b4b50f927473fc87eb425875cb05eaf34d24a9eef8f94cd6945"
+  },
+  {
+    "from": "src/domain/sim/inputState.ts",
+    "to": "packages/arduino-core/src/sim/inputState.ts",
+    "sha256": "c3fdfaafeac50d479327967821bd60c6856b2cdc9ad679e1a09dbd9a08586a4a"
+  },
+  {
+    "from": "src/domain/sim/interpreter/index.ts",
+    "to": "packages/arduino-core/src/sim/interpreter/index.ts",
+    "sha256": "f458284432385db4facbe41ce662f819551cac6f3271794cb1e93556080e0b8d"
+  },
+  {
+    "from": "src/domain/sim/interpreter/inputs.ts",
+    "to": "packages/arduino-core/src/sim/interpreter/inputs.ts",
+    "sha256": "8691ad261324d3b793ee6ba4ac603b92051f1bdd42656ff74d6e58e47f1f6df2"
+  },
+  {
+    "from": "src/domain/sim/interpreter/parser.ts",
+    "to": "packages/arduino-core/src/sim/interpreter/parser.ts",
+    "sha256": "7650238f4e056f12a94061ea280686d3e6f37c92594972da20a4446547b80e70"
+  },
+  {
+    "from": "src/domain/sim/runner.ts",
+    "to": "packages/arduino-core/src/sim/runner.ts",
+    "sha256": "0fb9facc3f6addfa78d1dbdcb6f98b07a31242a69e2eea853312010212b089ba"
+  },
+  {
+    "from": "src/domain/lessons/content/hardware.ts",
+    "to": "packages/arduino-core/src/lessons/content/hardware.ts",
+    "sha256": "af3385a25e1ef47aa7ec1dc790d04248c37fdb7a2b27b60a7d99d95429455672"
+  },
+  {
+    "from": "src/domain/lessons/content/index.ts",
+    "to": "packages/arduino-core/src/lessons/content/index.ts",
+    "sha256": "a2a58356f376afdc445ffaf1b6d6e7a921743c4e846d630494bc2a50729a78f5"
+  },
+  {
+    "from": "src/domain/lessons/codeChecks.ts",
+    "to": "packages/arduino-core/src/lessons/codeChecks.ts",
+    "sha256": "468e831a57f606e70caed21d726c7ef6e2c9d0d09a36e5b4d84e67992f6a436f"
+  },
+  {
+    "from": "src/services/compile/normalize.ts",
+    "to": "packages/arduino-core/src/compile/normalize.ts",
+    "sha256": "000d22bc29428bd2a125f1710444ceff1f1a854170ad56714b0baf1fab7e76b9"
+  },
+  {
+    "from": "public/hex/08d28b5c41112f1a0cc1e9084f577c950606032177913c10e8d7954572eb775f.hex",
+    "to": "packages/curriculum/hex/08d28b5c41112f1a0cc1e9084f577c950606032177913c10e8d7954572eb775f.hex",
+    "sha256": "c9e789b32c6cedf49774ef0eeac1d7a5ba9a5bf769cd4ea8ee983872a3864bf9"
+  },
+  {
+    "from": "public/hex/14ce1013dc0bb66bb905e0f7d3a2ee23326b6acc07d64735ca8f17384c69045c.hex",
+    "to": "packages/curriculum/hex/14ce1013dc0bb66bb905e0f7d3a2ee23326b6acc07d64735ca8f17384c69045c.hex",
+    "sha256": "fd59298c58c7033d45880bd60e3d9828ca4f248186196ec982500102c1bcf64d"
+  },
+  {
+    "from": "public/hex/15772c4a8420859a011432b15b8a8e86951698e8a098d0ad134a66dad9587d1a.hex",
+    "to": "packages/curriculum/hex/15772c4a8420859a011432b15b8a8e86951698e8a098d0ad134a66dad9587d1a.hex",
+    "sha256": "66c26627b06bc53779aba5ada03a6255965a4d9a5a02e600ce1086a73daed9d5"
+  },
+  {
+    "from": "public/hex/1a35eb4d0c58b6a3cf656df4fd03769281b0b1dcc871120a7991aebe46a78b3c.hex",
+    "to": "packages/curriculum/hex/1a35eb4d0c58b6a3cf656df4fd03769281b0b1dcc871120a7991aebe46a78b3c.hex",
+    "sha256": "cdd73417688e39b8f5974b77854a5fec22bb8a20d4085b7d5293919511ef5f31"
+  },
+  {
+    "from": "public/hex/1f00c8b28d751d7aa6534c149096aaf96b1ea6a33837964113f7a80227dad4f1.hex",
+    "to": "packages/curriculum/hex/1f00c8b28d751d7aa6534c149096aaf96b1ea6a33837964113f7a80227dad4f1.hex",
+    "sha256": "b8b497062a8c4be2dd02496a0e1a8909b45edbcda9c655e96c67a9bfae0140fa"
+  },
+  {
+    "from": "public/hex/24bc532b17eed71c2af26053fbdbb19e6ca673e63d1ae6083b08bc51f2c3988d.hex",
+    "to": "packages/curriculum/hex/24bc532b17eed71c2af26053fbdbb19e6ca673e63d1ae6083b08bc51f2c3988d.hex",
+    "sha256": "a394bcb829b4ce6dce000354987b1610ecd35a5c4c75a65c0d9fedfcbf724a1b"
+  },
+  {
+    "from": "public/hex/278e3663051cb521b2d85f5f02a1251881afa9056bd66011ba3d996ccf8cac2f.hex",
+    "to": "packages/curriculum/hex/278e3663051cb521b2d85f5f02a1251881afa9056bd66011ba3d996ccf8cac2f.hex",
+    "sha256": "07dab713c321b3450e9eb1e25362a534afbabdf1495605ad8bde85eb08cbab3d"
+  },
+  {
+    "from": "public/hex/2ab73ca70138c9f0dd48fe6f565f774f8af32f4499b35a4657f3ef2585de2271.hex",
+    "to": "packages/curriculum/hex/2ab73ca70138c9f0dd48fe6f565f774f8af32f4499b35a4657f3ef2585de2271.hex",
+    "sha256": "b4b9db7131203cc4ea9427f7db1c5f1b4b169689a80b2ca464298b02b67c0b7d"
+  },
+  {
+    "from": "public/hex/33340247a2849b05f1d616cc81696d1d80770394d2df975fdc0539635c059054.hex",
+    "to": "packages/curriculum/hex/33340247a2849b05f1d616cc81696d1d80770394d2df975fdc0539635c059054.hex",
+    "sha256": "ffb3172b5d9c731fecae1df9070c5520df153db3013ca8784f7d554bcb6b4453"
+  },
+  {
+    "from": "public/hex/42f106de981a19db2b5c3e87216fc5c5157f3cfecfd933174ead09c43627dd4e.hex",
+    "to": "packages/curriculum/hex/42f106de981a19db2b5c3e87216fc5c5157f3cfecfd933174ead09c43627dd4e.hex",
+    "sha256": "172e2ff0a757c71432964edf211e3e3eb092b3333df1b99666cadc14d25245d5"
+  },
+  {
+    "from": "public/hex/6db8a5352875e1748184d6679e95bd6b0a6f96d19cf3aa96d83382e9f9261733.hex",
+    "to": "packages/curriculum/hex/6db8a5352875e1748184d6679e95bd6b0a6f96d19cf3aa96d83382e9f9261733.hex",
+    "sha256": "db0f7b5fb280f5776ec146927f61f0f95406c968ed009015efcaa670d393abcd"
+  },
+  {
+    "from": "public/hex/7da1e2df4dd2a253be4f51cb1d823c3422c9244aaa851a5e48a800aee3381da3.hex",
+    "to": "packages/curriculum/hex/7da1e2df4dd2a253be4f51cb1d823c3422c9244aaa851a5e48a800aee3381da3.hex",
+    "sha256": "cc540d784e43d8731cade5250b11a949d370686cdc0b21dea7cb441620340c65"
+  },
+  {
+    "from": "public/hex/81ab03900edf65de5e89876818d99047d6cf19c3269b1183d47fcf7eaff7812c.hex",
+    "to": "packages/curriculum/hex/81ab03900edf65de5e89876818d99047d6cf19c3269b1183d47fcf7eaff7812c.hex",
+    "sha256": "daec1d29847f34967f7cdc3436437af5b6b787ce2327f2d2f757931b881e8f5e"
+  },
+  {
+    "from": "public/hex/877e5be385c1bb44c34f13b5706a7fa1fb113ab35612ab7b2cd8be9b038fdf33.hex",
+    "to": "packages/curriculum/hex/877e5be385c1bb44c34f13b5706a7fa1fb113ab35612ab7b2cd8be9b038fdf33.hex",
+    "sha256": "e38d9bba5ce1a3a0f5a929a1f99b83ebdfda6ce99062575396de6e1cf3107bce"
+  },
+  {
+    "from": "public/hex/95d7a243964eae097ab07419226a7ab1c9d9619928d67e1785ad124046ecc226.hex",
+    "to": "packages/curriculum/hex/95d7a243964eae097ab07419226a7ab1c9d9619928d67e1785ad124046ecc226.hex",
+    "sha256": "b0486f73bf131e0d2b2cc49db0591a8cf96aa885c3ea7405a7d58d61fe86c7d0"
+  },
+  {
+    "from": "public/hex/96efe17d97d6b56cba6e70eacdb566e374cafcfe170e1cf8d6836de0caecfbe3.hex",
+    "to": "packages/curriculum/hex/96efe17d97d6b56cba6e70eacdb566e374cafcfe170e1cf8d6836de0caecfbe3.hex",
+    "sha256": "23c04a2be83dbfff3f5ca0881b24c59fc38a5c56db0f91cd8eceec892de87194"
+  },
+  {
+    "from": "public/hex/99c77beb1fdba7211084c6b3fd5e986fcc3c3c5fcc6394f1001717eadcf254b0.hex",
+    "to": "packages/curriculum/hex/99c77beb1fdba7211084c6b3fd5e986fcc3c3c5fcc6394f1001717eadcf254b0.hex",
+    "sha256": "6a00e277581cecbbf74be1bd1a34c1501b5e0f54afa28704096d2b234726fe9e"
+  },
+  {
+    "from": "public/hex/9d9a00a00a74a68d8f78090818f6d8ee8fcdd20cbbc91dffad2f3134b0361333.hex",
+    "to": "packages/curriculum/hex/9d9a00a00a74a68d8f78090818f6d8ee8fcdd20cbbc91dffad2f3134b0361333.hex",
+    "sha256": "7576200f85ffd4220a43e777296481fa903d5add8eb0db3b108bbf153cea9382"
+  },
+  {
+    "from": "public/hex/a663ecda738e4b099edc7c43f4928482bc24e5fcde1cb69014bda79a8ade6e52.hex",
+    "to": "packages/curriculum/hex/a663ecda738e4b099edc7c43f4928482bc24e5fcde1cb69014bda79a8ade6e52.hex",
+    "sha256": "ba440621b9be3bbcbdca342b2abfb279483ff7fb49c7f954f9cb8a94d2265d73"
+  },
+  {
+    "from": "public/hex/ad84b04a507ec48b10413bbd59032e00d5074947d692a685b082bbfc5f241eac.hex",
+    "to": "packages/curriculum/hex/ad84b04a507ec48b10413bbd59032e00d5074947d692a685b082bbfc5f241eac.hex",
+    "sha256": "bc4408ee6ffa35578f2c71f11e4f463205f99cec924db3d856457ca3750aedd1"
+  },
+  {
+    "from": "public/hex/b0f3799a9599d604ba7dd08c738990fef2c811f38443ed244a0c543a642dd4dc.hex",
+    "to": "packages/curriculum/hex/b0f3799a9599d604ba7dd08c738990fef2c811f38443ed244a0c543a642dd4dc.hex",
+    "sha256": "f340289df3fd14437944dc4c4409256c78461e2343db7f41469e796915f9bd8f"
+  },
+  {
+    "from": "public/hex/b74b58bf1cbdc346b6b5ddaab4f7dfaadc0d47ca187f718e51b993d08183ad3a.hex",
+    "to": "packages/curriculum/hex/b74b58bf1cbdc346b6b5ddaab4f7dfaadc0d47ca187f718e51b993d08183ad3a.hex",
+    "sha256": "0c9af5c2e219e980c2becf12397ab33b44a44e63df4c49ee7013bf6d367abeb1"
+  },
+  {
+    "from": "public/hex/d35b66886dcfe106fb9f7000f158ece64d67c68ee48670d5549b2d00410b319d.hex",
+    "to": "packages/curriculum/hex/d35b66886dcfe106fb9f7000f158ece64d67c68ee48670d5549b2d00410b319d.hex",
+    "sha256": "92d134f7b472b164e848d2f0d3cfee51d8bd94c506f32347ae3e4f721e16e265"
+  },
+  {
+    "from": "public/hex/e6e7dce95966c13651424b62cecc13503aefa66f8849cee1129d6d10e4496a22.hex",
+    "to": "packages/curriculum/hex/e6e7dce95966c13651424b62cecc13503aefa66f8849cee1129d6d10e4496a22.hex",
+    "sha256": "4bcce85df3a2085ee3072b1ae7c7e4151c42ecc711e44aff10d2bfbb8c59c757"
+  },
+  {
+    "from": "public/hex/ea47f715ffbf538a27d7290c1878d26c3d0d71d72013e224f605b2b3940fe40a.hex",
+    "to": "packages/curriculum/hex/ea47f715ffbf538a27d7290c1878d26c3d0d71d72013e224f605b2b3940fe40a.hex",
+    "sha256": "b47f0c2690c8fea2054055206b4c60af686324b8aa8f937faec675539c9bbecb"
+  },
+  {
+    "from": "public/hex/f661d49ac9dc7d5409e990025f842e6ba4744048e71be0f1b958863b02eb2865.hex",
+    "to": "packages/curriculum/hex/f661d49ac9dc7d5409e990025f842e6ba4744048e71be0f1b958863b02eb2865.hex",
+    "sha256": "e03b06fe4ad04ec8bddb1ca07b6ff5db796bda81fbe1cd08d006803263fdcc62"
+  },
+  {
+    "from": "public/hex/fadcbc7b70dc598faa1880577d93ea86695d74d800f1c9dcd37126a6b2f4f310.hex",
+    "to": "packages/curriculum/hex/fadcbc7b70dc598faa1880577d93ea86695d74d800f1c9dcd37126a6b2f4f310.hex",
+    "sha256": "970114724b5794b40c5de6989b24df288037f2c8adddd633cfcadd9f829f00c8"
+  },
+  {
+    "from": "public/hex/fc4522daa28cce6c6904b0c0274ef13a0a03ef52c362dac9b580781ffc2312a2.hex",
+    "to": "packages/curriculum/hex/fc4522daa28cce6c6904b0c0274ef13a0a03ef52c362dac9b580781ffc2312a2.hex",
+    "sha256": "dd790c43bfd06a593facb6b3d4122681183b32908ecb7ce969bb36f9b99eac40"
+  },
+  {
+    "from": "public/hex/index.json",
+    "to": "packages/curriculum/hex/index.json",
+    "sha256": "92fa46c01dc956f04f3eb71e4d09ae09127b4a79cdd7db7778dd693c9f82ec1a"
+  }
+]

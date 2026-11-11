@@ -121,6 +121,25 @@ importers:
         specifier: 5.0.5
         version: 5.0.5(@types/node@24.19.2)(@vitest/coverage-v8@5.0.5)(vite@8.3.4(@types/node@24.19.2)(jiti@2.7.0))
 
+  packages/arduino-core:
+    dependencies:
+      '@arduhub/curriculum':
+        specifier: workspace:*
+        version: link:../curriculum
+      avr8js:
+        specifier: ^0.21.1
+        version: 0.21.1
+    devDependencies:
+      vitest:
+        specifier: 5.0.5
+        version: 5.0.5(@types/node@24.19.2)(@vitest/coverage-v8@5.0.5)(vite@8.3.4(@types/node@24.19.2)(jiti@2.7.0))
+
+  packages/curriculum:
+    devDependencies:
+      vitest:
+        specifier: 5.0.5
+        version: 5.0.5(@types/node@24.19.2)(@vitest/coverage-v8@5.0.5)(vite@8.3.4(@types/node@24.19.2)(jiti@2.7.0))
+
 packages:
 
   '@alloc/quick-lru@5.3.0':
