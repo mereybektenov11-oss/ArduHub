@@ -608,3 +608,7 @@ Build (52/52), lint, typecheck, lint:copy, test:secrets — exit 0. Unit: 405/61
 ## 11.11.2026 — D-DESIGN: три концепции стиля приложения для ПК
 
 Выполнил Claude вместо Codex (лимит Codex). Макеты «Мастерская изобретателя», «Ночная лаборатория», «Яркий конструктор»: по 4 экрана 1440×900 в `outputs/app-design/`, сводка `outputs/app-design/index.html`, описание `docs/specs/app-design-concepts.md`. Контраст 27 пар токенов ≥ 4.5; снимки в Chrome без ошибок и переполнений. `pnpm lint` чистый, `pnpm build` скомпилирован. Код сайта не менялся. Ждёт выбора владельца.
+
+## 11.11.2026 — D1: приложение ArduHub для ПК (вход, меню, настройки)
+
+Выполнил Claude вместо Codex. `apps/desktop`: Electron 45.1.0 + Vite 8.3.5 + React 19.3.1, тема «Ночная лаборатория». Вход через Supabase, сессия зашифрована safeStorage (DPAPI), белый список внешних ссылок, CSP, sandbox. Проверки: typecheck/build приложения, unit 7/7, E2E 3/3 на собранном Electron с подменённым Supabase, корневые test/lint/typecheck/build/test:secrets зелёные. Реальный вход аккаунтом не проверен автоматически — нужна ручная проверка владельцем. Подробно: `docs/coordination/agent-notebook.md`.

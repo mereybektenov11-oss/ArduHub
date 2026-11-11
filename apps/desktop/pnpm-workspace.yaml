@@ -1,0 +1,6 @@
+# The desktop app is installed as its own pnpm project (see apps/desktop/README.md):
+# the site's node_modules lives on drive D through a junction, and pnpm does not
+# discover workspace packages through it.
+allowBuilds:
+  electron: true
+  esbuild: true

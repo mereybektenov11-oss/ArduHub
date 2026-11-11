@@ -9,7 +9,12 @@ const cli = resolve(
   dirname(require.resolve("vitest/package.json")),
   "vitest.mjs",
 );
-for (const cwd of [".", "packages/curriculum", "packages/arduino-core"]) {
+for (const cwd of [
+  ".",
+  "packages/curriculum",
+  "packages/arduino-core",
+  "apps/desktop",
+]) {
   const result = spawnSync(process.execPath, [cli, "run"], {
     cwd,
     stdio: "inherit",
