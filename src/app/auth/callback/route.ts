@@ -14,7 +14,7 @@ export async function GET(request: Request) {
             ? "/auth/reset"
             : url.searchParams.get("next") === "profile"
               ? "/app/profile"
-              : "/app",
+              : "/app/profile",
           requestOrigin(request),
         ),
       );

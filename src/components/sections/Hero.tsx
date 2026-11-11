@@ -19,7 +19,7 @@ export default function Hero({ background }: { background: ReactNode }) {
         <p className="hero-description">{ru.hero.description}</p>
         <div className="hero-buttons">
           <TextureButton asChild variant="glass" size="lg">
-            <a href="/app">
+            <a href="/app/profile">
               {ru.hero.primary}
               <span aria-hidden="true">↗</span>
             </a>

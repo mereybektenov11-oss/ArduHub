@@ -21,7 +21,6 @@ vi.mock("@/lib/useLearningStore", () => ({
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }),
 }));
-import PracticePage from "../../src/app/app/practice/page";
 import PracticeView from "../../src/components/cabinet/PracticeView";
 import ProjectsView from "../../src/components/projects/ProjectsView";
 import ProfilePage from "../../src/components/profile/ProfilePage";
@@ -29,19 +28,6 @@ import ProfileSettings from "../../src/components/profile/ProfileSettings";
 import ShopPage from "../../src/components/shop/ShopPage";
 import Leaderboard from "../../src/components/home/Leaderboard";
 describe("G6 pupil pages", () => {
-  it("keeps only training and glossary navigation even for the old homework query", async () => {
-    state.progress = createProgress();
-    const page = await PracticePage({
-      searchParams: Promise.resolve({ tab: "homework" }),
-    });
-    const html = renderToStaticMarkup(page);
-    expect(html).not.toContain("Домашка");
-    expect(html).not.toContain("?tab=homework");
-    expect(html).toContain("?tab=training");
-    expect(html).toContain("?tab=glossary");
-    expect(html).toContain("kids-games");
-  });
-
   it("has exactly three training game links and no review for fresh progress", () => {
     state.progress = createProgress();
     const html = renderToStaticMarkup(createElement(PracticeView));

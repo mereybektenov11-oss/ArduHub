@@ -81,7 +81,7 @@ export function VideoFinalCta() {
           <h2>{ru.landingVideo.finalTitle}</h2>
           <p>{ru.landingVideo.finalText}</p>
           <TextureButton asChild variant="glass" size="lg">
-            <a href="/app">
+            <a href="/app/profile">
               {ru.hero.primary}
               <span aria-hidden="true">↗</span>
             </a>

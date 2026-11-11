@@ -49,7 +49,14 @@ export default function ProfileShell({ children }: { children: ReactNode }) {
               <span>{ru.brand}</span>
             </Link>
             <div className="profile-toplinks">
-              <Link href="/app/lessons">{c.learning}</Link>
+              <Link
+                href="/app/profile/desktop"
+                aria-current={
+                  path === "/app/profile/desktop" ? "page" : undefined
+                }
+              >
+                {c.learning}
+              </Link>
               <Link
                 href="/app/pricing"
                 aria-current={path === "/app/pricing" ? "page" : undefined}

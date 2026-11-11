@@ -104,7 +104,7 @@ export default function AuthCard({
     try {
       const response = await fetch("/api/auth/guest", { method: "POST" });
       if (!response.ok) throw Error();
-      router.push("/app");
+      router.push("/app/profile");
       router.refresh();
     } catch {
       setError(c.network);
@@ -155,7 +155,7 @@ export default function AuthCard({
             setError(c.network);
           } else setError(c.expired);
         } else {
-          router.push("/app");
+          router.push("/app/profile");
           router.refresh();
         }
       } else if (mode === "register") {
@@ -206,7 +206,7 @@ export default function AuthCard({
             setError(c.network);
           } else setError(authError(error.code));
         } else {
-          router.push("/app");
+          router.push("/app/profile");
           router.refresh();
         }
       }

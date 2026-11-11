@@ -108,7 +108,7 @@ export default function DocumentationView({
       )}
       <div>
         <TextureButton asChild variant="primary">
-          <Link href="/app/lesson/lesson-1">
+          <Link href="/app/profile/desktop">
             {c.openLesson}
             <span aria-hidden="true">↗</span>
           </Link>

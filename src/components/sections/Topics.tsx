@@ -57,7 +57,7 @@ export default function Topics() {
               <p>{t.text}</p>
               <span className="topic-lessons">{ru.ui.lessonCount}</span>
               <div className="topic-actions">
-                <Link href="/app/lessons" className="text-button">
+                <Link href="/app/profile/desktop" className="text-button">
                   {ru.ui.openLessons}
                   <span aria-hidden="true">↗</span>
                 </Link>

@@ -9,6 +9,25 @@ function normalizeEntryPath(value: string) {
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   transpilePackages: ["@arduhub/arduino-core", "@arduhub/curriculum"],
+  // Learning moved to the desktop app: the old cabinet pages lead to the
+  // personal profile, where the app is downloaded.
+  async redirects() {
+    const learning =
+      "about|glossary|homework|ideas|leaderboard|lesson|lessons|map|mentor|missions|practice|projects|shop|test";
+    return [
+      { source: "/app", destination: "/app/profile", permanent: true },
+      {
+        source: `/app/:section(${learning})`,
+        destination: "/app/profile",
+        permanent: true,
+      },
+      {
+        source: `/app/:section(${learning})/:rest*`,
+        destination: "/app/profile",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     const dev = process.env.NODE_ENV !== "production";
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;

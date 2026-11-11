@@ -17,7 +17,7 @@ export default function Pricing() {
             <p>{p.tagline}</p>
             <div className="plan-price">{p.price}</div>
             <span className="plan-period">{ru.ui.perMonth}</span>
-            <Link href="/app" className="button button-primary">
+            <Link href="/app/profile" className="button button-primary">
               {p.cta}
               <span aria-hidden="true">↗</span>
             </Link>

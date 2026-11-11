@@ -31,7 +31,7 @@ export default function Page() {
       {!completed && <p className="profile-subtitle">{c.progressEmpty}</p>}
       <div>
         <TextureButton asChild variant="secondary">
-          <Link href="/app/lessons">
+          <Link href="/app/profile/desktop">
             {c.continue}
             <span aria-hidden="true">↗</span>
           </Link>

@@ -13,7 +13,7 @@ describe("landing reflects the available product", () => {
     );
     const cta = html.match(/<a [^>]*>/g) ?? [];
     expect(cta).toHaveLength(1);
-    expect(cta[0]).toContain('href="/app"');
+    expect(cta[0]).toContain('href="/app/profile"');
     expect(cta[0]).toContain('data-slot="texture-button"');
     expect(cta[0]).toContain('data-variant="glass"');
     expect(cta[0]).toContain('data-size="lg"');
@@ -23,9 +23,9 @@ describe("landing reflects the available product", () => {
   it("offers only the working free access and links it to the cabinet", () => {
     expect(ru.plans.map((plan) => plan.id)).toEqual(["free"]);
     const html = renderToStaticMarkup(createElement(Pricing));
-    expect(html).toContain('href="/app"');
+    expect(html).toContain('href="/app/profile"');
     expect(html).not.toContain('href="#access"');
-    expect(html).not.toMatch(/Pro|Индивидуально|токен/iu);
+    expect(html).not.toMatch(/\bPro\b|Индивидуально|токен/iu);
   });
 
   it("collects interest in new lessons without promising an email was sent", () => {
