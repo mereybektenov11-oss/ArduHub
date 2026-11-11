@@ -1,0 +1,112 @@
+[
+  {
+    "width": 360,
+    "route": "sign-in",
+    "overflow": false,
+    "loaded": true,
+    "overlap": false,
+    "font": "inter, \"inter Fallback\", sans-serif",
+    "primary": "rgb(20, 96, 255)"
+  },
+  {
+    "width": 360,
+    "route": "register",
+    "overflow": false,
+    "loaded": true,
+    "overlap": false,
+    "font": "inter, \"inter Fallback\", sans-serif",
+    "primary": "rgb(20, 96, 255)"
+  },
+  {
+    "width": 390,
+    "route": "sign-in",
+    "overflow": false,
+    "loaded": true,
+    "overlap": false,
+    "font": "inter, \"inter Fallback\", sans-serif",
+    "primary": "rgb(20, 96, 255)"
+  },
+  {
+    "width": 390,
+    "route": "register",
+    "overflow": false,
+    "loaded": true,
+    "overlap": false,
+    "font": "inter, \"inter Fallback\", sans-serif",
+    "primary": "rgb(20, 96, 255)"
+  },
+  {
+    "width": 768,
+    "route": "sign-in",
+    "overflow": false,
+    "loaded": true,
+    "overlap": false,
+    "font": "inter, \"inter Fallback\", sans-serif",
+    "primary": "rgb(20, 96, 255)"
+  },
+  {
+    "width": 768,
+    "route": "register",
+    "overflow": false,
+    "loaded": true,
+    "overlap": false,
+    "font": "inter, \"inter Fallback\", sans-serif",
+    "primary": "rgb(20, 96, 255)"
+  },
+  {
+    "width": 1440,
+    "route": "sign-in",
+    "overflow": false,
+    "loaded": true,
+    "overlap": false,
+    "font": "inter, \"inter Fallback\", sans-serif",
+    "primary": "rgb(20, 96, 255)"
+  },
+  {
+    "route": "sign-in",
+    "theme": "light",
+    "accessibility": []
+  },
+  {
+    "route": "sign-in",
+    "theme": "dark",
+    "accessibility": []
+  },
+  {
+    "width": 1440,
+    "route": "register",
+    "overflow": false,
+    "loaded": true,
+    "overlap": false,
+    "font": "inter, \"inter Fallback\", sans-serif",
+    "primary": "rgb(20, 96, 255)"
+  },
+  {
+    "route": "register",
+    "theme": "light",
+    "accessibility": []
+  },
+  {
+    "route": "register",
+    "theme": "dark",
+    "accessibility": []
+  },
+  {
+    "width": 1920,
+    "route": "sign-in",
+    "overflow": false,
+    "loaded": true,
+    "overlap": false,
+    "font": "inter, \"inter Fallback\", sans-serif",
+    "primary": "rgb(20, 96, 255)"
+  },
+  {
+    "width": 1920,
+    "route": "register",
+    "overflow": false,
+    "loaded": true,
+    "overlap": false,
+    "font": "inter, \"inter Fallback\", sans-serif",
+    "primary": "rgb(20, 96, 255)"
+  }
+]

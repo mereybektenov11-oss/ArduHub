@@ -31,20 +31,7 @@ export default function VideoFrame({
     () =>
       typeof document === "undefined" || document.visibilityState === "visible",
   );
-  const [mode, setMode] = useState<"auto" | "play" | "paused">("auto");
-  const [playing, setPlaying] = useState(false);
   const [failed, setFailed] = useState(false);
-
-  useEffect(() => {
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    // A new system preference invalidates an earlier play gesture. A fresh
-    // explicit play remains available after motion has been reduced.
-    const changed = () => {
-      if (media.matches) setMode("paused");
-    };
-    media.addEventListener("change", changed);
-    return () => media.removeEventListener("change", changed);
-  }, []);
 
   useEffect(() => {
     const element = root.current;
@@ -78,25 +65,13 @@ export default function VideoFrame({
   useEffect(() => {
     const element = video.current;
     if (!element || !ready || failed) return;
-    const shouldPlay =
-      visible &&
-      tabVisible &&
-      (mode === "play" || (mode === "auto" && !reduced));
+    const shouldPlay = visible && tabVisible && !reduced;
     if (shouldPlay) {
       void element.play().catch(() => {
-        /* The explicit play control remains available. */
+        /* Keep the poster if the browser blocks autoplay. */
       });
     } else element.pause();
-  }, [ready, visible, tabVisible, mode, reduced, failed]);
-
-  function toggle() {
-    if (playing) setMode("paused");
-    else {
-      setReady(true);
-      setMode("play");
-      void video.current?.play().catch(() => {});
-    }
-  }
+  }, [ready, visible, tabVisible, reduced, failed]);
 
   return (
     <figure
@@ -116,9 +91,6 @@ export default function VideoFrame({
           width="1280"
           height="800"
           aria-label={label}
-          aria-describedby={`${id}-caption`}
-          onPlay={() => setPlaying(true)}
-          onPause={() => setPlaying(false)}
           onError={() => setFailed(true)}
           style={failed ? { visibility: "hidden" } : undefined}
         />
@@ -137,24 +109,7 @@ export default function VideoFrame({
             </p>
           </>
         )}
-        {!failed && (
-          <button
-            type="button"
-            className="video-toggle"
-            onClick={toggle}
-            aria-label={playing ? ru.landingVideo.pause : ru.landingVideo.play}
-          >
-            <span aria-hidden="true">{playing ? "Ⅱ" : "▷"}</span>
-            <span>
-              {playing ? ru.landingVideo.pauseShort : ru.landingVideo.playShort}
-            </span>
-          </button>
-        )}
       </div>
-      <figcaption id={`${id}-caption`}>{label}</figcaption>
-      <noscript>
-        <style>{".video-toggle{display:none}"}</style>
-      </noscript>
     </figure>
   );
 }

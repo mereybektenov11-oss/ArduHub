@@ -22,7 +22,7 @@ for (const width of [360, 1440]) {
     await entry.click();
     await expect(page).toHaveURL(/\/sign-in$/);
     await expect(
-      page.getByRole("button", { name: "Войти", exact: true }),
+      page.getByRole("heading", { name: "С возвращением", exact: true }),
     ).toBeVisible();
     await expect(
       page.getByRole("button", { name: "Регистрация", exact: true }).first(),

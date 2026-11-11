@@ -7,6 +7,7 @@
 - Keep Russian visible copy in `src/content/ru.ts`, colors and spacing in tokens.
 - Keep demonstration data explicit. Counts, pricing, working editor, AI and access must not be presented as available without evidence.
 - Run build and lint after each task. Keep progress in `docs/progress.md`.
+- Game migration (`docs/plans/arduhub-game-migration.md`) is coordinated in `docs/coordination/agent-notebook.md`. Codex and Astra: before starting work, read the notebook, take only tasks addressed to you with status `ВЫДАНО`, and append your report there by its rules.
 - Local code compilation is enabled via the authenticated loopback gateway in `compiler-service/server.mjs` with `LOCAL_COMPILER=true` in ignored local env. It uses the installed Arduino CLI for trusted local development. Keep Docker as the default for public/untrusted compilation; never describe native mode as isolated. See `compiler-service/README.md`.
 - Supabase project ArduHub (`wjdxephhhedxertzgjnu`) was created and connected on 17.10.2026 with the user's approval. Email confirmation is disabled for this prototype with explicit approval; custom SMTP is not configured. Production is https://arduhub.vercel.app in Vercel scope merey4/project arduhub. See `docs/vercel-deployment.md` for current cloud verification and compiler limitations.
 

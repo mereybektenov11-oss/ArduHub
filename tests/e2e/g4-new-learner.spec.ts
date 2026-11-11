@@ -64,6 +64,17 @@ async function dismissTour(page: Page) {
     await tour.getByRole("button", { name: "Пропустить", exact: true }).click();
 }
 async function audit(page: Page) {
+  // Route content fades in (PageTransition); measure contrast on the settled
+  // page, not on a semi-transparent intermediate frame.
+  await page.waitForFunction(() =>
+    document
+      .getAnimations()
+      .every(
+        (a) =>
+          a.playState !== "running" ||
+          a.effect?.getTiming().iterations === Infinity,
+      ),
+  );
   const result = await new AxeBuilder({ page }).analyze();
   expect(
     result.violations.filter((v) =>

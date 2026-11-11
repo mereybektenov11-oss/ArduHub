@@ -11,7 +11,9 @@ test("live login loads the account, survives reopening, and logout protects the 
   );
   test.setTimeout(60000);
   const enter = async (target: typeof page, password: string) => {
-    await target.getByLabel("Почта").fill(process.env.E2E_AUTH_EMAIL!);
+    if (await target.getByLabel("Почта").count()) {
+      await target.getByLabel("Почта").fill(process.env.E2E_AUTH_EMAIL!);
+    }
     await target.getByLabel("Пароль", { exact: true }).fill(password);
     await target.getByRole("button", { name: "Войти", exact: true }).click();
   };

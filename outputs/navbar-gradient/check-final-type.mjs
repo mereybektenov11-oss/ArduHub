@@ -1,0 +1,3 @@
+import {chromium} from '@playwright/test';const b=await chromium.launch({channel:'chrome'});const p=await b.newPage();await p.goto('http://localhost:3000',{waitUntil:'networkidle'});
+for(const width of [360,768,1440]){await p.setViewportSize({width,height:900}); console.log(await p.evaluate(()=>({width:innerWidth,overflow:document.documentElement.scrollWidth>innerWidth,summaryClipped:[...document.querySelectorAll('.benefit-summary')].some(el=>{const a=el.getBoundingClientRect(),b=el.closest('.benefit-card').getBoundingClientRect();return a.top<b.top||a.bottom>b.bottom}),heroWordHeight:document.querySelector('.hero h1 em').getBoundingClientRect().height})));}
+await b.close();

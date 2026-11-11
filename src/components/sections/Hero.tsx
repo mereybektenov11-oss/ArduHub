@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { ru } from "@/content/ru";
-import { Button } from "../ui/primitives";
+import { TextureButton } from "../ui/texture-button";
 
 export default function Hero({ background }: { background: ReactNode }) {
   return (
@@ -18,10 +18,12 @@ export default function Hero({ background }: { background: ReactNode }) {
         </h1>
         <p className="hero-description">{ru.hero.description}</p>
         <div className="hero-buttons">
-          <Button href="/app" size="lg">
-            {ru.hero.primary}
-            <span aria-hidden="true">↗</span>
-          </Button>
+          <TextureButton asChild variant="glass" size="lg">
+            <a href="/app">
+              {ru.hero.primary}
+              <span aria-hidden="true">↗</span>
+            </a>
+          </TextureButton>
         </div>
         <p className="hero-footnote">{ru.hero.footnote}</p>
       </div>

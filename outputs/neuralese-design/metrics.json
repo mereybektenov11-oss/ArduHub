@@ -1,0 +1,522 @@
+{
+  "landing-1440": {
+    "h1": {
+      "h": "192",
+      "font-family": "ebGaramond, \"ebGaramond Fallback\", Georgia, serif",
+      "font-weight": "500",
+      "letter-spacing": "-1px",
+      "font-size": "80px",
+      "color": "rgb(0, 0, 0)"
+    },
+    "h1Fonts": "EB Garamond:24",
+    "body": {
+      "h": "64",
+      "font-family": "geistSans, \"geistSans Fallback\", inter, \"inter Fallback\", sans-serif",
+      "color": "rgba(0, 0, 0, 0.66)"
+    },
+    "bodyFonts": "Geist:107",
+    "navLink": {
+      "h": "32",
+      "font-family": "geistSans, \"geistSans Fallback\", inter, \"inter Fallback\", sans-serif"
+    },
+    "navFonts": "Geist:8",
+    "cta": {
+      "h": "40",
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "linear-gradient(in oklab, rgb(26, 102, 240) 0px, rgb(26, 102, 240) 100%)",
+      "border-radius": "9999px",
+      "color": "rgb(255, 255, 255)",
+      "font-family": "geistSans, \"geistSans Fallback\", inter, \"inter Fallback\", sans-serif"
+    },
+    "ctaInner": {
+      "h": "36",
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "linear-gradient(in oklab, rgb(26, 102, 240) 0px, rgb(26, 102, 240) 100%)",
+      "border-radius": "9999px",
+      "color": "rgb(255, 255, 255)",
+      "padding": "8px 20px"
+    },
+    "ctaFonts": "Geist:17",
+    "bg": {
+      "h": "6723",
+      "background-color": "rgb(250, 250, 250)"
+    },
+    "htmlBg": "rgb(250, 250, 250)",
+    "cards": [
+      "reveal video-feature-media | r=0px bg=rgba(0, 0, 0, 0) border=0px rgb(0, 0, 0) shadow=none",
+      "reveal video-feature-media | r=0px bg=rgba(0, 0, 0, 0) border=0px rgb(0, 0, 0) shadow=none",
+      "reveal video-feature-media | r=0px bg=rgba(0, 0, 0, 0) border=0px rgb(0, 0, 0) shadow=none",
+      "benefit-card benefit-card-0 | r=28px bg=rgba(255, 255, 255, 0.8) border=1px rgba(255, 255, 255, 0.72) shadow=rgba(0, 0, 0, 0.04) 0px 1px 2px 0px, rgba(0, 0, 0, 0.12) 0px 12px 32px -14px, rg",
+      "benefit-card benefit-card-1 | r=28px bg=rgba(255, 255, 255, 0.8) border=1px rgba(255, 255, 255, 0.72) shadow=rgba(0, 0, 0, 0.04) 0px 1px 2px 0px, rgba(0, 0, 0, 0.12) 0px 12px 32px -14px, rg",
+      "benefit-card benefit-card-2 | r=28px bg=rgba(255, 255, 255, 0.8) border=1px rgba(255, 255, 255, 0.72) shadow=rgba(0, 0, 0, 0.04) 0px 1px 2px 0px, rgba(0, 0, 0, 0.12) 0px 12px 32px -14px, rg",
+      "benefit-card benefit-card-3 | r=28px bg=rgba(255, 255, 255, 0.8) border=1px rgba(255, 255, 255, 0.72) shadow=rgba(0, 0, 0, 0.04) 0px 1px 2px 0px, rgba(0, 0, 0, 0.12) 0px 12px 32px -14px, rg",
+      "video-final section | r=0px bg=rgba(0, 0, 0, 0) border=0px rgb(0, 0, 0) shadow=none"
+    ],
+    "darkSurfaces": [
+      "DIV.video-viewport rgb(21, 25, 34) 1064x665",
+      "DIV.video-viewport rgb(21, 25, 34) 532x333",
+      "DIV.video-viewport rgb(21, 25, 34) 532x333",
+      "DIV.video-viewport rgb(21, 25, 34) 532x333"
+    ],
+    "upper": [],
+    "overflow": 0
+  },
+  "landing-390": {
+    "h1": {
+      "h": "103",
+      "font-family": "ebGaramond, \"ebGaramond Fallback\", Georgia, serif",
+      "font-weight": "500",
+      "letter-spacing": "-0.53625px",
+      "font-size": "42.9px",
+      "color": "rgb(0, 0, 0)"
+    },
+    "h1Fonts": "EB Garamond:24",
+    "body": {
+      "h": "78",
+      "font-family": "geistSans, \"geistSans Fallback\", inter, \"inter Fallback\", sans-serif",
+      "color": "rgba(0, 0, 0, 0.66)"
+    },
+    "bodyFonts": "Geist:106",
+    "navLink": {
+      "h": "30",
+      "font-family": "geistSans, \"geistSans Fallback\", inter, \"inter Fallback\", sans-serif"
+    },
+    "navFonts": "Geist:8",
+    "cta": {
+      "h": "40",
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "linear-gradient(in oklab, rgb(26, 102, 240) 0px, rgb(26, 102, 240) 100%)",
+      "border-radius": "9999px",
+      "color": "rgb(255, 255, 255)",
+      "font-family": "geistSans, \"geistSans Fallback\", inter, \"inter Fallback\", sans-serif"
+    },
+    "ctaInner": {
+      "h": "36",
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "linear-gradient(in oklab, rgb(26, 102, 240) 0px, rgb(26, 102, 240) 100%)",
+      "border-radius": "9999px",
+      "color": "rgb(255, 255, 255)",
+      "padding": "8px 20px"
+    },
+    "ctaFonts": "Geist:17",
+    "bg": {
+      "h": "6556",
+      "background-color": "rgb(250, 250, 250)"
+    },
+    "htmlBg": "rgb(250, 250, 250)",
+    "cards": [
+      "reveal video-feature-media | r=0px bg=rgba(0, 0, 0, 0) border=0px rgb(0, 0, 0) shadow=none",
+      "reveal video-feature-media | r=0px bg=rgba(0, 0, 0, 0) border=0px rgb(0, 0, 0) shadow=none",
+      "reveal video-feature-media | r=0px bg=rgba(0, 0, 0, 0) border=0px rgb(0, 0, 0) shadow=none",
+      "benefit-card benefit-card-0 | r=28px bg=rgba(255, 255, 255, 0.8) border=1px rgba(255, 255, 255, 0.72) shadow=rgba(0, 0, 0, 0.04) 0px 1px 2px 0px, rgba(0, 0, 0, 0.12) 0px 12px 32px -14px, rg",
+      "benefit-card benefit-card-1 | r=28px bg=rgba(255, 255, 255, 0.8) border=1px rgba(255, 255, 255, 0.72) shadow=rgba(0, 0, 0, 0.04) 0px 1px 2px 0px, rgba(0, 0, 0, 0.12) 0px 12px 32px -14px, rg",
+      "benefit-card benefit-card-2 | r=28px bg=rgba(255, 255, 255, 0.8) border=1px rgba(255, 255, 255, 0.72) shadow=rgba(0, 0, 0, 0.04) 0px 1px 2px 0px, rgba(0, 0, 0, 0.12) 0px 12px 32px -14px, rg",
+      "benefit-card benefit-card-3 | r=28px bg=rgba(255, 255, 255, 0.8) border=1px rgba(255, 255, 255, 0.72) shadow=rgba(0, 0, 0, 0.04) 0px 1px 2px 0px, rgba(0, 0, 0, 0.12) 0px 12px 32px -14px, rg",
+      "video-final section | r=0px bg=rgba(0, 0, 0, 0) border=0px rgb(0, 0, 0) shadow=none"
+    ],
+    "darkSurfaces": [
+      "DIV.video-viewport rgb(21, 25, 34) 338x211",
+      "DIV.video-viewport rgb(21, 25, 34) 324x203",
+      "DIV.video-viewport rgb(21, 25, 34) 324x203",
+      "DIV.video-viewport rgb(21, 25, 34) 324x203"
+    ],
+    "upper": [],
+    "overflow": 0
+  },
+  "auth/sign-in-1440": {
+    "card": {
+      "h": "623",
+      "border-radius": "28px",
+      "border-top-color": "rgba(255, 255, 255, 0.72)",
+      "box-shadow": "rgb(255, 255, 255) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.04) 0px 1px 2px 0px, rgba(0, 0, 0, 0.06) 0px 16px 40px 0px",
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.72))"
+    },
+    "h1": {
+      "h": "44",
+      "font-family": "ebGaramond, \"ebGaramond Fallback\", Georgia, serif",
+      "font-weight": "500",
+      "letter-spacing": "-0.9px"
+    },
+    "h1Fonts": "EB Garamond:14",
+    "input": {
+      "h": "44",
+      "border-radius": "10px",
+      "background-color": "rgba(0, 0, 0, 0)",
+      "color": "rgb(0, 0, 0)",
+      "padding": "0px 12px"
+    },
+    "inputWrap": {
+      "h": "56",
+      "border-radius": "999px",
+      "background-color": "rgb(255, 255, 255)"
+    },
+    "primary": {
+      "h": "50",
+      "border-radius": "9999px",
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "linear-gradient(in oklab, rgb(26, 102, 240) 0px, rgb(26, 102, 240) 100%)",
+      "color": "rgb(255, 255, 255)"
+    },
+    "primaryInner": {
+      "h": "46",
+      "border-radius": "9999px",
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "linear-gradient(in oklab, rgb(26, 102, 240) 0px, rgb(26, 102, 240) 100%)",
+      "color": "rgb(255, 255, 255)",
+      "font-family": "geistSans, \"geistSans Fallback\", inter, \"inter Fallback\", sans-serif"
+    },
+    "bodyFonts": "Geist:5",
+    "pageBg": {
+      "h": "900",
+      "background-color": "rgb(250, 250, 250)",
+      "font-family": "geistSans, \"geistSans Fallback\", inter, \"inter Fallback\", sans-serif"
+    },
+    "buttons": [
+      "A[] \"← На главную\" r=999px bg=rgb(255, 255, 255) h=46",
+      "BUTTON[icon] \"☾\" r=9999px bg=rgba(0, 0, 0, 0) h=40",
+      "A[] \"ArduHub\" r=0px bg=rgba(0, 0, 0, 0) h=36",
+      "BUTTON[icon] \"◎\" r=9999px bg=rgba(0, 0, 0, 0) h=40",
+      "BUTTON[primary] \"Войти→\" r=9999px bg=rgba(0, 0, 0, 0) h=50",
+      "BUTTON[minimal] \"Забыли пароль?\" r=9999px bg=rgba(0, 0, 0, 0) h=34",
+      "BUTTON[minimal] \"Регистрация\" r=9999px bg=rgba(0, 0, 0, 0) h=34",
+      "BUTTON[secondary] \"Начать без аккаунта ↗\" r=9999px bg=rgba(0, 0, 0, 0) h=50"
+    ],
+    "overflow": 0
+  },
+  "auth/sign-in-390": {
+    "card": {
+      "h": "596",
+      "border-radius": "28px",
+      "border-top-color": "rgba(255, 255, 255, 0.72)",
+      "box-shadow": "rgb(255, 255, 255) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.04) 0px 1px 2px 0px, rgba(0, 0, 0, 0.06) 0px 16px 40px 0px",
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.72))"
+    },
+    "h1": {
+      "h": "33",
+      "font-family": "ebGaramond, \"ebGaramond Fallback\", Georgia, serif",
+      "font-weight": "500",
+      "letter-spacing": "-0.9px"
+    },
+    "h1Fonts": "EB Garamond:14",
+    "input": {
+      "h": "44",
+      "border-radius": "10px",
+      "background-color": "rgba(0, 0, 0, 0)",
+      "color": "rgb(0, 0, 0)",
+      "padding": "0px 12px"
+    },
+    "inputWrap": {
+      "h": "56",
+      "border-radius": "999px",
+      "background-color": "rgb(255, 255, 255)"
+    },
+    "primary": {
+      "h": "50",
+      "border-radius": "9999px",
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "linear-gradient(in oklab, rgb(26, 102, 240) 0px, rgb(26, 102, 240) 100%)",
+      "color": "rgb(255, 255, 255)"
+    },
+    "primaryInner": {
+      "h": "46",
+      "border-radius": "9999px",
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "linear-gradient(in oklab, rgb(26, 102, 240) 0px, rgb(26, 102, 240) 100%)",
+      "color": "rgb(255, 255, 255)",
+      "font-family": "geistSans, \"geistSans Fallback\", inter, \"inter Fallback\", sans-serif"
+    },
+    "bodyFonts": "Geist:5",
+    "pageBg": {
+      "h": "900",
+      "background-color": "rgb(250, 250, 250)",
+      "font-family": "geistSans, \"geistSans Fallback\", inter, \"inter Fallback\", sans-serif"
+    },
+    "buttons": [
+      "A[] \"← На главную\" r=999px bg=rgb(255, 255, 255) h=46",
+      "BUTTON[icon] \"☾\" r=9999px bg=rgba(0, 0, 0, 0) h=40",
+      "A[] \"ArduHub\" r=0px bg=rgba(0, 0, 0, 0) h=36",
+      "BUTTON[icon] \"◎\" r=9999px bg=rgba(0, 0, 0, 0) h=40",
+      "BUTTON[primary] \"Войти→\" r=9999px bg=rgba(0, 0, 0, 0) h=50",
+      "BUTTON[minimal] \"Забыли пароль?\" r=9999px bg=rgba(0, 0, 0, 0) h=34",
+      "BUTTON[minimal] \"Регистрация\" r=9999px bg=rgba(0, 0, 0, 0) h=34",
+      "BUTTON[secondary] \"Начать без аккаунта ↗\" r=9999px bg=rgba(0, 0, 0, 0) h=50"
+    ],
+    "overflow": 0
+  },
+  "auth/register-1440": {
+    "card": {
+      "h": "419",
+      "border-radius": "28px",
+      "border-top-color": "rgba(255, 255, 255, 0.72)",
+      "box-shadow": "rgb(255, 255, 255) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.04) 0px 1px 2px 0px, rgba(0, 0, 0, 0.06) 0px 16px 40px 0px",
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.72))"
+    },
+    "h1": {
+      "h": "44",
+      "font-family": "ebGaramond, \"ebGaramond Fallback\", Georgia, serif",
+      "font-weight": "500",
+      "letter-spacing": "-0.9px"
+    },
+    "h1Fonts": "EB Garamond:22",
+    "input": {
+      "h": "44",
+      "border-radius": "10px",
+      "background-color": "rgba(0, 0, 0, 0)",
+      "color": "rgb(0, 0, 0)",
+      "padding": "0px 12px"
+    },
+    "inputWrap": {
+      "h": "56",
+      "border-radius": "999px",
+      "background-color": "rgb(255, 255, 255)"
+    },
+    "primary": {
+      "h": "40",
+      "border-radius": "9999px",
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "linear-gradient(in oklab, rgb(26, 102, 240) 0px, rgb(26, 102, 240) 100%)",
+      "color": "rgb(255, 255, 255)"
+    },
+    "primaryInner": {
+      "h": "36",
+      "border-radius": "9999px",
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "linear-gradient(in oklab, rgb(26, 102, 240) 0px, rgb(26, 102, 240) 100%)",
+      "color": "rgb(255, 255, 255)",
+      "font-family": "geistSans, \"geistSans Fallback\", inter, \"inter Fallback\", sans-serif"
+    },
+    "bodyFonts": "Geist:5",
+    "pageBg": {
+      "h": "900",
+      "background-color": "rgb(250, 250, 250)",
+      "font-family": "geistSans, \"geistSans Fallback\", inter, \"inter Fallback\", sans-serif"
+    },
+    "buttons": [
+      "A[] \"← На главную\" r=999px bg=rgb(255, 255, 255) h=46",
+      "BUTTON[icon] \"☾\" r=9999px bg=rgba(0, 0, 0, 0) h=40",
+      "A[] \"ArduHub\" r=0px bg=rgba(0, 0, 0, 0) h=36",
+      "BUTTON[primary] \"→\" r=9999px bg=rgba(0, 0, 0, 0) h=40",
+      "BUTTON[minimal] \"Уже есть аккаунт? Войти\" r=9999px bg=rgba(0, 0, 0, 0) h=34",
+      "BUTTON[secondary] \"Начать без аккаунта ↗\" r=9999px bg=rgba(0, 0, 0, 0) h=50"
+    ],
+    "overflow": 0
+  },
+  "auth/register-390": {
+    "card": {
+      "h": "392",
+      "border-radius": "28px",
+      "border-top-color": "rgba(255, 255, 255, 0.72)",
+      "box-shadow": "rgb(255, 255, 255) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.04) 0px 1px 2px 0px, rgba(0, 0, 0, 0.06) 0px 16px 40px 0px",
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.72))"
+    },
+    "h1": {
+      "h": "33",
+      "font-family": "ebGaramond, \"ebGaramond Fallback\", Georgia, serif",
+      "font-weight": "500",
+      "letter-spacing": "-0.9px"
+    },
+    "h1Fonts": "EB Garamond:22",
+    "input": {
+      "h": "44",
+      "border-radius": "10px",
+      "background-color": "rgba(0, 0, 0, 0)",
+      "color": "rgb(0, 0, 0)",
+      "padding": "0px 12px"
+    },
+    "inputWrap": {
+      "h": "56",
+      "border-radius": "999px",
+      "background-color": "rgb(255, 255, 255)"
+    },
+    "primary": {
+      "h": "40",
+      "border-radius": "9999px",
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "linear-gradient(in oklab, rgb(26, 102, 240) 0px, rgb(26, 102, 240) 100%)",
+      "color": "rgb(255, 255, 255)"
+    },
+    "primaryInner": {
+      "h": "36",
+      "border-radius": "9999px",
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "linear-gradient(in oklab, rgb(26, 102, 240) 0px, rgb(26, 102, 240) 100%)",
+      "color": "rgb(255, 255, 255)",
+      "font-family": "geistSans, \"geistSans Fallback\", inter, \"inter Fallback\", sans-serif"
+    },
+    "bodyFonts": "Geist:5",
+    "pageBg": {
+      "h": "900",
+      "background-color": "rgb(250, 250, 250)",
+      "font-family": "geistSans, \"geistSans Fallback\", inter, \"inter Fallback\", sans-serif"
+    },
+    "buttons": [
+      "A[] \"← На главную\" r=999px bg=rgb(255, 255, 255) h=46",
+      "BUTTON[icon] \"☾\" r=9999px bg=rgba(0, 0, 0, 0) h=40",
+      "A[] \"ArduHub\" r=0px bg=rgba(0, 0, 0, 0) h=36",
+      "BUTTON[primary] \"→\" r=9999px bg=rgba(0, 0, 0, 0) h=40",
+      "BUTTON[minimal] \"Уже есть аккаунт? Войти\" r=9999px bg=rgba(0, 0, 0, 0) h=34",
+      "BUTTON[secondary] \"Начать без аккаунта ↗\" r=9999px bg=rgba(0, 0, 0, 0) h=50"
+    ],
+    "overflow": 0
+  },
+  "profile-1440": {
+    "h1": {
+      "h": "76",
+      "font-family": "ebGaramond, \"ebGaramond Fallback\", Georgia, serif",
+      "font-weight": "500",
+      "letter-spacing": "-0.9px"
+    },
+    "h1Fonts": "EB Garamond:7",
+    "bodyFonts": "Geist:42",
+    "shell": {
+      "h": "900",
+      "background-color": "rgb(250, 250, 250)",
+      "background-image": "radial-gradient(at 55% 0px, rgb(243, 245, 251), rgba(0, 0, 0, 0) 42%), none",
+      "font-family": "geistSans, \"geistSans Fallback\", inter, \"inter Fallback\", sans-serif"
+    },
+    "htmlBg": [
+      "rgb(14, 26, 21)",
+      "rgba(0, 0, 0, 0)"
+    ],
+    "radii": [
+      "NAV.profile-topnav r=999px bg=rgba(255, 255, 255, 0.72) border=1px rgb(255, 255, 255) shadow=rgba(0, 0, 0, 0.04) 0px 1px 2px 0px, rgba(0, 0, 0, 0.04) 0px 8px 24px 0px, rgb(255, 255, 2"
+    ],
+    "buttons": [
+      "secondary \"Профиль\" r=9999px bg=rgba(0, 0, 0, 0) linear-gradient(in oklab, rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0 color=rgb(0, 0, 0) h=43",
+      "danger-soft \"Выйти\" r=9999px bg=rgba(0, 0, 0, 0) linear-gradient(in oklab, rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0 color=rgb(217, 45, 32) h=40",
+      "secondary \"Редактировать профиль↗\" r=9999px bg=rgba(0, 0, 0, 0) linear-gradient(in oklab, rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0 color=rgb(0, 0, 0) h=40",
+      "accent \"Сохранить прогресс\" r=9999px bg=rgba(0, 0, 0, 0) linear-gradient(in oklab, rgb(26, 102, 240) 0px, rgb(26, 102 color=rgb(255, 255, 255) h=40"
+    ],
+    "overflow": 0
+  },
+  "profile-390": {
+    "h1": {
+      "h": "48",
+      "font-family": "ebGaramond, \"ebGaramond Fallback\", Georgia, serif",
+      "font-weight": "500",
+      "letter-spacing": "-0.5625px"
+    },
+    "h1Fonts": "EB Garamond:7",
+    "bodyFonts": "Geist:41",
+    "shell": {
+      "h": "1087",
+      "background-color": "rgb(250, 250, 250)",
+      "background-image": "radial-gradient(at 55% 0px, rgb(243, 245, 251), rgba(0, 0, 0, 0) 42%), none",
+      "font-family": "geistSans, \"geistSans Fallback\", inter, \"inter Fallback\", sans-serif"
+    },
+    "htmlBg": [
+      "rgb(14, 26, 21)",
+      "rgba(0, 0, 0, 0)"
+    ],
+    "radii": [
+      "NAV.profile-topnav r=24px bg=rgba(255, 255, 255, 0.72) border=1px rgb(255, 255, 255) shadow=rgba(0, 0, 0, 0.04) 0px 1px 2px 0px, rgba(0, 0, 0, 0.04) 0px 8px 24px 0px, rgb(255, 255, 2"
+    ],
+    "buttons": [
+      "secondary \"Профиль\" r=9999px bg=rgba(0, 0, 0, 0) linear-gradient(in oklab, rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0 color=rgb(0, 0, 0) h=43",
+      "danger-soft \"Выйти\" r=9999px bg=rgba(0, 0, 0, 0) linear-gradient(in oklab, rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0 color=rgb(217, 45, 32) h=40",
+      "secondary \"Редактировать профиль↗\" r=9999px bg=rgba(0, 0, 0, 0) linear-gradient(in oklab, rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0 color=rgb(0, 0, 0) h=40",
+      "accent \"Сохранить прогресс\" r=9999px bg=rgba(0, 0, 0, 0) linear-gradient(in oklab, rgb(26, 102, 240) 0px, rgb(26, 102 color=rgb(255, 255, 255) h=40"
+    ],
+    "overflow": 0
+  },
+  "overflow-320-/": 0,
+  "overflow-320-/sign-in": 0,
+  "overflow-320-/register": 0,
+  "overflow-320-/app/profile": 0,
+  "register-error": {
+    "color": "rgb(217, 45, 32)",
+    "ring": {
+      "wrapBorder": "rgb(26, 102, 240)",
+      "wrapShadow": "rgba(26, 102, 240, 0.16) 0px 0px 0px 3px",
+      "inputOutline": "solid rgb(26, 102, 240)"
+    }
+  },
+  "sign-in-error": {
+    "color": "rgb(217, 45, 32)",
+    "text": "Неверная почта или пароль"
+  },
+  "profile-settings-1440": {
+    "h1Fonts": "EB Garamond:9",
+    "cards": [
+      "FORM.profile-settings-form r=28px bg=rgb(243, 245, 251) border=1px rgba(255, 255, 255, 0.72) shadow=rgba(0, 0, 0, 0.04) 0px 1px 2px 0px, rgba(0, 0, 0, 0.04) 0px 8px 24px 0px, rgb(255, 255, 255) 0px 1p"
+    ],
+    "inputs": [
+      "INPUT[] r=9999px bg=rgb(255, 255, 255) pad=13px 20px",
+      "SELECT[] r=9999px bg=rgb(255, 255, 255) pad=13px 20px",
+      "INPUT[checkbox] r=0px bg=rgba(0, 0, 0, 0) pad=0px",
+      "INPUT[checkbox] r=0px bg=rgba(0, 0, 0, 0) pad=0px"
+    ],
+    "overflow": 0
+  },
+  "profile-settings-390": {
+    "h1Fonts": "EB Garamond:9",
+    "cards": [
+      "FORM.profile-settings-form r=28px bg=rgb(243, 245, 251) border=1px rgba(255, 255, 255, 0.72) shadow=rgba(0, 0, 0, 0.04) 0px 1px 2px 0px, rgba(0, 0, 0, 0.04) 0px 8px 24px 0px, rgb(255, 255, 255) 0px 1p"
+    ],
+    "inputs": [
+      "INPUT[] r=9999px bg=rgb(255, 255, 255) pad=13px 20px",
+      "SELECT[] r=9999px bg=rgb(255, 255, 255) pad=13px 20px",
+      "INPUT[checkbox] r=0px bg=rgba(0, 0, 0, 0) pad=0px",
+      "INPUT[checkbox] r=0px bg=rgba(0, 0, 0, 0) pad=0px"
+    ],
+    "overflow": 0
+  },
+  "profile-progress-1440": {
+    "h1Fonts": "EB Garamond:12",
+    "cards": [
+      "DIV. r=28px bg=rgb(243, 245, 251) border=1px rgba(255, 255, 255, 0.72) shadow=rgba(0, 0, 0, 0.04) 0px 1px 2px 0px, rgba(0, 0, 0, 0.04) 0px 8px 24px 0px, rgb(255, 255, 255) 0px 1p",
+      "DIV. r=28px bg=rgb(243, 245, 251) border=1px rgba(255, 255, 255, 0.72) shadow=rgba(0, 0, 0, 0.04) 0px 1px 2px 0px, rgba(0, 0, 0, 0.04) 0px 8px 24px 0px, rgb(255, 255, 255) 0px 1p",
+      "DIV. r=28px bg=rgb(243, 245, 251) border=1px rgba(255, 255, 255, 0.72) shadow=rgba(0, 0, 0, 0.04) 0px 1px 2px 0px, rgba(0, 0, 0, 0.04) 0px 8px 24px 0px, rgb(255, 255, 255) 0px 1p"
+    ],
+    "inputs": [],
+    "overflow": 0
+  },
+  "profile-progress-390": {
+    "h1Fonts": "EB Garamond:12",
+    "cards": [
+      "DIV. r=28px bg=rgb(243, 245, 251) border=1px rgba(255, 255, 255, 0.72) shadow=rgba(0, 0, 0, 0.04) 0px 1px 2px 0px, rgba(0, 0, 0, 0.04) 0px 8px 24px 0px, rgb(255, 255, 255) 0px 1p",
+      "DIV. r=28px bg=rgb(243, 245, 251) border=1px rgba(255, 255, 255, 0.72) shadow=rgba(0, 0, 0, 0.04) 0px 1px 2px 0px, rgba(0, 0, 0, 0.04) 0px 8px 24px 0px, rgb(255, 255, 255) 0px 1p",
+      "DIV. r=28px bg=rgb(243, 245, 251) border=1px rgba(255, 255, 255, 0.72) shadow=rgba(0, 0, 0, 0.04) 0px 1px 2px 0px, rgba(0, 0, 0, 0.04) 0px 8px 24px 0px, rgb(255, 255, 255) 0px 1p"
+    ],
+    "inputs": [],
+    "overflow": 0
+  },
+  "profile-desktop-1440": {
+    "h1Fonts": "EB Garamond:22",
+    "cards": [
+      "SECTION.profile-desktop r=28px bg=rgb(243, 245, 251) border=1px rgba(255, 255, 255, 0.72) shadow=rgba(0, 0, 0, 0.04) 0px 1px 2px 0px, rgba(0, 0, 0, 0.04) 0px 8px 24px 0px, rgb(255, 255, 255) 0px 1p",
+      "DIV.profile-monitor r=14px bg=rgb(26, 102, 240) border=5px rgb(255, 255, 255) shadow=rgba(0, 0, 0, 0.06) 0px 16px 26px 0px"
+    ],
+    "inputs": [],
+    "overflow": 0
+  },
+  "profile-desktop-390": {
+    "h1Fonts": "EB Garamond:21",
+    "cards": [
+      "SECTION.profile-desktop r=28px bg=rgb(243, 245, 251) border=1px rgba(255, 255, 255, 0.72) shadow=rgba(0, 0, 0, 0.04) 0px 1px 2px 0px, rgba(0, 0, 0, 0.04) 0px 8px 24px 0px, rgb(255, 255, 255) 0px 1p",
+      "DIV.profile-monitor r=14px bg=rgb(26, 102, 240) border=5px rgb(255, 255, 255) shadow=rgba(0, 0, 0, 0.06) 0px 16px 26px 0px"
+    ],
+    "inputs": [],
+    "overflow": 0
+  },
+  "/app/pricing-1440": {
+    "cards": [
+      "ARTICLE.pricing-card r=28px bg=rgb(243, 245, 251) border=1px rgba(255, 255, 255, 0.72)",
+      "ARTICLE.pricing-card r=28px bg=rgba(0, 0, 0, 0) border=2px rgb(26, 102, 240)",
+      "ARTICLE.pricing-card r=28px bg=rgb(243, 245, 251) border=1px rgba(255, 255, 255, 0.72)",
+      "ARTICLE.account-info-card r=28px bg=rgb(243, 245, 251) border=1px rgba(255, 255, 255, 0.72)",
+      "ARTICLE.account-info-card r=28px bg=rgb(243, 245, 251) border=1px rgba(255, 255, 255, 0.72)",
+      "ARTICLE.account-info-card r=28px bg=rgb(243, 245, 251) border=1px rgba(255, 255, 255, 0.72)",
+      "ARTICLE.account-info-card r=28px bg=rgb(243, 245, 251) border=1px rgba(255, 255, 255, 0.72)"
+    ],
+    "overflow": 0
+  },
+  "/app/docs-1440": {
+    "cards": [],
+    "overflow": 0
+  }
+}

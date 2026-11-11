@@ -25,6 +25,7 @@ import PracticePage from "../../src/app/app/practice/page";
 import PracticeView from "../../src/components/cabinet/PracticeView";
 import ProjectsView from "../../src/components/projects/ProjectsView";
 import ProfilePage from "../../src/components/profile/ProfilePage";
+import ProfileSettings from "../../src/components/profile/ProfileSettings";
 import ShopPage from "../../src/components/shop/ShopPage";
 import Leaderboard from "../../src/components/home/Leaderboard";
 describe("G6 pupil pages", () => {
@@ -83,16 +84,23 @@ describe("G6 pupil pages", () => {
     expect(html).not.toContain("Мой проект");
     expect(html).toMatch(/<input[^>]*hidden=""[^>]*type="file"/);
   });
-  it("renders required settings and a working mentor selection route", () => {
+  it("renders the account page without the removed legacy profile blocks", () => {
     state.progress = createProgress();
     const html = renderToStaticMarkup(createElement(ProfilePage));
-    expect(html).toContain("Звуки");
-    expect(html).toContain("Подсказки наставника");
-    expect(html.match(/role="switch"/g)).toHaveLength(2);
-    expect(html).toContain("Размер текста");
-    expect(html).toContain("Сохранить прогресс");
-    expect(html).toContain("kids-mentor-picker");
-    expect(html).toContain("Сменить наставника");
+    expect(html).toContain("Детали аккаунта");
+    expect(html).toContain("Профиль без аккаунта");
+    expect(html).toContain('href="/app/profile/settings"');
+    expect(html).not.toContain("kids-mentor-picker");
+    expect(html).not.toContain("Сменить наставника");
+    expect(html).not.toMatch(/role="switch"/);
+  });
+  it("renders the separate settings form with sounds and leaderboard privacy", () => {
+    state.progress = createProgress();
+    const html = renderToStaticMarkup(createElement(ProfileSettings));
+    expect(html).toContain("Звуки интерфейса");
+    expect(html).toContain("Скрыть меня из таблицы лидеров");
+    expect(html.match(/role="switch"/g)).toHaveLength(1);
+    expect(html).toMatch(/<select/);
   });
   it("renders three shop tabs and a truthful empty ranking without invented rank", () => {
     state.progress = createProgress();

@@ -11,9 +11,12 @@ describe("landing reflects the available product", () => {
     const html = renderToStaticMarkup(
       createElement(Hero, { background: null }),
     );
-    expect(html).toMatch(
-      /class="button button-primary button-lg[^"]*" href="\/app"/,
-    );
+    const cta = html.match(/<a [^>]*>/g) ?? [];
+    expect(cta).toHaveLength(1);
+    expect(cta[0]).toContain('href="/app"');
+    expect(cta[0]).toContain('data-slot="texture-button"');
+    expect(cta[0]).toContain('data-variant="glass"');
+    expect(cta[0]).toContain('data-size="lg"');
     expect(ru.header.account.href).toBe("/sign-in");
   });
 

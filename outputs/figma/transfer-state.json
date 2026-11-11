@@ -1,0 +1,699 @@
+{
+  "fileKey": "L5zK7WgxPuiRkdIpm7GiYr",
+  "sessionId": "50f99e3e-5d54-4c95-9c31-4eee8cf4537d",
+  "manifest": [
+    {
+      "slug": "landing",
+      "path": "/",
+      "capture": "72ecff07-c9c5-468c-b408-839c2fa16665",
+      "node": "2:2",
+      "group": "public",
+      "width": 1440
+    },
+    {
+      "slug": "signin",
+      "path": "/sign-in",
+      "id": "bd3f07b5-5856-415e-bfd0-7181429a42aa",
+      "node": "4:2",
+      "group": "public",
+      "width": 1440
+    },
+    {
+      "slug": "register",
+      "path": "/register",
+      "id": "47ec626d-32b2-4feb-8d76-25958ec86131",
+      "node": "5:2",
+      "group": "public",
+      "width": 1440
+    },
+    {
+      "slug": "reset",
+      "path": "/auth/reset",
+      "id": "cf97c30a-03ea-4a0e-95c8-162933c37b6b",
+      "node": "8:2",
+      "group": "public",
+      "width": 1440
+    },
+    {
+      "slug": "about",
+      "path": "/about",
+      "id": "d1bac83f-0fe0-4a14-9526-a2a209e82700",
+      "node": "7:2",
+      "group": "public",
+      "width": 1440
+    },
+    {
+      "slug": "privacy",
+      "path": "/privacy",
+      "id": "9ffa08da-0212-4e63-a315-22726e60a808",
+      "node": "6:2",
+      "group": "public",
+      "width": 1440
+    },
+    {
+      "slug": "home",
+      "path": "/app",
+      "id": "1f11bfba-c5ee-4488-882e-130ec330f1dc",
+      "node": "9:2",
+      "group": "states",
+      "width": 1440
+    },
+    {
+      "slug": "dashboard",
+      "path": "/app",
+      "id": "3f57d94d-7974-47c9-8d1c-c336a58e6310",
+      "node": "12:2",
+      "result": "The design has been added to your existing file: https://www.figma.com/design/L5zK7WgxPuiRkdIpm7GiYr?node-id=12-2\n\nUse `open` to view the changes in F",
+      "group": "cabinet",
+      "width": 1440
+    },
+    {
+      "slug": "lessons",
+      "path": "/app/lessons",
+      "id": "4c783204-004c-4c87-8745-1949e46e494b",
+      "node": "11:2",
+      "result": "The design has been added to your existing file: https://www.figma.com/design/L5zK7WgxPuiRkdIpm7GiYr?node-id=11-2\n\nUse `open` to view the changes in F",
+      "group": "cabinet",
+      "width": 1440
+    },
+    {
+      "slug": "map",
+      "path": "/app/map",
+      "id": "ce7ab944-c4cb-4d85-aca4-65ae61bb8979",
+      "node": "10:2",
+      "result": "The design has been added to your existing file: https://www.figma.com/design/L5zK7WgxPuiRkdIpm7GiYr?node-id=10-2\n\nUse `open` to view the changes in F",
+      "group": "cabinet",
+      "width": 1440
+    },
+    {
+      "slug": "mentor",
+      "path": "/app/mentor",
+      "id": "5df382a1-8b2b-4a07-a3ad-568ff6854372",
+      "node": "13:2",
+      "result": "The design has been added to your existing file: https://www.figma.com/design/L5zK7WgxPuiRkdIpm7GiYr?node-id=13-2\n\nUse `open` to view the changes in F",
+      "group": "cabinet",
+      "width": 1440
+    },
+    {
+      "slug": "practice",
+      "path": "/app/practice",
+      "id": "fd3678b9-d6ea-41b5-b94b-010255b38868",
+      "node": "14:2",
+      "result": "The design has been added to your existing file: https://www.figma.com/design/L5zK7WgxPuiRkdIpm7GiYr?node-id=14-2\n\nUse `open` to view the changes in F",
+      "group": "cabinet",
+      "width": 1440
+    },
+    {
+      "slug": "glossary",
+      "path": "/app/practice?tab=glossary",
+      "id": "229de141-2fdf-4b52-8357-ba04fa856182",
+      "result": "Status for capture ID `229de141-2fdf-4b52-8357-ba04fa856182`: **processing**.\nThis is normal. Capture data was submitted and conversion is in progress",
+      "group": "cabinet",
+      "width": 1440,
+      "node": "16:2"
+    },
+    {
+      "slug": "projects",
+      "path": "/app/projects",
+      "id": "c6425807-6e20-4d5e-ae9b-3caacc778146",
+      "node": "17:2",
+      "result": "The design has been added to your existing file: https://www.figma.com/design/L5zK7WgxPuiRkdIpm7GiYr?node-id=17-2\n\nUse `open` to view the changes in F",
+      "group": "cabinet",
+      "width": 1440
+    },
+    {
+      "slug": "ideas",
+      "path": "/app/ideas",
+      "id": "8028f69b-bfd5-48ce-81c1-771b0e7e7418",
+      "result": "Status for capture ID `8028f69b-bfd5-48ce-81c1-771b0e7e7418`: **processing**.\nThis is normal. Capture data was submitted and conversion is in progress",
+      "group": "cabinet",
+      "width": 1440,
+      "node": "15:2"
+    },
+    {
+      "slug": "homework",
+      "path": "/app/homework",
+      "id": "2b9fd2d8-5254-4ff8-aafe-b9146733270a",
+      "node": "20:2",
+      "result": "The design has been added to your existing file: https://www.figma.com/design/L5zK7WgxPuiRkdIpm7GiYr?node-id=20-2\n\nUse `open` to view the changes in F",
+      "group": "cabinet",
+      "width": 1440
+    },
+    {
+      "slug": "missions",
+      "path": "/app/missions",
+      "id": "f3eccb5f-eed8-4dfa-a1b2-11512fa19307",
+      "node": "18:2",
+      "result": "The design has been added to your existing file: https://www.figma.com/design/L5zK7WgxPuiRkdIpm7GiYr?node-id=18-2\n\nUse `open` to view the changes in F",
+      "group": "cabinet",
+      "width": 1440
+    },
+    {
+      "slug": "leaderboard",
+      "path": "/app/leaderboard",
+      "id": "340e02d4-d43b-4007-8c13-58fae1e11373",
+      "node": "22:2",
+      "group": "cabinet",
+      "width": 1440
+    },
+    {
+      "slug": "shop",
+      "path": "/app/shop",
+      "id": "c63ea3cd-e68c-4c62-9fd8-51c296ef34df",
+      "node": "23:2",
+      "group": "cabinet",
+      "width": 1440
+    },
+    {
+      "slug": "profile",
+      "path": "/app/profile",
+      "id": "f47ae666-0298-40c3-a56b-a64b81120528",
+      "node": "24:2",
+      "group": "cabinet",
+      "width": 1440
+    },
+    {
+      "slug": "cab-about",
+      "path": "/app/about",
+      "id": "416f67dd-9084-4a94-a328-a174fbff72a0",
+      "node": "21:2",
+      "group": "cabinet",
+      "width": 1440
+    },
+    {
+      "slug": "test",
+      "path": "/app/test",
+      "id": "c0f92182-82db-4e1b-b92d-ba5b95f01a5e",
+      "node": "27:2",
+      "group": "cabinet",
+      "width": 1440
+    },
+    {
+      "slug": "level-0",
+      "path": "/app/map/0",
+      "id": "2c63d699-76ee-438d-b8b8-19e44aafd08b",
+      "node": "28:2",
+      "group": "course",
+      "width": 1440
+    },
+    {
+      "slug": "level-1",
+      "path": "/app/map/1",
+      "id": "7c3859e0-0e07-4090-b8e3-53e842c90db0",
+      "node": "26:2",
+      "group": "course",
+      "width": 1440
+    },
+    {
+      "slug": "level-2",
+      "path": "/app/map/2",
+      "id": "b8931aba-30fc-4b45-85e4-66934ebeac66",
+      "node": "25:2",
+      "group": "course",
+      "width": 1440
+    },
+    {
+      "slug": "level-3",
+      "path": "/app/map/3",
+      "id": "583c6c26-12de-4ce7-b232-8ab274e6e602",
+      "node": "30:2",
+      "group": "course",
+      "width": 1440
+    },
+    {
+      "slug": "level-4",
+      "path": "/app/map/4",
+      "id": "f5ba35cd-27a3-46ee-a81b-61b201485d7e",
+      "node": "32:2",
+      "group": "course",
+      "width": 1440
+    },
+    {
+      "slug": "blitz",
+      "path": "/app/practice/blitz",
+      "id": "c623078f-519b-4a10-8d9f-62013df2cc52",
+      "node": "31:2",
+      "group": "games",
+      "width": 1440
+    },
+    {
+      "slug": "findbug",
+      "path": "/app/practice/findbug",
+      "id": "50e396b7-4b77-4f9d-8839-b83c7c99b5e6",
+      "node": "29:2",
+      "group": "games",
+      "width": 1440
+    },
+    {
+      "slug": "match",
+      "path": "/app/practice/match",
+      "id": "317dbd88-895c-4764-936e-ce1f51d32d91",
+      "node": "33:2",
+      "group": "games",
+      "width": 1440
+    },
+    {
+      "slug": "lesson-1",
+      "path": "/app/lesson/lesson-1",
+      "id": "6692f35a-437a-4f77-84bd-d2585eb432e5",
+      "node": "37:2",
+      "group": "course",
+      "width": 1440
+    },
+    {
+      "slug": "lesson-2",
+      "path": "/app/lesson/lesson-2",
+      "id": "d4e9bddd-76ef-40d2-bd49-4fd3fd4412ff",
+      "node": "36:2",
+      "group": "locked",
+      "width": 1440
+    },
+    {
+      "slug": "lesson-3",
+      "path": "/app/lesson/lesson-3",
+      "id": "3487c6f7-c4e6-4d96-975d-777aa28482e8",
+      "node": "35:2",
+      "group": "locked",
+      "width": 1440
+    },
+    {
+      "slug": "lesson-4",
+      "path": "/app/lesson/lesson-4",
+      "id": "5011c33c-b567-4561-ab28-16bd781952c2",
+      "node": "34:2",
+      "group": "locked",
+      "width": 1440
+    },
+    {
+      "slug": "lesson-5",
+      "path": "/app/lesson/lesson-5",
+      "id": "e45cce7d-4ed5-414f-adb5-6d51e70df52e",
+      "node": "40:2",
+      "group": "locked",
+      "width": 1440
+    },
+    {
+      "slug": "lesson-6",
+      "path": "/app/lesson/lesson-6",
+      "id": "68eb2e26-aec1-4c3f-89bc-e5956b002336",
+      "node": "39:2",
+      "group": "locked",
+      "width": 1440
+    },
+    {
+      "slug": "lesson-7",
+      "path": "/app/lesson/lesson-7",
+      "id": "097b8aca-c5ca-4deb-817d-ec45ef66a4a6",
+      "node": "41:2",
+      "group": "locked",
+      "width": 1440
+    },
+    {
+      "slug": "lesson-8",
+      "path": "/app/lesson/lesson-8",
+      "id": "11a18bb7-a242-405d-a670-76faaf8eeb4a",
+      "node": "38:2",
+      "group": "locked",
+      "width": 1440
+    },
+    {
+      "slug": "lesson-9",
+      "path": "/app/lesson/lesson-9",
+      "id": "3cc42150-543a-4797-8f52-13db4dcb59ae",
+      "node": "42:2",
+      "group": "locked",
+      "width": 1440
+    },
+    {
+      "slug": "lesson-10",
+      "path": "/app/lesson/lesson-10",
+      "id": "45a8ee94-f65b-460f-aa21-b72e11ae8e39",
+      "node": "44:2",
+      "group": "locked",
+      "width": 1440
+    },
+    {
+      "slug": "lesson-11",
+      "path": "/app/lesson/lesson-11",
+      "id": "eee7b784-d5b4-46eb-a208-9a56548360aa",
+      "node": "43:2",
+      "group": "locked",
+      "width": 1440
+    },
+    {
+      "slug": "lesson-12",
+      "path": "/app/lesson/lesson-12",
+      "id": "22d46b3a-01db-4c74-90e4-2687a32d4785",
+      "node": "45:2",
+      "group": "locked",
+      "width": 1440
+    },
+    {
+      "slug": "lesson-video-2",
+      "path": "/app/lesson/lesson-2?stage=video",
+      "id": "c3a3675f-0895-4e36-8fa0-c2729e08c3ca",
+      "node": "49:2",
+      "group": "course",
+      "width": 1440
+    },
+    {
+      "slug": "lesson-video-3",
+      "path": "/app/lesson/lesson-3?stage=video",
+      "id": "bd5ecf40-cf70-4b95-8aa8-6a801549f43b",
+      "node": "47:2",
+      "group": "course",
+      "width": 1440
+    },
+    {
+      "slug": "lesson-video-4",
+      "path": "/app/lesson/lesson-4?stage=video",
+      "id": "5da7c183-dd0a-4d55-bd10-d052e7d9606d",
+      "node": "50:2",
+      "group": "course",
+      "width": 1440
+    },
+    {
+      "slug": "lesson-video-5",
+      "path": "/app/lesson/lesson-5?stage=video",
+      "id": "55b01812-f3db-42e1-b762-bc05b70a42c3",
+      "node": "48:2",
+      "group": "course",
+      "width": 1440
+    },
+    {
+      "slug": "lesson-video-6",
+      "path": "/app/lesson/lesson-6?stage=video",
+      "id": "e7e8b441-fb99-44ca-9cce-04e018a2b48b",
+      "node": "53:2",
+      "group": "course",
+      "width": 1440
+    },
+    {
+      "slug": "lesson-video-7",
+      "path": "/app/lesson/lesson-7?stage=video",
+      "id": "54c5d74a-cdf3-4309-8b95-b6d136c4cdca",
+      "node": "54:2",
+      "group": "course",
+      "width": 1440
+    },
+    {
+      "slug": "lesson-video-8",
+      "path": "/app/lesson/lesson-8?stage=video",
+      "id": "b59d0a72-7d8a-4b71-984e-3b0012e22a00",
+      "node": "52:2",
+      "group": "course",
+      "width": 1440
+    },
+    {
+      "slug": "lesson-video-9",
+      "path": "/app/lesson/lesson-9?stage=video",
+      "id": "6d9afef2-9be6-474b-a414-70aba5b98924",
+      "node": "51:2",
+      "group": "course",
+      "width": 1440
+    },
+    {
+      "slug": "lesson-video-10",
+      "path": "/app/lesson/lesson-10?stage=video",
+      "id": "1f8fbfb5-bd6e-4deb-8dcc-206f70d778f4",
+      "node": "58:2",
+      "group": "course",
+      "width": 1440
+    },
+    {
+      "slug": "lesson-video-11",
+      "path": "/app/lesson/lesson-11?stage=video",
+      "id": "23f879a9-6a28-41d6-b73d-ff8c238b3800",
+      "node": "55:2",
+      "group": "course",
+      "width": 1440
+    },
+    {
+      "slug": "lesson-video-12",
+      "path": "/app/lesson/lesson-12?stage=video",
+      "id": "c14f121e-d18e-4911-9d31-b6a428db54e0",
+      "node": "56:2",
+      "group": "course",
+      "width": 1440
+    },
+    {
+      "slug": "editor",
+      "path": "/app/projects/52c6c82b-60b0-4bbc-9b83-1a186bc3d14e",
+      "id": "e022bdbd-9daa-4db9-bcc5-b8885b403647",
+      "node": "57:2",
+      "group": "games",
+      "width": 1440
+    }
+  ],
+  "foundations": {
+    "mutatedNodeIds": [
+      "0:1",
+      "46:4",
+      "59:2"
+    ],
+    "variables": [
+      {
+        "id": "VariableID:60:3",
+        "name": "color/ink-900"
+      },
+      {
+        "id": "VariableID:60:4",
+        "name": "color/ink-800"
+      },
+      {
+        "id": "VariableID:60:5",
+        "name": "color/forest-700"
+      },
+      {
+        "id": "VariableID:60:6",
+        "name": "color/cream-50"
+      },
+      {
+        "id": "VariableID:60:7",
+        "name": "color/cream-100"
+      },
+      {
+        "id": "VariableID:60:8",
+        "name": "color/amber-500"
+      },
+      {
+        "id": "VariableID:60:9",
+        "name": "color/amber-600"
+      },
+      {
+        "id": "VariableID:60:10",
+        "name": "color/text-dark"
+      },
+      {
+        "id": "VariableID:60:11",
+        "name": "color/text-light"
+      },
+      {
+        "id": "VariableID:60:12",
+        "name": "color/error"
+      },
+      {
+        "id": "VariableID:60:13",
+        "name": "color/success"
+      },
+      {
+        "id": "VariableID:60:14",
+        "name": "color/text-muted-dark"
+      },
+      {
+        "id": "VariableID:60:15",
+        "name": "color/text-muted-light"
+      },
+      {
+        "id": "VariableID:60:16",
+        "name": "color/line-dark"
+      },
+      {
+        "id": "VariableID:60:17",
+        "name": "color/line-light"
+      },
+      {
+        "id": "VariableID:60:18",
+        "name": "color/white"
+      },
+      {
+        "id": "VariableID:60:19",
+        "name": "color/board"
+      },
+      {
+        "id": "VariableID:60:20",
+        "name": "color/board-line"
+      },
+      {
+        "id": "VariableID:60:21",
+        "name": "color/chip"
+      },
+      {
+        "id": "VariableID:60:22",
+        "name": "color/metal"
+      },
+      {
+        "id": "VariableID:60:23",
+        "name": "color/wire"
+      },
+      {
+        "id": "VariableID:60:24",
+        "name": "color/light-success"
+      },
+      {
+        "id": "VariableID:60:25",
+        "name": "color/light-error"
+      },
+      {
+        "id": "VariableID:60:26",
+        "name": "color/surface-mentor"
+      },
+      {
+        "id": "VariableID:60:27",
+        "name": "color/surface-video"
+      },
+      {
+        "id": "VariableID:60:28",
+        "name": "color/surface-repeat"
+      },
+      {
+        "id": "VariableID:60:29",
+        "name": "color/surface-sensor"
+      },
+      {
+        "id": "VariableID:60:30",
+        "name": "color/surface-motor"
+      },
+      {
+        "id": "VariableID:60:31",
+        "name": "color/surface-button"
+      },
+      {
+        "id": "VariableID:60:32",
+        "name": "color/surface-collection"
+      },
+      {
+        "id": "VariableID:60:33",
+        "name": "color/surface-rank"
+      },
+      {
+        "id": "VariableID:60:34",
+        "name": "color/cab-sea"
+      },
+      {
+        "id": "VariableID:60:35",
+        "name": "color/cab-sea-light"
+      },
+      {
+        "id": "VariableID:60:36",
+        "name": "color/cab-orange"
+      },
+      {
+        "id": "VariableID:60:37",
+        "name": "color/cab-border"
+      },
+      {
+        "id": "VariableID:60:38",
+        "name": "space/space-xs"
+      },
+      {
+        "id": "VariableID:60:39",
+        "name": "space/space-sm"
+      },
+      {
+        "id": "VariableID:60:40",
+        "name": "space/space-md"
+      },
+      {
+        "id": "VariableID:60:41",
+        "name": "space/space-lg"
+      },
+      {
+        "id": "VariableID:60:42",
+        "name": "space/space-xl"
+      },
+      {
+        "id": "VariableID:60:43",
+        "name": "radius/radius-card"
+      },
+      {
+        "id": "VariableID:60:44",
+        "name": "radius/radius-pill"
+      }
+    ],
+    "styles": [
+      {
+        "id": "S:72e8f40c9033b5f20635d8cfcc3f629a31160150,",
+        "name": "ArduHub / Заголовок / Hero"
+      },
+      {
+        "id": "S:ed6dd49bd626eb668b78ad1f71e877069f90f434,",
+        "name": "ArduHub / Заголовок / Секция"
+      },
+      {
+        "id": "S:e6a158daa636d6bcb19dcbd714d100f7cafbe2b3,",
+        "name": "ArduHub / Заголовок / Страница"
+      },
+      {
+        "id": "S:88e9eb4434de82cc03676b14e7b5555ba873379a,",
+        "name": "ArduHub / Заголовок / Карточка"
+      },
+      {
+        "id": "S:69da088c165e81fcced4f07de8f4930723791b6f,",
+        "name": "ArduHub / Текст / Основной"
+      },
+      {
+        "id": "S:081e42418880664a31b4b649c4b31a86533099bc,",
+        "name": "ArduHub / Текст / Крупный"
+      },
+      {
+        "id": "S:8ae6f7d977772bc3002f31305d2f5b3eb7ef97d6,",
+        "name": "ArduHub / Текст / Подпись"
+      },
+      {
+        "id": "S:cf08c024ccdb6180ad89714c5a402db58f895416,",
+        "name": "ArduHub / Интерфейс / Кнопка"
+      }
+    ],
+    "pages": {
+      "desktop": "0:1",
+      "mobile": "46:4",
+      "components": "59:2"
+    },
+    "collectionId": "VariableCollectionId:60:2"
+  },
+  "projectPath": "/app/projects/52c6c82b-60b0-4bbc-9b83-1a186bc3d14e",
+  "status": "complete",
+  "completedDate": "2026-11-05",
+  "fileUrl": "https://www.figma.com/design/L5zK7WgxPuiRkdIpm7GiYr",
+  "versionTitle": "ArduHub — полный перенос 83 экранов",
+  "validation": {
+    "screens": 83,
+    "desktop": 53,
+    "mobile": 30,
+    "components": 23,
+    "instances": 334,
+    "legacyCapturesRemaining": 0,
+    "counts": {
+      "FRAME": 11190,
+      "TEXT": 5933,
+      "GROUP": 1157,
+      "VECTOR": 2611,
+      "RECTANGLE": 28,
+      "INSTANCE": 334
+    },
+    "fonts": [
+      "Manrope",
+      "Inter",
+      "Cousine"
+    ],
+    "verifiedViews": [
+      "Desktop sign-in /sign-in",
+      "Mobile dashboard /app"
+    ],
+    "mapImagesVerified": true,
+    "figmaHistoryVersionObserved": true
+  },
+  "backup": "outputs/figma/ArduHub-all-83-screens.fig",
+  "method": "Native editable layers via local Figma plugin after connected MCP Starter call limit; visually verified in desktop Figma."
+}

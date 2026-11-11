@@ -287,7 +287,34 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
               setOffline,
             );
             selected = remote;
-            loaded = await remote.hydrate();
+            try {
+              loaded = await remote.hydrate();
+            } catch {
+              setOffline(true);
+            }
+            // A verified account keeps its registration name even when profile
+            // hydration is offline; never reopen guest name onboarding for it.
+            if (loaded.account?.userId !== data.user.id) {
+              const registeredName = data.user.user_metadata?.display_name;
+              loaded = {
+                ...loaded,
+                profile: {
+                  ...loaded.profile,
+                  name:
+                    typeof registeredName === "string" && registeredName.trim()
+                      ? registeredName.trim()
+                      : loaded.profile.name,
+                },
+                account: {
+                  ...loaded.account,
+                  userId: data.user.id,
+                  role: loaded.account?.role ?? "student",
+                  timezone:
+                    loaded.account?.timezone ??
+                    Intl.DateTimeFormat().resolvedOptions().timeZone,
+                },
+              };
+            }
             localStorage.setItem("arduhub.active-user", data.user.id);
             if (
               !sessionStorage.getItem("arduhub.import:" + data.user.id) &&

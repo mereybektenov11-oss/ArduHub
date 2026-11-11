@@ -1,0 +1,772 @@
+- generic [ref=f29e2]:
+  - link "Перейти к содержимому" [ref=f29e3] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=f29e4]:
+    - generic [ref=f29e5]:
+      - 'link "ArduHub: на главную" [ref=f29e6] [cursor=pointer]':
+        - /url: "#main"
+        - generic [aria-hidden] [ref=f29e7]: ∞
+        - text: ArduHub
+      - button "Открыть меню" [ref=f29e8] [cursor=pointer]: ☰
+  - main [ref=f29e9]:
+    - generic [ref=f29e10]:
+      - generic [ref=f29e11]:
+        - paragraph [ref=f29e12]: Arduino без платы и установки
+        - heading [level=1] [ref=f29e14]:
+          - text: Собрал схему.
+          - emphasis [ref=f29e15]: Заработает?
+        - paragraph [ref=f29e16]: Собери схему в браузере. Проверка покажет неверное соединение, а наставник поможет разобрать причину ошибки.
+        - generic [ref=f29e17]:
+          - link "Начать бесплатно" [ref=f29e18] [cursor=pointer]:
+            - /url: /app
+            - text: Начать бесплатно
+            - generic [aria-hidden] [ref=f29e19]: ↗
+          - link "Как это выглядит" [ref=f29e20] [cursor=pointer]:
+            - /url: "#product-demo"
+            - text: Как это выглядит
+            - generic [aria-hidden] [ref=f29e21]: ↓
+        - paragraph [ref=f29e22]: Бесплатно для старта · В браузере · Без установки
+      - generic [aria-hidden] [ref=f29e23]:
+        - generic [ref=f29e24]: 01 — ARDUHUB
+        - generic [ref=f29e25]:
+          - text: От схемы к первому проекту
+          - generic [ref=f29e26]: ↓
+    - generic [ref=f29e28]:
+      - generic [ref=f29e29]:
+        - paragraph [ref=f29e30]: ОДИН УРОК. ОТ ОБЪЯСНЕНИЯ ДО ПРАКТИКИ.
+        - heading "Посмотри, как схема оживает." [level=2] [ref=f29e31]
+        - paragraph [ref=f29e32]: Соедини детали, проверь себя и разбери ошибку. Здесь можно переключить состояния учебного примера.
+      - generic [ref=f29e34]:
+        - generic [ref=f29e35]: Светодиод · Arduino Uno
+        - generic [ref=f29e41]:
+          - complementary [ref=f29e42]:
+            - heading "Подключение светодиода" [level=3] [ref=f29e43]
+            - paragraph [ref=f29e44]: Подключи светодиод через резистор к цифровому пину 13 и GND.
+          - generic [ref=f29e45]:
+            - generic [ref=f29e46]:
+              - generic [ref=f29e47]: Рабочее поле
+              - generic [aria-hidden] [ref=f29e48]: ＋ − ⤢
+            - 'img "Учебная схема: Arduino Uno, резистор и светодиод" [ref=f29e49]':
+              - generic [ref=f29e55]:
+                - generic [ref=f29e69]: ARDUINO UNO
+                - generic [ref=f29e70]: "13"
+                - generic [ref=f29e71]: GND
+                - generic [ref=f29e72]: 5V
+              - generic [ref=f29e75]: 220 Ω
+            - status [ref=f29e90]:
+              - generic [aria-hidden] [ref=f29e91]: ⌁
+              - generic [ref=f29e92]:
+                - strong [ref=f29e93]: Сборка схемы
+                - paragraph [ref=f29e94]: "Попробуй проверить схему: в этом примере можно увидеть ошибку и её исправление."
+        - generic [ref=f29e95]:
+          - generic [ref=f29e96]: Пример учебного задания
+          - generic [ref=f29e97]:
+            - button "Собрать заново" [ref=f29e98] [cursor=pointer]
+            - button "Найти ошибку" [ref=f29e99] [cursor=pointer]:
+              - text: Найти ошибку
+              - generic [aria-hidden] [ref=f29e100]: ↗
+    - generic [ref=f29e102]:
+      - generic [ref=f29e103]:
+        - generic [ref=f29e104]:
+          - strong [ref=f29e105]:
+            - generic [ref=f29e106]:
+              - generic [ref=f29e107]: "5"
+              - text: "5"
+          - paragraph [ref=f29e108]: шагов от урока до практики
+        - generic [ref=f29e109]:
+          - strong [ref=f29e110]:
+            - generic [ref=f29e111]:
+              - generic [ref=f29e112]: "12"
+              - text: "12"
+          - paragraph [ref=f29e113]: примеров схем на этой странице
+        - generic [ref=f29e114]:
+          - strong [ref=f29e115]:
+            - generic [ref=f29e116]:
+              - generic [ref=f29e117]: "6"
+              - text: "6"
+          - paragraph [ref=f29e118]: тем для знакомства с электроникой
+      - paragraph [ref=f29e119]: Начни обучение в кабинете. Ниже — примеры учебных интерфейсов.
+    - generic [ref=f29e121]:
+      - paragraph [ref=f29e122]: УЧИМСЯ НА ПРАКТИКЕ
+      - generic [ref=f29e123]:
+        - heading "Что даёт ArduHub" [level=2] [ref=f29e125]
+        - paragraph [ref=f29e127]: Урок, сборка и проверка находятся в одном учебном задании.
+      - generic [ref=f29e128]:
+        - article [ref=f29e130]:
+          - generic [ref=f29e131]:
+            - generic [aria-hidden] [ref=f29e132]: "01"
+            - heading "Схема в браузере" [level=3] [ref=f29e133]
+            - paragraph [ref=f29e134]: Плата, макетка, провода и датчики на одном экране. Покупать Arduino не нужно.
+          - generic [ref=f29e135]:
+            - generic [ref=f29e136]:
+              - generic [ref=f29e137]: ArduHub
+              - generic [aria-hidden] [ref=f29e138]: •••
+            - generic [ref=f29e139]:
+              - generic [aria-hidden] [ref=f29e140]:
+                - generic [ref=f29e141]: ＋
+                - generic [ref=f29e142]: ⌁
+                - generic [ref=f29e143]: ↶
+              - 'img "Учебная схема: Arduino Uno, резистор и светодиод" [ref=f29e144]':
+                - generic [ref=f29e150]:
+                  - generic [ref=f29e164]: ARDUINO UNO
+                  - generic [ref=f29e165]: "13"
+                  - generic [ref=f29e166]: GND
+                  - generic [ref=f29e167]: 5V
+              - generic [ref=f29e181]: Схема готова к запуску
+            - generic [ref=f29e183]: Пример
+        - article [ref=f29e185]:
+          - generic [ref=f29e186]:
+            - generic [aria-hidden] [ref=f29e187]: "02"
+            - heading "Разбор ошибок" [level=3] [ref=f29e188]
+            - paragraph [ref=f29e189]: Проверка укажет неверное соединение. Подсказки помогут понять причину и исправить схему.
+          - generic [ref=f29e190]:
+            - generic [ref=f29e191]:
+              - generic [ref=f29e192]: ArduHub
+              - generic [aria-hidden] [ref=f29e193]: •••
+            - generic [ref=f29e194]:
+              - generic [ref=f29e195]:
+                - generic [aria-hidden] [ref=f29e196]: "!"
+                - text: Светодиод включён наоборот
+              - generic [ref=f29e197]:
+                - generic [aria-hidden] [ref=f29e198]: ✳
+                - strong [ref=f29e199]: Подсказка наставника
+                - paragraph [ref=f29e200]: "Посмотри на ножки светодиода. Короткая ножка должна вести к земле: GND."
+            - generic [ref=f29e201]: Пример
+        - article [ref=f29e203]:
+          - generic [ref=f29e204]:
+            - generic [aria-hidden] [ref=f29e205]: "03"
+            - heading "Видео и практика" [level=3] [ref=f29e206]
+            - paragraph [ref=f29e207]: После ролика открой задание на ту же тему и повтори показанную сборку.
+          - generic [ref=f29e208]:
+            - generic [ref=f29e209]:
+              - generic [ref=f29e210]: ArduHub
+              - generic [aria-hidden] [ref=f29e211]: •••
+            - generic [ref=f29e212]:
+              - generic [ref=f29e213]:
+                - generic [aria-hidden] [ref=f29e214]: ▶
+                - generic [ref=f29e215]: 6:12
+              - strong [ref=f29e216]: Как устроен светодиод
+              - paragraph [ref=f29e219]: Пример учебного интерфейса. Открой урок в кабинете для просмотра.
+              - generic [ref=f29e220]:
+                - text: Задание
+                - generic [aria-hidden] [ref=f29e221]: ↗
+            - generic [ref=f29e222]: Пример
+        - article [ref=f29e224]:
+          - generic [ref=f29e225]:
+            - generic [aria-hidden] [ref=f29e226]: "04"
+            - heading "Повторение" [level=3] [ref=f29e227]
+            - paragraph [ref=f29e228]: Возвращайся к пройденным заданиям и закрепляй то, что вызвало трудности.
+          - generic [ref=f29e229]:
+            - generic [ref=f29e230]:
+              - generic [ref=f29e231]: ArduHub
+              - generic [aria-hidden] [ref=f29e232]: •••
+            - generic [ref=f29e233]:
+              - strong [ref=f29e234]:
+                - text: "Схем на повтор:"
+                - generic [ref=f29e235]:
+                  - generic [ref=f29e236]: "3"
+                  - text: "3"
+              - generic [ref=f29e237]:
+                - generic [ref=f29e238]: "01"
+                - generic [ref=f29e239]: Первый огонёк
+                - generic [aria-hidden] [ref=f29e240]: ↗
+              - generic [ref=f29e241]:
+                - generic [ref=f29e242]: "02"
+                - generic [ref=f29e243]: Кнопка и свет
+                - generic [aria-hidden] [ref=f29e244]: ↗
+              - generic [ref=f29e245]:
+                - generic [ref=f29e246]: "03"
+                - generic [ref=f29e247]: Ночной светильник
+                - generic [aria-hidden] [ref=f29e248]: ↗
+              - generic [ref=f29e249]:
+                - text: Начать повтор
+                - generic [aria-hidden] [ref=f29e250]: →
+            - generic [ref=f29e251]: Пример
+      - paragraph [ref=f29e252]: На этой странице — примеры интерфейсов. Учебные задания открываются в кабинете.
+    - generic [ref=f29e254]:
+      - generic [ref=f29e255]:
+        - heading "Как это работает" [level=2] [ref=f29e256]
+        - paragraph [ref=f29e257]: Выбери урок, посмотри объяснение и проверь схему на практике.
+      - generic [ref=f29e258]:
+        - generic [ref=f29e259]:
+          - heading "01 Выбери урок" [level=3] [ref=f29e260]:
+            - generic [ref=f29e261]: "01"
+            - text: Выбери урок
+          - paragraph [ref=f29e262]: Открой тему курса и выбери доступное задание.
+          - generic [ref=f29e263]:
+            - generic [ref=f29e264]:
+              - generic [ref=f29e265]: ArduHub
+              - generic [aria-hidden] [ref=f29e266]: •••
+            - generic [ref=f29e267]:
+              - generic [aria-hidden] [ref=f29e268]: "04"
+              - text: Твой прогресс
+              - heading "Урок 4 · Кнопка и светодиод" [level=3] [ref=f29e269]
+              - generic [ref=f29e272]:
+                - text: Продолжить
+                - generic [aria-hidden] [ref=f29e273]: ↗
+            - generic [ref=f29e274]: Пример
+        - generic [ref=f29e275]:
+          - heading "02 Смотри видео" [level=3] [ref=f29e276]:
+            - generic [ref=f29e277]: "02"
+            - text: Смотри видео
+          - paragraph [ref=f29e278]: Посмотри объяснение и пример схемы перед заданием.
+          - generic [ref=f29e279]:
+            - generic [ref=f29e280]:
+              - generic [ref=f29e281]: ArduHub
+              - generic [aria-hidden] [ref=f29e282]: •••
+            - generic [ref=f29e283]:
+              - generic [ref=f29e284]:
+                - generic [aria-hidden] [ref=f29e285]: ▶
+                - generic [ref=f29e286]: 6:12
+              - strong [ref=f29e287]: Как устроен светодиод
+              - paragraph [ref=f29e288]: Пример учебного интерфейса. Открой урок в кабинете для просмотра.
+              - generic [ref=f29e289]:
+                - text: Задание
+                - generic [aria-hidden] [ref=f29e290]: ↗
+            - generic [ref=f29e291]: Пример
+        - generic [ref=f29e292]:
+          - heading "03 Собери схему" [level=3] [ref=f29e293]:
+            - generic [ref=f29e294]: "03"
+            - text: Собери схему
+          - paragraph [ref=f29e295]: Перенеси детали на поле и соедини пины. Всё прямо в браузере.
+          - generic [ref=f29e296]:
+            - generic [ref=f29e297]:
+              - generic [ref=f29e298]: ArduHub
+              - generic [aria-hidden] [ref=f29e299]: •••
+            - generic [ref=f29e300]:
+              - generic [aria-hidden] [ref=f29e301]:
+                - generic [ref=f29e302]: ＋
+                - generic [ref=f29e303]: ⌁
+                - generic [ref=f29e304]: ↶
+              - 'img "Учебная схема: Arduino Uno, резистор и светодиод" [ref=f29e305]'
+              - generic [ref=f29e306]: Схема готова к запуску
+            - generic [ref=f29e308]: Пример
+        - generic [ref=f29e309]:
+          - heading "04 Получи разбор" [level=3] [ref=f29e310]:
+            - generic [ref=f29e311]: "04"
+            - text: Получи разбор
+          - paragraph [ref=f29e312]: Проверка укажет место ошибки, а наставник поможет разобраться в причине.
+          - generic [ref=f29e313]:
+            - generic [ref=f29e314]:
+              - generic [ref=f29e315]: ArduHub
+              - generic [aria-hidden] [ref=f29e316]: •••
+            - generic [ref=f29e317]:
+              - generic [ref=f29e318]:
+                - generic [aria-hidden] [ref=f29e319]: "!"
+                - text: Светодиод включён наоборот
+              - generic [ref=f29e320]:
+                - generic [aria-hidden] [ref=f29e321]: ✳
+                - strong [ref=f29e322]: Подсказка наставника
+                - paragraph [ref=f29e323]: "Посмотри на ножки светодиода. Короткая ножка должна вести к земле: GND."
+            - generic [ref=f29e324]: Пример
+        - generic [ref=f29e325]:
+          - heading "05 Повтори и закрепи" [level=3] [ref=f29e326]:
+            - generic [ref=f29e327]: "05"
+            - text: Повтори и закрепи
+          - paragraph [ref=f29e328]: Вернись к сложной схеме, чтобы в следующий раз собрать её самостоятельно.
+          - generic [ref=f29e329]:
+            - generic [ref=f29e330]:
+              - generic [ref=f29e331]: ArduHub
+              - generic [aria-hidden] [ref=f29e332]: •••
+            - generic [ref=f29e333]:
+              - strong [ref=f29e334]: "Схем на повтор: 3"
+              - generic [ref=f29e335]:
+                - generic [ref=f29e336]: "01"
+                - generic [ref=f29e337]: Первый огонёк
+                - generic [aria-hidden] [ref=f29e338]: ↗
+              - generic [ref=f29e339]:
+                - generic [ref=f29e340]: "02"
+                - generic [ref=f29e341]: Кнопка и свет
+                - generic [aria-hidden] [ref=f29e342]: ↗
+              - generic [ref=f29e343]:
+                - generic [ref=f29e344]: "03"
+                - generic [ref=f29e345]: Ночной светильник
+                - generic [aria-hidden] [ref=f29e346]: ↗
+              - generic [ref=f29e347]:
+                - text: Начать повтор
+                - generic [aria-hidden] [ref=f29e348]: →
+            - generic [ref=f29e349]: Пример
+    - generic [ref=f29e351]:
+      - generic [ref=f29e352]:
+        - heading "Найди схему для практики." [level=2] [ref=f29e354]
+        - paragraph [ref=f29e356]: Попробуй фильтры на 12 примерах. Учебные задания открываются в кабинете.
+      - generic [ref=f29e357]:
+        - generic [ref=f29e358]:
+          - generic [ref=f29e359]:
+            - generic [aria-hidden] [ref=f29e360]: ⌘
+            - text: Банк схем
+          - generic [ref=f29e361]: Пример
+        - generic [ref=f29e363]:
+          - group "Тема" [ref=f29e364]:
+            - generic [ref=f29e366]:
+              - button "Светодиоды" [ref=f29e367] [cursor=pointer]
+              - button "Кнопки" [ref=f29e368] [cursor=pointer]
+              - button "Датчики" [ref=f29e369] [cursor=pointer]
+              - button "Моторы" [ref=f29e370] [cursor=pointer]
+          - group "Сложность" [ref=f29e371]:
+            - generic [ref=f29e373]:
+              - button "Лёгкая" [ref=f29e374] [cursor=pointer]
+              - button "Средняя" [ref=f29e375] [cursor=pointer]
+              - button "Сложная" [ref=f29e376] [cursor=pointer]
+          - group "Статус" [ref=f29e377]:
+            - generic [ref=f29e379]:
+              - button "Новая" [ref=f29e380] [cursor=pointer]
+              - button "С ошибкой" [ref=f29e381] [cursor=pointer]
+              - button "Решена" [ref=f29e382] [cursor=pointer]
+        - generic [ref=f29e383]:
+          - status [ref=f29e384]:
+            - text: "Найдено:"
+            - strong [ref=f29e385]:
+              - generic [ref=f29e386]:
+                - generic [ref=f29e387]: "12"
+                - text: "12"
+          - button "Сбросить" [ref=f29e388] [cursor=pointer]:
+            - text: Сбросить
+            - generic [aria-hidden] [ref=f29e389]: ↻
+        - generic [ref=f29e390]:
+          - button "Новая Лёгкая Светодиоды Первый огонёк" [ref=f29e393] [cursor=pointer]:
+            - generic [ref=f29e394]: Новая
+            - generic [ref=f29e410]:
+              - generic [ref=f29e411]:
+                - text: Лёгкая
+                - generic [aria-hidden] [ref=f29e412]: ·
+                - text: Светодиоды
+              - heading "Первый огонёк" [level=3] [ref=f29e413]
+              - generic [aria-hidden] [ref=f29e414]: ↗
+          - button "Решена Лёгкая Светодиоды Мигающий светодиод" [ref=f29e417] [cursor=pointer]:
+            - generic [ref=f29e418]: Решена
+            - generic [ref=f29e434]:
+              - generic [ref=f29e435]:
+                - text: Лёгкая
+                - generic [aria-hidden] [ref=f29e436]: ·
+                - text: Светодиоды
+              - heading "Мигающий светодиод" [level=3] [ref=f29e437]
+              - generic [aria-hidden] [ref=f29e438]: ↗
+          - button "С ошибкой Средняя Светодиоды Светофор" [ref=f29e441] [cursor=pointer]:
+            - generic [ref=f29e442]: С ошибкой
+            - generic [ref=f29e458]:
+              - generic [ref=f29e459]:
+                - text: Средняя
+                - generic [aria-hidden] [ref=f29e460]: ·
+                - text: Светодиоды
+              - heading "Светофор" [level=3] [ref=f29e461]
+              - generic [aria-hidden] [ref=f29e462]: ↗
+          - button "Новая Лёгкая Кнопки Кнопка и свет" [ref=f29e465] [cursor=pointer]:
+            - generic [ref=f29e466]: Новая
+            - generic [ref=f29e482]:
+              - generic [ref=f29e483]:
+                - text: Лёгкая
+                - generic [aria-hidden] [ref=f29e484]: ·
+                - text: Кнопки
+              - heading "Кнопка и свет" [level=3] [ref=f29e485]
+              - generic [aria-hidden] [ref=f29e486]: ↗
+          - button "С ошибкой Средняя Кнопки Счётчик нажатий" [ref=f29e489] [cursor=pointer]:
+            - generic [ref=f29e490]: С ошибкой
+            - generic [ref=f29e506]:
+              - generic [ref=f29e507]:
+                - text: Средняя
+                - generic [aria-hidden] [ref=f29e508]: ·
+                - text: Кнопки
+              - heading "Счётчик нажатий" [level=3] [ref=f29e509]
+              - generic [aria-hidden] [ref=f29e510]: ↗
+          - button "Решена Сложная Кнопки Переключатель режимов" [ref=f29e513] [cursor=pointer]:
+            - generic [ref=f29e514]: Решена
+            - generic [ref=f29e530]:
+              - generic [ref=f29e531]:
+                - text: Сложная
+                - generic [aria-hidden] [ref=f29e532]: ·
+                - text: Кнопки
+              - heading "Переключатель режимов" [level=3] [ref=f29e533]
+              - generic [aria-hidden] [ref=f29e534]: ↗
+          - button "Новая Лёгкая Датчики Ночной светильник" [ref=f29e537] [cursor=pointer]:
+            - generic [ref=f29e538]: Новая
+            - generic [ref=f29e554]:
+              - generic [ref=f29e555]:
+                - text: Лёгкая
+                - generic [aria-hidden] [ref=f29e556]: ·
+                - text: Датчики
+              - heading "Ночной светильник" [level=3] [ref=f29e557]
+              - generic [aria-hidden] [ref=f29e558]: ↗
+          - button "Решена Средняя Датчики Измеритель расстояния" [ref=f29e561] [cursor=pointer]:
+            - generic [ref=f29e562]: Решена
+            - generic [ref=f29e578]:
+              - generic [ref=f29e579]:
+                - text: Средняя
+                - generic [aria-hidden] [ref=f29e580]: ·
+                - text: Датчики
+              - heading "Измеритель расстояния" [level=3] [ref=f29e581]
+              - generic [aria-hidden] [ref=f29e582]: ↗
+          - button "С ошибкой Сложная Датчики Умный термометр" [ref=f29e585] [cursor=pointer]:
+            - generic [ref=f29e586]: С ошибкой
+            - generic [ref=f29e602]:
+              - generic [ref=f29e603]:
+                - text: Сложная
+                - generic [aria-hidden] [ref=f29e604]: ·
+                - text: Датчики
+              - heading "Умный термометр" [level=3] [ref=f29e605]
+              - generic [aria-hidden] [ref=f29e606]: ↗
+          - button "Решена Лёгкая Моторы Первый поворот" [ref=f29e609] [cursor=pointer]:
+            - generic [ref=f29e610]: Решена
+            - generic [ref=f29e626]:
+              - generic [ref=f29e627]:
+                - text: Лёгкая
+                - generic [aria-hidden] [ref=f29e628]: ·
+                - text: Моторы
+              - heading "Первый поворот" [level=3] [ref=f29e629]
+              - generic [aria-hidden] [ref=f29e630]: ↗
+          - button "Новая Средняя Моторы Управляемый привод" [ref=f29e633] [cursor=pointer]:
+            - generic [ref=f29e634]: Новая
+            - generic [ref=f29e650]:
+              - generic [ref=f29e651]:
+                - text: Средняя
+                - generic [aria-hidden] [ref=f29e652]: ·
+                - text: Моторы
+              - heading "Управляемый привод" [level=3] [ref=f29e653]
+              - generic [aria-hidden] [ref=f29e654]: ↗
+          - button "С ошибкой Сложная Моторы Роботизированный шлагбаум" [ref=f29e657] [cursor=pointer]:
+            - generic [ref=f29e658]: С ошибкой
+            - generic [ref=f29e674]:
+              - generic [ref=f29e675]:
+                - text: Сложная
+                - generic [aria-hidden] [ref=f29e676]: ·
+                - text: Моторы
+              - heading "Роботизированный шлагбаум" [level=3] [ref=f29e677]
+              - generic [aria-hidden] [ref=f29e678]: ↗
+    - generic [ref=f29e680]:
+      - generic [ref=f29e681]:
+        - heading "Практика после урока" [level=2] [ref=f29e682]
+        - paragraph [ref=f29e683]: Сохраняй схемы, отвечай на вопросы и следи за результатами.
+      - generic [ref=f29e684]:
+        - article [ref=f29e686]:
+          - generic [ref=f29e687]:
+            - generic [ref=f29e688]:
+              - strong [ref=f29e689]: Моя коллекция
+              - generic [aria-hidden] [ref=f29e690]: ↗
+            - generic [ref=f29e691]:
+              - generic [aria-hidden] [ref=f29e692]: ⌁
+              - generic [ref=f29e693]: Первый огонёк
+              - 'button "Сохранено: Первый огонёк" [pressed] [ref=f29e694] [cursor=pointer]': ▣
+            - generic [ref=f29e695]:
+              - generic [aria-hidden] [ref=f29e696]: ⏚
+              - generic [ref=f29e697]: Мигающий светодиод
+              - 'button "Сохранено: Мигающий светодиод" [pressed] [ref=f29e698] [cursor=pointer]': ▣
+            - generic [ref=f29e699]:
+              - generic [aria-hidden] [ref=f29e700]: ⌘
+              - generic [ref=f29e701]: Светофор
+              - 'button "Сохранено: Светофор" [pressed] [ref=f29e702] [cursor=pointer]': ▣
+          - heading "Моя коллекция" [level=3] [ref=f29e703]
+          - paragraph [ref=f29e704]: Сохраняй схемы, чтобы продолжить сборку или повторить задание.
+        - article [ref=f29e706]:
+          - generic [ref=f29e707]:
+            - generic [ref=f29e708]:
+              - 'img "Жизни: 3" [ref=f29e709]':
+                - generic [aria-hidden] [ref=f29e710]: ♥
+                - generic [aria-hidden] [ref=f29e711]: ♥
+                - generic [aria-hidden] [ref=f29e712]: ♥
+              - generic [ref=f29e713]:
+                - text: "Серия:"
+                - generic [ref=f29e714]: "0"
+            - strong [ref=f29e715]: Куда подключить короткую ножку светодиода?
+            - generic [ref=f29e716]:
+              - button "К GND" [ref=f29e717] [cursor=pointer]:
+                - text: К GND
+                - generic [aria-hidden] [ref=f29e718]: ↗
+              - button "К 5V" [ref=f29e719] [cursor=pointer]:
+                - text: К 5V
+                - generic [aria-hidden] [ref=f29e720]: ↗
+            - generic [ref=f29e721]: Пример
+          - heading "Блиц" [level=3] [ref=f29e722]
+          - paragraph [ref=f29e723]: Ответь на короткие вопросы по схемам. В блице есть три попытки и счётчик серии.
+        - article [ref=f29e725]:
+          - generic [ref=f29e726]:
+            - generic [ref=f29e727]:
+              - strong [ref=f29e728]: Рейтинг
+              - generic [ref=f29e729]: Пример
+            - generic [ref=f29e730]:
+              - generic [ref=f29e731]: "1"
+              - generic [ref=f29e732]: С
+              - generic [ref=f29e733]: Саша
+              - strong [ref=f29e734]: "840"
+              - 'meter "Саша: 840 очков" [ref=f29e735]'
+            - generic [ref=f29e736]:
+              - generic [ref=f29e737]: "2"
+              - generic [ref=f29e738]: А
+              - generic [ref=f29e739]: Амина
+              - strong [ref=f29e740]: "720"
+              - 'meter "Амина: 720 очков" [ref=f29e741]'
+            - generic [ref=f29e742]:
+              - generic [ref=f29e743]: "3"
+              - generic [ref=f29e744]: Т
+              - generic [ref=f29e745]: Ты
+              - strong [ref=f29e746]: "680"
+              - 'meter "Ты: 680 очков" [ref=f29e747]'
+          - heading "Рейтинг" [level=3] [ref=f29e748]
+          - paragraph [ref=f29e749]: Пример таблицы результатов. Свой прогресс смотри в кабинете.
+      - paragraph [ref=f29e750]: На этой странице — примеры интерфейсов. Учебные задания открываются в кабинете.
+    - generic [ref=f29e752]:
+      - generic [ref=f29e753]:
+        - heading "Темы курса" [level=2] [ref=f29e754]
+        - paragraph [ref=f29e755]: Свет, кнопки, датчики и движение. Начни с основ и переходи к своим проектам.
+      - generic [ref=f29e756]:
+        - article [ref=f29e758]:
+          - generic [ref=f29e759]:
+            - generic [aria-hidden] [ref=f29e760]: С
+            - generic [ref=f29e761]: "01"
+          - heading "Светодиоды и резисторы" [level=3] [ref=f29e762]
+          - paragraph [ref=f29e763]: Зажги первый светодиод. Разберись с полярностью, током и сопротивлением.
+          - generic [ref=f29e764]: Знакомство с темой
+          - generic [ref=f29e765]:
+            - link "Открыть уроки" [ref=f29e766] [cursor=pointer]:
+              - /url: /app/lessons
+              - text: Открыть уроки
+              - generic [aria-hidden] [ref=f29e767]: ↗
+            - link "Банк схем" [ref=f29e768] [cursor=pointer]:
+              - /url: "#bank"
+              - text: Банк схем
+              - generic [aria-hidden] [ref=f29e769]: →
+        - article [ref=f29e771]:
+          - generic [ref=f29e772]:
+            - generic [aria-hidden] [ref=f29e773]: К
+            - generic [ref=f29e774]: "02"
+          - heading "Кнопки и ввод" [level=3] [ref=f29e775]
+          - paragraph [ref=f29e776]: Научи схему реагировать на нажатия. Познакомься с цифровым входом.
+          - generic [ref=f29e777]: Знакомство с темой
+          - generic [ref=f29e778]:
+            - link "Открыть уроки" [ref=f29e779] [cursor=pointer]:
+              - /url: /app/lessons
+              - text: Открыть уроки
+              - generic [aria-hidden] [ref=f29e780]: ↗
+            - link "Банк схем" [ref=f29e781] [cursor=pointer]:
+              - /url: "#bank"
+              - text: Банк схем
+              - generic [aria-hidden] [ref=f29e782]: →
+        - article [ref=f29e784]:
+          - generic [ref=f29e785]:
+            - generic [aria-hidden] [ref=f29e786]: Д
+            - generic [ref=f29e787]: "03"
+          - heading "Датчики" [level=3] [ref=f29e788]
+          - paragraph [ref=f29e789]: Измеряй свет, температуру и расстояние. Превращай показания в действия.
+          - generic [ref=f29e790]: Знакомство с темой
+          - generic [ref=f29e791]:
+            - link "Открыть уроки" [ref=f29e792] [cursor=pointer]:
+              - /url: /app/lessons
+              - text: Открыть уроки
+              - generic [aria-hidden] [ref=f29e793]: ↗
+            - link "Банк схем" [ref=f29e794] [cursor=pointer]:
+              - /url: "#bank"
+              - text: Банк схем
+              - generic [aria-hidden] [ref=f29e795]: →
+        - article [ref=f29e797]:
+          - generic [ref=f29e798]:
+            - generic [aria-hidden] [ref=f29e799]: М
+            - generic [ref=f29e800]: "04"
+          - heading "Сервоприводы и моторы" [level=3] [ref=f29e801]
+          - paragraph [ref=f29e802]: "Добавь движение: поворот сервопривода и управление простым механизмом."
+          - generic [ref=f29e803]: Знакомство с темой
+          - generic [ref=f29e804]:
+            - link "Открыть уроки" [ref=f29e805] [cursor=pointer]:
+              - /url: /app/lessons
+              - text: Открыть уроки
+              - generic [aria-hidden] [ref=f29e806]: ↗
+            - link "Банк схем" [ref=f29e807] [cursor=pointer]:
+              - /url: "#bank"
+              - text: Банк схем
+              - generic [aria-hidden] [ref=f29e808]: →
+        - article [ref=f29e810]:
+          - generic [ref=f29e811]:
+            - generic [aria-hidden] [ref=f29e812]: Э
+            - generic [ref=f29e813]: "05"
+          - heading "Дисплеи и звук" [level=3] [ref=f29e814]
+          - paragraph [ref=f29e815]: Выводи текст на дисплей и управляй звуковым сигналом.
+          - generic [ref=f29e816]: Знакомство с темой
+          - generic [ref=f29e817]:
+            - link "Открыть уроки" [ref=f29e818] [cursor=pointer]:
+              - /url: /app/lessons
+              - text: Открыть уроки
+              - generic [aria-hidden] [ref=f29e819]: ↗
+            - link "Банк схем" [ref=f29e820] [cursor=pointer]:
+              - /url: "#bank"
+              - text: Банк схем
+              - generic [aria-hidden] [ref=f29e821]: →
+        - article [ref=f29e823]:
+          - generic [ref=f29e824]:
+            - generic [aria-hidden] [ref=f29e825]: П
+            - generic [ref=f29e826]: "06"
+          - heading "Мини-проекты" [level=3] [ref=f29e827]
+          - paragraph [ref=f29e828]: "Объедини несколько деталей в одном задании: светильник, сигнализацию или светофор."
+          - generic [ref=f29e829]: Знакомство с темой
+          - generic [ref=f29e830]:
+            - link "Открыть уроки" [ref=f29e831] [cursor=pointer]:
+              - /url: /app/lessons
+              - text: Открыть уроки
+              - generic [aria-hidden] [ref=f29e832]: ↗
+            - link "Банк схем" [ref=f29e833] [cursor=pointer]:
+              - /url: "#bank"
+              - text: Банк схем
+              - generic [aria-hidden] [ref=f29e834]: →
+    - generic [ref=f29e836]:
+      - generic [ref=f29e837]:
+        - heading "Доступ без подписки" [level=2] [ref=f29e838]
+        - paragraph [ref=f29e839]: Открой кабинет и начни с доступных уроков и практических заданий.
+      - article [ref=f29e841]:
+        - heading "Бесплатно" [level=3] [ref=f29e843]
+        - paragraph [ref=f29e844]: Доступные уроки и практика
+        - generic [ref=f29e845]: 0 ₸
+        - text: без подписки
+        - link "Начать бесплатно" [ref=f29e846] [cursor=pointer]:
+          - /url: /app
+          - text: Начать бесплатно
+          - generic [aria-hidden] [ref=f29e847]: ↗
+        - list [ref=f29e848]:
+          - listitem [ref=f29e849]:
+            - generic [aria-hidden] [ref=f29e850]: ✓
+            - text: Первые уроки курса
+          - listitem [ref=f29e851]:
+            - generic [aria-hidden] [ref=f29e852]: ✓
+            - text: Виртуальный редактор
+          - listitem [ref=f29e853]:
+            - generic [aria-hidden] [ref=f29e854]: ✓
+            - text: Базовая проверка схем
+          - listitem [ref=f29e855]:
+            - generic [aria-hidden] [ref=f29e856]: ✓
+            - text: Вопросы блица
+      - paragraph [ref=f29e857]:
+        - generic [aria-hidden] [ref=f29e858]: ✳
+        - text: Начни без аккаунта на этом устройстве. Войди в аккаунт, чтобы сохранять учебный прогресс между устройствами.
+    - generic [ref=f29e861]:
+      - heading "Частые вопросы" [level=2] [ref=f29e864]
+      - generic [ref=f29e865]:
+        - generic [ref=f29e866]:
+          - heading [level=3] [ref=f29e867]:
+            - button "Что такое ArduHub?" [expanded] [ref=f29e868] [cursor=pointer]:
+              - text: Что такое ArduHub?
+              - generic [aria-hidden] [ref=f29e869]: +
+          - region "Что такое ArduHub?" [ref=f29e870]:
+            - paragraph [ref=f29e872]: Это платформа для изучения Arduino в браузере. Уроки, вопросы, виртуальная сборка и проверка соединений объединены в один учебный сценарий. Открой кабинет и начни с первого урока.
+        - generic [ref=f29e873]:
+          - heading [level=3] [ref=f29e874]:
+            - button "Нужна ли плата Arduino?" [expanded] [ref=f29e875] [cursor=pointer]:
+              - text: Нужна ли плата Arduino?
+              - generic [aria-hidden] [ref=f29e876]: +
+          - region "Нужна ли плата Arduino?" [ref=f29e877]:
+            - paragraph [ref=f29e879]: "Для занятий покупать плату и детали не нужно: схемы собираются в браузере. Полученные знания можно применить и с настоящей платой."
+        - generic [ref=f29e880]:
+          - heading [level=3] [ref=f29e881]:
+            - button "Как проверяется схема?" [expanded] [ref=f29e882] [cursor=pointer]:
+              - text: Как проверяется схема?
+              - generic [aria-hidden] [ref=f29e883]: +
+          - region "Как проверяется схема?" [ref=f29e884]:
+            - paragraph [ref=f29e886]: "Соединения хранятся как данные: код проверяет пины, полярность и типовые ошибки. ИИ помогает объяснить результат простым языком, а не угадывает правильность по картинке."
+        - generic [ref=f29e887]:
+          - heading [level=3] [ref=f29e888]:
+            - button "Чем это отличается от обычного симулятора?" [expanded] [ref=f29e889] [cursor=pointer]:
+              - text: Чем это отличается от обычного симулятора?
+              - generic [aria-hidden] [ref=f29e890]: +
+          - region "Чем это отличается от обычного симулятора?" [ref=f29e891]:
+            - paragraph [ref=f29e893]: "ArduHub ведёт по учебному пути: объяснение, вопросы, задание и проверка. Цель — помочь понять, почему схема работает, и закрепить это на практике."
+        - generic [ref=f29e894]:
+          - heading [level=3] [ref=f29e895]:
+            - button "Подходит ли для школ и кружков?" [expanded] [ref=f29e896] [cursor=pointer]:
+              - text: Подходит ли для школ и кружков?
+              - generic [aria-hidden] [ref=f29e897]: +
+          - region "Подходит ли для школ и кружков?" [ref=f29e898]:
+            - paragraph [ref=f29e900]: Ученики могут проходить уроки индивидуально на занятиях кружка. Отдельного кабинета преподавателя, групповых заданий и аналитики класса в текущем доступе нет.
+        - generic [ref=f29e901]:
+          - heading [level=3] [ref=f29e902]:
+            - button "Нужна ли платная подписка?" [expanded] [ref=f29e903] [cursor=pointer]:
+              - text: Нужна ли платная подписка?
+              - generic [aria-hidden] [ref=f29e904]: +
+          - region "Нужна ли платная подписка?" [ref=f29e905]:
+            - paragraph [ref=f29e907]: Для начала обучения платная подписка не нужна. Доступные уроки, редактор и проверка схем открываются в кабинете. Подсказки наставника доступны внутри учебного задания; ответ ИИ зависит от подключения сервиса.
+    - generic [ref=f29e909]:
+      - generic [ref=f29e910]:
+        - paragraph [ref=f29e911]: Arduino без платы и установки
+        - heading "Получать новости об уроках" [level=2] [ref=f29e912]
+        - paragraph [ref=f29e913]: Оставь почту для новостей об уроках ArduHub. Начать обучение можно уже сейчас в кабинете.
+        - generic [ref=f29e914]:
+          - status
+          - generic [ref=f29e915]:
+            - generic [ref=f29e916]: Твоя электронная почта
+            - generic [ref=f29e917]:
+              - textbox "Твоя электронная почта" [ref=f29e918]:
+                - /placeholder: you@example.com
+              - textbox [aria-hidden] [ref=f29e919]
+              - button "Подписаться" [disabled] [ref=f29e920]:
+                - text: Подписаться
+                - generic [aria-hidden] [ref=f29e921]: ↗
+            - paragraph [ref=f29e922]: Не удалось сохранить адрес. Попробуйте позже.
+            - paragraph [ref=f29e923]:
+              - text: Отправляя заявку, вы соглашаетесь с
+              - link "политикой конфиденциальности" [ref=f29e924] [cursor=pointer]:
+                - /url: /privacy
+              - text: .
+            - paragraph [ref=f29e925]: Для отправки формы нужен JavaScript.
+      - generic [aria-hidden] [ref=f29e926]:
+        - generic [ref=f29e927]: +
+        - generic [ref=f29e928]: +
+        - generic [ref=f29e929]: +
+        - generic [ref=f29e930]: +
+        - generic [ref=f29e931]: +
+        - generic [ref=f29e932]: +
+        - generic [ref=f29e933]: +
+        - generic [ref=f29e934]: +
+        - generic [ref=f29e935]: +
+        - generic [ref=f29e936]: +
+        - generic [ref=f29e937]: +
+        - generic [ref=f29e938]: +
+        - generic [ref=f29e939]: +
+        - generic [ref=f29e940]: +
+        - generic [ref=f29e941]: +
+        - generic [ref=f29e942]: +
+        - generic [ref=f29e943]: +
+        - generic [ref=f29e944]: +
+        - generic [ref=f29e945]: +
+        - generic [ref=f29e946]: +
+        - generic [ref=f29e947]: +
+        - generic [ref=f29e948]: +
+        - generic [ref=f29e949]: +
+        - generic [ref=f29e950]: +
+        - generic [ref=f29e951]: +
+        - generic [ref=f29e952]: +
+        - generic [ref=f29e953]: +
+        - generic [ref=f29e954]: +
+        - generic [ref=f29e955]: +
+        - generic [ref=f29e956]: +
+        - generic [ref=f29e957]: +
+        - generic [ref=f29e958]: +
+        - generic [ref=f29e959]: +
+        - generic [ref=f29e960]: +
+        - generic [ref=f29e961]: +
+        - generic [ref=f29e962]: +
+        - generic [ref=f29e963]: +
+        - generic [ref=f29e964]: +
+        - generic [ref=f29e965]: +
+        - generic [ref=f29e966]: +
+        - generic [ref=f29e967]: +
+        - generic [ref=f29e968]: +
+        - generic [ref=f29e969]: +
+        - generic [ref=f29e970]: +
+        - generic [ref=f29e971]: +
+        - generic [ref=f29e972]: +
+        - generic [ref=f29e973]: +
+        - generic [ref=f29e974]: +
+        - generic [ref=f29e975]: +
+  - contentinfo [ref=f29e976]:
+    - generic [ref=f29e977]:
+      - generic [ref=f29e978]:
+        - generic [ref=f29e979]:
+          - link "ArduHub" [ref=f29e980] [cursor=pointer]:
+            - /url: "#main"
+          - paragraph [ref=f29e981]: Электроника начинается с любопытства.
+        - navigation "Продукт" [ref=f29e982]:
+          - link "Продукт" [ref=f29e983] [cursor=pointer]:
+            - /url: "#features"
+          - link "Бесплатный доступ" [ref=f29e984] [cursor=pointer]:
+            - /url: "#pricing"
+          - link "Новые уроки" [ref=f29e985] [cursor=pointer]:
+            - /url: "#access"
+          - link "Политика конфиденциальности" [ref=f29e986] [cursor=pointer]:
+            - /url: /privacy
+      - generic [ref=f29e987]:
+        - generic [ref=f29e988]: © 2026 ArduHub
+        - generic [ref=f29e989]: Учись в своём темпе

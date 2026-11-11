@@ -1,0 +1,11 @@
+import {chromium} from '@playwright/test';
+const browser=await chromium.launch({channel:'chrome'});
+const page=await browser.newPage({viewport:{width:862,height:327}});
+await page.goto('http://127.0.0.1:3100/register');
+await page.getByLabel('Почта').fill('qa@example.org');
+console.log('email',await page.evaluate(()=>({scroll:scrollY,brand:document.querySelector('.signup-brand').getBoundingClientRect().top,title:document.querySelector('h1').getBoundingClientRect().top})));
+await page.getByRole('button',{name:'Продолжить',exact:true}).click();
+await page.getByLabel('Пароль',{exact:true}).focus();
+console.log('password',await page.evaluate(()=>({scroll:scrollY,brand:document.querySelector('.signup-brand').getBoundingClientRect().top,title:document.querySelector('h1').getBoundingClientRect().top})));
+await page.screenshot({path:'outputs/auth-workshop/short-before.png'});
+await browser.close();

@@ -1,0 +1,167 @@
+- generic [ref=e2]:
+  - link "Перейти к содержимому" [ref=e3] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - 'link "ArduHub: на главную" [ref=e6] [cursor=pointer]':
+        - /url: "#main"
+        - generic [aria-hidden] [ref=e7]: ∞
+        - text: ArduHub
+      - navigation "Основная навигация" [ref=e8]:
+        - link "Возможности" [ref=e9] [cursor=pointer]:
+          - /url: "#features"
+        - link "Обучение" [ref=e10] [cursor=pointer]:
+          - /url: "#learning"
+        - link "Вопросы" [ref=e11] [cursor=pointer]:
+          - /url: "#faq"
+        - link "Регистрация" [ref=e12] [cursor=pointer]:
+          - /url: /register
+      - link "В кабинет" [ref=e13] [cursor=pointer]:
+        - /url: /sign-in
+        - text: В кабинет
+        - generic [aria-hidden] [ref=e14]: ↗
+  - main [ref=e15]:
+    - generic [ref=e17]:
+      - heading [level=1] [ref=e18]:
+        - text: Собрал схему.
+        - emphasis [ref=e19]: Заработает?
+      - paragraph [ref=e20]: Собери схему в браузере. Проверка покажет неверное соединение, а наставник поможет разобрать причину ошибки.
+      - link "Начать бесплатно" [ref=e22] [cursor=pointer]:
+        - /url: /app
+        - text: Начать бесплатно
+        - generic [aria-hidden] [ref=e23]: ↗
+      - paragraph [ref=e24]: Бесплатно для старта · В браузере · Без установки
+    - figure "Пример интерфейса ArduHub · редактор учебной схемы" [ref=e28]:
+      - generic [ref=e29]:
+        - generic "Пример интерфейса ArduHub · редактор учебной схемы" [ref=e30]
+        - button "Воспроизвести видео" [ref=e31] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e32]: ▷
+          - generic [ref=e33]: Смотреть
+    - generic [ref=e36]:
+      - generic [ref=e37]:
+        - heading "Arduino становится понятнее." [level=2] [ref=e38]
+        - paragraph [ref=e39]: Посмотри объяснение, собери схему и проверь соединения. Все шаги — в одном учебном задании.
+      - generic [ref=e40]:
+        - article [ref=e41]:
+          - generic [ref=e42]:
+            - heading "Собирай схемы. Разбирайся в деталях." [level=3] [ref=e43]
+            - paragraph [ref=e44]: Плата, светодиод и резистор уже на рабочем поле. Перемещай детали, соединяй пины и пиши код прямо в браузере.
+          - figure "Пример интерфейса ArduHub · сборка схемы" [ref=e46]:
+            - generic [ref=e47]:
+              - generic "Пример интерфейса ArduHub · сборка схемы" [ref=e48]
+              - button "Воспроизвести видео" [ref=e49] [cursor=pointer]:
+                - generic [aria-hidden] [ref=e50]: ▷
+                - generic [ref=e51]: Смотреть
+        - article [ref=e53]:
+          - generic [ref=e54]:
+            - heading "Найди ошибку. Пойми причину." [level=3] [ref=e55]
+            - paragraph [ref=e56]: Проверка помогает заметить неверное соединение. В этом примере показаны ошибка полярности светодиода и её исправление.
+          - figure "Пример интерфейса ArduHub · проверка подключения" [ref=e58]:
+            - generic [ref=e59]:
+              - generic "Пример интерфейса ArduHub · проверка подключения" [ref=e60]
+              - button "Воспроизвести видео" [ref=e61] [cursor=pointer]:
+                - generic [aria-hidden] [ref=e62]: ▷
+                - generic [ref=e63]: Смотреть
+        - article [ref=e65]:
+          - generic [ref=e66]:
+            - heading "От первого огонька — к своим проектам." [level=3] [ref=e67]
+            - paragraph [ref=e68]: Начни со светодиода. Затем познакомься с кнопками, датчиками и движением. У каждого урока есть объяснение, вопросы и практика.
+          - figure "Пример интерфейса ArduHub · список уроков" [ref=e70]:
+            - generic [ref=e71]:
+              - generic "Пример интерфейса ArduHub · список уроков" [ref=e72]
+              - button "Воспроизвести видео" [ref=e73] [cursor=pointer]:
+                - generic [aria-hidden] [ref=e74]: ▷
+                - generic [ref=e75]: Смотреть
+    - generic [ref=e78]:
+      - generic [ref=e79]:
+        - heading "Для первых занятий Arduino." [level=2] [ref=e80]
+        - paragraph [ref=e81]: Учись в своём темпе и проверяй новые идеи на практике.
+      - generic [ref=e82]:
+        - generic [ref=e89]:
+          - heading "Начни без платы" [level=3] [ref=e90]
+          - paragraph [ref=e91]: Для первых заданий достаточно браузера. Покупать Arduino и набор деталей не нужно.
+        - generic [ref=e97]:
+          - heading "Проверь себя" [level=3] [ref=e98]
+          - paragraph [ref=e99]: Сравни результат с заданием и найди неверное соединение в схеме.
+        - generic [ref=e105]:
+          - heading "Смотри и пробуй" [level=3] [ref=e106]
+          - paragraph [ref=e107]: После объяснения ответь на вопросы и переходи к сборке.
+        - generic [ref=e112]:
+          - heading "Сохраняй идеи" [level=3] [ref=e113]
+          - paragraph [ref=e114]: Создавай проекты в кабинете и возвращайся к своим схемам.
+    - generic [ref=e117]:
+      - heading "Частые вопросы" [level=2] [ref=e120]
+      - generic [ref=e121]:
+        - generic [ref=e122]:
+          - heading [level=3] [ref=e123]:
+            - button "Что такое ArduHub?" [expanded] [ref=e124] [cursor=pointer]:
+              - text: Что такое ArduHub?
+              - generic [aria-hidden] [ref=e125]: +
+          - region "Что такое ArduHub?" [ref=e126]:
+            - paragraph [ref=e128]: Это платформа для изучения Arduino в браузере. Уроки, вопросы, виртуальная сборка и проверка соединений объединены в один учебный сценарий. Открой кабинет и начни с первого урока.
+        - generic [ref=e129]:
+          - heading [level=3] [ref=e130]:
+            - button "Нужна ли плата Arduino?" [expanded] [ref=e131] [cursor=pointer]:
+              - text: Нужна ли плата Arduino?
+              - generic [aria-hidden] [ref=e132]: +
+          - region "Нужна ли плата Arduino?" [ref=e133]:
+            - paragraph [ref=e135]: "Для занятий покупать плату и детали не нужно: схемы собираются в браузере. Полученные знания можно применить и с настоящей платой."
+        - generic [ref=e136]:
+          - heading [level=3] [ref=e137]:
+            - button "Как проверяется схема?" [expanded] [ref=e138] [cursor=pointer]:
+              - text: Как проверяется схема?
+              - generic [aria-hidden] [ref=e139]: +
+          - region "Как проверяется схема?" [ref=e140]:
+            - paragraph [ref=e142]: "Соединения хранятся как данные: код проверяет пины, полярность и типовые ошибки. ИИ помогает объяснить результат простым языком, а не угадывает правильность по картинке."
+        - generic [ref=e143]:
+          - heading [level=3] [ref=e144]:
+            - button "Чем это отличается от обычного симулятора?" [expanded] [ref=e145] [cursor=pointer]:
+              - text: Чем это отличается от обычного симулятора?
+              - generic [aria-hidden] [ref=e146]: +
+          - region "Чем это отличается от обычного симулятора?" [ref=e147]:
+            - paragraph [ref=e149]: "ArduHub ведёт по учебному пути: объяснение, вопросы, задание и проверка. Цель — помочь понять, почему схема работает, и закрепить это на практике."
+        - generic [ref=e150]:
+          - heading [level=3] [ref=e151]:
+            - button "Подходит ли для школ и кружков?" [expanded] [ref=e152] [cursor=pointer]:
+              - text: Подходит ли для школ и кружков?
+              - generic [aria-hidden] [ref=e153]: +
+          - region "Подходит ли для школ и кружков?" [ref=e154]:
+            - paragraph [ref=e156]: Ученики могут проходить уроки индивидуально на занятиях кружка. Отдельного кабинета преподавателя, групповых заданий и аналитики класса в текущем доступе нет.
+        - generic [ref=e157]:
+          - heading [level=3] [ref=e158]:
+            - button "Нужна ли платная подписка?" [expanded] [ref=e159] [cursor=pointer]:
+              - text: Нужна ли платная подписка?
+              - generic [aria-hidden] [ref=e160]: +
+          - region "Нужна ли платная подписка?" [ref=e161]:
+            - paragraph [ref=e163]: Для начала обучения платная подписка не нужна. Доступные уроки, редактор и проверка схем открываются в кабинете. Подсказки наставника доступны внутри учебного задания; ответ ИИ зависит от подключения сервиса.
+    - generic [ref=e165]:
+      - generic [ref=e166]:
+        - heading "Первая схема — уже сегодня." [level=2] [ref=e167]
+        - paragraph [ref=e168]: Открой ArduHub и начни с доступного урока. Всё работает в браузере.
+        - link "Начать бесплатно" [ref=e169] [cursor=pointer]:
+          - /url: /app
+          - text: Начать бесплатно
+          - generic [aria-hidden] [ref=e170]: ↗
+      - generic [aria-hidden] [ref=e171]:
+        - generic [ref=e172]: Схема
+        - generic [ref=e174]: Код
+        - generic [ref=e176]: Результат
+  - contentinfo [ref=e177]:
+    - generic [ref=e178]:
+      - generic [ref=e179]:
+        - generic [ref=e180]:
+          - link "ArduHub" [ref=e181] [cursor=pointer]:
+            - /url: "#main"
+          - paragraph [ref=e182]: Электроника начинается с любопытства.
+        - navigation "Продукт" [ref=e183]:
+          - link "Продукт" [ref=e184] [cursor=pointer]:
+            - /url: "#features"
+          - link "Обучение" [ref=e185] [cursor=pointer]:
+            - /url: "#learning"
+          - link "Начать бесплатно" [ref=e186] [cursor=pointer]:
+            - /url: "#access"
+          - link "Политика конфиденциальности" [ref=e187] [cursor=pointer]:
+            - /url: /privacy
+      - generic [ref=e188]:
+        - generic [ref=e189]: © 2026 ArduHub
+        - generic [ref=e190]: Учись в своём темпе

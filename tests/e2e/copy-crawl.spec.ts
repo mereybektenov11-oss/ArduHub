@@ -52,8 +52,11 @@ test("all cabinet pages have clean visible copy and no permanent account banner"
   await seed(page, { named: true });
   for (const route of routes) {
     await page.goto(route);
-    await expect(page.locator(".dash-shell")).toBeVisible();
-    await expect(page.locator(".cab-main h1").first()).toBeVisible();
+    // /app/profile uses the separate profile shell, not the dashboard shell.
+    const shell = route === "/app/profile" ? ".profile-shell" : ".dash-shell";
+    const main = route === "/app/profile" ? "#profile-main" : ".cab-main";
+    await expect(page.locator(shell)).toBeVisible();
+    await expect(page.locator(`${main} h1`).first()).toBeVisible();
     expect(await page.locator("body").innerText(), route).not.toMatch(
       forbidden,
     );
@@ -96,7 +99,12 @@ test("save invitation is dismissible and does not return on reload; profile reta
   await expect(page.locator(".dash-shell")).toBeVisible();
   await expect(dialog).toHaveCount(0);
   await page.goto("/app/profile");
-  await expect(
-    page.getByRole("link", { name: "Сохранить прогресс", exact: true }),
-  ).toBeVisible();
+  const save = page.getByRole("link", {
+    name: "Сохранить прогресс",
+    exact: true,
+  });
+  await expect(save).toBeVisible();
+  await expect(save).toHaveAttribute("data-variant", "accent");
+  await save.click();
+  await expect(page).toHaveURL(/\/register$/);
 });
