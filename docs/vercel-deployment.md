@@ -1,5 +1,13 @@
 # Публикация ArduHub на Vercel — 17.10.2026
 
+## 11.11.2026 — установщик Windows и сайт без старого обучения
+
+- Установщик `ArduHub-Setup-0.1.0.exe` (117 МБ, без подписи кода) опубликован в публичном релизе https://github.com/mereybektenov11-oss/ArduHub-releases/releases/tag/v0.1.0. SHA-256 `9ac536599d47f5ffa4212cc4a217cbbb784628a59062987ffd49f920f7ba050f`; анонимное скачивание проверено, хеш совпал.
+- Preview `https://arduhub-b1hjnhhvz-merey4.vercel.app` (код `3f6eae3`) проверен, затем `vercel promote` → production `dpl_GS42fbLeu8A4wU5kV4NzxR3cuqec`, READY.
+- На https://arduhub.vercel.app: `/`, `/sign-in`, `/register`, `/privacy` — 200; `/app/profile`, `/app/docs` без входа — 307; `/dev/motion`, `/about` — 404; обе кнопки «Скачать приложение» ведут на установщик.
+- Не проверено: страницы профиля после входа на production и установка на чистой машине.
+- Откат: предыдущая production-сборка `arduhub-mvngf3u12-merey4.vercel.app`.
+
 ## 11.11.2026 — вся ветка `codex/landing-cobalt-redesign` и ИИ для приложения
 
 По решению владельца выложена вся ветка (коммит `e87f594`), а не только доступ ИИ. Сверх предыдущей production-версии (`arduhub-e0ohlzd0r`, 4 дня назад) вошли:
