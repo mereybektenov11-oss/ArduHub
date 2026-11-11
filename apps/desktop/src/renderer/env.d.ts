@@ -10,7 +10,6 @@ interface ArduhubBridge {
   };
   openExternal(url: string): Promise<boolean>;
   version(): Promise<string>;
-  setTheme?(choice: "system" | "light" | "dark"): Promise<void>;
 }
 
 interface Window {

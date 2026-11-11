@@ -1,6 +1,6 @@
 # ArduHub для ПК (Windows)
 
-Приложение Electron + Vite + React. Тема «Ночная лаборатория» (`docs/specs/app-design-concepts.md`). Сейчас готовы:
+Приложение Electron + Vite + React. Светлая тема в стиле «Ночная лаборатория» (`docs/specs/app-design-concepts.md`); тёмная тема удалена 11.11.2026. Сейчас готовы:
 
 - вход тем же аккаунтом Supabase, что и на сайте;
 - главное меню;

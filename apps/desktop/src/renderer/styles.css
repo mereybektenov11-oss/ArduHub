@@ -1,6 +1,6 @@
-/* «Ночная лаборатория» — тема ArduHub для ПК (docs/specs/app-design-concepts.md).
-   Две палитры: тёмная (по умолчанию в токенах :root) и светлая
-   (:root[data-theme="light"]). Тему выбирает prefs.ts. */
+/* Тема ArduHub для ПК: светлая версия стиля «Ночная лаборатория»
+   (docs/specs/app-design-concepts.md). Тёмная тема удалена по решению
+   владельца 11.11.2026. Контраст текста ≥ 4.5:1 (расчёт в отчёте THEME). */
 @font-face {
   font-family: "Monocraft";
   src: url("./fonts/Monocraft-Regular.woff2") format("woff2");
@@ -14,39 +14,6 @@
 }
 
 :root {
-  --color-bg: #0b1020;
-  --color-surface: #121a31;
-  --color-surface-2: #1a2442;
-  --color-text: #e6edff;
-  --color-muted: #9aa8cc;
-  --color-primary: #22d3ee;
-  --color-on-primary: #062029;
-  --color-accent: #f472b6;
-  --color-line: #2a3760;
-  --color-locked: #8f9cc0;
-  --color-led: #4ade80;
-  --color-danger: #fb7185;
-  --glow: 0 0 18px rgba(34, 211, 238, 0.55);
-  --glow-hover: 0 0 30px rgba(34, 211, 238, 0.35);
-  --glow-current: 0 0 22px rgba(34, 211, 238, 0.8);
-  --glow-done: 0 0 14px rgba(74, 222, 128, 0.45);
-  --grid-line: rgba(34, 211, 238, 0.06);
-  --shadow-card-app:
-    0 0 0 1px rgba(34, 211, 238, 0.08), 0 0 28px rgba(34, 211, 238, 0.08);
-  --radius: 10px;
-  --text-scale: 1;
-  --font-head: "Monocraft", ui-monospace, monospace;
-  /* Pixel face only for the main headings; everything else uses SF Pro when
-     it is installed on the computer (the app does not ship it: Apple's
-     licence allows it only on Apple platforms), otherwise the bundled Inter. */
-  --font-body:
-    "SF Pro Text", "SF Pro Display", "SF Pro", "Inter", system-ui, sans-serif;
-  color-scheme: dark;
-}
-
-/* Дневная палитра: тот же характер, светлые поверхности, мягкие тени
-   вместо неона. Контраст текста ≥ 4.5:1 (расчёт в отчёте THEME). */
-:root[data-theme="light"] {
   --color-bg: #f4f7fd;
   --color-surface: #ffffff;
   --color-surface-2: #e6ecf7;
@@ -66,6 +33,14 @@
   --grid-line: rgba(14, 116, 144, 0.07);
   --shadow-card-app:
     0 1px 2px rgba(11, 16, 32, 0.06), 0 8px 24px rgba(11, 16, 32, 0.06);
+  --radius: 10px;
+  --text-scale: 1;
+  --font-head: "Monocraft", ui-monospace, monospace;
+  /* Pixel face only for the main headings; everything else uses SF Pro when
+     it is installed on the computer (the app does not ship it: Apple's
+     licence allows it only on Apple platforms), otherwise the bundled Inter. */
+  --font-body:
+    "SF Pro Text", "SF Pro Display", "SF Pro", "Inter", system-ui, sans-serif;
   color-scheme: light;
 }
 

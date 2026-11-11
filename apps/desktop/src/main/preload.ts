@@ -12,5 +12,4 @@ contextBridge.exposeInMainWorld("arduhub", {
   },
   openExternal: (url: string) => ipcRenderer.invoke("external:open", url),
   version: () => ipcRenderer.invoke("app:version"),
-  setTheme: (choice: string) => ipcRenderer.invoke("theme:set", choice),
 });

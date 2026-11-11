@@ -46,7 +46,6 @@ describe("parsePrefs", () => {
     ).toEqual({
       sounds: false,
       volume: 0.2,
-      theme: "system",
       textScale: 1.15,
       reduceMotion: true,
     });
@@ -55,35 +54,24 @@ describe("parsePrefs", () => {
       reduceMotion: false,
       sounds: true,
       volume: 0.5,
-      theme: "system",
     });
     expect(parsePrefs("not json")).toEqual({
       textScale: 1,
       reduceMotion: false,
       sounds: true,
       volume: 0.5,
-      theme: "system",
     });
     expect(parsePrefs(null)).toEqual({
       textScale: 1,
       reduceMotion: false,
       sounds: true,
       volume: 0.5,
-      theme: "system",
     });
   });
 });
 
-describe("resolveTheme", async () => {
-  const { resolveTheme } = await import("../src/renderer/prefs");
-  it("follows Windows only for the system choice", () => {
-    expect(resolveTheme("system", true)).toBe("dark");
-    expect(resolveTheme("system", false)).toBe("light");
-    expect(resolveTheme("light", true)).toBe("light");
-    expect(resolveTheme("dark", false)).toBe("dark");
-  });
-  it("keeps a valid stored theme and rejects others", () => {
-    expect(parsePrefs('{"theme":"light"}').theme).toBe("light");
-    expect(parsePrefs('{"theme":"pink"}').theme).toBe("system");
+describe("prefs without theme", () => {
+  it("ignores a theme stored by older versions", () => {
+    expect(parsePrefs('{"theme":"dark"}')).not.toHaveProperty("theme");
   });
 });

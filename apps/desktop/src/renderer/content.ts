@@ -52,12 +52,6 @@ export const t = {
       ["1.3", "Очень крупный"],
     ] as const,
     motion: "Меньше анимации",
-    theme: "Тема",
-    themes: [
-      ["system", "Как в Windows"],
-      ["light", "Светлая"],
-      ["dark", "Тёмная"],
-    ] as const,
     sounds: "Звуковые эффекты",
     volume: "Громкость",
     testSound: "Проверить звук",
