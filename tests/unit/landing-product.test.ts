@@ -14,7 +14,9 @@ describe("landing reflects the available product", () => {
     const cta = html.match(/<a [^>]*>/g) ?? [];
     expect(cta).toHaveLength(1);
     expect(cta[0]).toContain(`href="${desktopAppRu.downloadUrl}"`);
-    expect(desktopAppRu.downloadUrl).toMatch(/^https:\/\/github\.com\/.+\.exe$/);
+    expect(desktopAppRu.downloadUrl).toMatch(
+      /^https:\/\/github\.com\/.+\.exe$/,
+    );
     expect(html).toContain("Скачать приложение");
     expect(cta[0]).toContain('data-slot="texture-button"');
     expect(cta[0]).toContain('data-variant="glass"');

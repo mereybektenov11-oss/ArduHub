@@ -1,4 +1,7 @@
-import { learningLessons, exampleScene } from "@arduhub/arduino-core/lessons/content";
+import {
+  learningLessons,
+  exampleScene,
+} from "@arduhub/arduino-core/lessons/content";
 import { hardwareScene } from "@arduhub/arduino-core/lessons/content/hardware";
 import sketches from "@arduhub/curriculum/sketches.json" with { type: "json" };
 import hardware from "@arduhub/curriculum/hardware-examples.json" with { type: "json" };

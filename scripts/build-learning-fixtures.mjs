@@ -2,10 +2,18 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { resolve } from "node:path";
 import { compileJob } from "../compiler-service/compile-job.mjs";
 const sketches = [
-  ...JSON.parse(await readFile("packages/curriculum/src/sketches.json", "utf8")),
-  ...JSON.parse(await readFile("packages/curriculum/src/hardware-examples.json", "utf8")),
-  ...JSON.parse(await readFile("packages/curriculum/src/course-sketches.json", "utf8")),
-  ...JSON.parse(await readFile("packages/curriculum/src/project-sketches.json", "utf8")),
+  ...JSON.parse(
+    await readFile("packages/curriculum/src/sketches.json", "utf8"),
+  ),
+  ...JSON.parse(
+    await readFile("packages/curriculum/src/hardware-examples.json", "utf8"),
+  ),
+  ...JSON.parse(
+    await readFile("packages/curriculum/src/course-sketches.json", "utf8"),
+  ),
+  ...JSON.parse(
+    await readFile("packages/curriculum/src/project-sketches.json", "utf8"),
+  ),
 ];
 const cli = resolve("tools/arduino/arduino-cli.exe");
 const config = resolve("tools/arduino/arduino-cli.yaml");

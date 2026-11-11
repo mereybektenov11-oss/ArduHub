@@ -2,12 +2,18 @@ import { describe, expect, it } from "vitest";
 import { BrowserProgressStore, STORAGE_KEY } from "@/domain/progress/storage";
 import { createProgress } from "@/domain/seed";
 import { lessonOpen } from "@/domain/progress/xp";
-import { learningLessons, exampleScene } from "@arduhub/arduino-core/lessons/content";
+import {
+  learningLessons,
+  exampleScene,
+} from "@arduhub/arduino-core/lessons/content";
 import { emptyScene, makePart } from "@arduhub/arduino-core/scene/scene";
 import { connections } from "@arduhub/arduino-core/scene/netlist";
 import { checkScene } from "@arduhub/arduino-core/scene/check";
 import { legacyNetlist } from "@arduhub/arduino-core/scene/migrate";
-import { checkBehavior, type BehaviorCheck } from "@arduhub/arduino-core/sim/checks";
+import {
+  checkBehavior,
+  type BehaviorCheck,
+} from "@arduhub/arduino-core/sim/checks";
 import type { Sample } from "@arduhub/arduino-core/sim/runner";
 import { reviewSections } from "@/services/mentor/review";
 function storage(value: unknown) {

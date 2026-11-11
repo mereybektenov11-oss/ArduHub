@@ -22,3 +22,12 @@ docs/ArduHub_dashboard_auth_spec.md
 docs/ArduHub_polish_plan.md
 docs/ArduHub_lesson_flow_plan.md
 compiler-service/normalize-code.mjs
+
+# Generated artifacts (screenshots, Figma exports, browser snapshots).
+outputs/
+.playwright-mcp/
+.superpowers/
+.21st/
+# User-supplied task specifications: preserve the original bytes.
+docs/ArduHub_*.md
+src/components/icons/boxicons.generated.ts

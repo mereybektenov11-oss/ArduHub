@@ -86,7 +86,8 @@
   --glass-nav-border: #fffdf73d;
   --glass-nav-inset: 1rem;
   --glass-nav-radius: 999px;
-  --glass-shadow: inset 0 1px 1px #fffdf7a6, inset 0 -1px 2px #fffdf733,
+  --glass-shadow:
+    inset 0 1px 1px #fffdf7a6, inset 0 -1px 2px #fffdf733,
     inset 0 0 12px #fffdf71f, 0 6px 20px #06120b1a;
 }
 
@@ -3482,7 +3483,12 @@ main#main > #topics {
 
 .button {
   border-color: var(--glass-edge);
-  background-image: linear-gradient(155deg, #fffdf72e, transparent 48%, #fffdf70d);
+  background-image: linear-gradient(
+    155deg,
+    #fffdf72e,
+    transparent 48%,
+    #fffdf70d
+  );
 }
 
 .button-primary {
@@ -3490,7 +3496,8 @@ main#main > #topics {
 }
 
 .button-primary:hover {
-  background: linear-gradient(155deg, #fffdf72e, transparent 48%, #fffdf70d),
+  background:
+    linear-gradient(155deg, #fffdf72e, transparent 48%, #fffdf70d),
     var(--glass-amber-hover);
 }
 
@@ -3537,13 +3544,16 @@ main#main > #topics {
   margin: var(--glass-nav-inset) auto;
   border: 1px solid var(--glass-nav-border);
   border-radius: var(--glass-nav-radius);
-  background: linear-gradient(120deg, #fffdf717, transparent 48%, #fffdf709),
+  background:
+    linear-gradient(120deg, #fffdf717, transparent 48%, #fffdf709),
     var(--glass-nav);
   color: var(--text-light);
   color-scheme: dark;
   -webkit-backdrop-filter: blur(12px) saturate(1.4);
   backdrop-filter: blur(12px) saturate(1.4);
-  box-shadow: var(--glass-shadow), 0 12px 36px #06120b24;
+  box-shadow:
+    var(--glass-shadow),
+    0 12px 36px #06120b24;
 }
 
 .header-inner {

@@ -3,7 +3,9 @@ import { createVideoResolver } from "../src/services/video/resolve.mjs";
 const queries = JSON.parse(
   await readFile("packages/curriculum/src/lesson-video-queries.json", "utf8"),
 );
-const data = JSON.parse(await readFile("packages/curriculum/src/lesson-videos.json", "utf8"));
+const data = JSON.parse(
+  await readFile("packages/curriculum/src/lesson-videos.json", "utf8"),
+);
 const resolver = createVideoResolver({
   key: process.env.YOUTUBE_API_KEY,
   initial: data,

@@ -2,8 +2,7 @@ import { expect, test } from "@playwright/test";
 
 test("primary landing actions download the Windows app", async ({ page }) => {
   await page.goto("/");
-  const installer =
-    /^https:\/\/github\.com\/.+\/releases\/download\/.+\.exe$/;
+  const installer = /^https:\/\/github\.com\/.+\/releases\/download\/.+\.exe$/;
   for (const section of [".hero", ".video-final"]) {
     await expect(
       page.locator(section).getByRole("link", { name: "Скачать приложение" }),

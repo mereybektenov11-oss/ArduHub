@@ -2,14 +2,6 @@ import { describe, it, expect } from "vitest";
 
 import { exampleScene } from "@arduhub/arduino-core/lessons/content";
 
-
-
-
-
-
-
-
-
 import {
   LearningStore,
   importProject,

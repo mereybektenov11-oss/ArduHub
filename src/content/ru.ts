@@ -663,8 +663,15 @@ export const ru = {
 } as const;
 
 export { learningRu } from "@arduhub/curriculum/learning.ru";
-export { lessonQuizRu, lessonQuizzes } from "@arduhub/curriculum/lesson-quiz.ru";
-export { partNames, partCategories, paletteCopy } from "@arduhub/curriculum/parts.ru";
+export {
+  lessonQuizRu,
+  lessonQuizzes,
+} from "@arduhub/curriculum/lesson-quiz.ru";
+export {
+  partNames,
+  partCategories,
+  paletteCopy,
+} from "@arduhub/curriculum/parts.ru";
 export { courseCopy } from "@arduhub/curriculum/course.ru";
 export { inputCopy } from "@arduhub/curriculum/inputs.ru";
 export { ideaCopy, projectCopy } from "./projects.ru";
@@ -748,7 +755,8 @@ export const profileRu = {
     "Уроки, схемы, код и наставник — в приложении для Windows. Войди тем же аккаунтом, что и на сайте. Это ранняя версия: 3D-практика пока в разработке.",
   soon: "Ранняя версия",
   download: "Скачать приложение",
-  smartscreen: "Установщик пока без цифровой подписи: если Windows покажет предупреждение SmartScreen, нажми «Подробнее» → «Выполнить в любом случае».",
+  smartscreen:
+    "Установщик пока без цифровой подписи: если Windows покажет предупреждение SmartScreen, нажми «Подробнее» → «Выполнить в любом случае».",
   browser: "Обучение проходит в приложении",
   continue: "Учиться в приложении",
   settingsHint: "Удобство работы — под тебя.",

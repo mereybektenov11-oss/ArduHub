@@ -828,7 +828,6 @@ export const interfaceCopy = {
   text093: "Понятно",
 };
 
-
 export const topicNames: Record<Topic, string> = {
   leds: "Светодиоды",
   buttons: "Кнопки",

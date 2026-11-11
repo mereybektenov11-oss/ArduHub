@@ -3,7 +3,10 @@ import { fileURLToPath } from "node:url";
 export default defineConfig({
   resolve: { alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) } },
   test: {
-    include: ["tests/unit/**/*.test.ts"],
+    include: [
+      "tests/unit/**/*.test.ts",
+      "packages/arduino-core/tests/cabinet-checker.test.ts",
+    ],
     env: {
       LEARNING_COVERAGE: process.argv.some((arg) =>
         arg.startsWith("--coverage"),
