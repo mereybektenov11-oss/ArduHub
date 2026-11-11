@@ -2,18 +2,20 @@ import { describe, expect, it } from "vitest";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { spawnSync } from "node:child_process";
-import { ru } from "@/content/ru";
+import { desktopAppRu, ru } from "@/content/ru";
 import Pricing from "@/components/sections/Pricing";
 import Hero from "@/components/sections/Hero";
 
 describe("landing reflects the available product", () => {
-  it("takes the main hero action directly to the cabinet", () => {
+  it("offers the Windows installer as the main hero action", () => {
     const html = renderToStaticMarkup(
       createElement(Hero, { background: null }),
     );
     const cta = html.match(/<a [^>]*>/g) ?? [];
     expect(cta).toHaveLength(1);
-    expect(cta[0]).toContain('href="/app/profile"');
+    expect(cta[0]).toContain(`href="${desktopAppRu.downloadUrl}"`);
+    expect(desktopAppRu.downloadUrl).toMatch(/^https:\/\/github\.com\/.+\.exe$/);
+    expect(html).toContain("Скачать приложение");
     expect(cta[0]).toContain('data-slot="texture-button"');
     expect(cta[0]).toContain('data-variant="glass"');
     expect(cta[0]).toContain('data-size="lg"');

@@ -1,15 +1,14 @@
 import { expect, test } from "@playwright/test";
 
-test("primary landing actions open the real application", async ({ page }) => {
+test("primary landing actions download the Windows app", async ({ page }) => {
   await page.goto("/");
-  await expect(
-    page.locator(".hero").getByRole("link", { name: "Начать бесплатно" }),
-  ).toHaveAttribute("href", "/app");
-  await expect(
-    page
-      .locator(".video-final")
-      .getByRole("link", { name: "Начать бесплатно" }),
-  ).toHaveAttribute("href", "/app");
+  const installer =
+    /^https:\/\/github\.com\/.+\/releases\/download\/.+\.exe$/;
+  for (const section of [".hero", ".video-final"]) {
+    await expect(
+      page.locator(section).getByRole("link", { name: "Скачать приложение" }),
+    ).toHaveAttribute("href", installer);
+  }
   await expect(page.locator(".header .account")).toHaveAttribute(
     "href",
     "/sign-in",
@@ -58,15 +57,4 @@ test("metadata and security headers remain available", async ({
   );
   expect((await request.get("/privacy")).ok()).toBe(true);
   expect((await request.get("/robots.txt")).ok()).toBe(true);
-});
-
-test("circuit gallery remains independent of the new landing", async ({
-  page,
-}) => {
-  await page.goto("/dev/circuits");
-  const scene = page.locator(".circuit").first();
-  await page.getByRole("button", { name: "Ошибка подключения" }).click();
-  await expect(scene).toHaveClass(/phase-error/);
-  await page.getByRole("button", { name: "Соединение исправлено" }).click();
-  await expect(scene).toHaveClass(/phase-fixed/);
 });

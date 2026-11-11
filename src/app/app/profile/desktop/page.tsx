@@ -1,5 +1,5 @@
-import { profileRu as c } from "@/content/ru";
-import { TextureButton } from "@/components/ui/texture-button";
+import { desktopAppRu as app, profileRu as c } from "@/content/ru";
+import DownloadAppButton from "@/components/ui/DownloadAppButton";
 export default function Page() {
   return (
     <div className="profile-content">
@@ -22,17 +22,12 @@ export default function Page() {
         </div>
         <div className="profile-desktop-copy">
           <span className="profile-status">{c.soon}</span>
-          <h2>{c.desktopHint}</h2>
+          <h2>{app.platform}</h2>
           <p>{c.desktopBody}</p>
-          <TextureButton
-            variant="secondary"
-            type="button"
-            disabled
-            aria-describedby="desktop-status"
-          >
-            ↓ {c.download}
-          </TextureButton>
-          <small id="desktop-status">{c.unavailable}</small>
+          <DownloadAppButton variant="primary" size="default" />
+          <small>
+            {app.meta(app.version, app.size)}. {c.smartscreen}
+          </small>
         </div>
       </section>
     </div>

@@ -3,4 +3,5 @@
 # discover workspace packages through it.
 allowBuilds:
   electron: true
+  electron-winstaller: false
   esbuild: true

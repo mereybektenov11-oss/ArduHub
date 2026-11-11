@@ -33,6 +33,8 @@ const icons = {
   logout: "regular/bx-log-out",
   volume: "regular/bx-volume-full",
   chip: "regular/bx-chip",
+  windows: "logos/bxl-windows",
+  download: "regular/bx-download",
 };
 
 const require = createRequire(import.meta.url);

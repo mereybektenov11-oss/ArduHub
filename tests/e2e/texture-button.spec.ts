@@ -62,22 +62,3 @@ for (const width of [360, 1440])
       expect(item.overflow, item.label).toBeLessThanOrEqual(0);
     }
   });
-
-test("disabled asChild link stays focusable but never navigates", async ({
-  page,
-}) => {
-  await page.goto("/dev/texture-buttons");
-  const link = page
-    .getByRole("link", { name: "asChild disabled link" })
-    .first();
-  await expect(link).toHaveAttribute("aria-disabled", "true");
-  await expect(link).toHaveAttribute("href", "/register");
-  expect(await link.evaluate((el) => el.hasAttribute("disabled"))).toBe(false);
-  await link.focus();
-  await expect(link).toBeFocused();
-  await page.keyboard.press("Enter");
-  await link.click({ force: true });
-  await link.dispatchEvent("click");
-  await page.waitForTimeout(300);
-  await expect(page).toHaveURL(/\/dev\/texture-buttons$/);
-});

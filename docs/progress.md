@@ -652,3 +652,11 @@ Monocraft — только логотип, заголовки экранов и 
 ## 11.11.2026 — production: вся ветка и ИИ для приложения
 
 Vercel CLI 65.4.0: preview arduhub-7rccvsigt проверен, production arduhub-mvngf3u12 READY (коммит e87f594). Основной адрес: страницы 200, профиль → вход, /api/mentor: CORS только для app://arduhub, чужие источники 403, поддельный токен 401. Реальный ответ Groq из приложения не проверялся. Откат: arduhub-e0ohlzd0r.
+
+## 11.11.2026 — установщик Windows и сайт без старого обучения
+
+- Собран установщик `ArduHub-Setup-0.1.0.exe` (electron-builder, NSIS, x64, 117 МБ, без подписи кода — Windows покажет SmartScreen). Сборка: в `apps/desktop` — `tsc -p tsconfig.main.json && vite build && electron-builder --win nsis --x64` (electron-builder вызывает `pnpm`, он должен быть в PATH).
+- Установщик публикуется в публичном релизе GitHub `mereybektenov11-oss/ArduHub-releases`; ссылка — `desktopAppRu.downloadUrl` в `src/content/ru.ts`.
+- Кнопка героя и финального блока — «Скачать приложение» с иконкой Windows (`DownloadAppButton`), страница «Приложение» в профиле отдаёт установщик.
+- Документация в профиле переписана под приложение: установка, вход, работа в приложении.
+- Удалены `/dev/*`, `/about` и их E2E. На сайте остались лендинг, вход/регистрация, профиль (документация, тарифы) и политика конфиденциальности.

@@ -1,6 +1,6 @@
+import DownloadAppButton from "../ui/DownloadAppButton";
 import type { ReactNode } from "react";
 import { ru } from "@/content/ru";
-import { TextureButton } from "../ui/texture-button";
 
 export default function Hero({ background }: { background: ReactNode }) {
   return (
@@ -18,12 +18,7 @@ export default function Hero({ background }: { background: ReactNode }) {
         </h1>
         <p className="hero-description">{ru.hero.description}</p>
         <div className="hero-buttons">
-          <TextureButton asChild variant="glass" size="lg">
-            <a href="/app/profile">
-              {ru.hero.primary}
-              <span aria-hidden="true">↗</span>
-            </a>
-          </TextureButton>
+          <DownloadAppButton />
         </div>
         <p className="hero-footnote">{ru.hero.footnote}</p>
       </div>

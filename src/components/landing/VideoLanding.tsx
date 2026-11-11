@@ -1,8 +1,8 @@
+import DownloadAppButton from "../ui/DownloadAppButton";
 import { ru } from "@/content/ru";
 import VideoFrame from "./VideoFrame";
 import BenefitCards from "./BenefitCards";
 import Reveal from "../ui/Reveal";
-import { TextureButton } from "../ui/texture-button";
 
 export function MainVideo() {
   return (
@@ -80,12 +80,7 @@ export function VideoFinalCta() {
         <Reveal className="video-final-copy">
           <h2>{ru.landingVideo.finalTitle}</h2>
           <p>{ru.landingVideo.finalText}</p>
-          <TextureButton asChild variant="glass" size="lg">
-            <a href="/app/profile">
-              {ru.hero.primary}
-              <span aria-hidden="true">↗</span>
-            </a>
-          </TextureButton>
+          <DownloadAppButton />
         </Reveal>
         <div className="final-node-art" aria-hidden="true">
           <span>{ru.landingVideo.nodeLabels[0]}</span>
