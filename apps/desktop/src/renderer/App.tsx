@@ -1,11 +1,13 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { lazy, Suspense, useEffect, useState, type FormEvent } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { courseCopy } from "@arduhub/curriculum/course.ru";
 import { authConfigured, countDone, loginError, supabase } from "./auth";
 import { site, t } from "./content";
 import { applyPrefs, loadPrefs, savePrefs, type Prefs } from "./prefs";
+import { navigate, route, useLocation } from "./router";
 
-type Screen = "menu" | "settings";
+const LearningArea = lazy(() => import("./learning/LearningArea"));
+
 const total = courseCopy.length;
 const open = (path: string) => void window.arduhub.openExternal(site + path);
 
@@ -13,7 +15,7 @@ export default function App() {
   const [session, setSession] = useState<Session | null | undefined>(
     authConfigured ? undefined : null,
   );
-  const [screen, setScreen] = useState<Screen>("menu");
+  const r = route(useLocation());
   const [prefs, setPrefs] = useState<Prefs>(loadPrefs);
 
   useEffect(() => applyPrefs(prefs), [prefs]);
@@ -33,7 +35,19 @@ export default function App() {
       </main>
     );
   if (!session) return <Login />;
-  return screen === "settings" ? (
+  if (r.screen === "lessons" || r.screen === "lesson")
+    return (
+      <Suspense
+        fallback={
+          <main className="center" aria-busy="true">
+            <p className="muted">{t.loading}</p>
+          </main>
+        }
+      >
+        <LearningArea lessonId={r.screen === "lesson" ? r.id : undefined} />
+      </Suspense>
+    );
+  return r.screen === "settings" ? (
     <Settings
       session={session}
       prefs={prefs}
@@ -41,10 +55,10 @@ export default function App() {
         setPrefs(p);
         savePrefs(p);
       }}
-      onBack={() => setScreen("menu")}
+      onBack={() => navigate("/menu")}
     />
   ) : (
-    <Menu session={session} onSettings={() => setScreen("settings")} />
+    <Menu session={session} onSettings={() => navigate("/settings")} />
   );
 }
 
@@ -213,7 +227,7 @@ function Menu({
             mark="2D"
             title={t.menu.learning}
             hint={t.menu.learningHint}
-            soon
+            onClick={() => navigate("/app/lessons")}
             extra={
               <>
                 <div className="bar" aria-hidden="true">

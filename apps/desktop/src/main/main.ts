@@ -2,21 +2,37 @@ import {
   app,
   BrowserWindow,
   ipcMain,
+  protocol,
   safeStorage,
   session,
   shell,
 } from "electron";
 import { join } from "node:path";
+import { APP_ORIGIN, serveApp } from "./appProtocol";
 import { isAllowedExternal } from "./external";
 import { createSecureStore } from "./secureStore";
 
 const devServer = process.env.ARDUHUB_DEV_SERVER_URL;
+const rendererRoot = join(__dirname, "..", "renderer");
 
 // Tests and parallel runs may point the app at a separate profile folder.
 if (process.env.ARDUHUB_USER_DATA)
   app.setPath("userData", process.env.ARDUHUB_USER_DATA);
 
+protocol.registerSchemesAsPrivileged([
+  {
+    scheme: "app",
+    privileges: {
+      standard: true,
+      secure: true,
+      supportFetchAPI: true,
+      corsEnabled: false,
+    },
+  },
+]);
+
 let store: ReturnType<typeof createSecureStore>;
+const appUrl = devServer ?? `${APP_ORIGIN}/`;
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -40,16 +56,13 @@ function createWindow() {
   // The renderer never opens windows or leaves the app page.
   win.webContents.setWindowOpenHandler(() => ({ action: "deny" }));
   win.webContents.on("will-navigate", (event, url) => {
-    const allowed = devServer
-      ? url.startsWith(devServer)
-      : url.startsWith("file://");
-    if (!allowed) event.preventDefault();
+    if (!url.startsWith(appUrl)) event.preventDefault();
   });
-  if (devServer) void win.loadURL(devServer);
-  else void win.loadFile(join(__dirname, "..", "renderer", "index.html"));
+  void win.loadURL(appUrl);
 }
 
 app.whenReady().then(() => {
+  protocol.handle("app", (request) => serveApp(rendererRoot, request));
   store = createSecureStore(join(app.getPath("userData"), "session.json"), {
     available: () => safeStorage.isAsyncEncryptionAvailable(),
     encrypt: (plain) => safeStorage.encryptStringAsync(plain),
@@ -58,6 +71,22 @@ app.whenReady().then(() => {
   });
   session.defaultSession.setPermissionRequestHandler((_wc, _perm, done) =>
     done(false),
+  );
+  // The YouTube embed refuses players without an http(s) referrer, and the
+  // app page lives on app://. Present the site as the referrer, only for
+  // YouTube requests.
+  session.defaultSession.webRequest.onBeforeSendHeaders(
+    {
+      urls: ["https://www.youtube-nocookie.com/*", "https://www.youtube.com/*"],
+    },
+    (details, done) => {
+      done({
+        requestHeaders: {
+          ...details.requestHeaders,
+          Referer: "https://arduhub.vercel.app/",
+        },
+      });
+    },
   );
 
   ipcMain.handle("store:get", (_e, key) => store.get(key));

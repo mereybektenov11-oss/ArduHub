@@ -12,8 +12,14 @@
     "resolveJsonModule": true,
     "types": [],
     "paths": {
+      "@/lib/supabase/client": ["./src/renderer/shims/supabaseClient.ts"],
       "@arduhub/curriculum/*": ["../../packages/curriculum/src/*"],
-      "@arduhub/arduino-core/*": ["../../packages/arduino-core/src/*"]
+      "@arduhub/arduino-core/*": ["../../packages/arduino-core/src/*"],
+      "@/*": ["../../src/*"],
+      "next/navigation": ["./src/renderer/shims/navigation.ts"],
+      "next/link": ["./src/renderer/shims/link.tsx"],
+      "next/dynamic": ["./src/renderer/shims/dynamic.tsx"],
+      "next/image": ["./src/renderer/shims/image.tsx"]
     }
   },
   "include": ["src/renderer/**/*.ts", "src/renderer/**/*.tsx"]

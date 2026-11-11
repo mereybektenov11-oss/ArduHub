@@ -73,3 +73,29 @@ describe("secure store", () => {
     expect(await s.get("big")).toBeNull();
   });
 });
+
+describe("app:// protocol paths", async () => {
+  const { resolveAppPath } = await import("../src/main/appProtocol");
+  const root = join(tmpdir(), "renderer");
+  it("serves files inside the renderer folder only", () => {
+    expect(resolveAppPath(root, "app://arduhub/")).toBe(
+      join(root, "index.html"),
+    );
+    expect(resolveAppPath(root, "app://arduhub/hex/index.json")).toBe(
+      join(root, "hex", "index.json"),
+    );
+    expect(resolveAppPath(root, "app://arduhub/../secret.txt")).toBe(
+      join(root, "secret.txt"),
+    );
+    // The URL parser itself collapses %2e%2e segments: still inside root.
+    expect(resolveAppPath(root, "app://arduhub/%2e%2e/%2e%2e/x")).toBe(
+      join(root, "x"),
+    );
+    // Encoded slashes survive parsing; decoding must not escape the root.
+    expect(resolveAppPath(root, "app://arduhub/%2F..%2F..%2Fx")).toBeNull();
+    expect(resolveAppPath(root, "app://arduhub/..%5C..%5Cx")).toBeNull();
+    expect(resolveAppPath(root, "app://evil/index.html")).toBeNull();
+    expect(resolveAppPath(root, "https://arduhub/index.html")).toBeNull();
+    expect(resolveAppPath(root, "app://arduhub/a%00b")).toBeNull();
+  });
+});

@@ -6,4 +6,6 @@ export default defineConfig({
   timeout: 60_000,
   workers: 1,
   reporter: "list",
+  // Root tsconfig: the learning test reuses site fixtures (@/ paths).
+  tsconfig: "../../tsconfig.json",
 });

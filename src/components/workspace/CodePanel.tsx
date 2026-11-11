@@ -14,12 +14,24 @@ import { linter, lintGutter, setDiagnostics } from "@codemirror/lint";
 import {
   syntaxHighlighting,
   defaultHighlightStyle,
+  HighlightStyle,
   StreamLanguage,
 } from "@codemirror/language";
 import { explain, type Diagnostic } from "@/services/compile/explain";
 import { learningRu as c } from "@arduhub/curriculum/learning.ru";
 import { kidsWorkspaceRu as k } from "@/content/kids-workspace.ru";
 import SettingsIcon from "@/components/icons/SettingsIcon";
+// Default CodeMirror colours, each overridable by a CSS variable named after
+// it (e.g. --code-00f). The site keeps the defaults; the desktop app's dark
+// theme supplies readable values.
+const themableHighlight = HighlightStyle.define(
+  defaultHighlightStyle.specs.map((spec) =>
+    typeof spec.color === "string" && spec.color.startsWith("#")
+      ? { ...spec, color: `var(--code-${spec.color.slice(1)}, ${spec.color})` }
+      : spec,
+  ),
+);
+
 export default function CodePanel({
   value,
   onChange,
@@ -51,7 +63,7 @@ export default function CodePanel({
           history(),
           keymap.of([...defaultKeymap, ...historyKeymap]),
           StreamLanguage.define(cpp),
-          syntaxHighlighting(defaultHighlightStyle),
+          syntaxHighlighting(themableHighlight),
           EditorState.transactionFilter.of((tr) => {
             const large =
               new TextEncoder().encode(tr.newDoc.toString()).length > 16384;

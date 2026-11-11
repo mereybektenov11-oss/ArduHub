@@ -148,7 +148,7 @@ test("login screen: validation, wrong password, security", async () => {
   expect(s.errors.filter((e) => !e.includes("status of 400"))).toEqual([]);
 });
 
-test("menu after login shows account data and in-development sections", async () => {
+test("menu after login shows account data; practice is still in development", async () => {
   const s = await launch(userData);
   app = s.app;
   const { page } = s;
@@ -157,8 +157,9 @@ test("menu after login shows account data and in-development sections", async ()
     page.getByRole("heading", { name: /Привет, Алия!/ }),
   ).toBeVisible();
   await expect(page.getByText("Пройдено 2 из 12")).toBeVisible();
-  await expect(page.getByText("В разработке", { exact: true })).toHaveCount(2);
+  await expect(page.getByText("В разработке", { exact: true })).toHaveCount(1);
   await expect(page.getByRole("button", { name: /Профиль/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Обучение/ })).toBeVisible();
   await page.screenshot({ path: join(shots, "menu.png") });
 
   // The stored session is encrypted on disk.

@@ -1,0 +1,171 @@
+/* «Ночная лаборатория» for the learning area (D2).
+   The reused site lesson CSS is light (cream background, ink text, amber
+   accent). Here its tokens are remapped while the learning area is open:
+   dark and light tokens swap places, so every background/text pair of the
+   site keeps its contrast, and amber becomes the neon cyan. Text on cyan is
+   pinned dark by neon-on-primary.generated.css. */
+:root:has(.learning-area) {
+  color-scheme: dark;
+  --neon-on-primary: #062029;
+
+  --cream-50: #0b1020;
+  --cream-100: #1a2442;
+  --white: #121a31;
+  --ink-900: #e6edff;
+  --ink-800: #c9d4f2;
+  --forest-700: #4ade80;
+  --text-dark: #e6edff;
+  --text-light: #0b1020;
+  --text-muted-dark: #9aa8cc;
+  --text-muted-light: #3d4a73;
+  --line-dark: #2a3760;
+  --line-light: #c9d4f2;
+
+  --amber-500: #22d3ee;
+  --amber-600: #06b6d4;
+  --amber-ink: #062029;
+  --wire: #22d3ee;
+
+  --success: #4ade80;
+  --success-ink: #4ade80;
+  --light-success: #10331f;
+  --error: #fb7185;
+  --error-ink: #fda4af;
+  --light-error: #3a1520;
+  --error-border: #7f1d1d;
+  --error-text-dark: #fda4af;
+
+  --surface-mentor: #1a2442;
+  --surface-video: #1a2442;
+  --surface-repeat: #1a2442;
+  --surface-sensor: #1a2442;
+  --surface-motor: #1a2442;
+  --surface-button: #1a2442;
+  --surface-collection: #1a2442;
+  --surface-rank: #1a2442;
+
+  --glass-light: #121a31d9;
+  --glass-dark: #e6edffd9;
+  --glass-amber: #22d3eeed;
+  --glass-amber-hover: #67e8f9ef;
+  --glass-edge: #22d3ee40;
+  --dialog-backdrop: #05081ad9;
+  --shadow-card:
+    0 0 0 1px rgba(34, 211, 238, 0.08), 0 0 28px rgba(34, 211, 238, 0.08);
+  --topic-muted: #9aa8cc;
+  --topic-link: #22d3ee;
+
+  /* Headings in the pixel display face of the theme. */
+  --font-manrope: "Monocraft";
+}
+:root:has(.learning-area) .cabinet {
+  color-scheme: dark;
+  --cab-border: #2a3760;
+  --cab-muted: #9aa8cc;
+}
+:root:has(.learning-area) body {
+  background: var(--color-bg)
+    linear-gradient(rgba(34, 211, 238, 0.06) 1px, transparent 1px) 0 0 / 100%
+    28px;
+}
+/* Primary actions glow like in the rest of the app. */
+:root:has(.learning-area) .cab-btn:not(.cab-btn-secondary),
+:root:has(.learning-area) .button-primary {
+  box-shadow: 0 0 18px rgba(34, 211, 238, 0.45);
+}
+/* The code editor keeps a dark surface with readable syntax colours. */
+:root:has(.learning-area) .cm-editor {
+  background: #0b1020;
+  color: #e6edff;
+}
+:root:has(.learning-area) {
+  /* CodeMirror defaults (see themableHighlight in the site's CodePanel),
+     remapped for the dark editor; all ≥ 6.8:1 on #0b1020. */
+  --code-404740: #cbd5e1;
+  --code-708: #f0abfc;
+  --code-219: #a5b4fc;
+  --code-164: #86efac;
+  --code-a11: #fca5a5;
+  --code-e40: #fdba74;
+  --code-00f: #7dd3fc;
+  --code-30a: #c4b5fd;
+  --code-085: #6ee7b7;
+  --code-167: #5eead4;
+  --code-256: #93c5fd;
+  --code-00c: #67e8f9;
+  --code-940: #fcd34d;
+  --code-f00: #f87171;
+}
+:root:has(.learning-area) .cm-gutters {
+  background: #121a31;
+  color: #7c88ab;
+  border-color: #2a3760;
+}
+:root:has(.learning-area) .cm-activeLine,
+:root:has(.learning-area) .cm-activeLineGutter {
+  background: #1a2442;
+}
+
+.learning-area {
+  min-height: 100vh;
+}
+
+/* Lesson map — the app's own screen. Site globals load with the learning
+   area, so the theme's type and chips are restated with enough weight. */
+.learning-area .lesson-map h1,
+.learning-area .lesson-map .map-title {
+  font-family: var(--font-head);
+  font-weight: 400;
+  font-size: 2.4rem;
+  letter-spacing: 0.02em;
+  line-height: 1.15;
+  margin-top: 8px;
+}
+.learning-area .lesson-map .chip {
+  border: 1px solid var(--color-line);
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-radius: 6px;
+}
+.map-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+.map-card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  text-align: left;
+  color: var(--color-text);
+}
+.map-card:not(:disabled):hover {
+  border-color: var(--color-primary);
+}
+.map-card:disabled {
+  cursor: not-allowed;
+}
+.map-card .node {
+  width: 52px;
+  height: 52px;
+  font-size: 1.1rem;
+}
+.map-name {
+  font-weight: 700;
+}
+.map-premium {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+}
+@media (max-width: 1100px) {
+  .map-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
