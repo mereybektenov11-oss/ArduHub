@@ -1,12 +1,12 @@
 # Блокнот координации агентов ArduHub
 
-Общий рабочий журнал Claude, Codex и Astra по плану `docs/plans/arduhub-game-migration.md`. Раздел плана «Решения владельца от 11.11.2026 и поправки к плану» имеет приоритет над остальным текстом плана.
+Общий рабочий журнал Claude и Codex по плану `docs/plans/arduhub-game-migration.md`. Раздел плана «Решения владельца от 11.11.2026 и поправки к плану» имеет приоритет над остальным текстом плана.
 
 ## Роли
 
 - **Claude** (планирование и проверка): пишет задания, проверяет результат сам (команды, дифф, браузер) и выносит вердикт. Код не пишет.
-- **Codex** и **Astra** (исполнители): берут только задания, адресованные им, делают их, пишут отчёт.
-- **Владелец**: отвечает на вопросы `В1–В20` (раздел 11 плана и раздел поправок), читает раздел «Отчёт владельцу».
+- **Codex** — единственный исполнитель (по решению владельца от 11.11.2026; Astra — модель, на которой работает Codex, а не отдельный агент). Берёт задания, делает их, пишет отчёт. Упоминания Astra в плане относятся к Codex.
+- **Владелец**: отвечает на вопросы `В1–В22` (раздел 11 плана и раздел поправок), читает раздел «Отчёт владельцу».
 
 ## Правила
 
@@ -26,20 +26,27 @@
 
 ## Доска задач
 
-Порядок этапов по решению владельца: 0 → 2 → 3 → 4 → 5 → 1 (сайт сокращается последним).
+Исполнитель один, поэтому задачи идут **строго последовательно сверху вниз**. Следующая задача начинается только после `ПРИНЯТО` предыдущей. Исключение — задачи «только чтение»: их можно делать подряд без ожидания.
 
-| ID        | Задача                                                | Исполнитель             | Статус             | Зависит от            |
-| --------- | ----------------------------------------------------- | ----------------------- | ------------------ | --------------------- |
-| C-00      | Закоммитить всю рабочую копию                         | Codex                   | ВЫДАНО             | —                     |
-| P-01      | Разведка перед этапом 0 (только чтение)               | Codex                   | ВЫДАНО             | C-00                  |
-| S0        | Этап 0: тег и вынос материалов в пакеты               | Codex                   | ЖДЁТ ПРОВЕРКИ P-01 | C-00, P-01            |
-| S2-proto  | `packages/game-protocol`                              | Codex (Astra согласует) | ЖДЁТ               | S0                    |
-| S2-server | Игровой сервер, авторизация JWT, тарифы на сервере    | Codex                   | ЖДЁТ РЕШЕНИЯ       | S2-proto, В3, В17     |
-| S2-client | Electron + R3F клиент: вход, комната, движение        | Astra                   | ЖДЁТ               | S2-proto              |
-| S3        | Совместные действия и симуляция                       | Codex + Astra           | ЖДЁТ               | S2                    |
-| S4        | Результаты и `entitlements` в БД, профиль             | Codex + Astra           | ЖДЁТ РЕШЕНИЯ       | S3, В5, В17           |
-| S5        | Развёртывание сервера, выпуск установщика, скачивание | Codex + Astra           | ЖДЁТ РЕШЕНИЯ       | S4, В3, В18, В19      |
-| S1        | Сокращение сайта (последним)                          | Codex                   | ЖДЁТ               | S5 принят, В4, В6, В7 |
+| №   | ID        | Задача                                                      | Статус       | Зависит от           |
+| --- | --------- | ----------------------------------------------------------- | ------------ | -------------------- |
+| 1   | C-00      | Закоммитить всю рабочую копию                               | ПРИНЯТО      | —                    |
+| 2   | P-01      | Разведка перед этапом 0 (только чтение)                     | ПРИНЯТО      | C-00                 |
+| 3   | P-02      | Исследование ESP32 (только чтение)                          | ПРИНЯТО      | —                    |
+| 4   | S0        | Этап 0: тег и вынос материалов в пакеты                     | ВЫДАНО       | P-01                 |
+| 5   | S2-proto  | `packages/game-protocol`: сообщения и схема состояния       | ЖДЁТ         | S0                   |
+| 6   | S2-server | Игровой сервер локально: комната, движение, проверка JWT    | ЖДЁТ         | S2-proto             |
+| 7   | S2-client | Приложение Electron + R3F: вход, комната, движение          | ЖДЁТ         | S2-server            |
+| 8   | S3-server | Совместные действия и симуляция на сервере                  | ЖДЁТ         | S2-client            |
+| 9   | S3-client | Стеллаж, верстак, провода, терминал, рубильник в приложении | ЖДЁТ         | S3-server            |
+| 10  | S4-db     | Миграции `game_results`, `entitlements`; запись с сервера   | ЖДЁТ РЕШЕНИЯ | S3-client, В5        |
+| 11  | S4-site   | Профиль: результаты, тариф, страница скачивания             | ЖДЁТ         | S4-db                |
+| 12  | S5        | Развёртывание сервера, установщик Windows, скачивание       | ЖДЁТ РЕШЕНИЯ | S4-site, В3, В19     |
+| 13  | S1        | Сокращение сайта (последним)                                | ЖДЁТ РЕШЕНИЯ | S5, В4, В6, В7       |
+| 14  | S6        | ESP32 в Премиум                                             | ЖДЁТ РЕШЕНИЯ | S1, P-02, В21        |
+| 15  | S7        | Школьный тариф и школьные аккаунты                          | ЖДЁТ РЕШЕНИЯ | S6 или после S1, В22 |
+
+Поправка к зависимостям: игровой сервер (S2–S4) разрабатывается и тестируется **локально**. Решение о хостинге (В3) нужно только к S5.
 
 ---
 
@@ -53,6 +60,20 @@
 - **В13:** сокращать сайт, когда приложение будет готово.
 
 Ещё не решены: В3 (хостинг сервера), В4–В12, В14–В16, В17–В20 (см. план).
+
+### 11.11.2026 (второй блок)
+
+- **В18:** первый выпуск только для Windows. Сборки для macOS и Linux не делаются.
+- **В17:** в Free — базовые уроки, базовые компоненты и плата Uno. В Премиум — плата ESP32, больше компонентов и больше уроков. Действует схема «один установщик, тариф проверяет сервер».
+- Ждёт подтверждения **В21**: таблица тарифов в плане (раздел «Решения владельца от 11.11.2026 (второй блок)»), название тарифа «Премиум» или «Pro», цена.
+- ESP32 вынесен в этап 6 после MVP: текущий движок avr8js не эмулирует ESP32.
+- **Школьный тариф:** все возможности Премиум и школьные аккаунты. Это этап 7. Модель аккаунтов — вопрос **В22** в плане.
+
+---
+
+### 11.11.2026 (третий блок)
+
+- **Исполнитель один — Codex.** Astra — модель Codex, а не отдельный агент. Задачи идут последовательно, порядок задан на доске.
 
 ---
 
@@ -95,17 +116,261 @@ _Заменено уточнённой версией ниже: добавлен
 
 **Отчёт:** в раздел «Отчёты исполнителей» по правилу 4. Отдельно отметь, что проверено, а что предположение.
 
+**Поправка от 11.11.2026 (владелец выбрал только Windows):** в пунктах 4 и 6 macOS и Linux не исследовать. Нужны только Windows: WebView2, подпись, `electron-updater`, NSIS.
+
+### 11.11.2026 · Claude → Codex · P-02 · ВЫДАНО (после отчёта по P-01)
+
+**Цель:** понять, как добавить ESP32 в Премиум (этап 6). Только чтение и эксперименты во временной папке вне репозитория.
+
+1. **Эмуляция ESP32** (какой модели: ESP32 классический на Xtensa или ESP32-C3 на RISC-V). Найди варианты и для каждого укажи лицензию, язык и среду (браузер, Node или нативный процесс), поддержку GPIO, PWM (LEDC), ADC, Serial, Wi-Fi, а также активность проекта. Обязательно проверь:
+   - QEMU от Espressif;
+   - облачный симулятор Wokwi (условия API и коммерческое использование — только из официальных источников);
+   - любые открытые эмуляторы ESP32 на JS или WASM, если они есть.
+2. **Альтернатива без эмуляции процессора:** поведенческая модель на уровне Arduino API. Оцени, можно ли расширить существующий интерпретатор `src/domain/sim/interpreter/*` для программ ESP32 уровня уроков (`digitalWrite`, `analogRead`, `ledcWrite`, `Serial`).
+3. **Компиляция:** что нужно в `compiler-service` для ядра `arduino-esp32` (размер установки, время сборки скетча blink, формат прошивки). Можно ли использовать HEX-кэш эталонных решений так же, как для Uno.
+4. **Итог:** таблица вариантов (плюсы, минусы, стоимость, риск) и твоя рекомендация с обоснованием. Помечай, что проверено, а что предположение.
+
+### 11.11.2026 · Claude → Codex · S0 · ВЫДАНО
+
+**Цель:** зафиксировать веб-обучение тегом и вынести движок и материалы в workspace-пакеты. Сайт внешне и по поведению не меняется. Учебные страницы **не удалять**: по решению владельца сайт сокращается последним (S1).
+
+0. **Коммит документов.** Сначала отдельным коммитом зафиксируй текущие незакоммиченные `docs/plans/arduhub-game-migration.md`, `docs/coordination/agent-notebook.md`, `docs/progress.md`: `docs: game migration plan and coordination notebook`. Amend не использовать, push не делать.
+1. **Тег.** Локальный аннотированный тег `learning-web-final` на коммит `794325e`, не на HEAD. Без push.
+2. **Workspace.** В `pnpm-workspace.yaml` добавь `packages: ["packages/*"]`, существующие настройки сохрани. Имена пакетов `@arduhub/arduino-core` и `@arduhub/curriculum`, зависимости через `workspace:*`.
+   - Учти вывод P-01 про диск D: пакеты должны разрешаться к каноническим исходникам в этом репозитории, а не к копиям на D.
+   - Выбери способ (например, junction из D-копии на `packages/` проекта), проверь его и опиши процедуру в README, раздел «Локальное хранение».
+   - В отчёте покажи, к какому пути разрешается `require.resolve('@arduhub/arduino-core')`.
+3. **`@arduhub/curriculum`** (только данные и тексты, без DOM). Перенеси:
+   - тексты `src/content/{course,learning,lesson-quiz,lesson-flow,lesson-flow-options,parts,inputs,compile-run}.ru.ts` и `src/content/compiler.ts`;
+   - `sketches.json`, `course-sketches.json`, `project-sketches.json`, `hardware-examples.json`;
+   - `content/lesson-video-queries.json`, `content/lesson-videos.json`;
+   - нужную часть `cabinet.ru.ts`, на которую ссылается `checker/errors.ru.ts`: вынеси минимальный объект, остальное оставь на сайте.
+
+   HEX-кэш: `public/hex/**` **скопируй** в пакет (сайт продолжает раздавать свою копию до S1). `scripts/build-hex-cache.mjs` должен писать в оба места или в пакет с синхронизацией — опиши выбранный вариант. Если оставшимся на сайте файлам нужны перенесённые тексты, сайт импортирует их из пакета. Дублирования текстов быть не должно.
+
+4. **`@arduhub/arduino-core`** (headless, работает в Node без DOM):
+   - перенеси `domain/{scene,checker,sim}` и `domain/parts` **без** `loaders.generated.ts` (DOM-слой Wokwi остаётся на сайте);
+   - перенеси нужные типы из `domain/types.ts` (Netlist, PinRef, CheckError и т. п.) и `services/compile/normalize.ts`;
+   - `sim/worker.ts` раздели на нейтральное ядро в пакете и браузерный адаптер Worker на сайте;
+   - `lessons/codeChecks.ts` перенеси; `lessons/content/index.ts` положи в curriculum или core, по направлению зависимостей;
+   - `lessons/flow.ts` и `lessons/quiz.ts` зависят от `projects/storage` и `progress/courseState`. Оставь их на сайте, если их нельзя перенести без переноса хранилища сайта, и укажи это в отчёте.
+5. **Подключение к сайту.** `transpilePackages: ['@arduhub/arduino-core', '@arduhub/curriculum']` в `next.config.ts` (по `node_modules/next/dist/docs/`, как в P-01). Все импорты сайта перепиши на пакеты. Re-export-заглушки в старых путях не оставляй.
+6. **Тесты.** Unit-тесты движка из списка P-01 перенеси в `packages/*/tests` с vitest-конфигом пакета, тесты сайта оставь. В корне добавь `pnpm -r test` или аналог.
+   - **Baseline:** 403 теста в 57 файлах. Сумма по корню и пакетам должна быть ≥ 403, все зелёные. Покажи таблицу «было/стало» по файлам.
+7. **Проверка без DOM.** Скрипт или тест, который в Node (не jsdom) импортирует `@arduhub/arduino-core`, запускает `runner` на HEX эталона `lesson-1` из `@arduhub/curriculum` и проходит проверку `pinBlinks` (пин 13). Это доказательство, что движок годится для игрового сервера.
+8. **Регрессия сайта.** `pnpm build`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm lint:copy`, `pnpm test:secrets`. На свежей сборке E2E `learning-v2.spec.ts`, `lesson-flow.spec.ts`, `lesson-quiz.spec.ts`, `landing-video.spec.ts`, `account-navigation.spec.ts`. Где проверка падала и до S0, покажи это по тегу `learning-web-final`.
+9. **Контроль переноса.**
+   - `grep -r "@/" packages/` — пусто;
+   - список удалённых из `src/` файлов с указанием нового пути каждого;
+   - ни один учебный материал не потерян: сравни хэши содержимого JSON и HEX до и после.
+10. **Коммиты.** Логичными шагами (workspace → curriculum → core → подключение сайта → тесты), без amend и push. Запись в `docs/progress.md`. Отчёт в блокнот, статус НА ПРОВЕРКЕ.
+
 ---
 
 ## Отчёты исполнителей (пишут Codex и Astra)
 
 _Пока нет._
 
+### 11.11.2026 · Codex → Claude · C-00
+
+**Статус: НА ПРОВЕРКЕ.** Исполнитель Codex, модель GPT-6 Astra.
+
+Создан один локальный коммит `794325eab1ab2a026603e295b62e330edefeb10e` — `chore: snapshot working copy before game migration`, с атрибуцией Codex. Ветка `codex/landing-cobalt-redesign`; push и тег не выполнялись. В снимок вошли все 728 изменённых/новых путей, включая запись в `docs/progress.md`. Код специально не исправлялся.
+
+Проверки перед коммитом:
+
+- `git ls-files --modified --others --exclude-standard -z`: 728 уникальных путей. Проверка размеров через Node: максимум `outputs/figma/ArduHub-Figma-Transfer/ui.html`, 16 510 417 байт; файлов больше 100 МБ нет.
+- Поиск `sk_`, `sb_secret`, `service_role`, `eyJ`, `GROQ`, `api_key`, `password=` по текстовым кандидатам, включая `.playwright-mcp/` и `outputs/`: совпадения в документации, lockfile, Figma/base64-данных и тестах. Дополнительный поиск структурированных JWT и длинных ключей: совпадений нет. Пароль в `tests/e2e/auth-layout.spec.ts` — фикстура перехваченного `page.route` запроса с mock-ответом 400; в `ru.ts` — текст интерфейса. Содержимое бинарных архивов не распаковывалось; поиск не является полноценным аудитом секретов внутри архивов.
+- `git check-ignore -v .env .env.local .env.production compiler-service/.env.local tmp/`: env покрыты `.gitignore:7`, tmp — `.gitignore:22`. `git ls-files` показывает только ранее отслеживаемый `.env.example`: проверен, поля ключей и паролей пустые. `git diff --cached --name-only -- '.env*' '**/.env*'` перед коммитом — пусто. Новые env в индекс не добавлены.
+- `pnpm.cmd` отсутствует в PATH; использован доступный `corepack.cmd pnpm`.
+- `corepack.cmd pnpm lint`: exit 0, `eslint . --max-warnings=0`, ошибок и предупреждений нет.
+- `corepack.cmd pnpm build` в sandbox: exit 1, `EPERM: operation not permitted, open '.next/trace'`, аналогично `trace-build`, ошибка получения lockfile (`os error 5`). `.next` — junction на `D:\CodexWorkspaces\ArduHub_Software\.next`. Повтор с разрешённым запуском вне sandbox: exit 0; `Compiled successfully in 12.0s`, TypeScript завершён, `Generating static pages (52/52)`.
+
+Последние пять строк `git show --stat HEAD`:
+
+```text
+ tests/unit/kids-pages.test.ts                      |   24 +-
+ tests/unit/landing-product.test.ts                 |    9 +-
+ tests/unit/supabase-fetch.test.ts                  |   49 +
+ tests/unit/texture-button.test.ts                  |  186 ++++
+ 728 files changed, 16713 insertions(+), 1157 deletions(-)
+```
+
+`git status --short` сразу после коммита — пустой. После добавления данного отчёта ожидается единственное изменение `docs/coordination/agent-notebook.md`: отчёт с хэшем намеренно записан после снимка. При создании своей записи progress.md обнаружена потеря кириллицы в PowerShell stdin; исправлена через UTF-8 patch и включена amend в тот же единственный коммит до фиксации указанного хэша.
+
+**P-01 ещё не начата:** она зависит от C-00. По правилу 3 этого блокнота требуется `ПРИНЯТО` от Claude; по правилу 9 исполнитель останавливается на проверке. Прошу Claude проверить C-00 и обновить доску. Статусы и чужие записи не редактировались.
+
+Повторный `git status --short` после записи отчёта показал также `M docs/plans/arduhub-game-migration.md`. Этот файл исполнитель после снимка не изменял: изменение появилось параллельно и оставлено нетронутым. Итого на момент сдачи изменены блокнот и план; непосредственно после коммита статус был пустым.
+
+---
+
+### 11.11.2026 · Codex → Claude · P-01
+
+**Статус: НА ПРОВЕРКЕ.** Исследование выполнено после приёмки C-00; код, зависимости проекта, БД, облако и git не изменялись. Ниже факты на дату проверки, отдельно ограничения подтверждения.
+
+**1. JWT.** Публичный GET `https://wjdxephhhedxertzgjnu.supabase.co/auth/v1/.well-known/jwks.json` через `Invoke-RestMethod` вернул один ключ `kty=EC, alg=ES256, use=sig`. Асимметричная проверка через JWKS доступна; нельзя считать проект работающим исключительно на общем HS256-секрете. Сам JWKS не доказывает, какой ключ сейчас активен для выпуска новых access token (там бывают standby/previous keys). Новый вход не выполнялся, активный signing key в Dashboard не проверен: этот узкий вопрос остаётся неподтверждённым. Для S2: проверять подпись, issuer, audience, exp; не делать вывод об алгоритме пользовательского JWT по legacy anon key. [Supabase signing keys](https://supabase.com/docs/guides/auth/signing-keys). Доступный коннектор не предоставляет отдельного чтения Auth signing-key configuration, поэтому использован публичный endpoint.
+
+**2. Vercel.** Старое утверждение «Functions не поддерживают WebSocket» устарело: [анонс от 22.06.2026](https://vercel.com/changelog/websocket-support-is-now-in-public-beta). На Fluid Compute соединения поддерживаются, но закрываются по максимальной длительности функции: Hobby 300 s; Pro/Enterprise 800 s, расширение до 1800 s в beta. Reconnect может попасть в другой instance; постоянный процесс с бессрочным состоянием комнаты не гарантируется. Для Colyseus по-прежнему рекомендую отдельный долгоживущий сервер, но это архитектурный вывод, а не запрет WebSocket. [Текущая инструкция и лимиты](https://vercel.com/kb/guide/do-vercel-serverless-functions-support-websocket-connections). Деплой Colyseus на Vercel не проверялся.
+
+**3. Версии.** Прочитаны JSON `https://registry.npmjs.org/<package>/latest` через системный HTTP-клиент; никаких install в проект. `latest` на 11.11.2026:
+
+| Пакет              | Версия  | Проверка заявленной совместимости                                |
+| ------------------ | ------- | ---------------------------------------------------------------- |
+| colyseus           | 0.18.12 | Node >=22; peers core ^0.18.10, schema ^5.0.8 и семейство 0.18   |
+| @colyseus/schema   | 5.0.47  | TS >=5; Node engine не объявлен                                  |
+| @colyseus/sdk      | 0.18.10 | Node >=12, peer core 0.18.x; выбирать для server 0.18            |
+| colyseus.js        | 0.16.22 | legacy клиент, не смешивать автоматически с server 0.18          |
+| three              | 0.187.0 | React/Node peer/engine не объявлены                              |
+| @react-three/fiber | 9.8.2   | React/react-dom >=19 <19.4, three >=0.156                        |
+| @react-three/drei  | 10.7.9  | React ^19, fiber ^9, three >=0.159                               |
+| electron           | 45.3.0  | установочный пакет Node >=22.12; runtime Node встроен в Electron |
+| electron-builder   | 26.18.0 | Node >=14                                                        |
+| electron-updater   | 6.8.11  | Node engine не объявлен                                          |
+| vite               | 8.3.8   | Node ^20.19 или >=22.12                                          |
+
+Локальные Node 24.16.0 и React 19.3.1 удовлетворяют указанным диапазонам. Отсутствие engine — не доказательство runtime-совместимости. Совместная установка и приложение с этими версиями не проверены. Источник каждой строки — npm registry endpoint выше, не версии из памяти.
+
+**4–6. Windows desktop.** Tauri использует Chromium WebView2; WebGL2 ожидается в современном runtime, однако это не гарантия на любой GPU/драйвер: нужна проверка `getContext('webgl2')` на целевых ПК. [WebView](https://v2.tauri.app/reference/webview-versions/). Официальное «от 600 KB» относится к минимальному Tauri-приложению, не измеренному Windows NSIS: [источник](https://v2.tauri.app/start/). Размер установщика зависит от [доставки WebView2](https://v2.tauri.app/distribute/windows-installer/). Оценка для планирования, НЕ замер: Tauri несколько МБ без runtime; Electron десятки–сотня МБ с Chromium. Сопоставимых официальных замеров Windows hello-world установщиков не установлено.
+
+Electron `safeStorage` в main process использует Windows DPAPI; не защищает от других приложений того же пользователя. В 45 синхронный API deprecated, следует использовать async API. [Документация](https://www.electronjs.org/docs/latest/api/safe-storage). Tauri предлагает [Stronghold](https://v2.tauri.app/plugin/stronghold/) для зашифрованного vault; пароль/ключ разблокировки надо проектировать отдельно, это не автоматический эквивалент DPAPI.
+
+В проекте установлен @playwright/test 1.64.1. [Electron automation](https://playwright.dev/docs/api/class-electron) экспериментальная, `electron.launch()` возвращает отдельное приложение, поддерживает Electron >=21. Два запуска с отдельными userData и без single-instance lock архитектурно возможны; запуск двух реальных Electron процессов не проверен, Electron в проект не устанавливался. Голый `require('playwright')` из корня не разрешается из-за pnpm strict dependencies: использовать зависимость, доступную через @playwright/test, либо явно объявить playwright в будущем desktop test package.
+
+Для Windows — NSIS и electron-updater, latest.yml и артефакты на update endpoint. Authenticode: OV/EV сертификат или Azure Trusted Signing; ключи/учётные данные должны быть доступны сборке. Подпись Windows рекомендована, не является общим требованием запуска приложения; предупреждения SmartScreen возможны. Для неподписанных NSIS обновлений нельзя обещать работу с включённой проверкой издателя: нужен явно спроектированный режим без Authenticode verification и отдельный smoke-test двух релизов. Это не проверялось. [Stable v26 signing](https://www.electron.build/v26/docs/features/code-signing/), [v26 updater](https://www.electron.build/v26/docs/features/auto-update/), [v26 Windows options](https://www.electron.build/v26/docs/win/). Найденные страницы без /v26 описывают ещё не выпущенный v27; его требования signed update manifests не переносились на stable 26.18.0. macOS/Linux не исследовались по поправке задания.
+
+**7. Workspace.** Реальный минимальный эксперимент вне репозитория: `%TEMP%/arduhub-p01-bf7c3f0d3bdf4e2b8369231ee24ecb33` и одноимённая папка `D:/CodexWorkspaces`. В обеих root manifest с `@probe/x: workspace:*`, `packages/x`, pnpm-workspace.yaml; `corepack.cmd pnpm --dir <D-copy> install --offline` — exit 0, pnpm 11.25.0, два workspace проекта. Junction C-copy/node_modules → D-copy/node_modules. `require.resolve` из C-copy вернул **D-copy/packages/x/index.js**, значение 42. Следствие: копирования только manifest/lockfile по текущему README недостаточно для будущего workspace: пакеты нужно также синхронизировать или делать junction на канонические исходники. Next build временного monorepo не выполнялся. Локальный `node_modules/next/dist/docs/01-app/03-api-reference/05-config/01-next-config-js/transpilePackages.md` подтверждает автоматическую обработку workspace для App Router + Webpack и явный `transpilePackages: ['@arduhub/arduino-core']` для raw TS в node_modules. Указываются имена, не пути; не совмещать с serverExternalPackages.
+
+**8. Полный список файлов с импортами за границу выбранных каталогов.** Получен обходом TypeScript AST, включая re-export, import type и динамические import; относительные пути нормализованы. Внутренние переходы между шестью выбранными каталогами не считаются внешними.
+
+| Файл                                  | Внешняя зависимость                                                                                                                                                           |
+| ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| src/domain/scene/check.ts             | @/content/learning.ru                                                                                                                                                         |
+| src/domain/scene/migrate.ts           | src/domain/types                                                                                                                                                              |
+| src/domain/checker/check.ts           | src/domain/types                                                                                                                                                              |
+| src/domain/checker/netlist.ts         | src/domain/types                                                                                                                                                              |
+| src/domain/checker/errors.ru.ts       | @/content/cabinet.ru                                                                                                                                                          |
+| src/domain/parts/catalog.overrides.ts | @/content/parts.ru (type)                                                                                                                                                     |
+| src/domain/parts/catalog.ts           | @/content/parts.ru, @/content/learning.ru                                                                                                                                     |
+| src/domain/parts/loaders.generated.ts | динамические импорты @wokwi/elements/dist/esm/*; DOM-слой, не переносить в headless server без разделения                                                                     |
+| src/domain/sim/checks.ts              | @/content/learning.ru                                                                                                                                                         |
+| src/domain/sim/runner.ts              | avr8js                                                                                                                                                                        |
+| src/domain/lessons/codeChecks.ts      | @/content/learning.ru                                                                                                                                                         |
+| src/domain/lessons/content/index.ts   | @/content/{sketches.json,learning.ru,course.ru,hardware-examples.json,course-sketches.json,lesson-quiz.ru,lesson-flow-options.ru}; корневой content/lesson-video-queries.json |
+| src/domain/lessons/flow.ts            | @/domain/projects/storage, @/domain/progress/courseState                                                                                                                      |
+| src/domain/lessons/quiz.ts            | @/content/lesson-quiz.ru, @/domain/projects/storage                                                                                                                           |
+| src/services/compile/explain.ts       | @/content/learning.ru                                                                                                                                                         |
+| src/services/compile/handler.ts       | @/lib/rateLimit                                                                                                                                                               |
+| src/services/compile/probe.ts         | @/content/compiler                                                                                                                                                            |
+
+**9. Тестовая база.** `corepack.cmd pnpm test`: **57 файлов / 403 passed**, exit 0. Sandbox первый запуск дал EPERM node_modules/.vite-temp; вне sandbox прошёл. Для числа тестов по файлам повторено с JSON reporter (`%TEMP%/arduhub-p01-tests.json`); verbose вывод ранее обрезался. Файлы с прямыми импортами выбранных каталогов (это карта зависимостей тестов, не измерение покрытия):
+
+```text
+arduino-interpreter.test.ts 13; cabinet-checker.test.ts 6
+compile-routing.test.ts 5; compiler-client-retry.test.ts 3; compiler-probe.test.ts 7
+course-state-review.test.ts 2; course-state.test.ts 7; dashboard-sync.test.ts 3
+hex-cache.test.ts 2; kids-settings.test.ts 2; learning-compiler.test.ts 6
+learning-contracts.test.ts 6; learning-course.test.ts 13; learning-hardware.test.ts 20
+learning-logic.test.ts 8; learning-placement.test.ts 3; learning-v2.test.ts 14
+lesson-flow.test.ts 4; lesson-quiz.test.ts 16; polish-compiler.test.ts 8
+quiz-practice-transition.test.ts 2; two-led-completion.test.ts 7
+```
+
+Все имена относительно `tests/unit/`. Полный suite сохранять как регрессионный baseline: косвенные зависимости также значимы. После P-01: `corepack.cmd pnpm build` вне sandbox — exit 0, 52/52 страницы; `corepack.cmd pnpm lint` — exit 0. Не проверены: активный выпускающий JWT ключ, реальное desktop-приложение, его GPU/установщик/обновления и полная сборка workspace-копии. Это ограничения исследования, а не заявленные реализованные возможности. Перехожу к разрешённой read-only P-02.
+
+---
+
+### 11.11.2026 · Codex → Claude · P-02
+
+**Статус: НА ПРОВЕРКЕ.** Исследование после отчёта P-01. Никакие эмуляторы, ядра или зависимости в проект не устанавливались, компилятор и облако не изменены. Поддержка ниже — заявления первичных источников, не результаты запуска наших прошивок.
+
+**1. Варианты эмуляции.** Классический ESP32 — Xtensa LX6, ESP32-C3 — RISC-V RV32IMC; это разные цели компиляции, ROM и карты периферии.
+
+| Вариант                          | Лицензия, язык, среда                                                                                 | GPIO / LEDC / ADC / Serial / Wi-Fi                                                                                                                                                                             | Активность и ограничение                                                                                                                                                                                                                                     |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Espressif QEMU                   | C, нативный процесс; COPYING — GPL v2, отдельные файлы имеют свои лицензии                            | UART да; GPIO strap да, GPIO matrix/IOMUX нет; LEDC да только classic ESP32, C3 нет; ADC не подтверждён таблицей; Wi-Fi нет, OpenETH — отдельная виртуальная Ethernet-периферия                                | GitHub pushed_at 09.11.2026, не archived; esp-develop rebased, требуется pin commit                                                                                                                                                                          |
+| Wokwi                            | закрытый движок сервиса; внутренний язык не подтверждён. Браузерный UI; CI через облако, CLI — клиент | По таблице classic и C3: GPIO, LEDC, ADC, UART, Wi-Fi да; это виртуальная сеть, не радиофизика                                                                                                                 | Актуальные документация/тарифы, новые чипы в beta; дата коммита закрытого ядра недоступна                                                                                                                                                                    |
+| espressif/esp-emulator (ESP-EMU) | README: Rust, native и WASM с JS API; репозиторий Apache-2.0                                          | C3: GPIO, LEDC, ADC, UART, Wi-Fi заявлены. Classic ESP32 LX6 в списке целей отсутствует; есть S3 LX7                                                                                                           | pushed_at 07.11.2026, не archived. Репозиторий распространяет binaries/docs/tools: наличие Apache LICENSE не доказывает, что исходники всего ядра опубликованы. Нативный Windows binary в README не заявлен; для Windows — браузерный WASM и отдельный relay |
+| mikroverk/esp32sim               | Rust, MIT; native и WASM в браузере                                                                   | S3: GPIO/IO_MUX full, LEDC partial (без hardware fades), UART partial, Wi-Fi partial; ADC требует проверки конкретного chip path. Classic early, C3 draft/console-only — поддержку S3 нельзя переносить на них | pushed_at 09.11.2026, не archived. Масочные ROM загружаются отдельно; готовые native релизы README — Linux/macOS; Windows WASM предпочтительнее для эксперимента                                                                                             |
+
+Источники: [QEMU feature matrix](https://github.com/espressif/esp-toolchain-docs/blob/main/qemu/README.md), [QEMU COPYING](https://github.com/espressif/qemu/blob/esp-develop/COPYING), [Wokwi matrix](https://docs.wokwi.com/guides/esp32), [ESP-EMU](https://github.com/espressif/esp-emulator), [esp32sim](https://github.com/mikroverk/esp32sim), [его периферия](https://github.com/mikroverk/esp32sim/blob/main/docs/peripherals.md). Активность прочитана через GitHub REST `repos/<owner>/<repo>`; pushed_at — признак недавних изменений, не гарантия зрелости. Полноценный чисто JavaScript ESP32 CPU-эмулятор с подтверждённой пригодностью не найден; найденные WASM-варианты не являются JS-реализацией CPU. `@wokwi/elements` — визуальные компоненты, не ESP32 CPU.
+
+**Wokwi API и коммерция.** [Официальный CLI](https://docs.wokwi.com/wokwi-ci/cli-usage) использует API token, firmware/diagram, сценарии, serial и VCD; [CI](https://docs.wokwi.com/wokwi-ci/getting-started) выполняет симуляцию в облаке, есть квоты времени и on-premise по договорённости. Это не подтверждённая лицензия на встраивание white-label движка. [Terms](https://wokwi.com/legal/terms) ограничивают обычное использование некоммерческими целями, запрещают создание конкурирующего сервиса без разрешения и требуют письменного разрешения на ряд способов использования ПО. [Pricing](https://wokwi.com/pricing) предлагает Pro для коммерческих проектов и Classroom по предложению; показано €20/seat/month при annual billing, 2000 CI minutes. Для платной ArduHub нужна отдельная договорённость о встраивании/пользователях; обычную Pro-подписку нельзя считать достаточным разрешением. Цена такой интеграции неизвестна, обращения и покупки не выполнялись.
+
+**2. Поведенческий путь — оценка по коду.** Расширение возможно для ограниченного списка учебных программ. `parser.ts` содержит allow-list вызовов, `index.ts` — ограниченный интерпретатор с виртуальным временем и лимитами. Уже есть digitalWrite/read, analogRead/write, Serial.begin/print/println. Но это не C++ компилятор и не эмуляция ESP32/FreeRTOS. Сейчас: массивы на 20 пинов; pin 0–19; ADC 6 каналов, 0–5 V → 0–1023; LED_BUILTIN=13; A0=14; PWM 0–255. LEDC отсутствует.
+
+Предлагаемый объём S6: board profile (пины, ADC, напряжение, константы, доступность входа/выхода); отдельное сопоставление pin→ADC; разрешение ADC по выбранной плате; модель привязки LEDC pin/channel/timer, duty/frequency/resolution; обновление scene/netlist/input/output glue и Sample, которые сейчас ориентированы на Uno. Сохранить лимиты выполнения и отказ для неподдерживаемого кода. В Arduino-ESP32 3.x выбирать pin-based `ledcAttach(pin,freq,resolution)` и `ledcWrite(pin,duty)`; не смешивать со старым channel-based API 2.x. [Официальный LEDC API](https://docs.espressif.com/projects/arduino-esp32/en/latest/api/ledc.html). Нужны проверки Blink, цифрового входа, ADC и PWM/Serial для каждого board profile. Wi-Fi, библиотеки, задачи RTOS и точные тайминги нельзя объявлять поддержанными этой моделью.
+
+**3. Компиляция.** [Официальная установка](https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html) использует индекс `https://espressif.github.io/arduino-esp32/package_esp32_index.json`. Прочитан системным HTTP-клиентом: первая stable platform 3.3.12, архив ядра **51 102 895 байт**. Сумма ядра и Windows toolsDependencies из этого индекса — **1 979 406 907 байт** (~1,98 GB), без внешнего `arduino:dfu-util`; это объём загрузок, НЕ размер установки. Включены Xtensa и RISC-V toolchain, отладчики, esptool, файловые утилиты и chip libraries. Распакованный размер **не измерен**; для планирования оценка — несколько GB, плюс build/cache/temp. Toolchain не скачивался.
+
+Время Blink **не измерено**: ESP32 core не установлен, официального универсального времени нет. Предварительная оценка для планирования — десятки секунд–несколько минут cold build, warm быстрее, но использовать как SLA нельзя. Перед S6 нужен отдельный benchmark с зафиксированными CPU, core 3.3.12, FQBN, jobs, cold/warm и пиковыми RAM/диском. Исследование не подменяет этот замер.
+
+Текущий `compiler-service/Dockerfile` устанавливает только arduino:avr; `compile-job.mjs` жёстко задаёт `arduino:avr:uno` и читает `sketch.ino.hex`; `server.mjs` валидирует HEX и ограничивает размер; `scripts/build-hex-cache.mjs` пишет public/hex и ключует по нормализованному коду. Для ESP32 нужны pin core/tool versions, отдельные FQBN (`esp32:esp32:esp32` или `esp32:esp32:esp32c3`), board options, настройка allowed headers/libraries, лимитов ресурсов и timeout. Для публичного кода оставить Docker isolation; native LOCAL_COMPILER не изолирован.
+
+Артефакты ESP32 — application BIN и ELF, bootloader/partition BIN, при необходимости merged flash image с корректными offsets; это не AVR Intel HEX. Эмулятору нужен его поддерживаемый формат и ROM. Кэширование эталонов возможно как принцип, но требует нового контракта: `{board, fqbn, coreVersion, toolchain, libraries, options, partitionHash, sourceHash, format, artifactHashes}` и BIN/ELF/manifest вместо поля hex. Старый HEX-кэш напрямую неприменим; cache hit по одному коду между Uno/C3/classic недопустим. Форматы подтверждены [Wokwi custom firmware](https://docs.wokwi.com/guides/esp32) и README ESP-EMU (merged BIN).
+
+**4. Сравнение и рекомендация (инженерная оценка).**
+
+| Вариант                      | Плюсы                                                            | Минусы / риск                                                                                                      | Стоимость                                                          |
+| ---------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------ |
+| Расширить свой интерпретатор | Общий TS, детерминированные учебные проверки, без firmware boot  | Только объявленное подмножество Arduino; требуется board abstraction; риск выдавать модель за настоящее устройство | Разработка и регрессии; внешняя подписка не требуется              |
+| QEMU                         | Настоящие firmware и отладка CPU, открытые исходники             | Недостаточная периферия для схем, процесс/изоляция, GPL notices/source obligations                                 | Инфраструктура и разработка; обязательной подписки не найдено      |
+| Wokwi                        | Широкая подтверждённая таблицей периферия, готовая автоматизация | Договор на интеграцию, квоты, облачная зависимость, условия конкурирующего продукта                                | Pro/seat не равно white-label; интеграционная цена по договору     |
+| ESP-EMU WASM                 | C3 и периферия заявлены, JS API, компактная интеграция возможна  | Проверить права на binary и доступность исходников core, firmware compatibility; native Windows не подтверждён     | Цена redistributable binary не установлена; расходы интеграции     |
+| esp32sim WASM                | MIT, исходники Rust, local browser execution                     | Classic early / C3 draft; частичная периферия; ROM/assets имеют свои лицензии                                      | Разработка, тестирование и сопровождение без обязательной подписки |
+
+Рекомендую для первого ESP32-этапа **ограниченную учебную модель Arduino API** с явным обозначением модели и одного конкретного board profile. Выбор classic/C3 должен утвердить владелец вместе с уроками В21; для будущего firmware пути предпочтительно исследовать C3, но это предложение, не принятое решение. Если обязательны произвольные ESP-IDF/Arduino библиотеки и Wi-Fi, сначала отдельный proof-of-concept реального firmware на выбранном WASM-эмуляторе; нельзя обещать это расширением allow-list. Критерии: загрузка BIN, Blink GPIO, ADC, LEDC, Serial, остановка бесконечного кода и два изолированных экземпляра. Wokwi рассматривать только после явного разрешения на нужную коммерческую интеграцию.
+
+Не выполнено/не подтверждено: установка arduino-esp32, cold/warm compile benchmark, дисковый размер после распаковки, запуск ESP32 firmware в перечисленных эмуляторах, коммерческое согласование Wokwi. Все варианты оценены по документации и локальному коду, а не названы готовой интеграцией. Вопрос для последующего S6: конкретная плата, список обязательных API/уроков, нужен ли реальный Wi-Fi.
+
+---
+
+### 11.11.2026 · Codex → Claude · P-01 / P-02 · проверки сдачи
+
+После P-02 `corepack.cmd pnpm build` вне sandbox — exit 0, компиляция 13.7 s, 52/52 страницы; `corepack.cmd pnpm lint` — exit 0. После P-01 те же проверки также прошли (выше). Дополнительно P-01: `createRequire(require.resolve('@playwright/test'))('playwright')._electron.launch` существует (`function`), проверено локально. Оба отчёта остаются **НА ПРОВЕРКЕ**; доска не изменялась. Дополнен `docs/progress.md`. Commit, tag, push, миграции и изменения приложения не выполнялись. Временный workspace-пример оставлен для воспроизведения Claude.
+
 ---
 
 ## Проверки (пишет Claude)
 
-_Пока нет._
+### 11.11.2026 · Claude → Codex · C-00 · ПРИНЯТО
+
+Проверил сам:
+
+- `git log`: HEAD `794325e chore: snapshot working copy before game migration`, ветка `codex/landing-cobalt-redesign`, родитель `5e5d445`; хэш совпадает с отчётом.
+- В коммите нет `.env*`: grep по `git show --name-only` пуст.
+- Крупнейший файл в дереве — 16 510 417 байт (`outputs/figma/ArduHub-Figma-Transfer/ui.html`), лимит GitHub соблюдён.
+- Тег `learning-web-final` не создан — так и должно быть.
+- `git status` после коммита показывает только мои правки `docs/plans/arduhub-game-migration.md` и `docs/coordination/agent-notebook.md`, сделанные после снимка.
+- `pnpm build` (вне sandbox) и `pnpm lint` по отчёту прошли. Сборку я не повторял: в коммите не появилось нового кода, только снимок.
+- Замечание без последствий: коммит был изменён через amend до отчёта. В будущих задачах amend не использовать — нужен новый коммит.
+
+**P-01 можно начинать.** После неё делай P-02.
+
+### 11.11.2026 · Claude → Codex · P-01 · ПРИНЯТО
+
+Перепроверил сам:
+
+- **JWKS проекта.** Один ключ `EC/ES256/sig`, совпадает.
+- **npm `latest`.** colyseus 0.18.12, @colyseus/schema 5.0.47, @colyseus/sdk 0.18.10, three 0.187.0, @react-three/fiber 9.8.2 (peer react `>=19 <19.4`), drei 10.7.9, electron 45.3.0, electron-builder 26.18.0, vite 8.3.8 — совпадают.
+- **Vercel KB.** WebSocket в public beta с 22.06.2026 на Fluid Compute, длительность соединения Hobby 300 s, Pro 800 s (1800 s beta) — совпадает. Моё утверждение в плане «Vercel не держит WebSocket» устарело, исправлено в плане: отдельный долгоживущий сервер нужен из-за ограничения длительности и непостоянства инстанса, а не из-за отсутствия поддержки.
+- **Файлы с импортами `@/content|@/lib`.** grep даёт тот же набор, что в отчёте.
+- **Baseline тестов.** `arduhub-p01-tests.json`: 403/403, 57 файлов.
+- **Временные папки эксперимента** на C и D существуют.
+
+Принимаю выводы:
+
+- сервер проверяет JWT через JWKS (ES256) с проверкой `iss`, `aud`, `exp`;
+- клиент Colyseus — `@colyseus/sdk` 0.18.x, не `colyseus.js`;
+- `safeStorage` вызывать в async-варианте;
+- R3F 9.8 требует React < 19.4: при обновлении React это блокер.
+
+### 11.11.2026 · Claude → Codex · P-02 · ПРИНЯТО
+
+Перепроверил наличие и лицензии `espressif/esp-emulator` (Apache-2.0, pushed 07.11.2026) и `mikroverk/esp32sim` (MIT, pushed 09.11.2026) через GitHub API — совпадает. Размеры ядра arduino-esp32 и условия Wokwi не перепроверял, они остаются на ответственности отчёта.
+
+Рекомендацию принимаю для плана S6: первый этап ESP32 — ограниченная учебная модель Arduino API на одной плате, с явной пометкой «модель». Для реальных прошивок нужен отдельный proof-of-concept. Wokwi — только после письменного разрешения. Выбор платы и Wi-Fi вынесен владельцу (В23).
+
+**S0 выдан.** Временные папки P-01 удали после S0, когда они больше не нужны для воспроизведения.
 
 ---
 
@@ -122,3 +387,25 @@ _Пока нет._
 - Для оболочки выбран Electron: сохраняется общий TS-движок. Альтернатива — Godot, но тогда движок придётся переписывать.
 - Codex выданы C-00 (коммит всей рабочей копии) и P-01 (разведка, включая Electron, подпись и тесты).
 - Ждут решения владельца: В17 (что даёт каждый тариф, один установщик или нет), В18 (какие ОС), В19 (подпись кода), В3 (хостинг сервера), В20 (оплата).
+
+### 11.11.2026 — тарифы и первый результат
+
+- Codex закоммитил всю рабочую копию (коммит `794325e`), я проверил и принял.
+- Записаны решения: только Windows; Free — базовые уроки и детали на Uno; Премиум — ESP32, больше деталей и уроков; Школьный — всё из Премиум и школьные аккаунты.
+- ESP32 нельзя запустить на текущем движке (avr8js эмулирует только Uno). Это отдельный этап 6, сначала исследование P-02.
+- Школьные аккаунты — этап 7, нужны ответы на В22.
+- Codex может продолжать: P-01, затем P-02.
+- Ждут ответа: В21 (какие уроки в Free, название и цена платного тарифа), В22 (как устроены школьные аккаунты), В3 (хостинг игрового сервера), В19 (сертификат подписи для Windows).
+
+### 11.11.2026 — один исполнитель
+
+- Все задачи переведены на Codex и выстроены в одну очередь из 15 шагов (доска задач).
+- Сервер разрабатывается локально, поэтому вопрос хостинга (В3) нужен только к шагу 12.
+
+### 11.11.2026 — разведка принята, выдан этап 0
+
+- Codex выполнил обе разведки, я перепроверил ключевые факты сам. Всё совпало.
+- **Исправление моего плана.** Vercel теперь поддерживает WebSocket (бета с июня 2026), но соединение живёт максимум 5–30 минут. Для игрового сервера по-прежнему нужен отдельный постоянный хост. Решение не меняется, меняется обоснование.
+- **ESP32.** Готового эмулятора на JS нет. Рекомендация — сначала учебная модель ESP32 на нашем движке, с честной пометкой, что это модель. Ядро для компиляции ESP32 весит около 2 ГБ загрузки. Wokwi для платного продукта требует отдельного договора.
+- Codex выдан этап 0: тег старого обучения и вынос движка и материалов в пакеты. Сайт при этом не меняется.
+- **Новый вопрос В23:** какая плата ESP32 нужна (классическая ESP32 или ESP32-C3) и нужен ли в уроках Wi-Fi.
