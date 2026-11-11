@@ -3,17 +3,17 @@ import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { lessons } from "@/domain/seed";
-import type { LearningLesson as Lesson } from "@/domain/lessons/content";
+import type { LearningLesson as Lesson } from "@arduhub/arduino-core/lessons/content";
 import {
   initialSteps,
   type Draft,
   type LearningStore,
 } from "@/domain/projects/storage";
-import { migrateScene } from "@/domain/scene/migrate";
-import { checkScene } from "@/domain/scene/check";
-import { codeIssue } from "@/domain/lessons/codeChecks";
-import { checkBehavior, type CheckResult } from "@/domain/sim/checks";
-import type { Trace } from "@/domain/sim/runner";
+import { migrateScene } from "@arduhub/arduino-core/scene/migrate";
+import { checkScene } from "@arduhub/arduino-core/scene/check";
+import { codeIssue } from "@arduhub/arduino-core/lessons/codeChecks";
+import { checkBehavior, type CheckResult } from "@arduhub/arduino-core/sim/checks";
+import type { Trace } from "@arduhub/arduino-core/sim/runner";
 import { lessonOpen, awardLesson } from "@/domain/progress/xp";
 import {
   migrateLessonFlow,
@@ -41,13 +41,13 @@ import QuizStage from "./stages/QuizStage";
 import PracticeStage from "./stages/PracticeStage";
 import Link from "next/link";
 import CompletionModal from "./CompletionModal";
-import { catalog } from "@/domain/parts/catalog";
+import { catalog } from "@arduhub/arduino-core/parts/catalog";
 import { computeStageState } from "@/domain/progress/courseState";
 import {
   matchesSolution,
   recordCompileAttempt,
 } from "@/domain/lessons/solutions";
-import { compileRunRu } from "@/content/compile-run.ru";
+import { compileRunRu } from "@arduhub/curriculum/compile-run.ru";
 import { kidsWorkspaceRu as k, kidsMentorRu } from "@/content/ru";
 import { useMentorNudge } from "@/lib/useMentorNudge";
 import { playSfx } from "@/lib/sfx";

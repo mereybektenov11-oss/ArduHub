@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { compilerStatusRu as c } from "@/content/compiler";
+import { compilerStatusRu as c } from "@arduhub/curriculum/compiler";
 
 export function CompilerProbe() {
   const [pending, setPending] = useState(false);

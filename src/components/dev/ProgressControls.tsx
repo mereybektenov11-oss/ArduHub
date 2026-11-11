@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { lessons } from "@/domain/seed";
-import { learningLessons } from "@/domain/lessons/content";
+import { learningLessons } from "@arduhub/arduino-core/lessons/content";
 import {
   computeCourseState,
   normalizeProgress,

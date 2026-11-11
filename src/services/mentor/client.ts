@@ -1,8 +1,8 @@
 import { templateReply } from "./templates";
-import type { CheckError } from "@/domain/types";
-import type { SceneDoc } from "@/domain/scene/scene";
-import { learningRu as learning } from "@/content/learning.ru";
-import { shorted } from "@/domain/scene/netlist";
+import type { CheckError } from "@arduhub/arduino-core/types";
+import type { SceneDoc } from "@arduhub/arduino-core/scene/scene";
+import { learningRu as learning } from "@arduhub/curriculum/learning.ru";
+import { shorted } from "@arduhub/arduino-core/scene/netlist";
 import { explain } from "@/services/compile/explain";
 export type MentorInput = {
   mentorId: string;

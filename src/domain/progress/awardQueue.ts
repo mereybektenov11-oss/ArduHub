@@ -1,6 +1,6 @@
 import type { Progress } from "@/domain/types";
 import { lessons } from "@/domain/seed";
-import { lessonQuizzes } from "@/content/lesson-quiz.ru";
+import { lessonQuizzes } from "@arduhub/curriculum/lesson-quiz.ru";
 import { computeCourseState } from "./courseState";
 
 export type AwardEvent = {

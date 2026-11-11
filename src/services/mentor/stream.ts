@@ -4,7 +4,7 @@ import { createRateLimiter } from "@/lib/rateLimit";
 import { lessons, mentors } from "@/domain/seed";
 import { mentorPrompt } from "./prompts";
 import { templateReply } from "./templates";
-import { learningRu as learning } from "@/content/learning.ru";
+import { learningRu as learning } from "@arduhub/curriculum/learning.ru";
 type Turn = { role: "user" | "assistant"; text: string };
 type Cached = { text: string; expires: number };
 export function createStreamingMentorHandler(

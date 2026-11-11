@@ -1,5 +1,5 @@
 "use client";
-import type { LearningLesson } from "@/domain/lessons/content";
+import type { LearningLesson } from "@arduhub/arduino-core/lessons/content";
 import { lessonFlowRu as c } from "@/content/ru";
 import { Stagger, StaggerItem } from "@/components/ui/Stagger";
 import { motionTokens } from "@/lib/motion";

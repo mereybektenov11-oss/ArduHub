@@ -1,9 +1,9 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { createVideoResolver } from "../src/services/video/resolve.mjs";
 const queries = JSON.parse(
-  await readFile("content/lesson-video-queries.json", "utf8"),
+  await readFile("packages/curriculum/src/lesson-video-queries.json", "utf8"),
 );
-const data = JSON.parse(await readFile("content/lesson-videos.json", "utf8"));
+const data = JSON.parse(await readFile("packages/curriculum/src/lesson-videos.json", "utf8"));
 const resolver = createVideoResolver({
   key: process.env.YOUTUBE_API_KEY,
   initial: data,
@@ -21,7 +21,7 @@ for (const [id, config] of Object.entries(queries)) {
   }
 }
 await writeFile(
-  "content/lesson-videos.json",
+  "packages/curriculum/src/lesson-videos.json",
   JSON.stringify(data, null, 2) + "\n",
 );
 console.log(

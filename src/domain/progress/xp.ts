@@ -6,7 +6,7 @@ import {
   computeStageState,
   normalizeProgress,
 } from "./courseState";
-import { learningLessons } from "@/domain/lessons/content";
+import { learningLessons } from "@arduhub/arduino-core/lessons/content";
 export { levelFromXp as xpLevel } from "./levels";
 export const syncLessonStates = normalizeProgress;
 export function lessonOpen(p: Progress, id: string): boolean {

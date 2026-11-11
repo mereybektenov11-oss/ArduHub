@@ -1,7 +1,7 @@
 "use client";
 import { useProgress } from "@/lib/useProgress";
-import { errorCopy } from "@/domain/checker/errors.ru";
-import type { ErrorCode } from "@/domain/types";
+import { errorCopy } from "@arduhub/arduino-core/checker/errors.ru";
+import type { ErrorCode } from "@arduhub/arduino-core/types";
 import { practiceCopy as c } from "@/content/cabinet.ru";
 import { kidsPagesRu as k } from "@/content/kids-pages.ru";
 import { Action, Card, GradientCard } from "./ui";

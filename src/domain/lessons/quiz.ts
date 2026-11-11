@@ -1,4 +1,4 @@
-import type { LessonQuestion } from "@/content/lesson-quiz.ru";
+import type { LessonQuestion } from "@arduhub/curriculum/lesson-quiz.ru";
 import type { Draft, StepState } from "@/domain/projects/storage";
 
 export type QuizProgress = {

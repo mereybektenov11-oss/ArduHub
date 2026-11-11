@@ -47,7 +47,7 @@ if (process.argv[2] === "--check-text") {
     }
     walk(tree);
   }
-  for (const root of ["src/content", "src/components", "src/app"]) {
+  for (const root of ["src/content", "src/components", "src/app", "packages/curriculum/src"]) {
     for (const entry of fs.readdirSync(root, {
       recursive: true,
       withFileTypes: true,

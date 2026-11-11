@@ -1,7 +1,7 @@
 import { createRateLimiter } from "@/lib/rateLimit";
 import { mentors, lessons } from "@/domain/seed";
-import { errorCopy } from "@/domain/checker/errors.ru";
-import { isScene } from "@/domain/scene/scene";
+import { errorCopy } from "@arduhub/arduino-core/checker/errors.ru";
+import { isScene } from "@arduhub/arduino-core/scene/scene";
 const clean = (s: string) =>
   s
     .replace(/<[^>]*>/g, "")

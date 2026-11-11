@@ -66,6 +66,16 @@ pnpm format:check
 
 Сборка и разработка используют Webpack, чтобы внешнее расположение зависимостей не мешало разрешению модулей.
 
+Workspace-пакеты хранятся только в `packages/` этого репозитория. Перед установкой на D: создайте junction (если пути ещё нет):
+
+```powershell
+New-Item -ItemType Junction -Path D:\CodexWorkspaces\ArduHub_Software\packages -Target C:\Users\User\Downloads\ArduHub_Software\packages
+```
+
+Не создавайте копию исходников пакетов на D:. После установки проверьте `node -p "require.resolve('@arduhub/arduino-core')"`: результат должен вести в `C:\Users\User\Downloads\ArduHub_Software\packages\arduino-core\src\index.ts`. При существующем пути сначала проверьте его Target; не удаляйте каталог вслепую. На этой машине команды pnpm запускаются как `corepack.cmd pnpm ...`. Корневой `pnpm test` вызывает Vitest для сайта и обоих пакетов через Node: рекурсивный runner pnpm 11 отказывается работать с junction-backed `node_modules`.
+
+`@arduhub/curriculum` содержит тексты, JSON и HEX; `@arduhub/arduino-core` — схемы, проверки, интерпретатор, AVR и нейтральный контроллер симуляции. Браузерный Worker и DOM-компоненты остаются на сайте. `pnpm hex:build` пишет одинаковые HEX и индекс в `packages/curriculum/hex` и `public/hex`. Проверка сохранности после S0: `node scripts/verify-s0-materials.mjs` (сравнивает SHA256 копий и тег с учётом Git LF/Windows CRLF).
+
 ## Обучение: новый план L2-1…L2-16
 
 Текущий план и проверка: `docs/learning-v2-tasks-progress.md`, начальный аудит: `docs/STATUS.md`.

@@ -1,6 +1,6 @@
 import type { Diagnostic } from "./explain";
 import { cachedHex } from "./cache";
-import { canInterpretArduino } from "@/domain/sim/interpreter";
+import { canInterpretArduino } from "@arduhub/arduino-core/sim/interpreter";
 export type CompileResult = {
   hex?: string;
   warnings?: Diagnostic[];

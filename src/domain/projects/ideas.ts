@@ -1,9 +1,9 @@
-import { learningLessons, exampleScene } from "@/domain/lessons/content";
-import { hardwareScene } from "@/domain/lessons/content/hardware";
-import sketches from "@/content/sketches.json" with { type: "json" };
-import hardware from "@/content/hardware-examples.json" with { type: "json" };
-import { catalog } from "@/domain/parts/catalog";
-import { makePart } from "@/domain/scene/scene";
+import { learningLessons, exampleScene } from "@arduhub/arduino-core/lessons/content";
+import { hardwareScene } from "@arduhub/arduino-core/lessons/content/hardware";
+import sketches from "@arduhub/curriculum/sketches.json" with { type: "json" };
+import hardware from "@arduhub/curriculum/hardware-examples.json" with { type: "json" };
+import { catalog } from "@arduhub/arduino-core/parts/catalog";
+import { makePart } from "@arduhub/arduino-core/scene/scene";
 import { ideaCopy } from "@/content/projects.ru";
 const night = exampleScene("pwm");
 night.components = night.components.map((p) =>

@@ -9,7 +9,7 @@ for (let i = 0; i < 20; i++) {
   await new Promise((r) => setTimeout(r, 500));
 }
 const example = JSON.parse(
-  await readFile("src/content/sketches.json", "utf8"),
+  await readFile("packages/curriculum/src/sketches.json", "utf8"),
 )[0].code;
 const request = (code, secret = key) =>
   fetch(url + "/compile", {

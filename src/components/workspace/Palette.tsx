@@ -1,10 +1,10 @@
 "use client";
-import { catalog, type PartType } from "@/domain/parts/catalog";
-import { learningRu as c } from "@/content/learning.ru";
+import { catalog, type PartType } from "@arduhub/arduino-core/parts/catalog";
+import { learningRu as c } from "@arduhub/curriculum/learning.ru";
 import PartView from "./PartView";
 import { useState } from "react";
-import { partCategories, paletteCopy as text } from "@/content/parts.ru";
-import { compilerLibraries } from "@/domain/parts/catalog.overrides";
+import { partCategories, paletteCopy as text } from "@arduhub/curriculum/parts.ru";
+import { compilerLibraries } from "@arduhub/arduino-core/parts/catalog.overrides";
 import { kidsWorkspaceRu as k } from "@/content/kids-workspace.ru";
 export default function Palette({
   types,

@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { learningRu as c } from "@/content/learning.ru";
+import { learningRu as c } from "@arduhub/curriculum/learning.ru";
 import { Action, Card } from "@/components/cabinet/ui";
 import { polishRu } from "@/content/ru";
 import { lessonFlowRu as flowCopy } from "@/content/ru";

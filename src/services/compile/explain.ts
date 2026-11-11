@@ -1,4 +1,4 @@
-import { learningRu as c } from "@/content/learning.ru";
+import { learningRu as c } from "@arduhub/curriculum/learning.ru";
 export type Diagnostic = { line: number; col: number; message: string };
 export function explain(message: string) {
   const d = c.compileExplanations;

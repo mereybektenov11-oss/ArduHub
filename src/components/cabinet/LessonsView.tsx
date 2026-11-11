@@ -7,8 +7,8 @@ import { computeCourseState } from "@/domain/progress/courseState";
 import { useProgress } from "@/lib/useProgress";
 import { lessonsCopy as c } from "@/content/cabinet.ru";
 import { Card, Pill, Tabs } from "./ui";
-import { learningRu } from "@/content/learning.ru";
-import { learningLessons } from "@/domain/lessons/content";
+import { learningRu } from "@arduhub/curriculum/learning.ru";
+import { learningLessons } from "@arduhub/arduino-core/lessons/content";
 export default function LessonsView() {
   const { progress: p, notify } = useProgress(),
     router = useRouter();

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { learningRu as c } from "@/content/learning.ru";
+import { learningRu as c } from "@arduhub/curriculum/learning.ru";
 export default function Page() {
   return (
     <div className="cab-stack">

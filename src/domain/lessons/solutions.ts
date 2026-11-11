@@ -1,5 +1,5 @@
-import { learningLessons } from "./content";
-import { normalizeCode } from "@/services/compile/normalize";
+import { learningLessons } from "@arduhub/arduino-core/lessons/content";
+import { normalizeCode } from "@arduhub/arduino-core/compile/normalize";
 import type { CompileResult } from "@/services/compile/client";
 const outageErrors = new Set([
   "compiler_unconfigured",

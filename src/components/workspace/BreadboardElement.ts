@@ -1,4 +1,4 @@
-import { breadboardPins } from "@/domain/parts/breadboard";
+import { breadboardPins } from "@arduhub/arduino-core/parts/breadboard";
 // Project-owned visual; @wokwi/elements 1.9.2 does not include a breadboard.
 if (!customElements.get("arduhub-breadboard")) {
   customElements.define(

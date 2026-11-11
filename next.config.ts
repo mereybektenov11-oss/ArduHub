@@ -8,6 +8,7 @@ function normalizeEntryPath(value: string) {
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  transpilePackages: ["@arduhub/arduino-core", "@arduhub/curriculum"],
   async headers() {
     const dev = process.env.NODE_ENV !== "production";
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;

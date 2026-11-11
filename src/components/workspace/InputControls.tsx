@@ -1,8 +1,8 @@
 "use client";
-import type { SceneDoc } from "@/domain/scene/scene";
-import { catalog } from "@/domain/parts/catalog";
-import { learningRu as c } from "@/content/learning.ru";
-import { inputCopy as copy } from "@/content/inputs.ru";
+import type { SceneDoc } from "@arduhub/arduino-core/scene/scene";
+import { catalog } from "@arduhub/arduino-core/parts/catalog";
+import { learningRu as c } from "@arduhub/curriculum/learning.ru";
+import { inputCopy as copy } from "@arduhub/curriculum/inputs.ru";
 const interactive = [
   "button",
   "pushbutton-6mm",

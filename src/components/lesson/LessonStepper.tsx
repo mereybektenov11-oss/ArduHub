@@ -1,8 +1,8 @@
 "use client";
-import { learningRu as c } from "@/content/learning.ru";
+import { learningRu as c } from "@arduhub/curriculum/learning.ru";
 import type { StepState } from "@/domain/projects/storage";
 import { lessonStepOrder, canOpenLessonStep } from "@/domain/lessons/quiz";
-import { lessonQuizRu } from "@/content/lesson-quiz.ru";
+import { lessonQuizRu } from "@arduhub/curriculum/lesson-quiz.ru";
 export default function LessonStepper({
   step,
   steps,

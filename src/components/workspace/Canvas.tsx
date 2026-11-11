@@ -6,14 +6,14 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { SceneDoc, PinRef } from "@/domain/scene/scene";
-import { canWire, pinKey, connections } from "@/domain/scene/netlist";
-import { pinPosition, componentPins } from "@/domain/parts/pins";
-import { catalog, isPartType, type PartType } from "@/domain/parts/catalog";
-import { sceneExtent, snap } from "@/domain/scene/placement";
-import { learningRu as c } from "@/content/learning.ru";
+import type { SceneDoc, PinRef } from "@arduhub/arduino-core/scene/scene";
+import { canWire, pinKey, connections } from "@arduhub/arduino-core/scene/netlist";
+import { pinPosition, componentPins } from "@arduhub/arduino-core/parts/pins";
+import { catalog, isPartType, type PartType } from "@arduhub/arduino-core/parts/catalog";
+import { sceneExtent, snap } from "@arduhub/arduino-core/scene/placement";
+import { learningRu as c } from "@arduhub/curriculum/learning.ru";
 import PartView from "./PartView";
-import { fitSceneToViewport } from "@/domain/scene/viewport";
+import { fitSceneToViewport } from "@arduhub/arduino-core/scene/viewport";
 import { kidsWorkspaceRu as k } from "@/content/kids-workspace.ru";
 import { playSfx } from "@/lib/sfx";
 export default function Canvas({

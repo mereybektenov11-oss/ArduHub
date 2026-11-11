@@ -9,7 +9,7 @@ import type {
   Topic,
 } from "./types";
 import { topics } from "./types";
-import { referenceCircuit } from "./checker/netlist";
+import { referenceCircuit } from "@arduhub/arduino-core/checker/netlist";
 import {
   cabinetRu,
   unitTitles,
@@ -19,7 +19,7 @@ import {
   levelDeck,
   gameDeck,
 } from "@/content/cabinet.ru";
-import { courseCopy } from "@/content/course.ru";
+import { courseCopy } from "@arduhub/curriculum/course.ru";
 export { topicNames } from "@/content/cabinet.ru";
 const courseLevels = [
   [1, 2, 3],

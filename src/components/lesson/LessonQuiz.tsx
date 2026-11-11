@@ -3,7 +3,7 @@ import { useRef } from "react";
 import {
   lessonQuizRu as c,
   type LessonQuestion,
-} from "@/content/lesson-quiz.ru";
+} from "@arduhub/curriculum/lesson-quiz.ru";
 import {
   quizResult,
   createQuizProgress,

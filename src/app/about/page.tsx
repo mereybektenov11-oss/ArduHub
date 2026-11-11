@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { learningRu as c } from "@/content/learning.ru";
+import { learningRu as c } from "@arduhub/curriculum/learning.ru";
 import { ru } from "@/content/ru";
 export default function About() {
   return (

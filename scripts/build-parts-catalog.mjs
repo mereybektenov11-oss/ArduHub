@@ -52,7 +52,7 @@ try {
     return result;
   });
   await writeFile(
-    "src/domain/parts/catalog.generated.json",
+    "packages/arduino-core/src/parts/catalog.generated.json",
     JSON.stringify(data, null, 2) + "\n",
   );
   const aliases = {

@@ -1,6 +1,6 @@
 import type { Draft } from "@/domain/projects/storage";
 import { computeStageState } from "@/domain/progress/courseState";
-import type { LearningLesson } from "./content";
+import type { LearningLesson } from "@arduhub/arduino-core/lessons/content";
 export function practiceAfterQuiz(
   lesson: Pick<LearningLesson, "id" | "quiz">,
   flow: LessonFlowState,

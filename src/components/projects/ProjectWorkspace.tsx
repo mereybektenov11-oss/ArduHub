@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { onboardingRu } from "@/content/ru";
-import { learningRu as c } from "@/content/learning.ru";
+import { learningRu as c } from "@arduhub/curriculum/learning.ru";
 import { useLearningStore } from "@/lib/useLearningStore";
 import { useProgress } from "@/lib/useProgress";
 import { thumbnail, type Project } from "@/domain/projects/storage";

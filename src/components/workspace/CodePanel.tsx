@@ -17,7 +17,7 @@ import {
   StreamLanguage,
 } from "@codemirror/language";
 import { explain, type Diagnostic } from "@/services/compile/explain";
-import { learningRu as c } from "@/content/learning.ru";
+import { learningRu as c } from "@arduhub/curriculum/learning.ru";
 import { kidsWorkspaceRu as k } from "@/content/kids-workspace.ru";
 import SettingsIcon from "@/components/icons/SettingsIcon";
 export default function CodePanel({

@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import type { LearningLesson } from "@/domain/lessons/content";
+import type { LearningLesson } from "@arduhub/arduino-core/lessons/content";
 import { motionTokens } from "./motion";
 const requests = new Map<string, Promise<LearningLesson>>();
 export function prefetchLesson(id: string): Promise<LearningLesson> {

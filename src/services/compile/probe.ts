@@ -1,4 +1,4 @@
-import { compilerStatusRu as c } from "@/content/compiler";
+import { compilerStatusRu as c } from "@arduhub/curriculum/compiler";
 
 export async function probeCompiler(
   config: { url?: string; key?: string },

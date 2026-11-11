@@ -3,7 +3,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { playSfx } from "@/lib/sfx";
 import { CheckDraw } from "@/components/feedback/EventFeedback";
 import { lessonFlowRu as c } from "@/content/ru";
-import type { LearningLesson } from "@/domain/lessons/content";
+import type { LearningLesson } from "@arduhub/arduino-core/lessons/content";
 import type { LessonFlowState } from "@/domain/lessons/flow";
 import { Action, Card } from "@/components/cabinet/ui";
 import RewardIcon from "@/components/icons/RewardIcon";

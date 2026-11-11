@@ -1,4 +1,4 @@
-import { normalizeCode } from "./normalize";
+import { normalizeCode } from "@arduhub/arduino-core/compile/normalize";
 type Index = { version: number; entries: Record<string, { path: string }> };
 let indexPromise: Promise<Index> | undefined;
 export async function cachedHex(code: string): Promise<string | null> {

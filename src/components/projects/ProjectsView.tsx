@@ -2,10 +2,10 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { onboardingRu } from "@/content/ru";
-import { learningRu as c } from "@/content/learning.ru";
-import sketches from "@/content/sketches.json" with { type: "json" };
-import { emptyScene } from "@/domain/scene/scene";
-import { exampleScene } from "@/domain/lessons/content";
+import { learningRu as c } from "@arduhub/curriculum/learning.ru";
+import sketches from "@arduhub/curriculum/sketches.json" with { type: "json" };
+import { emptyScene } from "@arduhub/arduino-core/scene/scene";
+import { exampleScene } from "@arduhub/arduino-core/lessons/content";
 import {
   importProject,
   thumbnail,
@@ -19,7 +19,7 @@ import { projectIdeas } from "@/domain/projects/ideas";
 import { kidsPagesRu as k } from "@/content/kids-pages.ru";
 import PartView from "@/components/workspace/PartView";
 import CabinetArt from "@/components/cabinet/CabinetArt";
-import { catalog } from "@/domain/parts/catalog";
+import { catalog } from "@arduhub/arduino-core/parts/catalog";
 import { exportProject } from "@/domain/projects/export";
 import { useProgress } from "@/lib/useProgress";
 import { recordAchievementEvent } from "@/domain/achievements";

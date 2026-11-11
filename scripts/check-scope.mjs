@@ -20,9 +20,9 @@ const exact = new Set([
   "src/domain/auth.ts",
   "src/lib/supabase/client.ts",
   // User-requested follow-up: correct two-LED lesson completion.
-  "src/domain/checker/check.ts",
-  "src/domain/scene/check.ts",
-  "src/domain/lessons/content/index.ts",
+  "packages/arduino-core/src/checker/check.ts",
+  "packages/arduino-core/src/scene/check.ts",
+  "packages/arduino-core/src/lessons/content/index.ts",
   "src/domain/lessons/flow.ts",
   "src/components/lesson/LearningLesson.tsx",
   // Existing presentation call sites; behavior/content changes remain subject to review.

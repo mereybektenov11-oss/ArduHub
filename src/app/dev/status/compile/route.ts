@@ -2,7 +2,7 @@ import { showDevStatus } from "@/lib/env";
 import { sameOrigin } from "@/lib/requestOrigin";
 import { createRateLimiter } from "@/lib/rateLimit";
 import { probeCompiler } from "@/services/compile/probe";
-import { compilerStatusRu as c } from "@/content/compiler";
+import { compilerStatusRu as c } from "@arduhub/curriculum/compiler";
 
 export const runtime = "nodejs";
 export const maxDuration = 45;

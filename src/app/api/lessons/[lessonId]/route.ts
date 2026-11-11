@@ -1,4 +1,4 @@
-import { learningLessons } from "@/domain/lessons/content";
+import { learningLessons } from "@arduhub/arduino-core/lessons/content";
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ lessonId: string }> },

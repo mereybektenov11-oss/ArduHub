@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { catalog, type PartType } from "@/domain/parts/catalog";
+import { catalog, type PartType } from "@arduhub/arduino-core/parts/catalog";
 import { partLoaders } from "@/domain/parts/loaders.generated";
 const loaders = {
   ...partLoaders,

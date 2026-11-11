@@ -1,7 +1,7 @@
 import type { Progress } from "../types";
 import { createProgress, lessons, mentors } from "../seed";
 import { topics } from "../types";
-import { isNetlist } from "../checker/netlist";
+import { isNetlist } from "@arduhub/arduino-core/checker/netlist";
 import { normalizeProgress } from "./courseState";
 export const STORAGE_KEY = "arduhub.progress.v1";
 export interface ProgressStore {

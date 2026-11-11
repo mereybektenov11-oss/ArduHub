@@ -1,6 +1,6 @@
 import type { LessonProgress, Progress } from "@/domain/types";
 import type { FlowQuestion, LessonFlowState } from "@/domain/lessons/flow";
-import { lessonQuizzes } from "@/content/lesson-quiz.ru";
+import { lessonQuizzes } from "@arduhub/curriculum/lesson-quiz.ru";
 import { lessons } from "@/domain/seed";
 import { levelFromXp } from "./levels";
 
