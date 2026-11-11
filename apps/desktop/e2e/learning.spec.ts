@@ -133,7 +133,7 @@ test("lesson 1 end to end in the app: video, test, circuit, code, real worker ru
     await expect(
       page.getByRole("heading", { name: "Карта уроков" }),
     ).toBeVisible();
-    await page.getByRole("button", { name: "← В меню" }).click();
+    await page.getByRole("button", { name: "В меню" }).click();
     await expect(
       page.getByRole("heading", { name: /Привет, Алия!/ }),
     ).toBeVisible();

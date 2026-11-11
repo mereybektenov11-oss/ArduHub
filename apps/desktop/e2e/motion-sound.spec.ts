@@ -53,6 +53,13 @@ async function frames(page: Page, action: () => Promise<void>) {
   };
 }
 
+// Interface text must use Boxicons, not emoji or symbol glyphs.
+const glyphs = /[←-⯿☀-➿■-◿\u{1F000}-\u{1FFFF}]/u;
+async function noGlyphs(page: Page, screen: string) {
+  const text = await page.locator("body").innerText();
+  expect(text.match(glyphs)?.[0] ?? null, screen).toBeNull();
+}
+
 let userData = "";
 test.beforeAll(() => {
   userData = mkdtempSync(join(tmpdir(), "arduhub-motion-"));
@@ -65,6 +72,7 @@ test("sounds play after a gesture, follow the setting; motion is smooth and can 
     const { page } = s;
     await countAudio(page);
 
+    await noGlyphs(page, "login");
     // Empty form: the deny sound plays after the click gesture.
     await page.getByRole("button", { name: "Войти" }).click();
     await expect.poll(() => sources(page)).toBeGreaterThan(0);
@@ -80,6 +88,7 @@ test("sounds play after a gesture, follow the setting; motion is smooth and can 
     expect(anim).toBe("screen-in");
     await page.waitForTimeout(800);
     await page.screenshot({ path: join(shots, "menu.png") });
+    await noGlyphs(page, "menu");
 
     const transition = await frames(page, () =>
       page.getByRole("button", { name: /Обучение/ }).click(),
@@ -88,7 +97,10 @@ test("sounds play after a gesture, follow the setting; motion is smooth and can 
     await expect(
       page.getByRole("heading", { name: "Карта уроков" }),
     ).toBeVisible();
-    await page.getByRole("button", { name: "← В меню" }).click();
+    await page.waitForTimeout(600);
+    await noGlyphs(page, "map");
+    await page.screenshot({ path: join(shots, "map.png") });
+    await page.getByRole("button", { name: "В меню" }).click();
 
     // Settings: sound off silences, «Меньше анимации» stops animations.
     await page.getByRole("button", { name: /Настройки/ }).click();
@@ -101,6 +113,7 @@ test("sounds play after a gesture, follow the setting; motion is smooth and can 
     await page.getByRole("button", { name: /Проверить звук/ }).click();
     await expect.poll(() => sources(page)).toBeGreaterThan(before);
     await page.screenshot({ path: join(shots, "settings.png") });
+    await noGlyphs(page, "settings");
 
     await page.getByLabel("Меньше анимации").check();
     await page.getByRole("button", { name: /В меню/ }).click();

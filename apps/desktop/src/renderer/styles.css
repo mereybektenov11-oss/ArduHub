@@ -585,3 +585,17 @@ button.chip:active,
   box-shadow: none;
   justify-self: start;
 }
+
+/* Boxicons (inline SVG) sit on the text baseline like a glyph. */
+.icon {
+  flex: none;
+  vertical-align: -0.18em;
+}
+.chip .icon,
+.btn .icon,
+.link .icon {
+  margin-inline: 0.05em;
+}
+.node .icon {
+  vertical-align: middle;
+}

@@ -1,5 +1,5 @@
 export const learningT = {
-  back: "← В меню",
+  back: "В меню",
   eyebrow: "Обучение · Arduino Uno",
   title: "Карта уроков",
   lesson: "Урок",

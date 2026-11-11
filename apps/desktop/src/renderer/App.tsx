@@ -6,6 +6,7 @@ import { site, t } from "./content";
 import { applyPrefs, loadPrefs, savePrefs, type Prefs } from "./prefs";
 import { navigate, route, useLocation } from "./router";
 import { playSfx } from "./sound/sfx";
+import Icon from "./icons/Icon";
 
 const LearningArea = lazy(() => import("./learning/LearningArea"));
 
@@ -155,7 +156,7 @@ function Login() {
                 aria-pressed={shown}
                 onClick={() => setShown(!shown)}
               >
-                {shown ? "◉" : "◎"}
+                <Icon name={shown ? "hide" : "show"} />
               </button>
             </span>
           </div>
@@ -176,14 +177,14 @@ function Login() {
             className="link"
             onClick={() => open("/register")}
           >
-            {t.login.register} ↗
+            {t.login.register} <Icon name="external" size="1em" />
           </button>
           <button
             type="button"
             className="link"
             onClick={() => open("/sign-in")}
           >
-            {t.login.forgot} ↗
+            {t.login.forgot} <Icon name="external" size="1em" />
           </button>
         </div>
       </section>
@@ -237,7 +238,7 @@ function Menu({
             onSettings();
           }}
         >
-          ⚙ {t.menu.settings}
+          <Icon name="cog" /> {t.menu.settings}
         </button>
       </header>
       <main className="menu">
@@ -252,7 +253,7 @@ function Menu({
         <section className="cards">
           <Tile
             index={0}
-            mark="2D"
+            mark={<Icon name="book" size="1.6rem" />}
             title={t.menu.learning}
             hint={t.menu.learningHint}
             onClick={() => navigate("/app/lessons")}
@@ -271,7 +272,7 @@ function Menu({
           />
           <Tile
             index={1}
-            mark="3D"
+            mark={<Icon name="cube" size="1.6rem" />}
             title={t.menu.practice}
             hint={t.menu.practiceHint}
             soon
@@ -279,7 +280,7 @@ function Menu({
           />
           <Tile
             index={2}
-            mark="☺"
+            mark={<Icon name="user" size="1.6rem" />}
             title={t.menu.profile}
             hint={t.menu.profileHint}
             onClick={() => open("/app/profile")}
@@ -292,7 +293,7 @@ function Menu({
 }
 
 function Tile(props: {
-  mark: string;
+  mark: React.ReactNode;
   title: string;
   hint: string;
   soon?: boolean;
@@ -365,7 +366,7 @@ function Settings(props: {
             props.onBack();
           }}
         >
-          {t.settings.back}
+          <Icon name="back" /> {t.settings.back}
         </button>
       </header>
       <main className="settings">
@@ -426,7 +427,7 @@ function Settings(props: {
             disabled={!prefs.sounds}
             onClick={() => playSfx("lesson_complete")}
           >
-            {t.settings.testSound}
+            <Icon name="play" /> {t.settings.testSound}
           </button>
           <label className="row">
             <input
@@ -464,14 +465,14 @@ function Settings(props: {
                 void supabase()?.auth.signOut();
               }}
             >
-              {t.settings.signOut}
+              <Icon name="logout" /> {t.settings.signOut}
             </button>
             <button
               type="button"
               className="link"
               onClick={() => open("/privacy")}
             >
-              {t.settings.privacy} ↗
+              {t.settings.privacy} <Icon name="external" size="1em" />
             </button>
           </div>
         </section>

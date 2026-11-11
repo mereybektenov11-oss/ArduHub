@@ -44,7 +44,7 @@ export const t = {
   },
   settings: {
     title: "Настройки",
-    back: "← В меню",
+    back: "В меню",
     text: "Размер текста",
     textSizes: [
       ["1", "Обычный"],
@@ -54,7 +54,7 @@ export const t = {
     motion: "Меньше анимации",
     sounds: "Звуковые эффекты",
     volume: "Громкость",
-    testSound: "▶ Проверить звук",
+    testSound: "Проверить звук",
     account: "Аккаунт",
     email: "Почта",
     session: "Хранение входа",

@@ -9,6 +9,7 @@ import { computeCourseState } from "@/domain/progress/courseState";
 import { learningLessons } from "@arduhub/arduino-core/lessons/content";
 import { navigate } from "../router";
 import { playSfx } from "../sound/sfx";
+import Icon from "../icons/Icon";
 import { learningT as t } from "./content";
 import { learningCss } from "./site-styles";
 
@@ -69,7 +70,7 @@ function LessonMap() {
             navigate("/menu");
           }}
         >
-          {t.back}
+          <Icon name="back" /> {t.back}
         </button>
         <div className="spacer" />
         <span className="chip">{t.progress(done, lessons.length)}</span>
@@ -103,7 +104,11 @@ function LessonMap() {
                 <span
                   className={`node ${state === "done" ? "done" : state === "current" ? "current" : ""}`}
                 >
-                  {state === "done" ? "✓" : i + 1}
+                  {state === "done" ? (
+                    <Icon name="check" size="1.4rem" />
+                  ) : (
+                    i + 1
+                  )}
                 </span>
                 <span className="tile-body">
                   <strong className="map-name">{l.title}</strong>
@@ -120,7 +125,9 @@ function LessonMap() {
         })}
       </ol>
       <div className="card map-premium">
-        <span className="node">🔒</span>
+        <span className="node">
+          <Icon name="lock" size="1.4rem" />
+        </span>
         <div className="tile-body">
           <strong className="map-name">{t.premium}</strong>
           <span className="muted small">{t.premiumHint}</span>
