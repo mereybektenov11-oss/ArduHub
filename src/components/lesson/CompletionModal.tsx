@@ -7,6 +7,7 @@ import RewardIcon from "@/components/icons/RewardIcon";
 import { Confetti, RewardFly } from "@/components/feedback/EventFeedback";
 import { playSfx } from "@/lib/sfx";
 import CabinetArt from "@/components/cabinet/CabinetArt";
+import Boxicon from "@/components/icons/Boxicon";
 export default function CompletionModal({
   rewarded,
   nextId,
@@ -50,7 +51,7 @@ export default function CompletionModal({
                 animationDelay: `${i * motionTokens.lessonFlow.stagger}s`,
               }}
             >
-              ★
+              <Boxicon name="star" size="1em" />
             </span>
           ))}
         </div>
@@ -72,7 +73,9 @@ export default function CompletionModal({
         )}
         <div className="cab-row">
           {nextId && (
-            <Action href={`/app/lesson/${nextId}`}>{c.nextLesson} →</Action>
+            <Action href={`/app/lesson/${nextId}`}>
+              {c.nextLesson} <Boxicon name="next" />
+            </Action>
           )}
           <Action secondary href="/app">
             {c.back}

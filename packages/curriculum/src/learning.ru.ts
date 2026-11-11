@@ -29,7 +29,7 @@ export const learningRu = {
   compiling: "Компилируем…",
   running: "Программа работает",
   paused: "Пауза: вкладка скрыта",
-  ready: "Нажми ▶, чтобы запустить",
+  ready: "Нажми «Запустить»",
   stopped: "Программа остановлена",
   seconds: "с виртуального времени",
   partsHint:

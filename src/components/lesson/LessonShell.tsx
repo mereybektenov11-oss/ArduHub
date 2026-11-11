@@ -13,6 +13,7 @@ import { lessonFlowRu as c, learningRu } from "@/content/ru";
 import TopProgressLine from "./TopProgressLine";
 import SettingsIcon from "@/components/icons/SettingsIcon";
 import { kidsWorkspaceRu as k } from "@/content/kids-workspace.ru";
+import Boxicon from "@/components/icons/Boxicon";
 export default function LessonShell({
   children,
   title = c.course,
@@ -37,7 +38,7 @@ export default function LessonShell({
     <div className="flow-shell">
       <header className="flow-header" data-tour="lesson-header">
         <Link className="cab-icon-btn" href="/app" aria-label={c.back}>
-          ×
+          <Boxicon name="close" />
         </Link>
         <span className="flow-course-title">{title}</span>
         <div className="flow-header-stage" data-tour="lesson-steps">

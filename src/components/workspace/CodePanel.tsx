@@ -21,6 +21,7 @@ import { explain, type Diagnostic } from "@/services/compile/explain";
 import { learningRu as c } from "@arduhub/curriculum/learning.ru";
 import { kidsWorkspaceRu as k } from "@/content/kids-workspace.ru";
 import SettingsIcon from "@/components/icons/SettingsIcon";
+import Boxicon from "@/components/icons/Boxicon";
 // Default CodeMirror colours, each overridable by a CSS variable named after
 // it (e.g. --code-00f). The site keeps the defaults; the desktop app's dark
 // theme supplies readable values.
@@ -167,7 +168,7 @@ export default function CodePanel({
               view.current?.requestMeasure();
             }}
           >
-            A−
+            A<Boxicon name="minus" size="0.9em" />
           </button>
           <span>{codeFontSize}</span>
           <button
@@ -179,7 +180,7 @@ export default function CodePanel({
               view.current?.requestMeasure();
             }}
           >
-            A+
+            A<Boxicon name="plus" size="0.9em" />
           </button>
         </div>
       </details>

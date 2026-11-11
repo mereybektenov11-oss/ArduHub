@@ -67,7 +67,7 @@ test("lesson checkpoint: wiring alone never awards XP in v2", async ({
   await seed(page);
   await page.goto("/app/lesson/lesson-1");
   await page.getByRole("button", { name: "Я посмотрел", exact: true }).click();
-  await page.getByRole("button", { name: "К тесту →", exact: true }).click();
+  await page.getByRole("button", { name: "К тесту", exact: true }).click();
   await passLessonQuiz(page);
   await dismissRewardDialogs(page);
   const pin = (name: string) => page.getByRole("button", { name, exact: true });
@@ -181,7 +181,7 @@ test("landing, diagnosis, map, lesson and reward", async ({ page }) => {
     .getByRole("button", { name: "Первый огонёк", exact: true })
     .click();
   await page.getByRole("button", { name: "Я посмотрел", exact: true }).click();
-  await page.getByRole("button", { name: "К тесту →", exact: true }).click();
+  await page.getByRole("button", { name: "К тесту", exact: true }).click();
   await passLessonQuiz(page);
   await dismissRewardDialogs(page);
   await expect(
@@ -378,7 +378,7 @@ test("all routes at 360, reduced motion and touch pin connections", async ({
   await seed(touch);
   await touch.goto("/app/lesson/lesson-1");
   await touch.getByRole("button", { name: "Я посмотрел", exact: true }).tap();
-  await touch.getByRole("button", { name: "К тесту →", exact: true }).tap();
+  await touch.getByRole("button", { name: "К тесту", exact: true }).tap();
   await passLessonQuiz(touch);
   await dismissRewardDialogs(touch);
   await touch.getByRole("button", { name: "uno 13", exact: true }).tap();
@@ -397,7 +397,7 @@ test("keyboard editor undo/redo and no duplicate/self wire", async ({
   await seed(page);
   await page.goto("/app/lesson/lesson-1");
   await page.getByRole("button", { name: "Я посмотрел", exact: true }).click();
-  await page.getByRole("button", { name: "К тесту →", exact: true }).click();
+  await page.getByRole("button", { name: "К тесту", exact: true }).click();
   await passLessonQuiz(page);
   await dismissRewardDialogs(page);
   const first = page.getByRole("button", { name: "uno 13", exact: true }),

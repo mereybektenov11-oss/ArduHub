@@ -6,6 +6,7 @@ import {
   type LessonStage,
 } from "@/domain/lessons/flow";
 import { computeStageState } from "@/domain/progress/courseState";
+import Boxicon from "@/components/icons/Boxicon";
 export default function StageIndicator({
   flow,
   active,
@@ -31,7 +32,9 @@ export default function StageIndicator({
           disabled={!canOpenStage(verified, stage)}
           onClick={() => onStage(stage)}
         >
-          <span aria-hidden="true">{stages[stage] ? "✓" : i + 1}</span>
+          <span aria-hidden="true">
+            {stages[stage] ? <Boxicon name="check" /> : i + 1}
+          </span>
           {c.stages[i]}
         </button>
       ))}

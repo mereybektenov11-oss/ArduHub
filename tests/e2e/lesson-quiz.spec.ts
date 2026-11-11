@@ -30,7 +30,7 @@ test.beforeEach(async ({ page, context }) => {
   await page.route("**/api/lesson-video?*", (r) => r.fulfill({ json: {} }));
   await page.goto("/app/lesson/lesson-1");
   await page.getByRole("button", { name: "Я посмотрел", exact: true }).click();
-  await page.getByRole("button", { name: "К тесту →", exact: true }).click();
+  await page.getByRole("button", { name: "К тесту", exact: true }).click();
 });
 
 test("70% gate, immediate feedback, saved position, one retry and reward dedup", async ({
@@ -43,7 +43,7 @@ test("70% gate, immediate feedback, saved position, one retry and reward dedup",
   await expect(practice).toBeDisabled();
   await expect(page.locator(".flow-answer")).toHaveCount(4);
   await expect(
-    page.getByRole("button", { name: "Дальше →", exact: true }),
+    page.getByRole("button", { name: "Дальше", exact: true }),
   ).toHaveCount(0);
   // Four correct answers are 67%, so practice must stay closed.
   for (let i = 0; i < 6; i++) {
@@ -61,7 +61,7 @@ test("70% gate, immediate feedback, saved position, one retry and reward dedup",
       );
       await expect(page.locator(".flow-answer").first()).toBeDisabled();
     }
-    await page.getByRole("button", { name: "Дальше →", exact: true }).click();
+    await page.getByRole("button", { name: "Дальше", exact: true }).click();
   }
   await expect(page.locator(".flow-quiz-score")).toHaveText(
     "67% · Верно 4 из 6",
@@ -74,12 +74,12 @@ test("70% gate, immediate feedback, saved position, one retry and reward dedup",
     .getByRole("button", { name: "Повторить ошибки", exact: true })
     .click();
   await page.locator(".flow-answer").nth(questions[4].correct).click();
-  await page.getByRole("button", { name: "Дальше →", exact: true }).click();
+  await page.getByRole("button", { name: "Дальше", exact: true }).click();
   await page
     .locator(".flow-answer")
     .nth((questions[5].correct + 1) % 4)
     .click();
-  await page.getByRole("button", { name: "Дальше →", exact: true }).click();
+  await page.getByRole("button", { name: "Дальше", exact: true }).click();
   await expect(page.locator(".flow-quiz-score")).toHaveText(
     "83% · Верно 5 из 6",
   );

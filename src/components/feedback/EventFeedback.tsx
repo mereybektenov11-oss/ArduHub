@@ -8,6 +8,7 @@ import {
 } from "react";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 import { motionTokens } from "@/lib/motion";
+import Boxicon from "@/components/icons/Boxicon";
 export function CheckDraw() {
   return (
     <svg
@@ -117,7 +118,7 @@ export function RewardFly({
               } as CSSProperties
             }
           >
-            ✦
+            <Boxicon name="star" size="0.9em" />
           </i>
         ))}
     </span>

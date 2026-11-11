@@ -58,7 +58,7 @@ test("a restored 6-of-6 result with a stale stage flag opens practice and surviv
   await expect(
     page.getByRole("heading", { name: "Верно 6 из 6", exact: true }),
   ).toBeVisible();
-  await page.getByRole("button", { name: "К практике →", exact: true }).click();
+  await page.getByRole("button", { name: "К практике", exact: true }).click();
   await expect(page.locator(".l2-workspace")).toBeVisible();
   await expect(page).toHaveURL(/stage=practice/);
   await page.reload();

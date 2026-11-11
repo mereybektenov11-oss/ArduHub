@@ -40,7 +40,19 @@ async function contrast(page: Page, step: string, found: string[]) {
       found.push(
         `${step}: ${n.target.join(" ")} — ${n.any[0]?.message ?? v.help}`,
       );
+  // Visible text must use Boxicons, not emoji or symbol glyphs.
+  const text = await page.locator("body").innerText();
+  for (const m of text.matchAll(glyphs)) {
+    // An arrow between two words is wiring notation in task text
+    // («13 → резистор»), not an icon.
+    const around = text.slice(Math.max(0, m.index - 2), m.index + 3);
+    if (m[0] === "→" && /^\S → \S$/u.test(around)) continue;
+    found.push(
+      `${step}: glyph «${m[0]}» in “${text.slice(Math.max(0, m.index - 25), m.index + 10).replace(/\s+/g, " ")}”`,
+    );
+  }
 }
+const glyphs = /[×←-⯿☀-➿■-◿\u{1F000}-\u{1FFFF}]️?/gu;
 
 const shots = resolve(__dirname, "../../../outputs/desktop-d2");
 
@@ -88,7 +100,7 @@ test("lesson 1 end to end in the app: video, test, circuit, code, real worker ru
     await page
       .getByRole("button", { name: "Я посмотрел", exact: true })
       .click();
-    await page.getByRole("button", { name: "К тесту →", exact: true }).click();
+    await page.getByRole("button", { name: "К тесту", exact: true }).click();
     await page.screenshot({ path: join(shots, "lesson-test.png") });
     await contrast(page, "test", low);
     await passLessonQuiz(page);

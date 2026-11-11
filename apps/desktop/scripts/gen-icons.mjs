@@ -1,7 +1,9 @@
-// Extracts the Boxicons used by the app into
-// src/renderer/icons/boxicons.generated.ts (path data only, no font, no
-// network). Boxicons 2.1.4 — MIT licence, © 2015-2021 Aniket Suvarna.
-// Add a name to `icons` and re-run: node apps/desktop/scripts/gen-icons.mjs
+// Extracts the Boxicons used by ArduHub into
+// src/components/icons/boxicons.generated.ts (path data only, no font, no
+// network). Shared by the site's lesson components and the desktop app.
+// Boxicons 2.1.4 — MIT licence, © 2015-2021 Aniket Suvarna.
+// The package is a dev dependency of apps/desktop. Add a name to `icons` and
+// re-run: node apps/desktop/scripts/gen-icons.mjs
 import { readFileSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
@@ -14,8 +16,17 @@ const icons = {
   cog: "regular/bx-cog",
   user: "regular/bx-user",
   back: "regular/bx-left-arrow-alt",
+  next: "regular/bx-right-arrow-alt",
   play: "regular/bx-play",
+  pause: "regular/bx-pause",
+  stop: "regular/bx-stop",
   check: "regular/bx-check",
+  retry: "regular/bx-revision",
+  close: "regular/bx-x",
+  plus: "regular/bx-plus",
+  minus: "regular/bx-minus",
+  more: "regular/bx-dots-horizontal-rounded",
+  star: "solid/bxs-star",
   lock: "regular/bx-lock-alt",
   book: "regular/bx-book-open",
   cube: "regular/bx-cube-alt",
@@ -37,7 +48,10 @@ for (const [name, file] of Object.entries(icons)) {
 }
 
 const target = fileURLToPath(
-  new URL("../src/renderer/icons/boxicons.generated.ts", import.meta.url),
+  new URL(
+    "../../../src/components/icons/boxicons.generated.ts",
+    import.meta.url,
+  ),
 );
 writeFileSync(
   target,
@@ -45,7 +59,7 @@ writeFileSync(
 // Boxicons 2.1.4 (https://boxicons.com), MIT licence,
 // Copyright (c) 2015-2021 Aniket Suvarna.
 export const boxicons = ${JSON.stringify(out, null, 2)} as const;
-export type IconName = keyof typeof boxicons;
+export type BoxiconName = keyof typeof boxicons;
 `,
 );
 console.log(`${Object.keys(out).length} icons`);

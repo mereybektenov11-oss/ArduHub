@@ -10,6 +10,7 @@ import {
 import Reveal from "@/components/ui/Reveal";
 import Overlay from "@/components/overlay/Overlay";
 
+import Boxicon from "@/components/icons/Boxicon";
 export function Card({
   children,
   className = "",
@@ -184,14 +185,14 @@ export function HorizontalShelf({
             aria-label={uiCopy.text043(title)}
             onClick={() => scroll(-280)}
           >
-            ←
+            <Boxicon name="back" />
           </button>
           <button
             className="cab-icon-btn"
             aria-label={uiCopy.text044(title)}
             onClick={() => scroll(280)}
           >
-            →
+            <Boxicon name="next" />
           </button>
         </div>
       </div>

@@ -8,6 +8,7 @@ import {
   type CSSProperties,
 } from "react";
 import { createPortal } from "react-dom";
+import Boxicon from "@/components/icons/Boxicon";
 import { cabinetRu as c } from "@/content/cabinet.ru";
 import { useOverlayQueue } from "./useOverlayQueue";
 import { usePortalTheme } from "./usePortalTheme";
@@ -135,7 +136,7 @@ export default function Overlay({
                   aria-label={c.close}
                   onClick={onClose}
                 >
-                  ×
+                  <Boxicon name="close" />
                 </button>
               )}
             </div>

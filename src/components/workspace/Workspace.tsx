@@ -10,7 +10,11 @@ import {
 } from "react";
 import { dashboardRu as d } from "@/content/dashboard.ru";
 import { learningRu as c } from "@arduhub/curriculum/learning.ru";
-import { catalog, partTypes, type PartType } from "@arduhub/arduino-core/parts/catalog";
+import {
+  catalog,
+  partTypes,
+  type PartType,
+} from "@arduhub/arduino-core/parts/catalog";
 import { makePart, type SceneDoc } from "@arduhub/arduino-core/scene/scene";
 import { shorted } from "@arduhub/arduino-core/scene/netlist";
 import { codeIssue } from "@arduhub/arduino-core/lessons/codeChecks";
@@ -18,7 +22,10 @@ import { compile, type CompileResult } from "@/services/compile/client";
 import { compileRunRu } from "@arduhub/curriculum/compile-run.ru";
 import type { Diagnostic } from "@/services/compile/explain";
 import type { Sample, Trace } from "@arduhub/arduino-core/sim/runner";
-import { outputLevels, buzzerFrequency } from "@arduhub/arduino-core/sim/glue/outputs";
+import {
+  outputLevels,
+  buzzerFrequency,
+} from "@arduhub/arduino-core/sim/glue/outputs";
 import { Action } from "@/components/cabinet/ui";
 import Canvas from "./Canvas";
 import Palette from "./Palette";
@@ -29,6 +36,7 @@ import { useProgress } from "@/lib/useProgress";
 import { askMentor } from "@/services/mentor/client";
 import { kidsWorkspaceRu as k } from "@/content/kids-workspace.ru";
 import { playSfx } from "@/lib/sfx";
+import Boxicon from "@/components/icons/Boxicon";
 const CodePanel = dynamic(() => import("./CodePanel"), {
   ssr: false,
   loading: () => <p>{c.code}…</p>,
@@ -449,7 +457,8 @@ export default function Workspace({
               disabled={busy || !canRun}
               aria-label={status === "compiling" ? c.compiling : k.run}
             >
-              {busy ? "⏸" : "▶"} {status === "compiling" ? c.compiling : k.run}
+              <Boxicon name={busy ? "pause" : "play"} />{" "}
+              {status === "compiling" ? c.compiling : k.run}
             </Action>
           }
           {actions}
@@ -461,7 +470,7 @@ export default function Workspace({
                 setMessage(c.stopped);
               }}
             >
-              {c.stop} ■
+              {c.stop} <Boxicon name="stop" />
             </Action>
           )}
           {scene.components.some((p) => p.type === "buzzer") && (

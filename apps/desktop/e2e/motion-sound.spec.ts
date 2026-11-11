@@ -54,7 +54,7 @@ async function frames(page: Page, action: () => Promise<void>) {
 }
 
 // Interface text must use Boxicons, not emoji or symbol glyphs.
-const glyphs = /[←-⯿☀-➿■-◿\u{1F000}-\u{1FFFF}]/u;
+const glyphs = /[×←-⯿☀-➿■-◿\u{1F000}-\u{1FFFF}]/u;
 async function noGlyphs(page: Page, screen: string) {
   const text = await page.locator("body").innerText();
   expect(text.match(glyphs)?.[0] ?? null, screen).toBeNull();

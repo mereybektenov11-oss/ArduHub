@@ -110,10 +110,10 @@ test("full lesson, real AVR, reward once, next node and review", async ({
   await expect(page.locator(".flow-video-stage")).toBeVisible();
   await audit(page);
   await expect(
-    page.getByRole("button", { name: "К тесту →", exact: true }),
+    page.getByRole("button", { name: "К тесту", exact: true }),
   ).toBeDisabled();
   await page.getByRole("button", { name: "Я посмотрел", exact: true }).click();
-  await page.getByRole("button", { name: "К тесту →", exact: true }).click();
+  await page.getByRole("button", { name: "К тесту", exact: true }).click();
   await expect(page.locator(".flow-answer")).toHaveCount(4);
   await audit(page);
   await passLessonQuiz(page);
@@ -235,7 +235,7 @@ for (const reduce of [false, true])
     await page
       .getByRole("button", { name: "Я посмотрел", exact: true })
       .click();
-    await page.getByRole("button", { name: "К тесту →", exact: true }).click();
+    await page.getByRole("button", { name: "К тесту", exact: true }).click();
     await expect(page.locator(".flow-quiz")).toBeVisible();
     await audit(page);
     await passLessonQuiz(page);
@@ -301,7 +301,7 @@ test("actual 80 percent watch unlocks test while seeking does not count", async 
   ).toBeVisible();
   await page.waitForTimeout(1300);
   await expect(
-    page.getByRole("button", { name: "К тесту →", exact: true }),
+    page.getByRole("button", { name: "К тесту", exact: true }),
   ).toBeDisabled();
   await page.evaluate(() => {
     (window as typeof window & { flowSeek: boolean }).flowSeek = false;
@@ -312,7 +312,7 @@ test("actual 80 percent watch unlocks test while seeking does not count", async 
     (window as typeof window & { flowSeek: boolean }).flowSeek = false;
   });
   await expect(
-    page.getByRole("button", { name: "К тесту →", exact: true }),
+    page.getByRole("button", { name: "К тесту", exact: true }),
   ).toBeEnabled({ timeout: 8000 });
 });
 

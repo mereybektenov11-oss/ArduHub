@@ -12,6 +12,7 @@ import { openMentor } from "@/components/mentor/openMentor";
 import { kidsMentorRu } from "@/content/kids-mentor.ru";
 import { playSfx } from "@/lib/sfx";
 import { CheckDraw } from "@/components/feedback/EventFeedback";
+import Boxicon from "@/components/icons/Boxicon";
 export default function QuizStage({
   lessonId,
   questions,
@@ -108,7 +109,9 @@ export default function QuizStage({
           <p>{c.quizReviewNote}</p>
           <div className="cab-row">
             {resultValue.passed ? (
-              <Action onClick={onContinue}>{c.toPractice} →</Action>
+              <Action onClick={onContinue}>
+                {c.toPractice} <Boxicon name="next" />
+              </Action>
             ) : (
               <Action
                 onClick={() => {
@@ -207,12 +210,16 @@ export default function QuizStage({
                   {kidsMentorRu.explain}
                 </Action>
               )}
-              <Action onClick={advance}>{c.next} →</Action>
+              <Action onClick={advance}>
+                {c.next} <Boxicon name="next" />
+              </Action>
             </div>
           )}
         </>
       ) : (
-        <Action onClick={onContinue}>{c.toPractice} →</Action>
+        <Action onClick={onContinue}>
+          {c.toPractice} <Boxicon name="next" />
+        </Action>
       )}
     </section>
   );

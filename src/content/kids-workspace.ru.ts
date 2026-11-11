@@ -11,7 +11,7 @@ export const kidsWorkspaceRu = {
   ask: "Спросить наставника",
   hint: "Подсказка",
   hintsLeft: "Осталось подсказок",
-  beforeRun: "Нажми ▶",
+  beforeRun: "Нажми «Запустить»",
   success: "Светодиод мигает!",
   successOther: "Всё работает!",
   retry: "Почти получилось! Проверь соединения и попробуй ещё раз.",

@@ -8,6 +8,7 @@ import type { LessonFlowState } from "@/domain/lessons/flow";
 import { Action, Card } from "@/components/cabinet/ui";
 import RewardIcon from "@/components/icons/RewardIcon";
 import { kidsWorkspaceRu as k } from "@/content/kids-workspace.ru";
+import Boxicon from "@/components/icons/Boxicon";
 export default function PracticeStage({
   lesson,
   flow,
@@ -156,7 +157,7 @@ export default function PracticeStage({
               <p>{k.retry}</p>
               {report.map((r, i) => (
                 <p key={i}>
-                  {r.pass ? "✓" : "↻"} {r.message}
+                  <Boxicon name={r.pass ? "check" : "retry"} /> {r.message}
                 </p>
               ))}
             </>

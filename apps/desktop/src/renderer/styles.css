@@ -587,15 +587,15 @@ button.chip:active,
 }
 
 /* Boxicons (inline SVG) sit on the text baseline like a glyph. */
-.icon {
+.boxicon {
   flex: none;
   vertical-align: -0.18em;
 }
-.chip .icon,
-.btn .icon,
-.link .icon {
+.chip .boxicon,
+.btn .boxicon,
+.link .boxicon {
   margin-inline: 0.05em;
 }
-.node .icon {
+.node .boxicon {
   vertical-align: middle;
 }

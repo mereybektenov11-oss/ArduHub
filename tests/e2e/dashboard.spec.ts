@@ -294,7 +294,7 @@ test("lesson focus has no sidebar and expected behavior on work steps", async ({
     page.getByRole("link", { name: "К пути", exact: true }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Я посмотрел", exact: true }).click();
-  await page.getByRole("button", { name: "К тесту →", exact: true }).click();
+  await page.getByRole("button", { name: "К тесту", exact: true }).click();
   await passLessonQuiz(page);
   await expect(
     page.getByRole("heading", { name: "Ожидаемое поведение" }),

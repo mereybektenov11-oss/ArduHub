@@ -51,6 +51,6 @@
 
 ## Приложение для ПК (`apps/desktop`)
 
-- Boxicons 2.1.4 — двойная/тройная лицензия `CC-BY-4.0 OR OFL-1.1 OR MIT`, используется по MIT. Copyright (c) 2015-2021 Aniket Suvarna, https://boxicons.com. В приложение входят только SVG-пути нужных иконок (`apps/desktop/src/renderer/icons/boxicons.generated.ts`), без шрифта.
+- Boxicons 2.1.4 — двойная/тройная лицензия `CC-BY-4.0 OR OFL-1.1 OR MIT`, используется по MIT. Copyright (c) 2015-2021 Aniket Suvarna, https://boxicons.com. Используются только SVG-пути нужных иконок (`src/components/icons/boxicons.generated.ts`, компонент `Boxicon`) — в уроках сайта и в приложении, без шрифта.
 - Звуковые эффекты приложения синтезируются в коде (`apps/desktop/src/renderer/sound/sfx.ts`); сторонних аудиофайлов нет.
 - Шрифты Monocraft и Inter — SIL OFL 1.1, файлы лицензий лежат рядом со шрифтами в `apps/desktop/src/renderer/fonts`.

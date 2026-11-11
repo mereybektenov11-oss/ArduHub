@@ -12,7 +12,10 @@ import {
 import { migrateScene } from "@arduhub/arduino-core/scene/migrate";
 import { checkScene } from "@arduhub/arduino-core/scene/check";
 import { codeIssue } from "@arduhub/arduino-core/lessons/codeChecks";
-import { checkBehavior, type CheckResult } from "@arduhub/arduino-core/sim/checks";
+import {
+  checkBehavior,
+  type CheckResult,
+} from "@arduhub/arduino-core/sim/checks";
 import type { Trace } from "@arduhub/arduino-core/sim/runner";
 import { lessonOpen, awardLesson } from "@/domain/progress/xp";
 import {
@@ -52,6 +55,7 @@ import { kidsWorkspaceRu as k, kidsMentorRu } from "@/content/ru";
 import { useMentorNudge } from "@/lib/useMentorNudge";
 import { playSfx } from "@/lib/sfx";
 import HintIcon from "@/components/icons/HintIcon";
+import Boxicon from "@/components/icons/Boxicon";
 const Workspace = dynamic(() => import("@/components/workspace/Workspace"), {
   ssr: false,
   loading: () => <Skeleton shape="practice" />,
@@ -412,7 +416,7 @@ function LessonFlow({
               aria-label={kidsMentorRu.dismissNudge}
               onClick={nudge.dismiss}
             >
-              ×
+              <Boxicon name="close" />
             </button>
           </aside>
         ) : undefined

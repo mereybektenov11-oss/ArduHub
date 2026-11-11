@@ -32,7 +32,7 @@ async function init(page: Page) {
 }
 async function build(page: Page) {
   await page.getByRole("button", { name: "Я посмотрел", exact: true }).click();
-  await page.getByRole("button", { name: "К тесту →", exact: true }).click();
+  await page.getByRole("button", { name: "К тесту", exact: true }).click();
   await passLessonQuiz(page);
   const pin = (name: string) => page.getByRole("button", { name, exact: true });
   for (const [a, b] of [
@@ -233,7 +233,7 @@ test("mobile workspace and all palette elements pass serious accessibility check
   await page.setViewportSize({ width: 360, height: 800 });
   await page.goto("/app/lesson/lesson-1");
   await page.getByRole("button", { name: "Я посмотрел", exact: true }).click();
-  await page.getByRole("button", { name: "К тесту →", exact: true }).click();
+  await page.getByRole("button", { name: "К тесту", exact: true }).click();
   await passLessonQuiz(page);
   for (const route of ["/app/lesson/lesson-1", "/app/projects"]) {
     await page.goto(route);

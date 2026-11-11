@@ -132,7 +132,7 @@ for (const mode of ["service", "browser", "mobile-reduced"] as const) {
     await page
       .getByRole("button", { name: "Я посмотрел", exact: true })
       .click();
-    await page.getByRole("button", { name: "К тесту →", exact: true }).click();
+    await page.getByRole("button", { name: "К тесту", exact: true }).click();
     const questions = lessonQuizzes["lesson-1"];
     for (let i = 0; i < questions.length; i++) {
       await expect(page.locator(".flow-question-progress")).toContainText(
@@ -150,11 +150,9 @@ for (const mode of ["service", "browser", "mobile-reduced"] as const) {
       await expect
         .poll(async () => (await notes(page)).slice(before))
         .toContain(i === 0 ? 196 : 784);
-      await page.getByRole("button", { name: "Дальше →", exact: true }).click();
+      await page.getByRole("button", { name: "Дальше", exact: true }).click();
     }
-    await page
-      .getByRole("button", { name: "К практике →", exact: true })
-      .click();
+    await page.getByRole("button", { name: "К практике", exact: true }).click();
     await page.getByRole("tab", { name: "Код", exact: true }).click();
     // Service mode uses an Arduino include to bypass the interpreter and known-code cache.
     // The fixture is real compiled Blink firmware; no compiler availability is claimed here.

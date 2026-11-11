@@ -7,15 +7,24 @@ import {
   type ReactNode,
 } from "react";
 import type { SceneDoc, PinRef } from "@arduhub/arduino-core/scene/scene";
-import { canWire, pinKey, connections } from "@arduhub/arduino-core/scene/netlist";
+import {
+  canWire,
+  pinKey,
+  connections,
+} from "@arduhub/arduino-core/scene/netlist";
 import { pinPosition, componentPins } from "@arduhub/arduino-core/parts/pins";
-import { catalog, isPartType, type PartType } from "@arduhub/arduino-core/parts/catalog";
+import {
+  catalog,
+  isPartType,
+  type PartType,
+} from "@arduhub/arduino-core/parts/catalog";
 import { sceneExtent, snap } from "@arduhub/arduino-core/scene/placement";
 import { learningRu as c } from "@arduhub/curriculum/learning.ru";
 import PartView from "./PartView";
 import { fitSceneToViewport } from "@arduhub/arduino-core/scene/viewport";
 import { kidsWorkspaceRu as k } from "@/content/kids-workspace.ru";
 import { playSfx } from "@/lib/sfx";
+import Boxicon from "@/components/icons/Boxicon";
 export default function Canvas({
   scene,
   onChange,
@@ -213,7 +222,7 @@ export default function Canvas({
               setZoom((z) => Math.min(2, z * 1.2));
             }}
           >
-            +
+            <Boxicon name="plus" />
           </button>
           <button
             className="cab-icon-btn"
@@ -223,12 +232,12 @@ export default function Canvas({
               setZoom((z) => Math.max(0.01, z / 1.2));
             }}
           >
-            −
+            <Boxicon name="minus" />
           </button>
         </div>
         <details className="kids-canvas-menu">
           <summary className="cab-icon-btn" aria-label={k.more}>
-            ⋯
+            <Boxicon name="more" />
           </summary>
           <div className="kids-options-panel">
             {wireOptions}

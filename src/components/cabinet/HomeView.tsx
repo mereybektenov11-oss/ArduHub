@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Boxicon from "@/components/icons/Boxicon";
 import { useEffect, useState } from "react";
 import { computeCourseState } from "@/domain/progress/courseState";
 import LessonPathV2 from "@/components/home/LessonPathV2";
@@ -102,7 +103,7 @@ export default function HomeView() {
               } catch {}
             }}
           >
-            ×
+            <Boxicon name="close" />
           </button>
           <h2>{k.diagnosticTitle}</h2>
           <p>{k.diagnosticText}</p>
