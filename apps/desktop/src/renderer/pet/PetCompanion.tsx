@@ -30,6 +30,8 @@ import {
   type PetMemory,
 } from "./memory";
 import { silence, speak } from "./speech";
+import { bubbleSide, chatBox, type ChatBox } from "./drag";
+import { usePetPosition } from "./usePetPosition";
 import volt from "./sprites/volt.png";
 import oma from "./sprites/oma.png";
 import rezik from "./sprites/rezik.png";
@@ -57,6 +59,9 @@ export default function PetCompanion(props: {
   const [fatal, setFatal] = useState<FatalCode | null>(null);
   const [chat, setChat] = useState(false);
   const [pending, setPending] = useState<string | null>(null);
+  const { pos, dragging, handlers, consumeClick } = usePetPosition();
+  const viewport = { w: window.innerWidth, h: window.innerHeight };
+  const side = bubbleSide(pos, viewport);
   const context = useRef<LessonContext>({});
   const acked = useRef(new Set<string>());
   const lastErrors = useRef("");
@@ -186,8 +191,12 @@ export default function PetCompanion(props: {
 
   return (
     <>
-      <div className={`pet pet-mood-${mood}`} data-mentor={mentor}>
-        {bubble && !chat && (
+      <div
+        className={`pet pet-mood-${mood} pet-bubble-${side.horizontal} pet-bubble-${side.vertical}${dragging ? " is-dragging" : ""}`}
+        data-mentor={mentor}
+        style={{ transform: `translate3d(${pos.x}px, ${pos.y}px, 0)` }}
+      >
+        {bubble && !chat && !dragging && (
           <div className="pet-bubble" role="status">
             <span className="pet-name">{rig.name}</span>
             <p>{bubble}</p>
@@ -198,13 +207,25 @@ export default function PetCompanion(props: {
           className="pet-sprite"
           aria-label={t.open(rig.name)}
           aria-expanded={chat}
+          aria-describedby="pet-move-hint"
+          {...handlers}
           onClick={() => {
+            if (consumeClick()) return;
             playSfx("mentor_open");
             setChat((v) => !v);
           }}
         >
-          <img src={sprites[mentor]} alt="" width={96} height={96} />
+          <img
+            src={sprites[mentor]}
+            alt=""
+            width={96}
+            height={96}
+            draggable={false}
+          />
         </button>
+        <span id="pet-move-hint" className="sr-only">
+          {t.moveHint}
+        </span>
       </div>
 
       {chat && (
@@ -216,6 +237,7 @@ export default function PetCompanion(props: {
           initial={pending}
           onInitialSent={() => setPending(null)}
           onClose={() => setChat(false)}
+          box={chatBox(pos, viewport)}
         />
       )}
 
@@ -263,6 +285,7 @@ function PetChat(props: {
   initial: string | null;
   onInitialSent: () => void;
   onClose: () => void;
+  box: ChatBox;
 }) {
   const { mentor, memory, remember, context } = props;
   const rig = mentorRigs[mentor];
@@ -341,7 +364,17 @@ function PetChat(props: {
   }
 
   return (
-    <section className="pet-chat" aria-label={t.chat.title}>
+    <section
+      className="pet-chat"
+      aria-label={t.chat.title}
+      style={{
+        left: props.box.left,
+        top: props.box.top,
+        bottom: props.box.bottom,
+        width: props.box.width,
+        maxHeight: props.box.maxHeight,
+      }}
+    >
       <header>
         <img src={sprites[mentor]} alt="" width={48} height={48} />
         <div>

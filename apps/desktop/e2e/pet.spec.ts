@@ -185,3 +185,72 @@ test("chat with the AI mentor: the site answers with the learner's token", async
     removeDir(userData);
   }
 });
+
+test("the companion can be dragged, moved with arrows and stays where it was put", async () => {
+  const userData = mkdtempSync(join(tmpdir(), "arduhub-pet-drag-"));
+  const box = async (page: Page) => (await page.locator(".pet").boundingBox())!; // not the bobbing sprite
+  try {
+    let s = await launchMocked(userData, { progress: learnerProgress() });
+    let page = s.page;
+    await signIn(page, "correct-horse");
+    await page.getByRole("button", { name: /Обучение/ }).click();
+    const sprite = page.getByRole("button", { name: "Вольтик: открыть чат" });
+    await expect(sprite).toBeVisible();
+    const start = await box(page);
+    expect(start.x).toBeGreaterThan(1000); // default: bottom-right
+
+    // Drag with the mouse to the top-left part of the window.
+    await page.mouse.move(start.x + 48, start.y + 48);
+    await page.mouse.down();
+    await page.mouse.move(400, 300, { steps: 12 });
+    await page.mouse.move(150, 160, { steps: 12 });
+    await page.mouse.up();
+    const dropped = await box(page);
+    expect(Math.abs(dropped.x - (150 - 48))).toBeLessThan(3);
+    expect(Math.abs(dropped.y - (160 - 48))).toBeLessThan(3);
+    // A drag is not a click: the chat stays closed.
+    await expect(
+      page.getByRole("region", { name: "Чат с наставником" }),
+    ).toHaveCount(0);
+
+    // Arrow keys move it too.
+    await sprite.focus();
+    await page.keyboard.press("ArrowRight");
+    await page.keyboard.press("Shift+ArrowDown");
+    const keyed = await box(page);
+    expect(Math.round(keyed.x - dropped.x)).toBe(24);
+    expect(Math.round(keyed.y - dropped.y)).toBe(96);
+
+    // A click opens the chat beside it, not on top of it, inside the window.
+    await sprite.click();
+    const chat = page.getByRole("region", { name: "Чат с наставником" });
+    await expect(chat).toBeVisible();
+    const c = (await chat.boundingBox())!;
+    const overlap =
+      c.x < keyed.x + keyed.width &&
+      c.x + c.width > keyed.x &&
+      c.y < keyed.y + keyed.height &&
+      c.y + c.height > keyed.y;
+    expect(overlap).toBe(false);
+    expect(c.x + c.width).toBeLessThanOrEqual(1280);
+    expect(c.y + c.height).toBeLessThanOrEqual(800);
+    await page.screenshot({ path: join(shots, "dragged-chat.png") });
+    expect(s.errors).toEqual([]);
+    await s.app.close();
+
+    // After a restart it is where it was left.
+    s = await launchMocked(userData, { progress: learnerProgress() });
+    page = s.page;
+    await expect(
+      page.getByRole("heading", { name: /Привет, Алия!/ }),
+    ).toBeVisible();
+    await page.getByRole("button", { name: /Обучение/ }).click();
+    await expect(page.locator(".pet-sprite")).toBeVisible();
+    const again = await box(page);
+    expect(Math.abs(again.x - keyed.x)).toBeLessThan(3);
+    expect(Math.abs(again.y - keyed.y)).toBeLessThan(3);
+    await s.app.close();
+  } finally {
+    removeDir(userData);
+  }
+});

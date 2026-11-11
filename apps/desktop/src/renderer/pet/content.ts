@@ -9,6 +9,8 @@ const times = (n: number) =>
 
 export const petT = {
   open: (name: string) => `${name}: открыть чат`,
+  moveHint:
+    "Наставника можно перетащить мышью или двигать стрелками; Shift — быстрее.",
   greeting: (name: string) =>
     `Я рядом, ${name}. Если что-то пойдёт не так — подскажу. Нажми на меня, чтобы поговорить.`,
   remember: (name: string, message: string, count: number) =>
