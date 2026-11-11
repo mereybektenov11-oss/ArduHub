@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { createProgress, lessons } from "../../src/domain/seed";
 import { initialFlowQuiz } from "../../src/domain/lessons/flow";
-import { learningLessons } from "../../src/domain/lessons/content";
+import { learningLessons } from "@arduhub/arduino-core/lessons/content";
 test("path, map and lesson list share the single current lesson and clean stages", async ({
   page,
 }) => {

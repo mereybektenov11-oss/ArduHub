@@ -1,14 +1,19 @@
 import { describe, expect, it } from "vitest";
-import fixtures from "@/services/compile/fixtures.json" with { type: "json" };
-import { learningLessons } from "@/domain/lessons/content";
-import { isScene } from "@/domain/scene/scene";
-import { checkScene } from "@/domain/scene/check";
-import { catalog } from "@/domain/parts/catalog";
-import { UnoRunner } from "@/domain/sim/runner";
-import { applyInputs } from "@/domain/sim/glue/inputs";
-import { attachTimed } from "@/domain/sim/glue/timed";
-import { attachBuses } from "@/domain/sim/glue/buses";
-import { checkBehavior } from "@/domain/sim/checks";
+import { readFileSync } from "node:fs";
+import { createRequire } from "node:module";
+import { createHash } from "node:crypto";
+import { normalizeCode } from "@arduhub/arduino-core/compile/normalize";
+import index from "@arduhub/curriculum/hex/index.json";
+const require = createRequire(import.meta.url);
+import { learningLessons } from "@arduhub/arduino-core/lessons/content";
+import { isScene } from "@arduhub/arduino-core/scene/scene";
+import { checkScene } from "@arduhub/arduino-core/scene/check";
+import { catalog } from "@arduhub/arduino-core/parts/catalog";
+import { UnoRunner } from "@arduhub/arduino-core/sim/runner";
+import { applyInputs } from "@arduhub/arduino-core/sim/glue/inputs";
+import { attachTimed } from "@arduhub/arduino-core/sim/glue/timed";
+import { attachBuses } from "@arduhub/arduino-core/sim/glue/buses";
+import { checkBehavior } from "@arduhub/arduino-core/sim/checks";
 describe("twelve lesson data", () => {
   it("contains valid scenes, allowed parts, video queries and three hints", () => {
     expect(learningLessons).toHaveLength(12);
@@ -39,9 +44,16 @@ describe.skipIf(process.env.LEARNING_COVERAGE === "1")(
   () => {
     for (const lesson of learningLessons)
       it(`passes ${lesson.id}: ${lesson.title}`, () => {
-        const firmware = fixtures.find(
-          (f) => f.code.trim() === lesson.code.solution.trim(),
-        );
+        const hash = createHash("sha256")
+          .update(normalizeCode(lesson.code.solution))
+          .digest("hex");
+        const entry = index.entries[hash as keyof typeof index.entries];
+        const firmware = entry && {
+          hex: readFileSync(
+            require.resolve("@arduhub/curriculum" + entry.path),
+            "utf8",
+          ),
+        };
         expect(firmware, lesson.id).toBeDefined();
         const r = new UnoRunner(firmware!.hex),
           scene = lesson.circuit.referenceScene,

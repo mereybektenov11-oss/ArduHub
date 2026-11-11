@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { emptyScene, makePart } from "@/domain/scene/scene";
+import { emptyScene, makePart } from "@arduhub/arduino-core/scene/scene";
 import {
   bounds,
   freePosition,
   overlaps,
   sceneExtent,
   snap,
-} from "@/domain/scene/placement";
+} from "@arduhub/arduino-core/scene/placement";
 describe("free placement", () => {
   it("fits rotated parts and imported wire bends with negative coordinates", () => {
     const scene = emptyScene();

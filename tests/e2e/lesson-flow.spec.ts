@@ -2,7 +2,7 @@ import { test, expect, type Page } from "@playwright/test";
 import { dismissRewardDialogs } from "./helpers/rewardDialogs";
 import AxeBuilder from "@axe-core/playwright";
 import { createProgress } from "../../src/domain/seed";
-import { learningLessons } from "../../src/domain/lessons/content";
+import { learningLessons } from "@arduhub/arduino-core/lessons/content";
 
 import { passLessonQuiz } from "./helpers/lessonQuiz";
 import { stubExternalVideo } from "./helpers/externalVideo";

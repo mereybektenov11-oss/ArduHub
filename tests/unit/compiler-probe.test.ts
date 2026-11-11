@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { probeCompiler } from "@/services/compile/probe";
-import { compilerStatusRu as c } from "@/content/compiler";
+import { compilerStatusRu as c } from "@arduhub/curriculum/compiler";
 
 describe("real compiler probe", () => {
   it("does not report fixture success when configuration is absent", async () => {

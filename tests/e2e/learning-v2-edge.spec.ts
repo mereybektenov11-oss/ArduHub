@@ -5,8 +5,8 @@ import { createProgress } from "../../src/domain/seed";
 import {
   exampleScene,
   learningLessons,
-} from "../../src/domain/lessons/content";
-import sketches from "../../src/content/sketches.json" with { type: "json" };
+} from "@arduhub/arduino-core/lessons/content";
+import sketches from "@arduhub/curriculum/sketches.json" with { type: "json" };
 for (const index of [2, 5])
   test(`v2 lesson ${index + 1} checks real input and output behavior`, async ({
     page,

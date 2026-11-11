@@ -1,7 +1,7 @@
 import { test, expect, type Page, type Locator } from "@playwright/test";
 import { mkdir } from "node:fs/promises";
 import { createProgress } from "../../src/domain/seed";
-import { learningLessons } from "../../src/domain/lessons/content";
+import { learningLessons } from "@arduhub/arduino-core/lessons/content";
 import { completeEvidence } from "../helpers/progressEvidence";
 import { stubExternalVideo } from "./helpers/externalVideo";
 

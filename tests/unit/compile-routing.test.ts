@@ -11,7 +11,7 @@ import {
 import { createProgress } from "@/domain/seed";
 import { awardLesson } from "@/domain/progress/xp";
 import { completeEvidence } from "../helpers/progressEvidence";
-import { learningLessons } from "@/domain/lessons/content";
+import { learningLessons } from "@arduhub/arduino-core/lessons/content";
 afterEach(() => {
   vi.restoreAllMocks();
   vi.unstubAllGlobals();

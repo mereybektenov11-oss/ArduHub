@@ -19,7 +19,7 @@ export default defineConfig({
         "src/lib/db.ts",
         "src/lib/submitWaitlist.ts",
         "src/app/api/waitlist/route.ts",
-        "src/domain/checker/check.ts",
+        "packages/arduino-core/src/checker/check.ts",
         "src/domain/progress/streak.ts",
         "src/domain/progress/xp.ts",
         "src/domain/progress/storage.ts",

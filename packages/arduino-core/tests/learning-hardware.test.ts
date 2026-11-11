@@ -1,17 +1,17 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
-import { UnoRunner } from "@/domain/sim/runner";
-import { applyInputs } from "@/domain/sim/glue/inputs";
-import { attachTimed } from "@/domain/sim/glue/timed";
-import { attachBuses } from "@/domain/sim/glue/buses";
-import { outputLevels } from "@/domain/sim/glue/outputs";
-import { hardwareScene } from "@/domain/lessons/content/hardware";
-import type { PartType } from "@/domain/parts/catalog";
-import { catalog } from "@/domain/parts/catalog";
-import generated from "@/domain/parts/catalog.generated.json" with { type: "json" };
-import { initialInputs } from "@/domain/sim/inputState";
-import { emptyScene, makePart } from "@/domain/scene/scene";
-import { connections } from "@/domain/scene/netlist";
+import { UnoRunner } from "@arduhub/arduino-core/sim/runner";
+import { applyInputs } from "@arduhub/arduino-core/sim/glue/inputs";
+import { attachTimed } from "@arduhub/arduino-core/sim/glue/timed";
+import { attachBuses } from "@arduhub/arduino-core/sim/glue/buses";
+import { outputLevels } from "@arduhub/arduino-core/sim/glue/outputs";
+import { hardwareScene } from "@arduhub/arduino-core/lessons/content/hardware";
+import type { PartType } from "@arduhub/arduino-core/parts/catalog";
+import { catalog } from "@arduhub/arduino-core/parts/catalog";
+import generated from "@arduhub/arduino-core/parts/catalog.generated.json" with { type: "json" };
+import { initialInputs } from "@arduhub/arduino-core/sim/inputState";
+import { emptyScene, makePart } from "@arduhub/arduino-core/scene/scene";
+import { connections } from "@arduhub/arduino-core/scene/netlist";
 function run(
   type: PartType,
   firmware: string,
@@ -20,7 +20,13 @@ function run(
 ) {
   const scene = hardwareScene(type, firmware === "lcd-i2c"),
     runner = new UnoRunner(
-      readFileSync(`tests/fixtures/firmware/${firmware}.hex`, "utf8"),
+      readFileSync(
+        new URL(
+          `../../../tests/fixtures/firmware/${firmware}.hex`,
+          import.meta.url,
+        ),
+        "utf8",
+      ),
     );
   states = { ...initialInputs(scene), ...states };
   attachTimed(runner, scene, () => states);

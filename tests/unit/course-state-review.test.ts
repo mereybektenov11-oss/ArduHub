@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createProgress } from "@/domain/seed";
 import { initialFlowQuiz } from "@/domain/lessons/flow";
-import { lessonQuizzes } from "@/content/lesson-quiz.ru";
+import { lessonQuizzes } from "@arduhub/curriculum/lesson-quiz.ru";
 import { mergeProgress } from "@/domain/progress/merge";
 import { awardLesson } from "@/domain/progress/xp";
 

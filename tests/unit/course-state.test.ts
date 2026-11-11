@@ -7,7 +7,7 @@ import {
 } from "@/domain/progress/courseState";
 import { levelFromXp } from "@/domain/progress/levels";
 import { initialFlowQuiz } from "@/domain/lessons/flow";
-import { lessonQuizzes } from "@/content/lesson-quiz.ru";
+import { lessonQuizzes } from "@arduhub/curriculum/lesson-quiz.ru";
 import { awardLesson } from "@/domain/progress/xp";
 
 export function completeEvidence(id: string) {

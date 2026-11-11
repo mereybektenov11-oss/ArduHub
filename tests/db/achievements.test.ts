@@ -1,7 +1,7 @@
 import { beforeAll, beforeEach, afterAll, describe, expect, it } from "vitest";
 import { PGlite } from "@electric-sql/pglite";
 import { readFile } from "node:fs/promises";
-import { lessonQuizzes } from "../../src/content/lesson-quiz.ru";
+import { lessonQuizzes } from "@arduhub/curriculum/lesson-quiz.ru";
 let db: PGlite;
 const A = "00000000-0000-4000-8000-000000000011",
   B = "00000000-0000-4000-8000-000000000012";

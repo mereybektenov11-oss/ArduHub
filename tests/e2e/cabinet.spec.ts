@@ -3,7 +3,7 @@ import { stubExternalVideo } from "./helpers/externalVideo";
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { createProgress } from "../../src/domain/seed";
-import { learningLessons } from "../../src/domain/lessons/content";
+import { learningLessons } from "@arduhub/arduino-core/lessons/content";
 import { diagnosticDeck } from "../../src/content/cabinet.ru";
 async function seed(page: Page, { showHomeTour = false } = {}) {
   const p = createProgress();

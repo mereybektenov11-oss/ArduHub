@@ -1,9 +1,9 @@
 import { expect, test } from "vitest";
-import { learningLessons } from "../../src/domain/lessons/content";
-import { checkScene } from "../../src/domain/scene/check";
-import { ArduinoInterpreter } from "../../src/domain/sim/interpreter";
-import { checkBehavior } from "../../src/domain/sim/checks";
-import type { Sample } from "../../src/domain/sim/runner";
+import { learningLessons } from "@arduhub/arduino-core/lessons/content";
+import { checkScene } from "@arduhub/arduino-core/scene/check";
+import { ArduinoInterpreter } from "@arduhub/arduino-core/sim/interpreter";
+import { checkBehavior } from "@arduhub/arduino-core/sim/checks";
+import type { Sample } from "@arduhub/arduino-core/sim/runner";
 
 test.each([500, 1000, 1500])(
   "two LEDs accept alternating output with %i ms pauses",

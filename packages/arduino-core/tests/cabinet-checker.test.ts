@@ -1,10 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { check } from "@/domain/checker/check";
+import { check } from "@arduhub/arduino-core/checker/check";
 import {
   referenceCircuit,
   component,
   validLink,
-} from "@/domain/checker/netlist";
+} from "@arduhub/arduino-core/checker/netlist";
 describe("Circuit graph", () => {
   it("accepts equivalent series orders", () => {
     expect(check(referenceCircuit(), referenceCircuit())).toEqual([]);

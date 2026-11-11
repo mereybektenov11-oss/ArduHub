@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
-import { normalizeCode } from "@/services/compile/normalize";
-import { learningLessons } from "@/domain/lessons/content";
+import { normalizeCode } from "@arduhub/arduino-core/compile/normalize";
+import { learningLessons } from "@arduhub/arduino-core/lessons/content";
 import { projectIdeas } from "@/domain/projects/ideas";
 import fixtures from "@/services/compile/fixtures.json";
 describe("trusted HEX cache", () => {

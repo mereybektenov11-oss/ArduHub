@@ -1,5 +1,5 @@
 import { expect, type Page } from "@playwright/test";
-import { lessonQuizzes } from "../../../src/content/lesson-quiz.ru";
+import { lessonQuizzes } from "@arduhub/curriculum/lesson-quiz.ru";
 export async function passLessonQuiz(page: Page, id = "lesson-1") {
   const questions = lessonQuizzes[id];
   if (

@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { BrowserProgressStore } from "@/domain/progress/storage";
 import { createProgress } from "@/domain/seed";
-import { fitSceneToViewport } from "@/domain/scene/viewport";
+import { fitSceneToViewport } from "@arduhub/arduino-core/scene/viewport";
 describe("child-facing workspace defaults", () => {
   it("keeps sound and mentor hint preferences after reload", () => {
     const values = new Map<string, string>();

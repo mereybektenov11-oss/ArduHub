@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { createProgress } from "../../src/domain/seed";
-import { learningLessons } from "../../src/domain/lessons/content";
+import { learningLessons } from "@arduhub/arduino-core/lessons/content";
 import { completeEvidence } from "../helpers/progressEvidence";
 
 test("a restored 6-of-6 result with a stale stage flag opens practice and survives reload", async ({

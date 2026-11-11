@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { createProgress } from "../../src/domain/seed";
-import { learningLessons } from "../../src/domain/lessons/content";
+import { learningLessons } from "@arduhub/arduino-core/lessons/content";
 import { achievementDeck } from "../../src/content/achievements.ru";
 import { completeEvidence } from "../helpers/progressEvidence";
 

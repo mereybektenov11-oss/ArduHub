@@ -2,7 +2,7 @@ import { achievementDeck } from "../../src/content/achievements.ru";
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { createProgress } from "../../src/domain/seed";
-import { lessonQuizzes } from "../../src/content/lesson-quiz.ru";
+import { lessonQuizzes } from "@arduhub/curriculum/lesson-quiz.ru";
 import { passLessonQuiz } from "./helpers/lessonQuiz";
 import { createClient } from "@supabase/supabase-js";
 

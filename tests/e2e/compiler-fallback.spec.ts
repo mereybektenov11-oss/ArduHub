@@ -1,6 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 import { createProgress } from "../../src/domain/seed";
-import { learningLessons } from "../../src/domain/lessons/content";
+import { learningLessons } from "@arduhub/arduino-core/lessons/content";
 import { completeEvidence } from "../helpers/progressEvidence";
 
 const blink =

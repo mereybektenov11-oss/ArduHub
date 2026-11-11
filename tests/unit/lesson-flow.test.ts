@@ -7,8 +7,8 @@ import {
   initialFlowQuiz,
 } from "@/domain/lessons/flow";
 import { initialSteps, type Draft } from "@/domain/projects/storage";
-import { emptyScene } from "@/domain/scene/scene";
-import { learningLessons } from "@/domain/lessons/content";
+import { emptyScene } from "@arduhub/arduino-core/scene/scene";
+import { learningLessons } from "@arduhub/arduino-core/lessons/content";
 const draft = (): Draft => ({
   scene: emptyScene(),
   code: "",

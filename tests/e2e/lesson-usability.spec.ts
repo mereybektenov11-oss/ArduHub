@@ -2,7 +2,7 @@ import { completeEvidence } from "../helpers/progressEvidence";
 import { achievementDeck } from "../../src/content/achievements.ru";
 import { test, expect, type Page } from "@playwright/test";
 import { createProgress } from "../../src/domain/seed";
-import { learningLessons } from "../../src/domain/lessons/content";
+import { learningLessons } from "@arduhub/arduino-core/lessons/content";
 
 async function lesson(page: Page) {
   await page

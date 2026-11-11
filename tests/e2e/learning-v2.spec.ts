@@ -3,8 +3,8 @@ import { passLessonQuiz } from "./helpers/lessonQuiz";
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { createProgress } from "../../src/domain/seed";
-import { exampleScene } from "../../src/domain/lessons/content";
-import sketches from "../../src/content/sketches.json" with { type: "json" };
+import { exampleScene } from "@arduhub/arduino-core/lessons/content";
+import sketches from "@arduhub/curriculum/sketches.json" with { type: "json" };
 async function init(page: Page) {
   const p = createProgress();
   p.profile.name = "Искра";

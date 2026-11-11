@@ -3,7 +3,7 @@ import {
   practiceAfterQuiz,
   type LessonFlowState,
 } from "../../src/domain/lessons/flow";
-import { learningLessons } from "../../src/domain/lessons/content";
+import { learningLessons } from "@arduhub/arduino-core/lessons/content";
 import { completeEvidence } from "../helpers/progressEvidence";
 const ready = (): LessonFlowState => ({
   version: 2,

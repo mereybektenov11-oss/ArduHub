@@ -4,7 +4,7 @@ import { test, expect, type Page } from "@playwright/test";
 import { stubExternalVideo } from "./helpers/externalVideo";
 import AxeBuilder from "@axe-core/playwright";
 import { createProgress } from "../../src/domain/seed";
-import { learningLessons } from "../../src/domain/lessons/content";
+import { learningLessons } from "@arduhub/arduino-core/lessons/content";
 const routes = [
   "/app",
   "/app/map",

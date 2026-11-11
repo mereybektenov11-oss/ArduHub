@@ -1,8 +1,8 @@
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { readFile, mkdir, writeFile } from "node:fs/promises";
-import { learningLessons } from "../../src/domain/lessons/content";
-import { lessonQuizzes } from "../../src/content/lesson-quiz.ru";
+import { learningLessons } from "@arduhub/arduino-core/lessons/content";
+import { lessonQuizzes } from "@arduhub/curriculum/lesson-quiz.ru";
 import { createProgress } from "../../src/domain/seed";
 import { completeEvidence } from "../helpers/progressEvidence";
 import { stubExternalVideo } from "./helpers/externalVideo";

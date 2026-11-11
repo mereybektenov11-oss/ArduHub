@@ -4,16 +4,16 @@ import {
   applyInterpreterInputs,
   canInterpretArduino,
   InterpreterError,
-} from "@/domain/sim/interpreter";
+} from "@arduhub/arduino-core/sim/interpreter";
 import {
   courseCodes,
   exampleScene,
   learningLessons,
-} from "@/domain/lessons/content";
-import { outputLevels } from "@/domain/sim/glue/outputs";
-import { checkBehavior } from "@/domain/sim/checks";
-import { initialInputs } from "@/domain/sim/inputState";
-import type { Sample } from "@/domain/sim/runner";
+} from "@arduhub/arduino-core/lessons/content";
+import { outputLevels } from "@arduhub/arduino-core/sim/glue/outputs";
+import { checkBehavior } from "@arduhub/arduino-core/sim/checks";
+import { initialInputs } from "@arduhub/arduino-core/sim/inputState";
+import type { Sample } from "@arduhub/arduino-core/sim/runner";
 
 describe("bounded Arduino interpreter", () => {
   it("runs all actual first eight lesson sketches", () => {
