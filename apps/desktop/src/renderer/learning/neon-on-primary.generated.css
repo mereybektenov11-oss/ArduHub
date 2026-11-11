@@ -21,7 +21,10 @@
 :root:has(.learning-area) .dash-nav-group a[aria-current],
 :root:has(.learning-area) .dash-node.current,
 :root:has(.learning-area) .dash-rail .dash-mission progress::-moz-progress-bar,
-:root:has(.learning-area) .dash-rail .dash-mission progress::-webkit-progress-value,
+:root:has(.learning-area)
+  .dash-rail
+  .dash-mission
+  progress::-webkit-progress-value,
 :root:has(.learning-area) .dash-segments .done,
 :root:has(.learning-area) .flow-current-label,
 :root:has(.learning-area) .flow-opening-progress span,
@@ -65,7 +68,10 @@
 :root:has(.learning-area) .dash-node,
 :root:has(.learning-area) .dash-node-row:before,
 :root:has(.learning-area) .dash-rail .dash-mission progress,
-:root:has(.learning-area) .dash-rail .dash-mission progress::-webkit-progress-bar,
+:root:has(.learning-area)
+  .dash-rail
+  .dash-mission
+  progress::-webkit-progress-bar,
 :root:has(.learning-area) .dash-segments span,
 :root:has(.learning-area) .flow-progress,
 :root:has(.learning-area) .flow-stage-indicator button,

@@ -5,6 +5,7 @@ import { authConfigured, countDone, loginError, supabase } from "./auth";
 import { site, t } from "./content";
 import { applyPrefs, loadPrefs, savePrefs, type Prefs } from "./prefs";
 import { navigate, route, useLocation } from "./router";
+import { playSfx } from "./sound/sfx";
 
 const LearningArea = lazy(() => import("./learning/LearningArea"));
 
@@ -28,38 +29,52 @@ export default function App() {
     return () => data.subscription.unsubscribe();
   }, []);
 
-  if (session === undefined)
-    return (
-      <main className="center" aria-busy="true">
-        <p className="muted">{t.loading}</p>
-      </main>
-    );
-  if (!session) return <Login />;
-  if (r.screen === "lessons" || r.screen === "lesson")
-    return (
-      <Suspense
-        fallback={
-          <main className="center" aria-busy="true">
-            <p className="muted">{t.loading}</p>
-          </main>
-        }
-      >
-        <LearningArea lessonId={r.screen === "lesson" ? r.id : undefined} />
-      </Suspense>
-    );
-  return r.screen === "settings" ? (
-    <Settings
-      session={session}
-      prefs={prefs}
-      onPrefs={(p) => {
-        setPrefs(p);
-        savePrefs(p);
-      }}
-      onBack={() => navigate("/menu")}
-    />
-  ) : (
-    <Menu session={session} onSettings={() => navigate("/settings")} />
+  // Each screen mounts in a keyed wrapper so it fades in on navigation.
+  const screenKey = !session
+    ? "login"
+    : r.screen === "lesson"
+      ? `lesson:${r.id}`
+      : r.screen;
+  return (
+    <div className="screen" key={screenKey}>
+      {renderScreen()}
+    </div>
   );
+
+  function renderScreen() {
+    if (session === undefined)
+      return (
+        <main className="center" aria-busy="true">
+          <p className="muted">{t.loading}</p>
+        </main>
+      );
+    if (!session) return <Login />;
+    if (r.screen === "lessons" || r.screen === "lesson")
+      return (
+        <Suspense
+          fallback={
+            <main className="center" aria-busy="true">
+              <p className="muted">{t.loading}</p>
+            </main>
+          }
+        >
+          <LearningArea lessonId={r.screen === "lesson" ? r.id : undefined} />
+        </Suspense>
+      );
+    return r.screen === "settings" ? (
+      <Settings
+        session={session}
+        prefs={prefs}
+        onPrefs={(p) => {
+          setPrefs(p);
+          savePrefs(p);
+        }}
+        onBack={() => navigate("/menu")}
+      />
+    ) : (
+      <Menu session={session} onSettings={() => navigate("/settings")} />
+    );
+  }
 }
 
 function Logo() {
@@ -83,7 +98,10 @@ function Login() {
     e.preventDefault();
     const sb = supabase();
     if (!sb) return setError(t.login.config);
-    if (!email.trim() || !password) return setError(t.login.empty);
+    if (!email.trim() || !password) {
+      playSfx("deny");
+      return setError(t.login.empty);
+    }
     setBusy(true);
     setError(null);
     try {
@@ -92,8 +110,10 @@ function Login() {
         password,
       });
       setError(loginError(err));
+      playSfx(err ? "wrong" : "unlock");
     } catch {
       setError(t.login.network);
+      playSfx("wrong");
     } finally {
       setBusy(false);
     }
@@ -209,7 +229,14 @@ function Menu({
         <span className="chip">
           {name ?? t.menu.fallbackName} · {t.menu.plan}
         </span>
-        <button type="button" className="chip" onClick={onSettings}>
+        <button
+          type="button"
+          className="chip"
+          onClick={() => {
+            playSfx("tap");
+            onSettings();
+          }}
+        >
           ⚙ {t.menu.settings}
         </button>
       </header>
@@ -224,6 +251,7 @@ function Menu({
         </section>
         <section className="cards">
           <Tile
+            index={0}
             mark="2D"
             title={t.menu.learning}
             hint={t.menu.learningHint}
@@ -231,7 +259,7 @@ function Menu({
             extra={
               <>
                 <div className="bar" aria-hidden="true">
-                  <i style={{ width: `${((done ?? 0) / total) * 100}%` }} />
+                  <i style={{ transform: `scaleX(${(done ?? 0) / total})` }} />
                 </div>
                 <p className="small muted">
                   {done === null
@@ -242,6 +270,7 @@ function Menu({
             }
           />
           <Tile
+            index={1}
             mark="3D"
             title={t.menu.practice}
             hint={t.menu.practiceHint}
@@ -249,6 +278,7 @@ function Menu({
             current
           />
           <Tile
+            index={2}
             mark="☺"
             title={t.menu.profile}
             hint={t.menu.profileHint}
@@ -269,7 +299,9 @@ function Tile(props: {
   current?: boolean;
   extra?: React.ReactNode;
   onClick?: () => void;
+  index: number;
 }) {
+  const style = { "--i": props.index } as React.CSSProperties;
   const body = (
     <>
       <span
@@ -288,11 +320,19 @@ function Tile(props: {
     </>
   );
   return props.onClick ? (
-    <button type="button" className="card tile" onClick={props.onClick}>
+    <button
+      type="button"
+      className="card tile appear"
+      style={style}
+      onClick={() => {
+        playSfx("tap");
+        props.onClick?.();
+      }}
+    >
       {body}
     </button>
   ) : (
-    <div className="card tile" aria-disabled="true">
+    <div className="card tile appear" style={style} aria-disabled="true">
       {body}
     </div>
   );
@@ -317,7 +357,14 @@ function Settings(props: {
       <header className="top">
         <Logo />
         <div className="spacer" />
-        <button type="button" className="chip" onClick={props.onBack}>
+        <button
+          type="button"
+          className="chip"
+          onClick={() => {
+            playSfx("tap");
+            props.onBack();
+          }}
+        >
           {t.settings.back}
         </button>
       </header>
@@ -345,6 +392,42 @@ function Settings(props: {
               ))}
             </div>
           </fieldset>
+          <label className="row">
+            <input
+              type="checkbox"
+              checked={prefs.sounds}
+              onChange={(e) => {
+                onPrefs({ ...prefs, sounds: e.target.checked });
+                if (e.target.checked) setTimeout(() => playSfx("tap"), 0);
+              }}
+            />
+            {t.settings.sounds}
+          </label>
+          <label className="row volume">
+            {t.settings.volume}
+            <input
+              type="range"
+              min={0}
+              max={100}
+              step={5}
+              value={Math.round(prefs.volume * 100)}
+              disabled={!prefs.sounds}
+              onChange={(e) =>
+                onPrefs({ ...prefs, volume: Number(e.target.value) / 100 })
+              }
+              onPointerUp={() => playSfx("tap")}
+              onKeyUp={() => playSfx("tap")}
+            />
+            <output>{Math.round(prefs.volume * 100)}%</output>
+          </label>
+          <button
+            type="button"
+            className="btn secondary"
+            disabled={!prefs.sounds}
+            onClick={() => playSfx("lesson_complete")}
+          >
+            {t.settings.testSound}
+          </button>
           <label className="row">
             <input
               type="checkbox"
@@ -376,7 +459,10 @@ function Settings(props: {
             <button
               type="button"
               className="btn danger"
-              onClick={() => void supabase()?.auth.signOut()}
+              onClick={() => {
+                playSfx("tap");
+                void supabase()?.auth.signOut();
+              }}
             >
               {t.settings.signOut}
             </button>

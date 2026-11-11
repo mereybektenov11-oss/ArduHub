@@ -39,18 +39,33 @@ describe("countDone", () => {
 
 describe("parsePrefs", () => {
   it("accepts known values and falls back on anything else", () => {
-    expect(parsePrefs('{"textScale":1.15,"reduceMotion":true}')).toEqual({
+    expect(
+      parsePrefs(
+        '{"textScale":1.15,"reduceMotion":true,"sounds":false,"volume":0.2}',
+      ),
+    ).toEqual({
+      sounds: false,
+      volume: 0.2,
       textScale: 1.15,
       reduceMotion: true,
     });
     expect(parsePrefs('{"textScale":3}')).toEqual({
       textScale: 1,
       reduceMotion: false,
+      sounds: true,
+      volume: 0.5,
     });
     expect(parsePrefs("not json")).toEqual({
       textScale: 1,
       reduceMotion: false,
+      sounds: true,
+      volume: 0.5,
     });
-    expect(parsePrefs(null)).toEqual({ textScale: 1, reduceMotion: false });
+    expect(parsePrefs(null)).toEqual({
+      textScale: 1,
+      reduceMotion: false,
+      sounds: true,
+      volume: 0.5,
+    });
   });
 });

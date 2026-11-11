@@ -331,10 +331,12 @@ button.tile:hover {
 }
 .bar i {
   display: block;
+  width: 100%;
   height: 100%;
   background: var(--color-accent);
   border-radius: 99px;
-  transition: width 0.6s ease;
+  transform-origin: left center;
+  transition: transform 0.9s var(--ease-out) 0.25s;
 }
 
 /* Settings */
@@ -374,6 +376,7 @@ legend {
 }
 .seg label {
   border: 1px solid var(--color-line);
+  cursor: pointer;
   border-radius: 8px;
   padding: 8px 14px;
 }
@@ -403,11 +406,182 @@ dd {
     grid-template-columns: 1fr;
   }
 }
+/* ---------- Motion ----------
+   Only transform and opacity are animated (compositor-friendly), with one
+   shared easing. Everything stops for the Windows "reduce motion" setting
+   and for the app's own «Меньше анимации». */
+:root {
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+.screen {
+  animation: screen-in 320ms var(--ease-out) both;
+}
+@keyframes screen-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.appear,
+.hero > * {
+  animation: rise 460ms var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 55ms + 90ms);
+}
+.hero > :nth-child(2) {
+  --i: 1;
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.login-card {
+  animation: pop 420ms var(--ease-out) both;
+}
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.error:not(:empty) {
+  animation: fade 220ms var(--ease-out) both;
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Interactive surfaces lift on hover and settle on press. The hover glow is
+   a pseudo-element faded with opacity instead of an animated box-shadow. */
+.tile,
+.map-card,
+.btn,
+.chip,
+.link,
+.seg label {
+  transition:
+    transform 180ms var(--ease-out),
+    border-color 200ms var(--ease-out),
+    opacity 200ms var(--ease-out);
+}
+.tile,
+.map-card {
+  position: relative;
+}
+.tile::after,
+.map-card::after,
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  box-shadow: 0 0 30px rgba(34, 211, 238, 0.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms var(--ease-out);
+}
+.btn {
+  position: relative;
+}
+button.tile:hover,
+.map-card:not(:disabled):hover {
+  transform: translateY(-3px);
+}
+button.tile:hover::after,
+.map-card:not(:disabled):hover::after,
+.btn:not(:disabled):hover::after {
+  opacity: 1;
+}
+button.tile:active,
+.map-card:not(:disabled):active {
+  transform: translateY(-1px) scale(0.99);
+  transition-duration: 90ms;
+}
+.btn:not(:disabled):hover,
+button.chip:hover {
+  transform: translateY(-1px);
+}
+.btn:not(:disabled):active,
+button.chip:active,
+.seg label:active {
+  transform: scale(0.97);
+  transition-duration: 90ms;
+}
+
+/* The current step breathes softly. */
+.node.current {
+  position: relative;
+}
+.node.current::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid var(--color-primary);
+  opacity: 0;
+  animation: breathe 2.4s var(--ease-in-out) infinite;
+}
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(1.04);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
     transition: none !important;
   }
 }
-:root[data-motion="reduce"] * {
+:root[data-motion="reduce"] *,
+:root[data-motion="reduce"] *::before,
+:root[data-motion="reduce"] *::after {
+  animation: none !important;
   transition: none !important;
+}
+
+.volume input[type="range"] {
+  flex: 1;
+  max-width: 280px;
+  accent-color: var(--color-primary);
+}
+.volume output {
+  min-width: 3.5em;
+  color: var(--color-muted);
+}
+.btn.secondary {
+  background: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  box-shadow: none;
+  justify-self: start;
 }

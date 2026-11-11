@@ -8,6 +8,7 @@ import { lessons } from "@/domain/seed";
 import { computeCourseState } from "@/domain/progress/courseState";
 import { learningLessons } from "@arduhub/arduino-core/lessons/content";
 import { navigate } from "../router";
+import { playSfx } from "../sound/sfx";
 import { learningT as t } from "./content";
 import { learningCss } from "./site-styles";
 
@@ -63,7 +64,10 @@ function LessonMap() {
         <button
           type="button"
           className="chip"
-          onClick={() => navigate("/menu")}
+          onClick={() => {
+            playSfx("tap");
+            navigate("/menu");
+          }}
         >
           {t.back}
         </button>
@@ -81,13 +85,20 @@ function LessonMap() {
             learningLessons.find((x) => x.id === l.id)?.available !== false;
           const open = state !== "locked" && ready;
           return (
-            <li key={l.id}>
+            <li
+              key={l.id}
+              className="appear"
+              style={{ "--i": Math.min(i, 8) } as CSSProperties}
+            >
               <button
                 type="button"
                 className={`card map-card ${state}`}
                 disabled={!open}
                 aria-label={`${t.lesson} ${i + 1}: ${l.title}. ${t.status[state as keyof typeof t.status] ?? ""}`}
-                onClick={() => navigate(`/app/lesson/${l.id}`)}
+                onClick={() => {
+                  playSfx("tap");
+                  navigate(`/app/lesson/${l.id}`);
+                }}
               >
                 <span
                   className={`node ${state === "done" ? "done" : state === "current" ? "current" : ""}`}

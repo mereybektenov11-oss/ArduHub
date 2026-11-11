@@ -110,6 +110,11 @@ export default defineConfig(({ mode }) => {
           find: /^@\/lib\/supabase\/client$/,
           replacement: shim("supabaseClient.ts"),
         },
+        // The app's synthesized sounds replace the site's for lessons too.
+        {
+          find: /^@\/lib\/sfx$/,
+          replacement: here("src/renderer/sound/sfx.ts"),
+        },
         { find: /^next\/navigation$/, replacement: shim("navigation.ts") },
         { find: /^next\/link$/, replacement: shim("link.tsx") },
         { find: /^next\/dynamic$/, replacement: shim("dynamic.tsx") },

@@ -12,6 +12,7 @@
     "resolveJsonModule": true,
     "types": [],
     "paths": {
+      "@/lib/sfx": ["./src/renderer/sound/sfx.ts"],
       "@/lib/supabase/client": ["./src/renderer/shims/supabaseClient.ts"],
       "@arduhub/curriculum/*": ["../../packages/curriculum/src/*"],
       "@arduhub/arduino-core/*": ["../../packages/arduino-core/src/*"],
