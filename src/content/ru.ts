@@ -662,17 +662,17 @@ export const ru = {
   },
 } as const;
 
-export { learningRu } from "./learning.ru";
-export { lessonQuizRu, lessonQuizzes } from "./lesson-quiz.ru";
-export { partNames, partCategories, paletteCopy } from "./parts.ru";
-export { courseCopy } from "./course.ru";
-export { inputCopy } from "./inputs.ru";
+export { learningRu } from "@arduhub/curriculum/learning.ru";
+export { lessonQuizRu, lessonQuizzes } from "@arduhub/curriculum/lesson-quiz.ru";
+export { partNames, partCategories, paletteCopy } from "@arduhub/curriculum/parts.ru";
+export { courseCopy } from "@arduhub/curriculum/course.ru";
+export { inputCopy } from "@arduhub/curriculum/inputs.ru";
 export { ideaCopy, projectCopy } from "./projects.ru";
 
 export { dashboardRu, authRu, dailyFacts } from "./dashboard.ru";
 
 export { shopDeck } from "./shop.ru";
-export { lessonFlowRu } from "./lesson-flow.ru";
+export { lessonFlowRu } from "@arduhub/curriculum/lesson-flow.ru";
 
 export const onboardingRu = {
   nameTitle: "Как тебя зовут?",

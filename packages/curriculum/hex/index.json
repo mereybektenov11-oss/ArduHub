@@ -1,0 +1,117 @@
+{
+  "version": 1,
+  "entries": {
+    "95d7a243964eae097ab07419226a7ab1c9d9619928d67e1785ad124046ecc226": {
+      "ids": ["blink"],
+      "path": "/hex/95d7a243964eae097ab07419226a7ab1c9d9619928d67e1785ad124046ecc226.hex"
+    },
+    "e6e7dce95966c13651424b62cecc13503aefa66f8849cee1129d6d10e4496a22": {
+      "ids": ["button"],
+      "path": "/hex/e6e7dce95966c13651424b62cecc13503aefa66f8849cee1129d6d10e4496a22.hex"
+    },
+    "99c77beb1fdba7211084c6b3fd5e986fcc3c3c5fcc6394f1001717eadcf254b0": {
+      "ids": ["pwm"],
+      "path": "/hex/99c77beb1fdba7211084c6b3fd5e986fcc3c3c5fcc6394f1001717eadcf254b0.hex"
+    },
+    "24bc532b17eed71c2af26053fbdbb19e6ca673e63d1ae6083b08bc51f2c3988d": {
+      "ids": ["serial"],
+      "path": "/hex/24bc532b17eed71c2af26053fbdbb19e6ca673e63d1ae6083b08bc51f2c3988d.hex"
+    },
+    "15772c4a8420859a011432b15b8a8e86951698e8a098d0ad134a66dad9587d1a": {
+      "ids": ["constant"],
+      "path": "/hex/15772c4a8420859a011432b15b8a8e86951698e8a098d0ad134a66dad9587d1a.hex"
+    },
+    "96efe17d97d6b56cba6e70eacdb566e374cafcfe170e1cf8d6836de0caecfbe3": {
+      "ids": ["buzzer"],
+      "path": "/hex/96efe17d97d6b56cba6e70eacdb566e374cafcfe170e1cf8d6836de0caecfbe3.hex"
+    },
+    "81ab03900edf65de5e89876818d99047d6cf19c3269b1183d47fcf7eaff7812c": {
+      "ids": ["segment"],
+      "path": "/hex/81ab03900edf65de5e89876818d99047d6cf19c3269b1183d47fcf7eaff7812c.hex"
+    },
+    "08d28b5c41112f1a0cc1e9084f577c950606032177913c10e8d7954572eb775f": {
+      "ids": ["bar"],
+      "path": "/hex/08d28b5c41112f1a0cc1e9084f577c950606032177913c10e8d7954572eb775f.hex"
+    },
+    "33340247a2849b05f1d616cc81696d1d80770394d2df975fdc0539635c059054": {
+      "ids": ["digital-input"],
+      "path": "/hex/33340247a2849b05f1d616cc81696d1d80770394d2df975fdc0539635c059054.hex"
+    },
+    "7da1e2df4dd2a253be4f51cb1d823c3422c9244aaa851a5e48a800aee3381da3": {
+      "ids": ["analog-input"],
+      "path": "/hex/7da1e2df4dd2a253be4f51cb1d823c3422c9244aaa851a5e48a800aee3381da3.hex"
+    },
+    "2ab73ca70138c9f0dd48fe6f565f774f8af32f4499b35a4657f3ef2585de2271": {
+      "ids": ["servo"],
+      "path": "/hex/2ab73ca70138c9f0dd48fe6f565f774f8af32f4499b35a4657f3ef2585de2271.hex"
+    },
+    "b0f3799a9599d604ba7dd08c738990fef2c811f38443ed244a0c543a642dd4dc": {
+      "ids": ["ultrasonic"],
+      "path": "/hex/b0f3799a9599d604ba7dd08c738990fef2c811f38443ed244a0c543a642dd4dc.hex"
+    },
+    "f661d49ac9dc7d5409e990025f842e6ba4744048e71be0f1b958863b02eb2865": {
+      "ids": ["stepper"],
+      "path": "/hex/f661d49ac9dc7d5409e990025f842e6ba4744048e71be0f1b958863b02eb2865.hex"
+    },
+    "14ce1013dc0bb66bb905e0f7d3a2ee23326b6acc07d64735ca8f17384c69045c": {
+      "ids": ["lcd"],
+      "path": "/hex/14ce1013dc0bb66bb905e0f7d3a2ee23326b6acc07d64735ca8f17384c69045c.hex"
+    },
+    "877e5be385c1bb44c34f13b5706a7fa1fb113ab35612ab7b2cd8be9b038fdf33": {
+      "ids": ["dht"],
+      "path": "/hex/877e5be385c1bb44c34f13b5706a7fa1fb113ab35612ab7b2cd8be9b038fdf33.hex"
+    },
+    "42f106de981a19db2b5c3e87216fc5c5157f3cfecfd933174ead09c43627dd4e": {
+      "ids": ["oled"],
+      "path": "/hex/42f106de981a19db2b5c3e87216fc5c5157f3cfecfd933174ead09c43627dd4e.hex"
+    },
+    "1f00c8b28d751d7aa6534c149096aaf96b1ea6a33837964113f7a80227dad4f1": {
+      "ids": ["mpu"],
+      "path": "/hex/1f00c8b28d751d7aa6534c149096aaf96b1ea6a33837964113f7a80227dad4f1.hex"
+    },
+    "278e3663051cb521b2d85f5f02a1251881afa9056bd66011ba3d996ccf8cac2f": {
+      "ids": ["rtc"],
+      "path": "/hex/278e3663051cb521b2d85f5f02a1251881afa9056bd66011ba3d996ccf8cac2f.hex"
+    },
+    "d35b66886dcfe106fb9f7000f158ece64d67c68ee48670d5549b2d00410b319d": {
+      "ids": ["keypad"],
+      "path": "/hex/d35b66886dcfe106fb9f7000f158ece64d67c68ee48670d5549b2d00410b319d.hex"
+    },
+    "ea47f715ffbf538a27d7290c1878d26c3d0d71d72013e224f605b2b3940fe40a": {
+      "ids": ["neopixel-library"],
+      "path": "/hex/ea47f715ffbf538a27d7290c1878d26c3d0d71d72013e224f605b2b3940fe40a.hex"
+    },
+    "fadcbc7b70dc598faa1880577d93ea86695d74d800f1c9dcd37126a6b2f4f310": {
+      "ids": ["ledcontrol-library"],
+      "path": "/hex/fadcbc7b70dc598faa1880577d93ea86695d74d800f1c9dcd37126a6b2f4f310.hex"
+    },
+    "ad84b04a507ec48b10413bbd59032e00d5074947d692a685b082bbfc5f241eac": {
+      "ids": ["blink-fast"],
+      "path": "/hex/ad84b04a507ec48b10413bbd59032e00d5074947d692a685b082bbfc5f241eac.hex"
+    },
+    "fc4522daa28cce6c6904b0c0274ef13a0a03ef52c362dac9b580781ffc2312a2": {
+      "ids": ["traffic"],
+      "path": "/hex/fc4522daa28cce6c6904b0c0274ef13a0a03ef52c362dac9b580781ffc2312a2.hex"
+    },
+    "6db8a5352875e1748184d6679e95bd6b0a6f96d19cf3aa96d83382e9f9261733": {
+      "ids": ["pwm-fixed"],
+      "path": "/hex/6db8a5352875e1748184d6679e95bd6b0a6f96d19cf3aa96d83382e9f9261733.hex"
+    },
+    "a663ecda738e4b099edc7c43f4928482bc24e5fcde1cb69014bda79a8ade6e52": {
+      "ids": ["alarm"],
+      "path": "/hex/a663ecda738e4b099edc7c43f4928482bc24e5fcde1cb69014bda79a8ade6e52.hex"
+    },
+    "1a35eb4d0c58b6a3cf656df4fd03769281b0b1dcc871120a7991aebe46a78b3c": {
+      "ids": ["metronome"],
+      "path": "/hex/1a35eb4d0c58b6a3cf656df4fd03769281b0b1dcc871120a7991aebe46a78b3c.hex"
+    },
+    "b74b58bf1cbdc346b6b5ddaab4f7dfaadc0d47ca187f718e51b993d08183ad3a": {
+      "ids": ["fade"],
+      "path": "/hex/b74b58bf1cbdc346b6b5ddaab4f7dfaadc0d47ca187f718e51b993d08183ad3a.hex"
+    },
+    "9d9a00a00a74a68d8f78090818f6d8ee8fcdd20cbbc91dffad2f3134b0361333": {
+      "ids": ["lcd-i2c"],
+      "path": "/hex/9d9a00a00a74a68d8f78090818f6d8ee8fcdd20cbbc91dffad2f3134b0361333.hex"
+    }
+  }
+}
