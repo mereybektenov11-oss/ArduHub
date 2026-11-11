@@ -8,6 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@arduhub/arduino-core':
+        specifier: workspace:*
+        version: link:packages/arduino-core
+      '@arduhub/curriculum':
+        specifier: workspace:*
+        version: link:packages/curriculum
       '@codemirror/commands':
         specifier: ^6.11.1
         version: 6.11.1

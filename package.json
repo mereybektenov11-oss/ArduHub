@@ -18,7 +18,7 @@
     "start": "next start --hostname 127.0.0.1",
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
+    "test": "node scripts/test-workspace.mjs",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "test:motion-profile": "node scripts/profile-motion.mjs",
@@ -56,7 +56,9 @@
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "tailwind-merge": "^3.7.0",
-    "zod": "4.6.7"
+    "zod": "4.6.7",
+    "@arduhub/arduino-core": "workspace:*",
+    "@arduhub/curriculum": "workspace:*"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
