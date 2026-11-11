@@ -3,7 +3,13 @@ import type { Session } from "@supabase/supabase-js";
 import { courseCopy } from "@arduhub/curriculum/course.ru";
 import { authConfigured, countDone, loginError, supabase } from "./auth";
 import { site, t } from "./content";
-import { applyPrefs, loadPrefs, savePrefs, type Prefs } from "./prefs";
+import {
+  applyPrefs,
+  loadPrefs,
+  savePrefs,
+  watchSystemTheme,
+  type Prefs,
+} from "./prefs";
 import { navigate, route, useLocation } from "./router";
 import { playSfx } from "./sound/sfx";
 import Icon from "./icons/Icon";
@@ -21,6 +27,13 @@ export default function App() {
   const [prefs, setPrefs] = useState<Prefs>(loadPrefs);
 
   useEffect(() => applyPrefs(prefs), [prefs]);
+  useEffect(
+    () =>
+      prefs.theme === "system"
+        ? watchSystemTheme(() => applyPrefs(prefs))
+        : undefined,
+    [prefs],
+  );
   useEffect(() => {
     const sb = supabase();
     if (!sb) return;
@@ -372,6 +385,25 @@ function Settings(props: {
       <main className="settings">
         <h1>{t.settings.title}</h1>
         <section className="card">
+          <fieldset>
+            <legend>{t.settings.theme}</legend>
+            <div className="seg">
+              {t.settings.themes.map(([value, label]) => (
+                <label key={value}>
+                  <input
+                    type="radio"
+                    name="theme"
+                    checked={prefs.theme === value}
+                    onChange={() => {
+                      playSfx("tap");
+                      onPrefs({ ...prefs, theme: value });
+                    }}
+                  />
+                  {label}
+                </label>
+              ))}
+            </div>
+          </fieldset>
           <fieldset>
             <legend>{t.settings.text}</legend>
             <div className="seg">

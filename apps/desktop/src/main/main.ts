@@ -2,6 +2,7 @@ import {
   app,
   BrowserWindow,
   ipcMain,
+  nativeTheme,
   protocol,
   safeStorage,
   session,
@@ -32,6 +33,10 @@ protocol.registerSchemesAsPrivileged([
 ]);
 
 let store: ReturnType<typeof createSecureStore>;
+
+// Matches --color-bg of the two themes, so no flash of the other colour.
+const windowBackground = () =>
+  nativeTheme.shouldUseDarkColors ? "#0B1020" : "#F4F7FD";
 const appUrl = devServer ?? `${APP_ORIGIN}/`;
 
 function createWindow() {
@@ -41,7 +46,7 @@ function createWindow() {
     minWidth: 1024,
     minHeight: 680,
     show: false,
-    backgroundColor: "#0B1020",
+    backgroundColor: windowBackground(),
     title: "ArduHub",
     autoHideMenuBar: true,
     webPreferences: {
@@ -94,6 +99,13 @@ app.whenReady().then(() => {
   ipcMain.handle("store:remove", (_e, key) => store.remove(key));
   ipcMain.handle("store:persistent", () => store.isPersistent());
   ipcMain.handle("app:version", () => app.getVersion());
+  // Light/dark choice from the settings: native frame and window background.
+  ipcMain.handle("theme:set", (_e, choice) => {
+    if (choice !== "system" && choice !== "light" && choice !== "dark") return;
+    nativeTheme.themeSource = choice;
+    for (const win of BrowserWindow.getAllWindows())
+      win.setBackgroundColor(windowBackground());
+  });
   ipcMain.handle("external:open", async (_e, url) => {
     if (!isAllowedExternal(url)) return false;
     await shell.openExternal(url);

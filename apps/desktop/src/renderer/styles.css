@@ -1,4 +1,6 @@
-/* «Ночная лаборатория» — тема ArduHub для ПК (docs/specs/app-design-concepts.md). */
+/* «Ночная лаборатория» — тема ArduHub для ПК (docs/specs/app-design-concepts.md).
+   Две палитры: тёмная (по умолчанию в токенах :root) и светлая
+   (:root[data-theme="light"]). Тему выбирает prefs.ts. */
 @font-face {
   font-family: "Monocraft";
   src: url("./fonts/Monocraft-Regular.woff2") format("woff2");
@@ -25,11 +27,42 @@
   --color-led: #4ade80;
   --color-danger: #fb7185;
   --glow: 0 0 18px rgba(34, 211, 238, 0.55);
+  --glow-hover: 0 0 30px rgba(34, 211, 238, 0.35);
+  --glow-current: 0 0 22px rgba(34, 211, 238, 0.8);
+  --glow-done: 0 0 14px rgba(74, 222, 128, 0.45);
+  --grid-line: rgba(34, 211, 238, 0.06);
+  --shadow-card-app:
+    0 0 0 1px rgba(34, 211, 238, 0.08), 0 0 28px rgba(34, 211, 238, 0.08);
   --radius: 10px;
   --text-scale: 1;
   --font-head: "Monocraft", ui-monospace, monospace;
   --font-body: "Inter", system-ui, sans-serif;
   color-scheme: dark;
+}
+
+/* Дневная палитра: тот же характер, светлые поверхности, мягкие тени
+   вместо неона. Контраст текста ≥ 4.5:1 (расчёт в отчёте THEME). */
+:root[data-theme="light"] {
+  --color-bg: #f4f7fd;
+  --color-surface: #ffffff;
+  --color-surface-2: #e6ecf7;
+  --color-text: #0b1020;
+  --color-muted: #47526f;
+  --color-primary: #0e7490;
+  --color-on-primary: #ffffff;
+  --color-accent: #db2777;
+  --color-line: #cbd5e8;
+  --color-locked: #4f5b7a;
+  --color-led: #15803d;
+  --color-danger: #be123c;
+  --glow: 0 4px 14px rgba(14, 116, 144, 0.28);
+  --glow-hover: 0 10px 28px rgba(14, 116, 144, 0.18);
+  --glow-current: 0 6px 18px rgba(14, 116, 144, 0.35);
+  --glow-done: 0 4px 12px rgba(21, 128, 61, 0.22);
+  --grid-line: rgba(14, 116, 144, 0.07);
+  --shadow-card-app:
+    0 1px 2px rgba(11, 16, 32, 0.06), 0 8px 24px rgba(11, 16, 32, 0.06);
+  color-scheme: light;
 }
 
 * {
@@ -45,8 +78,7 @@ body {
   line-height: 1.45;
   color: var(--color-text);
   background: var(--color-bg)
-    linear-gradient(rgba(34, 211, 238, 0.06) 1px, transparent 1px) 0 0 / 100%
-    28px;
+    linear-gradient(var(--grid-line) 1px, transparent 1px) 0 0 / 100% 28px;
 }
 h1,
 h2,
@@ -132,9 +164,7 @@ button.chip:hover {
   background: linear-gradient(180deg, var(--color-surface), var(--color-bg));
   border: 1px solid var(--color-line);
   border-radius: var(--radius);
-  box-shadow:
-    0 0 0 1px rgba(34, 211, 238, 0.08),
-    0 0 28px rgba(34, 211, 238, 0.08);
+  box-shadow: var(--shadow-card-app);
   padding: 24px;
 }
 
@@ -316,12 +346,12 @@ button.tile:hover {
   color: var(--color-led);
   border: 2px solid var(--color-led);
   background: transparent;
-  box-shadow: 0 0 14px rgba(74, 222, 128, 0.45);
+  box-shadow: var(--glow-done);
 }
 .node.current {
   background: var(--color-primary);
   color: var(--color-on-primary);
-  box-shadow: 0 0 22px rgba(34, 211, 238, 0.8);
+  box-shadow: var(--glow-current);
 }
 .bar {
   height: 8px;
@@ -496,7 +526,7 @@ dd {
   position: absolute;
   inset: -1px;
   border-radius: inherit;
-  box-shadow: 0 0 30px rgba(34, 211, 238, 0.35);
+  box-shadow: var(--glow-hover);
   opacity: 0;
   pointer-events: none;
   transition: opacity 220ms var(--ease-out);

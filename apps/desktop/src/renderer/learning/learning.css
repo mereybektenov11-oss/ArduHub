@@ -1,10 +1,13 @@
 /* «Ночная лаборатория» for the learning area (D2).
    The reused site lesson CSS is light (cream background, ink text, amber
-   accent). Here its tokens are remapped while the learning area is open:
-   dark and light tokens swap places, so every background/text pair of the
-   site keeps its contrast, and amber becomes the neon cyan. Text on cyan is
-   pinned dark by neon-on-primary.generated.css. */
-:root:has(.learning-area) {
+   accent). Its tokens are remapped while the learning area is open:
+   - dark theme: dark and light tokens swap places, so every background/text
+     pair of the site keeps its contrast, and amber becomes the neon cyan;
+   - light theme: light tokens stay light, recoloured to the app's cool
+     palette, and amber becomes the deep cyan of the light theme.
+   Text on the primary colour is set by neon-on-primary.generated.css
+   through --neon-on-primary. */
+:root[data-theme="dark"]:has(.learning-area) {
   color-scheme: dark;
   --neon-on-primary: #062029;
 
@@ -50,35 +53,9 @@
   --glass-amber-hover: #67e8f9ef;
   --glass-edge: #22d3ee40;
   --dialog-backdrop: #05081ad9;
-  --shadow-card:
-    0 0 0 1px rgba(34, 211, 238, 0.08), 0 0 28px rgba(34, 211, 238, 0.08);
   --topic-muted: #9aa8cc;
   --topic-link: #22d3ee;
 
-  /* Headings in the pixel display face of the theme. */
-  --font-manrope: "Monocraft";
-}
-:root:has(.learning-area) .cabinet {
-  color-scheme: dark;
-  --cab-border: #2a3760;
-  --cab-muted: #9aa8cc;
-}
-:root:has(.learning-area) body {
-  background: var(--color-bg)
-    linear-gradient(rgba(34, 211, 238, 0.06) 1px, transparent 1px) 0 0 / 100%
-    28px;
-}
-/* Primary actions glow like in the rest of the app. */
-:root:has(.learning-area) .cab-btn:not(.cab-btn-secondary),
-:root:has(.learning-area) .button-primary {
-  box-shadow: 0 0 18px rgba(34, 211, 238, 0.45);
-}
-/* The code editor keeps a dark surface with readable syntax colours. */
-:root:has(.learning-area) .cm-editor {
-  background: #0b1020;
-  color: #e6edff;
-}
-:root:has(.learning-area) {
   /* CodeMirror defaults (see themableHighlight in the site's CodePanel),
      remapped for the dark editor; all ≥ 6.8:1 on #0b1020. */
   --code-404740: #cbd5e1;
@@ -96,14 +73,100 @@
   --code-940: #fcd34d;
   --code-f00: #f87171;
 }
+:root[data-theme="dark"]:has(.learning-area) .cabinet {
+  color-scheme: dark;
+  --cab-border: #2a3760;
+  --cab-muted: #9aa8cc;
+}
+
+:root[data-theme="light"]:has(.learning-area) {
+  color-scheme: light;
+  --neon-on-primary: #ffffff;
+
+  --cream-50: #f4f7fd;
+  --cream-100: #e6ecf7;
+  --white: #ffffff;
+  --ink-900: #0b1020;
+  --ink-800: #1a2442;
+  --forest-700: #15803d;
+  --text-dark: #0b1020;
+  --text-light: #ffffff;
+  --text-muted-dark: #47526f;
+  --text-muted-light: #c9d4f2;
+  --line-dark: #cbd5e8;
+  --line-light: #2a3760;
+
+  --amber-500: #0e7490;
+  --amber-600: #155e75;
+  --amber-ink: #ffffff;
+  --wire: #0e7490;
+
+  --success: #15803d;
+  --success-ink: #15803d;
+  --light-success: #dcfce7;
+  --error: #be123c;
+  --error-ink: #9f1239;
+  --light-error: #ffe4e6;
+  --error-border: #fda4af;
+  --error-text-dark: #be123c;
+
+  --surface-mentor: #e6ecf7;
+  --surface-video: #e6ecf7;
+  --surface-repeat: #e6ecf7;
+  --surface-sensor: #e6ecf7;
+  --surface-motor: #e6ecf7;
+  --surface-button: #e6ecf7;
+  --surface-collection: #e6ecf7;
+  --surface-rank: #e6ecf7;
+
+  --glass-light: #ffffffd9;
+  --glass-dark: #0b1020d9;
+  --glass-amber: #0e7490ed;
+  --glass-amber-hover: #155e75ef;
+  --glass-edge: #0e749040;
+  --dialog-backdrop: #0b102099;
+  --topic-muted: #47526f;
+  --topic-link: #0e7490;
+
+  /* CodeMirror defaults that are weak on white; the rest stay (≥ 5:1). */
+  --code-e40: #c2410c;
+  --code-085: #047857;
+  --code-940: #b45309;
+  --code-f00: #dc2626;
+}
+:root[data-theme="light"]:has(.learning-area) .cabinet {
+  color-scheme: light;
+  --cab-border: #cbd5e8;
+  --cab-muted: #47526f;
+}
+
+:root:has(.learning-area) {
+  --shadow-card: var(--shadow-card-app);
+  /* Headings in the pixel display face of the theme. */
+  --font-manrope: "Monocraft";
+}
+:root:has(.learning-area) body {
+  background: var(--color-bg)
+    linear-gradient(var(--grid-line) 1px, transparent 1px) 0 0 / 100% 28px;
+}
+/* Primary actions glow like in the rest of the app. */
+:root:has(.learning-area) .cab-btn:not(.cab-btn-secondary),
+:root:has(.learning-area) .button-primary {
+  box-shadow: var(--glow);
+}
+/* The code editor follows the theme surfaces. */
+:root:has(.learning-area) .cm-editor {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
 :root:has(.learning-area) .cm-gutters {
-  background: #121a31;
-  color: #7c88ab;
-  border-color: #2a3760;
+  background: var(--color-surface);
+  color: var(--color-locked);
+  border-color: var(--color-line);
 }
 :root:has(.learning-area) .cm-activeLine,
 :root:has(.learning-area) .cm-activeLineGutter {
-  background: #1a2442;
+  background: var(--color-surface-2);
 }
 
 .learning-area {
