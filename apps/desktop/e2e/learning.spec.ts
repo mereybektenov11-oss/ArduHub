@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
@@ -9,6 +9,7 @@ import { passLessonQuiz } from "../../../tests/e2e/helpers/lessonQuiz";
 import sketches from "@arduhub/curriculum/sketches.json" with { type: "json" };
 import type { Page } from "@playwright/test";
 import { launchMocked, signIn } from "./helpers";
+import { removeDir } from "./helpers";
 
 // Text contrast of the themed screen (WCAG AA), reported per step. axe-core
 // is injected directly: AxeBuilder needs new pages, which Electron lacks.
@@ -174,6 +175,6 @@ test("lesson 1 end to end in the app: video, test, circuit, code, real worker ru
     expect(s.errors).toEqual([]);
   } finally {
     await s.app.close();
-    rmSync(userData, { recursive: true, force: true });
+    removeDir(userData);
   }
 });

@@ -54,6 +54,9 @@ export default defineConfig(({ mode }) => {
   const supabaseUrl = env.NEXT_PUBLIC_SUPABASE_URL ?? "";
   const supabaseKey = env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
   const supabaseOrigin = supabaseUrl ? new URL(supabaseUrl).origin : "";
+  // Site that serves the AI mentor; a local site can be used for testing.
+  const siteApi = process.env.ARDUHUB_SITE_API ?? "";
+  const siteOrigin = new URL(siteApi || "https://arduhub.vercel.app").origin;
   const dev = mode === "development";
   const csp = [
     "default-src 'self'",
@@ -65,7 +68,7 @@ export default defineConfig(({ mode }) => {
     "img-src 'self' data: https://i.ytimg.com",
     "media-src 'self'",
     "frame-src https://www.youtube-nocookie.com https://www.youtube.com",
-    `connect-src 'self' ${supabaseOrigin}${dev ? " ws://127.0.0.1:5199" : ""}`,
+    `connect-src 'self' ${supabaseOrigin} ${siteOrigin}${dev ? " ws://127.0.0.1:5199" : ""}`,
     "object-src 'none'",
     "base-uri 'none'",
     "form-action 'none'",
@@ -86,6 +89,7 @@ export default defineConfig(({ mode }) => {
     define: {
       __SUPABASE_URL__: JSON.stringify(supabaseUrl),
       __SUPABASE_ANON_KEY__: JSON.stringify(supabaseKey),
+      __SITE_API__: JSON.stringify(siteApi),
       // The site's lesson code reads these public values directly.
       "process.env.NEXT_PUBLIC_SUPABASE_URL": JSON.stringify(supabaseUrl),
       "process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY": JSON.stringify(supabaseKey),

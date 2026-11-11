@@ -107,7 +107,14 @@ let app: ElectronApplication;
 test.beforeAll(() => {
   userData = mkdtempSync(join(tmpdir(), "arduhub-e2e-"));
 });
-test.afterAll(() => rmSync(userData, { recursive: true, force: true }));
+test.afterAll(() =>
+  rmSync(userData, {
+    recursive: true,
+    force: true,
+    maxRetries: 10,
+    retryDelay: 200,
+  }),
+);
 test.afterEach(async () => app?.close());
 
 test("login screen: validation, wrong password, security", async () => {

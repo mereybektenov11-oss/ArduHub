@@ -1,8 +1,9 @@
 import { expect, test } from "@playwright/test";
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { launchMocked, signIn } from "./helpers";
+import { removeDir } from "./helpers";
 
 const shots = resolve(__dirname, "../../../outputs/desktop-mentor");
 const mentors = [
@@ -72,7 +73,7 @@ for (const [id, name] of mentors)
       expect(s.errors).toEqual([]);
     } finally {
       await s.app.close();
-      rmSync(userData, { recursive: true, force: true });
+      removeDir(userData);
     }
   });
 
@@ -91,6 +92,6 @@ test("reduced motion: the greeting is shown at once without animation", async ()
     expect(anim).toBe("none");
   } finally {
     await s.app.close();
-    rmSync(userData, { recursive: true, force: true });
+    removeDir(userData);
   }
 });

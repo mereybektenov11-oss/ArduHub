@@ -64,7 +64,14 @@ let userData = "";
 test.beforeAll(() => {
   userData = mkdtempSync(join(tmpdir(), "arduhub-motion-"));
 });
-test.afterAll(() => rmSync(userData, { recursive: true, force: true }));
+test.afterAll(() =>
+  rmSync(userData, {
+    recursive: true,
+    force: true,
+    maxRetries: 10,
+    retryDelay: 200,
+  }),
+);
 
 test("sounds play after a gesture, follow the setting; motion is smooth and can be turned off", async () => {
   const s = await launchMocked(userData);

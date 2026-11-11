@@ -1,9 +1,14 @@
 // The site's lesson components call relative /api/* routes of the Next server.
-// The app has no such server: lessons and videos are served from the bundled
-// curriculum here, and routes that need the site server (compiler, mentor,
-// awards, achievements) answer "unavailable" until D4 connects them.
+// The app has no such server:
+// - lessons and videos are served from the bundled curriculum;
+// - the AI mentor (/api/mentor) is forwarded to the ArduHub site with the
+//   learner's access token (the site accepts it from app://arduhub);
+// - other routes that need the site server (compiler, awards, achievements)
+//   answer "unavailable" until D4 connects them.
 import { learningLessons } from "@arduhub/arduino-core/lessons/content";
 import videos from "@arduhub/curriculum/lesson-videos.json";
+import { supabase } from "./auth";
+import { siteApi } from "./content";
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
@@ -29,6 +34,23 @@ export function localApi(url: URL, init?: RequestInit): Response | null {
   return null;
 }
 
+/** /api/mentor → the site, signed with the current session token. */
+export async function mentorProxy(
+  init: RequestInit | undefined,
+  fetcher: typeof fetch,
+): Promise<Response> {
+  const session = (await supabase()?.auth.getSession())?.data.session;
+  if (!session) return json({ error: "unauthorized" }, 401);
+  const headers = new Headers(init?.headers);
+  headers.set("Authorization", `Bearer ${session.access_token}`);
+  return fetcher(`${siteApi}/api/mentor`, {
+    method: "POST",
+    headers,
+    body: init?.body,
+    signal: init?.signal,
+  });
+}
+
 export function installLocalApi() {
   const original = window.fetch.bind(window);
   window.fetch = (input: RequestInfo | URL, init?: RequestInit) => {
@@ -40,6 +62,7 @@ export function installLocalApi() {
           : input.url;
     const url = new URL(raw, location.href);
     if (url.origin === location.origin) {
+      if (url.pathname === "/api/mentor") return mentorProxy(init, original);
       const local = localApi(url, init);
       if (local) return Promise.resolve(local);
     }

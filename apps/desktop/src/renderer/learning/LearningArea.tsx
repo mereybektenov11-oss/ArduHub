@@ -12,8 +12,13 @@ import { playSfx } from "../sound/sfx";
 import Icon from "../icons/Icon";
 import { learningT as t } from "./content";
 import { learningCss } from "./site-styles";
+import PetCompanion from "../pet/PetCompanion";
+import { selectedMentor } from "../mentor/mentors";
 
-export default function LearningArea(props: { lessonId?: string }) {
+export default function LearningArea(props: {
+  lessonId?: string;
+  userId: string;
+}) {
   return (
     <ProgressProvider>
       <style data-learning-styles>{learningCss}</style>
@@ -26,7 +31,21 @@ export default function LearningArea(props: { lessonId?: string }) {
           <LessonMap />
         )}
       </div>
+      <PetHost userId={props.userId} />
     </ProgressProvider>
+  );
+}
+
+// The pixel companion uses the mentor and name stored in the account.
+function PetHost({ userId }: { userId: string }) {
+  const { progress, ready } = useProgress();
+  if (!ready) return null;
+  return (
+    <PetCompanion
+      userId={userId}
+      mentor={selectedMentor(progress)}
+      name={progress.profile.name || "изобретатель"}
+    />
   );
 }
 

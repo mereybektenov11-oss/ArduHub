@@ -13,7 +13,10 @@ export function createStreamingMentorHandler(
     model?: string;
     fastModel?: string;
     fetcher?: typeof fetch;
-    account?: (mentorId: string) => Promise<{
+    account?: (
+      mentorId: string,
+      request: Request,
+    ) => Promise<{
       remaining: number;
       spend: (n: number) => Promise<void>;
       onSuccess?: () => Promise<void>;
@@ -100,7 +103,7 @@ export function createStreamingMentorHandler(
       onSuccess?: () => Promise<void>;
     } | null = null;
     try {
-      account = (await config.account?.(mentor.id)) ?? null;
+      account = (await config.account?.(mentor.id, request)) ?? null;
     } catch {
       return fail("unauthorized", 401);
     }

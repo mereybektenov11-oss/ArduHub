@@ -1,9 +1,10 @@
 import { expect, test, type Page } from "@playwright/test";
-import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { launchMocked, signIn } from "./helpers";
+import { removeDir } from "./helpers";
 
 const shots = resolve(__dirname, "../../../outputs/desktop-light");
 const axeSource = readFileSync(
@@ -67,6 +68,6 @@ test("the app has a light theme only, readable on every screen", async () => {
     expect(s.errors).toEqual([]);
     await s.app.close();
   } finally {
-    rmSync(userData, { recursive: true, force: true });
+    removeDir(userData);
   }
 });

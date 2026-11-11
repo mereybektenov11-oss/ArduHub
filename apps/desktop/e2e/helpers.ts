@@ -1,4 +1,7 @@
 import { _electron as electron, type Page } from "@playwright/test";
+import { createProgress } from "../../../src/domain/seed";
+import { achievementDeck } from "../../../src/content/achievements.ru";
+import { rmSync } from "node:fs";
 import { createRequire } from "node:module";
 import { join, resolve } from "node:path";
 
@@ -34,6 +37,13 @@ const tokenBody = {
 
 export type Mock = {
   progress?: unknown;
+  /** Reply of the site's AI mentor (SSE); without it the call is aborted. */
+  mentorReply?: string;
+};
+export type MentorCall = {
+  authorization?: string;
+  origin?: string;
+  body: unknown;
 };
 
 export async function launchMocked(userData: string, mock: Mock = {}) {
@@ -103,16 +113,93 @@ export async function launchMocked(userData: string, mock: Mock = {}) {
     if (url.pathname.startsWith("/rest/v1/")) return json(single ? null : []);
     return route.abort();
   });
+  // The site is never reached from tests: the AI mentor is mocked or aborted.
+  const mentorCalls: MentorCall[] = [];
+  await app.context().route(/arduhub\.vercel\.app/, async (route) => {
+    const req = route.request();
+    if (
+      !new URL(req.url()).pathname.startsWith("/api/mentor") ||
+      !mock.mentorReply
+    )
+      return route.abort();
+    const h = req.headers();
+    mentorCalls.push({
+      authorization: h["authorization"],
+      origin: h["origin"],
+      body: req.postDataJSON(),
+    });
+    const words = mock.mentorReply.split(" ");
+    const sse =
+      words
+        .map(
+          (w, i) =>
+            `event: delta
+data: ${JSON.stringify({ text: (i ? " " : "") + w })}
+
+`,
+        )
+        .join("") +
+      `event: done
+data: ${JSON.stringify({ fallback: false, tokensUsed: 1 })}
+
+`;
+    return route.fulfill({
+      status: 200,
+      headers: {
+        "Content-Type": "text/event-stream; charset=utf-8",
+        "Access-Control-Allow-Origin": "app://arduhub",
+      },
+      body: sse,
+    });
+  });
   const page = await app.firstWindow();
+  // Tests never speak out loud: speech is recorded instead.
+  await page.evaluate(() => {
+    const w = window as unknown as { __spoken: string[] };
+    w.__spoken = [];
+    speechSynthesis.speak = (u: SpeechSynthesisUtterance) => {
+      w.__spoken.push(`${u.voice?.name ?? "?"}: ${u.text}`);
+    };
+  });
   const errors: string[] = [];
   page.on("console", (m) => m.type() === "error" && errors.push(m.text()));
   page.on("pageerror", (e) => errors.push(String(e)));
   await page.setViewportSize({ width: 1280, height: 800 });
-  return { app, page, errors, requests };
+  return { app, page, errors, requests, mentorCalls };
 }
 
 export async function signIn(page: Page, password: string) {
   await page.getByLabel("Почта").fill("pilot@example.test");
   await page.getByLabel("Пароль", { exact: true }).fill(password);
   await page.getByRole("button", { name: "Войти" }).click();
+}
+
+// Learner fixture of the site's learning E2E: notices and tours seen.
+export function learnerProgress(mentor = "volt") {
+  const p = createProgress();
+  p.profile.name = "Алия";
+  p.mentor = { ...p.mentor, selectedId: mentor, unlockedIds: [mentor] };
+  p.achievements = {
+    unlocked: [],
+    claimed: [],
+    notified: achievementDeck.map((item) => item.id),
+  };
+  p.tourSeen = { "/app": true, "/app/map": true, "/app/practice": true };
+  for (let i = 1; i <= 12; i++) p.tourSeen["/app/lesson/lesson-" + i] = true;
+  return p;
+}
+
+/** Removes a test profile folder; never throws (Windows may still hold a
+ *  file of the closing app, and a throw here would hide the real error). */
+export function removeDir(dir: string) {
+  try {
+    rmSync(dir, {
+      recursive: true,
+      force: true,
+      maxRetries: 10,
+      retryDelay: 200,
+    });
+  } catch {
+    /* left in the temp folder */
+  }
 }

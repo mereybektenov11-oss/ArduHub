@@ -61,7 +61,10 @@ export default function App() {
             </main>
           }
         >
-          <LearningArea lessonId={r.screen === "lesson" ? r.id : undefined} />
+          <LearningArea
+            userId={session.user.id}
+            lessonId={r.screen === "lesson" ? r.id : undefined}
+          />
         </Suspense>
       );
     return r.screen === "settings" ? (
@@ -420,6 +423,15 @@ function Settings(props: {
               }}
             />
             {t.settings.sounds}
+          </label>
+          <label className="row">
+            <input
+              type="checkbox"
+              checked={prefs.voice}
+              disabled={!prefs.sounds}
+              onChange={(e) => onPrefs({ ...prefs, voice: e.target.checked })}
+            />
+            {t.settings.voice}
           </label>
           <label className="row volume">
             {t.settings.volume}

@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 
 vi.stubGlobal("__SUPABASE_URL__", "");
 vi.stubGlobal("__SUPABASE_ANON_KEY__", "");
+vi.stubGlobal("__SITE_API__", "");
 const { countDone, loginError } = await import("../src/renderer/auth");
 const { parsePrefs } = await import("../src/renderer/prefs");
 const { t } = await import("../src/renderer/content");
@@ -46,6 +47,7 @@ describe("parsePrefs", () => {
     ).toEqual({
       sounds: false,
       volume: 0.2,
+      voice: true,
       textScale: 1.15,
       reduceMotion: true,
     });
@@ -54,18 +56,21 @@ describe("parsePrefs", () => {
       reduceMotion: false,
       sounds: true,
       volume: 0.5,
+      voice: true,
     });
     expect(parsePrefs("not json")).toEqual({
       textScale: 1,
       reduceMotion: false,
       sounds: true,
       volume: 0.5,
+      voice: true,
     });
     expect(parsePrefs(null)).toEqual({
       textScale: 1,
       reduceMotion: false,
       sounds: true,
       volume: 0.5,
+      voice: true,
     });
   });
 });

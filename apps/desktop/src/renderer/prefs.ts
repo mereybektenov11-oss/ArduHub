@@ -6,6 +6,7 @@ export type Prefs = {
   reduceMotion: boolean;
   sounds: boolean;
   volume: number; // 0..1
+  voice: boolean; // the learning companion speaks out loud
 };
 
 const KEY = "arduhub.prefs";
@@ -15,6 +16,7 @@ export const defaultPrefs: Prefs = {
   reduceMotion: false,
   sounds: true,
   volume: 0.5,
+  voice: true,
 };
 
 export function parsePrefs(raw: string | null): Prefs {
@@ -28,6 +30,7 @@ export function parsePrefs(raw: string | null): Prefs {
         : 1,
       reduceMotion: v.reduceMotion === true,
       sounds: v.sounds !== false,
+      voice: v.voice !== false,
       volume:
         Number.isFinite(volume) && volume >= 0 && volume <= 1
           ? volume

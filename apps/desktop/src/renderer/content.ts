@@ -1,6 +1,9 @@
 // Russian copy of the desktop app. Unavailable features are labelled as in
 // development; nothing here claims a feature works before it does.
 export const site = "https://arduhub.vercel.app";
+/** Site server the app calls (AI mentor). Overridable at build time for
+ *  local testing: ARDUHUB_SITE_API=http://127.0.0.1:3001 */
+export const siteApi = __SITE_API__ || site;
 
 export const t = {
   brand: "ArduHub",
@@ -53,6 +56,7 @@ export const t = {
     ] as const,
     motion: "Меньше анимации",
     sounds: "Звуковые эффекты",
+    voice: "Наставник говорит вслух",
     volume: "Громкость",
     testSound: "Проверить звук",
     account: "Аккаунт",
