@@ -103,6 +103,20 @@ for (const theme of ["dark", "light"] as const)
       ).toBeDisabled();
       await page.screenshot({ path: join(dir, "lesson-video.png") });
       await contrast(page, "video", low);
+      // Pixel face only for the lesson's main title; the rest is the text
+      // face (SF Pro when installed, otherwise Inter).
+      const lessonFonts = await page.evaluate(() => ({
+        title: getComputedStyle(document.querySelector(".cabinet h1")!)
+          .fontFamily,
+        header: getComputedStyle(document.querySelector(".flow-course-title")!)
+          .fontFamily,
+        body: getComputedStyle(document.querySelector(".cabinet p")!)
+          .fontFamily,
+      }));
+      expect(lessonFonts.title).toContain("Monocraft");
+      expect(lessonFonts.header).not.toContain("Monocraft");
+      expect(lessonFonts.header).toMatch(/^"SF Pro Text"/);
+      expect(lessonFonts.body).toMatch(/^"SF Pro Text"/);
       await page
         .getByRole("button", { name: "Я посмотрел", exact: true })
         .click();
@@ -159,6 +173,11 @@ for (const theme of ["dark", "light"] as const)
         .getByRole("heading", { name: /Привет, Алия!/ })
         .evaluate((h) => getComputedStyle(h).fontFamily);
       expect(font).toContain("Monocraft");
+      const tileFont = await page
+        .getByRole("heading", { name: "Обучение" })
+        .evaluate((h) => getComputedStyle(h).fontFamily);
+      expect(tileFont).toMatch(/^"SF Pro Text"/);
+      expect(tileFont).not.toContain("Monocraft");
       await page.screenshot({ path: join(dir, "menu-after-lesson.png") });
 
       // Progress reached the account through the site's own RPC.

@@ -142,8 +142,16 @@
 
 :root:has(.learning-area) {
   --shadow-card: var(--shadow-card-app);
-  /* Headings in the pixel display face of the theme. */
-  --font-manrope: "Monocraft";
+  /* Site fonts map to the app's text face (SF Pro if installed, else
+     Inter); the pixel face is kept for the lesson's main title below. */
+  --font-manrope: var(--font-body);
+  --font-inter: var(--font-body);
+  --font-geist-sans: var(--font-body);
+}
+:root:has(.learning-area) .cabinet h1 {
+  font-family: var(--font-head);
+  font-weight: 400;
+  letter-spacing: 0.02em;
 }
 :root:has(.learning-area) body {
   background: var(--color-bg)
