@@ -66,6 +66,10 @@ describe("AI mentor route for the desktop app", () => {
 
   it("serves the app with CORS and without the site's session cookie", async () => {
     vi.stubEnv("GROQ_API_KEY", "");
+    // CI sets placeholder Supabase values; this case covers an unconfigured
+    // Supabase, where the template answer is served without verification.
+    vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "");
+    vi.stubEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY", "");
     const res = await route.POST(
       post({ origin: "app://arduhub", authorization: `Bearer ${token}` }),
     );
