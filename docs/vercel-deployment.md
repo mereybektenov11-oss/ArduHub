@@ -1,5 +1,39 @@
 # Публикация ArduHub на Vercel — 17.10.2026
 
+## 11.11.2026 — вся ветка `codex/landing-cobalt-redesign` и ИИ для приложения
+
+По решению владельца выложена вся ветка (коммит `e87f594`), а не только доступ ИИ. Сверх предыдущей production-версии (`arduhub-e0ohlzd0r`, 4 дня назад) вошли:
+
+- новый лендинг, вход и профиль;
+- перестройка на workspace-пакеты (S0);
+- иконки Boxicons в уроках;
+- `/api/mentor` с доступом приложения для ПК.
+
+**Выкладка:**
+
+- Публикация через Vercel CLI 65.4.0 (вход выполнил владелец).
+- Preview `https://arduhub-7rccvsigt-merey4.vercel.app` проверен до production. На preview нет переменных Supabase и Groq, поэтому поддельный токен от приложения получал заготовку, а не отказ; на production — 401.
+- Production `https://arduhub-mvngf3u12-merey4.vercel.app` — READY, основной адрес https://arduhub.vercel.app обновлён.
+- `.vercelignore` теперь исключает `apps/` (приложение для ПК) и тесты пакетов.
+
+**Проверено на основном адресе:**
+
+- `/`, `/sign-in`, `/register`, `/privacy`, `/api/lessons/lesson-1`, `robots.txt`, `sitemap.xml` — 200;
+- `/app/profile` без входа — 307 на `/sign-in`;
+- `/api/mentor`:
+  - OPTIONS от `app://arduhub` — 204 с CORS;
+  - OPTIONS от чужого источника — 403;
+  - POST от чужого источника с токеном — 403;
+  - POST от приложения с поддельным токеном — **401** без cookie;
+- главная визуально — новый лендинг.
+
+**Не проверено:**
+
+- настоящий ответ Groq из приложения (нужен вход реальным аккаунтом владельца);
+- полный набор E2E сайта на production.
+
+Откат: предыдущая production-сборка `arduhub-e0ohlzd0r-merey4.vercel.app` (команда `vercel promote` или rollback в панели).
+
 ## 27.10.2026 — переход к практике после теста
 
 Актуальная production-версия: `dpl_DJFebn2snJeMS888rdZnBAd8e3ZP`, READY, код `13fb4ee`, сборка 56 с. Основной адрес https://arduhub.vercel.app; сборка https://arduhub-neelkqbho-merey4.vercel.app. Кнопка «К практике» повторно проверяет сохранённые ответы и видео, вместо бездействия при устаревшем флаге `stages.test=false`.
