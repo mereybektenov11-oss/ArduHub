@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 for (const width of [360, 1440]) {
-  test(`cabinet entry opens authentication even with a saved guest session at ${width}`, async ({
+  test(`sign-in entry opens authentication even with a saved guest session at ${width}`, async ({
     page,
     baseURL,
   }) => {
@@ -15,7 +15,7 @@ for (const width of [360, 1440]) {
         .getByRole("button", { name: "Открыть меню", exact: true })
         .click();
     const entry = page
-      .getByRole("link", { name: /В кабинет/ })
+      .getByRole("link", { name: "Войти", exact: true })
       .filter({ visible: true })
       .first();
     await expect(entry).toHaveAttribute("href", "/sign-in");

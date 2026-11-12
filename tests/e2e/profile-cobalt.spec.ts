@@ -127,15 +127,19 @@ test("profile sections have separate pages, settings persist, and logout protect
   ).toBeVisible();
   await expect(page.locator(".profile-settings-form")).toHaveCount(0);
   await expect(
-    page.getByRole("link", { name: "Перейти к обучению" }),
+    page.getByRole("link", { name: "Учиться в приложении" }),
   ).toHaveAttribute("data-variant", "secondary");
   await menu.getByRole("link", { name: "Для компьютера" }).click();
   await expect(page).toHaveURL(/\/app\/profile\/desktop$/);
-  const download = page.getByRole("button", { name: "Скачать приложение" });
-  await expect(download).toBeDisabled();
-  await expect(download).toHaveAttribute("data-variant", "secondary");
-  await expect(download).toHaveAttribute("aria-describedby", "desktop-status");
-  await expect(page.locator("#desktop-status")).toContainText("пока нельзя");
+  const download = page.getByRole("link", { name: "Скачать приложение" });
+  await expect(download).toHaveAttribute(
+    "href",
+    /^https:\/\/github\.com\/.+\/releases\/download\/.+\.exe$/,
+  );
+  await expect(download).toHaveAttribute("data-variant", "primary");
+  await expect(page.locator(".profile-desktop-copy")).toContainText(
+    "SmartScreen",
+  );
   await expect(
     menu.getByRole("link", { name: "Для компьютера" }),
   ).toHaveAttribute("aria-current", "page");

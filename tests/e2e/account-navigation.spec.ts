@@ -67,9 +67,9 @@ test("navbar opens pricing and documentation with persistent navigation and redu
   }
   const free = page
     .locator('[data-plan="free"]')
-    .getByRole("link", { name: "Начать бесплатно" });
+    .getByRole("link", { name: "Скачать приложение" });
   await expect(free).toHaveAttribute("data-variant", "primary");
-  await expect(free).toHaveAttribute("href", "/app/lessons");
+  await expect(free).toHaveAttribute("href", "/app/profile/desktop");
   await expect(page.locator("#pricing-availability")).toContainText(
     "оплата пока недоступна",
   );
@@ -87,12 +87,15 @@ test("navbar opens pricing and documentation with persistent navigation and redu
   await expect(page).toHaveURL(/\/app\/docs$/);
   await expect(nav).toHaveAttribute("data-persistent-check", "yes");
   await expect(
-    page.getByRole("link", { name: "Открыть первый урок" }),
-  ).toHaveAttribute("data-variant", "primary");
-  const menu = page.getByRole("navigation", { name: "Разделы документации" });
-  await menu.getByRole("link", { name: "Работа в редакторе" }).click();
+    page.getByRole("link", { name: "Скачать приложение" }),
+  ).toHaveAttribute("href", "/app/profile/desktop");
   await expect(
-    page.getByRole("heading", { name: "Проверь схему", exact: true }),
+    page.getByRole("heading", { name: "Скачай установщик", exact: true }),
+  ).toBeVisible();
+  const menu = page.getByRole("navigation", { name: "Разделы документации" });
+  await menu.getByRole("link", { name: "Работа в приложении" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Наставник", exact: true }),
   ).toBeVisible();
   await menu.getByRole("link", { name: "Компоненты", exact: true }).click();
   await page.getByLabel("Найти компонент").fill("резистор");

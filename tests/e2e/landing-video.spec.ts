@@ -122,20 +122,23 @@ test("landing CTAs and header controls use TextureButton variants", async ({
   await page.goto("/");
   for (const scope of [".hero", "#access"]) {
     const cta = page.locator(scope).getByRole("link", {
-      name: "Начать бесплатно",
+      name: "Скачать приложение",
     });
     await expect(cta).toHaveCount(1);
     await expect(cta).toHaveAttribute("data-slot", "texture-button");
     await expect(cta).toHaveAttribute("data-variant", "glass");
     await expect(cta).toHaveAttribute("data-size", "lg");
-    await expect(cta).toHaveAttribute("href", "/app");
-    await expect(cta).toContainText("↗");
+    await expect(cta).toHaveAttribute(
+      "href",
+      /^https:\/\/github\.com\/.+\/releases\/download\/.+\.exe$/,
+    );
+    await expect(cta.locator("svg.boxicon")).toHaveCount(1);
   }
   const account = page.locator(".header .account");
   await expect(account).toBeVisible();
   await expect(account).toHaveAttribute("data-variant", "secondary");
   await expect(account).toHaveAttribute("href", "/sign-in");
-  await expect(account).toHaveText(/В кабинет/);
+  await expect(account).toHaveText(/Войти/);
   await expect(page.locator(".menu-toggle")).toBeHidden();
 
   await page.setViewportSize({ width: 390, height: 844 });
@@ -151,7 +154,7 @@ test("landing CTAs and header controls use TextureButton variants", async ({
   await expect(close).toHaveAttribute("aria-expanded", "true");
   const menu = page.locator("#mobile-menu");
   await expect(menu).toBeVisible();
-  await expect(menu.getByRole("link", { name: "В кабинет" })).toHaveAttribute(
+  await expect(menu.getByRole("link", { name: "Войти" })).toHaveAttribute(
     "href",
     "/sign-in",
   );
