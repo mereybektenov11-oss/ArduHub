@@ -44,6 +44,10 @@ export function recordActivity(
 ): Progress["streak"] {
   if (streak.lastActiveDate === today) return streak;
   return {
+    ...streak,
+    activityDates: [...new Set([...knownActivityDays(streak), today])]
+      .sort()
+      .slice(-30),
     count:
       streak.lastActiveDate &&
       ordinal(today) - ordinal(streak.lastActiveDate) === 1
@@ -51,4 +55,54 @@ export function recordActivity(
         : 1,
     lastActiveDate: today,
   };
+}
+export function knownActivityDays(streak: Progress["streak"]): string[] {
+  if (streak.activityDates) return streak.activityDates;
+  if (!streak.lastActiveDate) return [];
+  const end = ordinal(streak.lastActiveDate);
+  return Array.from(
+    { length: Math.min(30, Math.max(0, streak.count)) },
+    (_, i) => new Date((end - i) * 86400000).toISOString().slice(0, 10),
+  ).filter((day) => !streak.frozenDates?.includes(day));
+}
+/** Resolve only the current run. Frozen days preserve the run but are not activity. */
+export function settleStreak(
+  p: Progress,
+  today = localDate(),
+): { progress: Progress; event: "frozen" | "lost" | null } {
+  const next = freezeStreak(p, today);
+  if (next !== p)
+    return {
+      progress: {
+        ...next,
+        streak: {
+          ...next.streak,
+          activityDates: knownActivityDays(p.streak),
+          frozenDates: [
+            ...new Set([
+              ...(p.streak.frozenDates ?? []),
+              next.streak.lastActiveDate!,
+            ]),
+          ],
+        },
+      },
+      event: "frozen",
+    };
+  if (
+    p.streak.count > 0 &&
+    p.streak.lastActiveDate &&
+    ordinal(today) - ordinal(p.streak.lastActiveDate) > 1
+  )
+    return {
+      progress: {
+        ...p,
+        streak: {
+          ...p.streak,
+          activityDates: knownActivityDays(p.streak),
+          count: 0,
+        },
+      },
+      event: "lost",
+    };
+  return { progress: p, event: null };
 }

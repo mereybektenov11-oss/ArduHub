@@ -2,13 +2,19 @@ import { describe, expect, it } from "vitest";
 import { BrowserProgressStore, STORAGE_KEY } from "@/domain/progress/storage";
 import { createProgress } from "@/domain/seed";
 import { lessonOpen } from "@/domain/progress/xp";
-import { learningLessons, exampleScene } from "@/domain/lessons/content";
-import { emptyScene, makePart } from "@/domain/scene/scene";
-import { connections } from "@/domain/scene/netlist";
-import { checkScene } from "@/domain/scene/check";
-import { legacyNetlist } from "@/domain/scene/migrate";
-import { checkBehavior, type BehaviorCheck } from "@/domain/sim/checks";
-import type { Sample } from "@/domain/sim/runner";
+import {
+  learningLessons,
+  exampleScene,
+} from "@arduhub/arduino-core/lessons/content";
+import { emptyScene, makePart } from "@arduhub/arduino-core/scene/scene";
+import { connections } from "@arduhub/arduino-core/scene/netlist";
+import { checkScene } from "@arduhub/arduino-core/scene/check";
+import { legacyNetlist } from "@arduhub/arduino-core/scene/migrate";
+import {
+  checkBehavior,
+  type BehaviorCheck,
+} from "@arduhub/arduino-core/sim/checks";
+import type { Sample } from "@arduhub/arduino-core/sim/runner";
 import { reviewSections } from "@/services/mentor/review";
 function storage(value: unknown) {
   const data = new Map([[STORAGE_KEY, JSON.stringify(value)]]);
@@ -23,7 +29,7 @@ function storage(value: unknown) {
   };
 }
 describe("curriculum migration contracts", () => {
-  it("keeps completed lessons, moves button/pot progress, and preserves unrelated circuits", () => {
+  it("resets legacy completions without evidence, moves button/pot receipts, and preserves unrelated circuits", () => {
     const old = createProgress();
     delete old.curriculumVersion;
     delete old.settings;
@@ -42,8 +48,11 @@ describe("curriculum migration contracts", () => {
       next = store.load();
     expect(next.curriculumVersion).toBe(2);
     expect(next.settings?.textScale).toBe(1);
-    expect(next.lessons["lesson-3"].status).toBe("done");
-    expect(next.lessons["lesson-6"].status).toBe("done");
+    expect(next.lessons["lesson-1"].status).toBe("current");
+    expect(next.lessons["lesson-3"].status).toBe("locked");
+    expect(next.lessons["lesson-6"].status).toBe("locked");
+    expect(next.lessons["lesson-3"].rewarded).toBe(true);
+    expect(next.lessons["lesson-6"].rewarded).toBe(true);
     expect(next.lessons["lesson-2"].status).toBe("locked");
     expect(Object.keys(next.circuits)).toEqual([
       "lesson-1",

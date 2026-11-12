@@ -19,7 +19,7 @@ try {
     );
   });
   const sketches = JSON.parse(
-    await readFile("src/content/sketches.json", "utf8"),
+    await readFile("packages/curriculum/src/sketches.json", "utf8"),
   );
   await page.addInitScript((code) => {
     const now = new Date().toISOString();

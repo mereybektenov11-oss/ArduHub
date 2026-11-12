@@ -1,7 +1,8 @@
 import type { Progress } from "../types";
 import { createProgress, lessons, mentors } from "../seed";
 import { topics } from "../types";
-import { isNetlist } from "../checker/netlist";
+import { isNetlist } from "@arduhub/arduino-core/checker/netlist";
+import { normalizeProgress } from "./courseState";
 export const STORAGE_KEY = "arduhub.progress.v1";
 export interface ProgressStore {
   load(): Progress;
@@ -21,7 +22,7 @@ export function isProgress(value: unknown): value is Progress {
     !!p.profile &&
     Number.isInteger(p.profile.level) &&
     p.profile.level >= 0 &&
-    p.profile.level <= 4 &&
+    p.profile.level <= 6 &&
     !!p.diagnostic &&
     ["none", "inprogress", "done"].includes(p.diagnostic.status) &&
     Array.isArray(p.diagnostic.answers) &&
@@ -92,6 +93,17 @@ export class BrowserProgressStore implements ProgressStore {
         ...createProgress(),
         ...data,
         settings: {
+          sounds: data.settings?.sounds !== false,
+          mentorHints: data.settings?.mentorHints !== false,
+          ...(typeof data.settings?.soundVolume === "number" &&
+          Number.isFinite(data.settings.soundVolume)
+            ? {
+                soundVolume: Math.max(
+                  0,
+                  Math.min(1, data.settings.soundVolume),
+                ),
+              }
+            : {}),
           textScale: [1, 1.15, 1.3].includes(data.settings?.textScale ?? 0)
             ? data.settings!.textScale
             : 1,
@@ -123,6 +135,7 @@ export class BrowserProgressStore implements ProgressStore {
         );
         this.memory.curriculumVersion = 2;
       }
+      this.memory = normalizeProgress(this.memory);
       return this.memory;
     } catch {
       if (this.storage) {

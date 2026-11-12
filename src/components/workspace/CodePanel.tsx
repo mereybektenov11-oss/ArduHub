@@ -14,10 +14,25 @@ import { linter, lintGutter, setDiagnostics } from "@codemirror/lint";
 import {
   syntaxHighlighting,
   defaultHighlightStyle,
+  HighlightStyle,
   StreamLanguage,
 } from "@codemirror/language";
 import { explain, type Diagnostic } from "@/services/compile/explain";
-import { learningRu as c } from "@/content/learning.ru";
+import { learningRu as c } from "@arduhub/curriculum/learning.ru";
+import { kidsWorkspaceRu as k } from "@/content/kids-workspace.ru";
+import SettingsIcon from "@/components/icons/SettingsIcon";
+import Boxicon from "@/components/icons/Boxicon";
+// Default CodeMirror colours, each overridable by a CSS variable named after
+// it (e.g. --code-00f). The site keeps the defaults; the desktop app's dark
+// theme supplies readable values.
+const themableHighlight = HighlightStyle.define(
+  defaultHighlightStyle.specs.map((spec) =>
+    typeof spec.color === "string" && spec.color.startsWith("#")
+      ? { ...spec, color: `var(--code-${spec.color.slice(1)}, ${spec.color})` }
+      : spec,
+  ),
+);
+
 export default function CodePanel({
   value,
   onChange,
@@ -49,7 +64,7 @@ export default function CodePanel({
           history(),
           keymap.of([...defaultKeymap, ...historyKeymap]),
           StreamLanguage.define(cpp),
-          syntaxHighlighting(defaultHighlightStyle),
+          syntaxHighlighting(themableHighlight),
           EditorState.transactionFilter.of((tr) => {
             const large =
               new TextEncoder().encode(tr.newDoc.toString()).length > 16384;
@@ -136,31 +151,39 @@ export default function CodePanel({
       className="l2-code"
       style={{ "--code-font-size": `${codeFontSize}px` } as CSSProperties}
     >
-      <div className="cab-row" aria-label={polishRu.codeSize}>
-        <button
-          className="cab-btn cab-btn-secondary"
-          aria-label={polishRu.codeSmaller}
-          disabled={codeFontSize <= 12}
-          onClick={() => {
-            setCodeFontSize((n) => Math.max(12, n - 1));
-            view.current?.requestMeasure();
-          }}
+      <details className="kids-code-settings">
+        <summary className="cab-icon-btn" aria-label={k.codeSettings}>
+          <SettingsIcon />
+        </summary>
+        <div
+          className="cab-row kids-options-panel"
+          aria-label={polishRu.codeSize}
         >
-          A−
-        </button>
-        <span>{codeFontSize}</span>
-        <button
-          className="cab-btn cab-btn-secondary"
-          aria-label={polishRu.codeLarger}
-          disabled={codeFontSize >= 20}
-          onClick={() => {
-            setCodeFontSize((n) => Math.min(20, n + 1));
-            view.current?.requestMeasure();
-          }}
-        >
-          A+
-        </button>
-      </div>
+          <button
+            className="cab-btn cab-btn-secondary"
+            aria-label={polishRu.codeSmaller}
+            disabled={codeFontSize <= 12}
+            onClick={() => {
+              setCodeFontSize((n) => Math.max(12, n - 1));
+              view.current?.requestMeasure();
+            }}
+          >
+            A<Boxicon name="minus" size="0.9em" />
+          </button>
+          <span>{codeFontSize}</span>
+          <button
+            className="cab-btn cab-btn-secondary"
+            aria-label={polishRu.codeLarger}
+            disabled={codeFontSize >= 20}
+            onClick={() => {
+              setCodeFontSize((n) => Math.min(20, n + 1));
+              view.current?.requestMeasure();
+            }}
+          >
+            A<Boxicon name="plus" size="0.9em" />
+          </button>
+        </div>
+      </details>
       <div ref={root} />
       {tooLarge && (
         <p className="l2-error" role="alert">
@@ -170,8 +193,6 @@ export default function CodePanel({
       {diagnostics.map((d, i) => (
         <p className="l2-error" role="alert" key={i}>
           {d.line}:{d.col} — {explain(d.message)}
-          <br />
-          <code>{d.message}</code>
         </p>
       ))}
     </div>

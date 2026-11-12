@@ -1,5 +1,5 @@
 "use client";
-import type { LearningLesson } from "@/domain/lessons/content";
+import type { LearningLesson } from "@arduhub/arduino-core/lessons/content";
 import { lessonFlowRu as c } from "@/content/ru";
 import { Stagger, StaggerItem } from "@/components/ui/Stagger";
 import { motionTokens } from "@/lib/motion";
@@ -12,7 +12,7 @@ export default function VideoStage({
 }: {
   lesson: LearningLesson;
   completed: boolean;
-  onUnlock: () => void;
+  onUnlock: (evidence: { confirmed?: boolean; watchedRatio?: number }) => void;
   onContinue: () => void;
 }) {
   return (
@@ -27,7 +27,7 @@ export default function VideoStage({
       />
       <section className="flow-theory l2-theory" aria-label={c.summary}>
         <h2>{c.summary}</h2>
-        <Stagger interval={motionTokens.lessonFlow.stagger}>
+        <Stagger eager interval={motionTokens.lessonFlow.stagger}>
           {lesson.theory.slice(0, 5).map((block, i) => (
             <StaggerItem key={block.title}>
               <section className="flow-note-block">

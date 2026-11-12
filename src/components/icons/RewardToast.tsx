@@ -2,7 +2,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useProgress } from "@/lib/useProgress";
 import { dashboardRu as c } from "@/content/dashboard.ru";
+import RewardPopup from "@/components/overlay/RewardPopup";
 import RewardIcon from "./RewardIcon";
+import { RewardFly } from "@/components/feedback/EventFeedback";
 export default function RewardToast() {
   const { progress: p, ready } = useProgress();
   const previous = useRef<{ value: number; account?: string } | null>(null),
@@ -14,15 +16,14 @@ export default function RewardToast() {
     if (!old || old.account !== p.account?.userId || p.sparks <= old.value)
       return;
     const start = setTimeout(() => setReward(p.sparks - old.value), 0);
-    const end = setTimeout(() => setReward(0), 3000);
     return () => {
       clearTimeout(start);
-      clearTimeout(end);
     };
   }, [p.sparks, p.account?.userId, ready]);
   return reward > 0 ? (
-    <div className="polish-reward" role="status">
+    <RewardPopup className="polish-reward" onDone={() => setReward(0)}>
       <RewardIcon kind="spark" />+{reward} {c.sparks.toLowerCase()}
-    </div>
+      <RewardFly key={p.sparks} />
+    </RewardPopup>
   ) : null;
 }

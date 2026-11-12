@@ -13,14 +13,42 @@ import {
   diagnosticDeck,
 } from "@/content/cabinet.ru";
 import { Action, Card, Pill, ProgressBar } from "@/components/cabinet/ui";
+import { openMentor } from "@/components/mentor/openMentor";
+import { kidsMentorRu } from "@/content/kids-mentor.ru";
+import { recordAchievementEvent } from "@/domain/achievements";
+import {
+  queueGameAttempt,
+  type GameAttempt,
+} from "@/services/achievements/gameQueue";
 type Result = { score: number; errors: string[] };
 export default function GameView({ id }: { id: string }) {
-  const { update, notify } = useProgress();
+  const { progress, update, notify } = useProgress();
   const game = games.find((g) => g.id === id);
   const [result, setResult] = useState<Result | null>(null),
     [run, setRun] = useState(0);
   const ended = useRef(false);
   if (!game) return <h1>{c.notFound}</h1>;
+  function attempt(
+    correct: boolean,
+    raw: Omit<GameAttempt, "attemptId" | "gameId">,
+  ) {
+    if (!game) return;
+    update((p) => {
+      const tried = recordAchievementEvent(p, {
+        kind: "topic",
+        topic: game.topic,
+      });
+      return game.kind === "blitz"
+        ? recordAchievementEvent(tried, { kind: "blitz", correct })
+        : tried;
+    });
+    if (progress.account?.userId)
+      queueGameAttempt(progress.account.userId, {
+        ...raw,
+        attemptId: crypto.randomUUID(),
+        gameId: game.id,
+      });
+  }
   function finish(r: Result) {
     if (ended.current) return;
     ended.current = true;
@@ -58,6 +86,26 @@ export default function GameView({ id }: { id: string }) {
       <h1>{game.title}</h1>
       {result ? (
         <Card className="cab-stack">
+          {(result.errors.length > 0 || result.score === 0) && (
+            <div data-mentor-game-result="true">
+              <Action
+                secondary
+                onClick={() =>
+                  openMentor({
+                    prompt: kidsMentorRu.explainGame(game.title),
+                    context: {
+                      errors: result.errors.map(
+                        (error) => c.errorLabels[error] ?? c.matchError,
+                      ),
+                      step: game.title,
+                    },
+                  })
+                }
+              >
+                {kidsMentorRu.reviewErrors}
+              </Action>
+            </div>
+          )}
           <h2>{c.result}</h2>
           <div className="cab-row">
             <Pill>
@@ -90,9 +138,14 @@ export default function GameView({ id }: { id: string }) {
           </Action>
         </Card>
       ) : game.kind === "match" ? (
-        <MatchGame key={run} finish={finish} />
+        <MatchGame key={run} finish={finish} onAttempt={attempt} />
       ) : (
-        <CircuitGame key={run} kind={game.kind} finish={finish} />
+        <CircuitGame
+          key={run}
+          kind={game.kind}
+          finish={finish}
+          onAttempt={attempt}
+        />
       )}
     </div>
   );
@@ -100,9 +153,14 @@ export default function GameView({ id }: { id: string }) {
 function CircuitGame({
   kind,
   finish,
+  onAttempt,
 }: {
   kind: "blitz" | "findbug";
   finish: (r: Result) => void;
+  onAttempt: (
+    correct: boolean,
+    raw: Omit<GameAttempt, "attemptId" | "gameId">,
+  ) => void;
 }) {
   const [q, setQ] = useState(0),
     [lives, setLives] = useState(3),
@@ -134,7 +192,11 @@ function CircuitGame({
   }, [paused, score, errors, finish]);
   const task = blitzDeck[q % blitzDeck.length];
   const find = diagnosticDeck[5 + (q % 3)];
-  function answer(ok: boolean) {
+  function answer(
+    ok: boolean,
+    raw: { pair?: [string, string]; option?: number },
+  ) {
+    onAttempt(ok, { questionIndex: q, ...raw });
     const nextErrors = ok
       ? errors
       : [...errors, kind === "blitz" ? "wrong_pin" : "led_reversed"];
@@ -154,7 +216,9 @@ function CircuitGame({
       setPin(p);
       return;
     }
-    answer([pin, p].sort().join("|") === task.pair.slice().sort().join("|"));
+    answer([pin, p].sort().join("|") === task.pair.slice().sort().join("|"), {
+      pair: [pin, p],
+    });
   }
   return (
     <Card className="cab-stack">
@@ -178,7 +242,7 @@ function CircuitGame({
           options={find.options}
           kind={q % 3 === 1 ? "wrongpin" : q % 3 === 2 ? "sensor" : "led"}
           selected={null}
-          onSelect={(i) => answer(i === find.correct)}
+          onSelect={(i) => answer(i === find.correct, { option: i })}
         />
       ) : (
         <div className="cab-game-circuit">
@@ -231,9 +295,7 @@ function CircuitGame({
                 className="cab-pin-choice"
                 aria-label={p}
                 aria-pressed={pin === p}
-                onClick={() =>
-                  kind === "blitz" ? choose(p) : answer(p === "K")
-                }
+                onClick={() => choose(p)}
               >
                 {p}
               </button>
@@ -251,7 +313,16 @@ function CircuitGame({
     </Card>
   );
 }
-function MatchGame({ finish }: { finish: (r: Result) => void }) {
+function MatchGame({
+  finish,
+  onAttempt,
+}: {
+  finish: (r: Result) => void;
+  onAttempt: (
+    correct: boolean,
+    raw: Omit<GameAttempt, "attemptId" | "gameId">,
+  ) => void;
+}) {
   const deck = matchDeck.flatMap((p, i) => [
     { id: `a${i}`, pair: i, text: p[0] },
     {
@@ -285,6 +356,10 @@ function MatchGame({ finish }: { finish: (r: Result) => void }) {
                 return;
               }
               const prev = deck.find((c) => c.id === selected)!;
+              onAttempt(prev.pair === card.pair, {
+                questionIndex: 0,
+                match: [prev.pair, card.pair],
+              });
               if (prev.pair === card.pair) {
                 const next = [...matched, card.pair];
                 setMatched(next);

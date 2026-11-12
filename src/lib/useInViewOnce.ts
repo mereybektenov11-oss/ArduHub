@@ -3,13 +3,16 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { motionTokens } from "./motion";
 
-export function useInViewOnce<T extends HTMLElement>({ once = true } = {}) {
+export function useInViewOnce<T extends HTMLElement>({
+  once = true,
+  enabled = true,
+} = {}) {
   const ref = useRef<T>(null);
   const [inView, setInView] = useState(false);
 
   useLayoutEffect(() => {
     const element = ref.current;
-    if (!element || !window.IntersectionObserver) return;
+    if (!enabled || !element || !window.IntersectionObserver) return;
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     // Server HTML remains visible without JavaScript. Arm before first paint.
     element.dataset.motionReady = "true";
@@ -65,7 +68,7 @@ export function useInViewOnce<T extends HTMLElement>({ once = true } = {}) {
       delete element.dataset.motionReady;
       delete element.dataset.inView;
     };
-  }, [once]);
+  }, [once, enabled]);
 
   // Reduced motion is handled by CSS and the numeric animation itself, so an
   // off-screen observer doesn't trigger an extra hydration render per card.

@@ -802,7 +802,7 @@
   color: var(--cab-muted);
 }
 .polish-calendar .active {
-  color: var(--amber-600);
+  color: var(--text-dark);
 }
 .polish-calendar small {
   font-size: var(--type-caption);

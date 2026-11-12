@@ -1,7 +1,7 @@
 import { spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 const examples = JSON.parse(
-  await readFile("src/content/hardware-examples.json", "utf8"),
+  await readFile("packages/curriculum/src/hardware-examples.json", "utf8"),
 );
 for (const example of examples) {
   const result = spawnSync(

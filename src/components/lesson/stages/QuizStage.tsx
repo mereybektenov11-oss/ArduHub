@@ -8,13 +8,20 @@ import {
   type FlowQuestion,
 } from "@/domain/lessons/flow";
 import { Action } from "@/components/cabinet/ui";
+import { openMentor } from "@/components/mentor/openMentor";
+import { kidsMentorRu } from "@/content/kids-mentor.ru";
+import { playSfx } from "@/lib/sfx";
+import { CheckDraw } from "@/components/feedback/EventFeedback";
+import Boxicon from "@/components/icons/Boxicon";
 export default function QuizStage({
+  lessonId,
   questions,
   passPercent = 70,
   value,
   onChange,
   onContinue,
 }: {
+  lessonId?: string;
   questions: readonly FlowQuestion[];
   passPercent?: number;
   value: FlowQuiz;
@@ -55,6 +62,7 @@ export default function QuizStage({
         : value.awardedAnswers,
     };
     onChange(next, false, newAward);
+    playSfx(correct ? "correct" : "wrong");
   }
   function advance() {
     const last = review
@@ -101,7 +109,9 @@ export default function QuizStage({
           <p>{c.quizReviewNote}</p>
           <div className="cab-row">
             {resultValue.passed ? (
-              <Action onClick={onContinue}>{c.toPractice} →</Action>
+              <Action onClick={onContinue}>
+                {c.toPractice} <Boxicon name="next" />
+              </Action>
             ) : (
               <Action
                 onClick={() => {
@@ -164,7 +174,13 @@ export default function QuizStage({
                 disabled={answer !== undefined}
                 onClick={() => choose(i)}
               >
-                <span aria-hidden="true">{i + 1}</span>
+                <span aria-hidden="true">
+                  {answer === i && i === current.correctIndex ? (
+                    <CheckDraw />
+                  ) : (
+                    i + 1
+                  )}
+                </span>
                 {option}
               </button>
             ))}
@@ -178,12 +194,32 @@ export default function QuizStage({
                 {answer === current.correctIndex ? c.correct : c.incorrect}
               </strong>
               <p>{current.explanation}</p>
-              <Action onClick={advance}>{c.next} →</Action>
+              {answer !== current.correctIndex && (
+                <Action
+                  secondary
+                  onClick={() =>
+                    openMentor({
+                      lessonId,
+                      prompt: kidsMentorRu.explainQuestion(
+                        current.text,
+                        current.options[answer],
+                      ),
+                    })
+                  }
+                >
+                  {kidsMentorRu.explain}
+                </Action>
+              )}
+              <Action onClick={advance}>
+                {c.next} <Boxicon name="next" />
+              </Action>
             </div>
           )}
         </>
       ) : (
-        <Action onClick={onContinue}>{c.toPractice} →</Action>
+        <Action onClick={onContinue}>
+          {c.toPractice} <Boxicon name="next" />
+        </Action>
       )}
     </section>
   );

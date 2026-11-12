@@ -11,6 +11,7 @@ module.exports = async (browser) => {
   await page.evaluate(() => {
     const key = "arduhub.progress.v1";
     const progress = JSON.parse(localStorage.getItem(key));
+    progress.profile.name = "Проверка";
     progress.tourSeen = {
       ...progress.tourSeen,
       "/app": true,

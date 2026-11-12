@@ -7,8 +7,8 @@ import {
   initialFlowQuiz,
 } from "@/domain/lessons/flow";
 import { initialSteps, type Draft } from "@/domain/projects/storage";
-import { emptyScene } from "@/domain/scene/scene";
-import { learningLessons } from "@/domain/lessons/content";
+import { emptyScene } from "@arduhub/arduino-core/scene/scene";
+import { learningLessons } from "@arduhub/arduino-core/lessons/content";
 const draft = (): Draft => ({
   scene: emptyScene(),
   code: "",
@@ -40,13 +40,13 @@ describe("three-stage gate and migration", () => {
     f.stages.test = true;
     expect(resolveStage(f, "practice")).toBe("practice");
   });
-  it("keeps completed video, theory, quiz and untouched practice data", () => {
+  it("resets old stage flags without viewing or quiz evidence and keeps practice data", () => {
     const old = draft();
     old.steps = { ...old.steps, video: true, theory: true, quiz: true };
     old.step = 2;
     const f = migrateLessonFlow(old);
-    expect(f.stages).toEqual({ video: true, test: true, practice: false });
-    expect(f.stage).toBe("practice");
+    expect(f.stages).toEqual({ video: false, test: false, practice: false });
+    expect(f.stage).toBe("video");
     expect(old.steps.circuit).toBe(false);
   });
   it("requires 70 percent without rounding an incomplete score up", () => {

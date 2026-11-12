@@ -1,0 +1,227 @@
+.island-map-stage {
+  --map-label-size: 18px;
+  --map-caption-size: 15px;
+  --map-outline: #e9a93b;
+  --map-paper: #f6f3ea;
+  --map-ink: #14201a;
+}
+.island-map-viewport {
+  width: 100%;
+  aspect-ratio: 1280 / 720;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  background: var(--ink-900);
+}
+.island-map-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.island-map-image {
+  opacity: 0;
+  transition: opacity var(--motion-duration) var(--motion-ease);
+}
+.island-map-image.is-loaded {
+  opacity: 1;
+}
+.island-gold-road {
+  fill: none;
+  stroke: var(--map-outline);
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.32;
+}
+.island-gold-road.is-open {
+  opacity: 0.85;
+}
+.island-gold-road.is-unlocking {
+  animation: island-road-unlock var(--event-unlock, 0.7s) var(--motion-ease);
+}
+.island-node-orb {
+  fill: var(--map-paper);
+  stroke: var(--map-outline);
+  stroke-width: 3;
+}
+.island-node-label {
+  fill: var(--map-paper);
+  fill-opacity: 0.96;
+  stroke: var(--forest-700);
+  stroke-width: 2;
+}
+.island-node-name {
+  fill: var(--map-ink);
+  font-size: var(--map-label-size);
+  font-weight: 800;
+}
+.island-node-progress {
+  fill: var(--map-ink);
+  font-size: var(--map-caption-size);
+}
+.island-map-node {
+  cursor: pointer;
+  outline: none;
+}
+.island-map-node:focus-visible .island-node-orb {
+  stroke: var(--map-paper);
+  stroke-width: 8;
+}
+.island-map-node.is-locked {
+  cursor: default;
+}
+.island-map-node.is-locked .island-node-orb {
+  fill: var(--metal);
+  stroke: var(--forest-700);
+}
+.island-map-node.is-done .island-node-orb {
+  stroke: var(--success);
+  filter: drop-shadow(0 0 8px var(--success));
+}
+.island-map-node.is-current .island-node-orb {
+  animation: island-current 1.4s ease-in-out infinite alternate;
+}
+.island-node-flag {
+  fill: var(--map-outline);
+  stroke: var(--map-paper);
+  stroke-width: 2;
+}
+.island-map-node.is-unlocking .island-node-orb {
+  animation: island-node-unlock var(--event-unlock, 0.7s) var(--motion-ease);
+}
+.island-map-controls {
+  display: flex;
+  gap: var(--space-xs);
+  margin-top: var(--space-xs);
+}
+.island-map-controls button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--line-light);
+  border-radius: var(--radius-pill);
+}
+.island-level-list {
+  display: grid;
+  gap: var(--space-sm);
+  padding: 0;
+  list-style-position: inside;
+}
+.island-level-list li {
+  padding: var(--space-sm);
+  border: 1px solid var(--line-light);
+  border-radius: var(--radius-card);
+}
+.island-level-list span {
+  display: block;
+  font-size: var(--type-body-small);
+  color: var(--text-muted-dark);
+}
+.map-editor {
+  max-width: 1280px;
+  margin: auto;
+  padding: var(--space-md);
+}
+.map-editor svg {
+  width: 100%;
+  display: block;
+  touch-action: none;
+}
+.map-editor circle {
+  fill: var(--amber-500);
+  stroke: var(--cream-50);
+  stroke-width: 3;
+  cursor: grab;
+}
+.map-editor text {
+  fill: var(--ink-900);
+  font-weight: 800;
+  font-size: var(--type-body);
+  pointer-events: none;
+}
+.map-editor button {
+  padding: var(--space-sm);
+  min-height: 44px;
+}
+.map-editor textarea {
+  width: 100%;
+  min-height: 240px;
+  padding: var(--space-sm);
+  font-size: var(--type-body-small);
+}
+@media (max-width: 768px) {
+  .island-map-svg {
+    touch-action: none;
+  }
+}
+@keyframes island-current {
+  from {
+    opacity: 0.7;
+  }
+  to {
+    opacity: 1;
+    filter: drop-shadow(0 0 10px var(--map-outline));
+  }
+}
+@keyframes island-node-unlock {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+@keyframes island-road-unlock {
+  from {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    opacity: 1;
+  }
+  to {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 0;
+    opacity: 0.85;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .island-map-stage *,
+  .island-map-stage {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+[data-reduced-motion="true"] .island-map-stage * {
+  animation: none !important;
+  transition: none !important;
+}
+
+.island-unlock-lock {
+  fill: var(--metal);
+  stroke: var(--ink-900);
+  stroke-width: 2;
+  animation: island-lock-open var(--event-unlock, 0.7s) var(--motion-ease)
+    forwards;
+}
+@keyframes island-lock-open {
+  to {
+    transform: translateY(-20px) rotate(-15deg);
+    opacity: 0;
+  }
+}
+.island-level-list a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .island-unlock-lock {
+    animation: none !important;
+    opacity: 0;
+  }
+}
+[data-reduced-motion="true"] .island-unlock-lock {
+  animation: none !important;
+  opacity: 0;
+}

@@ -1,0 +1,160 @@
+.h-overlay-host {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: var(--space-sm);
+  z-index: 100;
+  min-height: 0;
+  background: transparent;
+}
+.h-overlay-host .h-overlay-panel {
+  position: fixed;
+  inset: auto;
+  top: 50dvh;
+  left: 50vw;
+  translate: -50% -50%;
+  margin: 0;
+  max-width: calc(100vw - 2 * var(--space-sm));
+  max-height: 90dvh;
+  overflow: hidden;
+}
+.h-overlay-panel > .cab-modal-content {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(90dvh - 2 * var(--space-sm));
+  overflow: hidden;
+}
+.h-overlay-header {
+  flex-shrink: 0;
+  position: relative;
+}
+.h-overlay-body {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.h-overlay-mentor .h-overlay-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+.h-overlay-mentor .cab-chat {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  max-height: none;
+}
+.h-overlay-sticker {
+  width: fit-content;
+}
+.h-overlay-sticker > .cab-modal-content {
+  padding: 0;
+  background: transparent;
+}
+.h-overlay-sticker .achievement-popup {
+  position: relative;
+  inset: auto;
+  margin: 0;
+  max-height: none;
+}
+.h-overlay-celebration {
+  text-align: center;
+}
+.h-overlay-celebration .h-overlay-header {
+  justify-content: center;
+}
+.h-overlay-celebration .h-overlay-header h2 {
+  width: 100%;
+  text-align: center;
+}
+.h-overlay-celebration .h-overlay-header > button {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.h-overlay-celebration .cab-row {
+  justify-content: center;
+}
+.h-overlay-celebration .flow-rewards {
+  flex-wrap: wrap;
+  padding-inline: 0;
+}
+.h-overlay-celebration .flow-rewards strong {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.h-overlay-celebration .h-overlay-body .cab-row:last-child {
+  position: sticky;
+  bottom: 0;
+  background: var(--cream-50);
+  padding-block: var(--space-xs);
+}
+.h-overlay-body > .cab-row:last-child {
+  position: sticky;
+  bottom: 0;
+  background: var(--cream-50);
+}
+.h-reward-host {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+  z-index: 110;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  min-height: 0;
+  background: transparent;
+}
+.h-reward-host .h-reward-popup {
+  position: relative;
+  inset: auto;
+  margin: 0;
+  max-width: calc(100vw - 2 * var(--space-sm));
+  text-align: center;
+}
+.h-reward-host .h-reward-popup.polish-reward {
+  transform: none;
+}
+@media (max-width: 600px) {
+  .h-overlay-celebration .h-overlay-body .cab-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+@media (max-width: 767px) {
+  .h-overlay-host .h-overlay-mentor {
+    top: var(--overlay-viewport-top, 0px);
+    bottom: auto;
+    translate: -50% 0;
+    margin-block: 0;
+    height: var(--overlay-viewport-height, 100dvh);
+    max-height: var(--overlay-viewport-height, 100dvh);
+    max-width: 100vw;
+    width: 100vw;
+  }
+  .h-overlay-mentor > .cab-modal-content {
+    max-height: 100%;
+  }
+  [data-overlay-keyboard="true"] .h-overlay-mentor > .cab-modal-content {
+    padding: var(--space-sm);
+  }
+  [data-overlay-keyboard="true"] .cab-chat {
+    gap: var(--space-xs);
+  }
+  [data-overlay-keyboard="true"] .polish-chat-header,
+  [data-overlay-keyboard="true"] .polish-chat-quick,
+  [data-overlay-keyboard="true"] .cab-chat > p {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .h-overlay-panel,
+  .h-reward-popup {
+    animation: none !important;
+    transition: none !important;
+  }
+}

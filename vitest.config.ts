@@ -3,7 +3,10 @@ import { fileURLToPath } from "node:url";
 export default defineConfig({
   resolve: { alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) } },
   test: {
-    include: ["tests/unit/**/*.test.ts"],
+    include: [
+      "tests/unit/**/*.test.ts",
+      "packages/arduino-core/tests/cabinet-checker.test.ts",
+    ],
     env: {
       LEARNING_COVERAGE: process.argv.some((arg) =>
         arg.startsWith("--coverage"),
@@ -19,7 +22,7 @@ export default defineConfig({
         "src/lib/db.ts",
         "src/lib/submitWaitlist.ts",
         "src/app/api/waitlist/route.ts",
-        "src/domain/checker/check.ts",
+        "packages/arduino-core/src/checker/check.ts",
         "src/domain/progress/streak.ts",
         "src/domain/progress/xp.ts",
         "src/domain/progress/storage.ts",

@@ -1,10 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { learningRu as c } from "@/content/learning.ru";
-import sketches from "@/content/sketches.json" with { type: "json" };
-import { emptyScene } from "@/domain/scene/scene";
-import { exampleScene } from "@/domain/lessons/content";
+import { onboardingRu } from "@/content/ru";
+import { learningRu as c } from "@arduhub/curriculum/learning.ru";
+import sketches from "@arduhub/curriculum/sketches.json" with { type: "json" };
+import { emptyScene } from "@arduhub/arduino-core/scene/scene";
+import { exampleScene } from "@arduhub/arduino-core/lessons/content";
 import {
   importProject,
   thumbnail,
@@ -14,19 +15,25 @@ import { useLearningStore } from "@/lib/useLearningStore";
 import { Action, Card, Tabs } from "@/components/cabinet/ui";
 
 import ScenePreview from "./ScenePreview";
-import { projectIdeas, ideaSupport } from "@/domain/projects/ideas";
-import { projectCopy } from "@/content/projects.ru";
-import { catalog } from "@/domain/parts/catalog";
+import { projectIdeas } from "@/domain/projects/ideas";
+import { kidsPagesRu as k } from "@/content/kids-pages.ru";
+import PartView from "@/components/workspace/PartView";
+import CabinetArt from "@/components/cabinet/CabinetArt";
+import { catalog } from "@arduhub/arduino-core/parts/catalog";
 import { exportProject } from "@/domain/projects/export";
+import { useProgress } from "@/lib/useProgress";
+import { recordAchievementEvent } from "@/domain/achievements";
 export default function ProjectsView({
   initialTab = "mine",
 }: {
   initialTab?: string;
 }) {
+  const { update } = useProgress();
   const { store, mutate } = useLearningStore(),
     router = useRouter(),
     [tab, setTab] = useState(initialTab),
     [message, setMessage] = useState("");
+  const importInput = useRef<HTMLInputElement>(null);
   function create(kind?: string) {
     if (!store) return;
     const idea = projectIdeas.find((s) => s.id === kind);
@@ -48,23 +55,28 @@ export default function ProjectsView({
     mutate((s) => {
       added = s.add(project);
     });
-    if (added) router.push(`/app/projects/${project.id}`);
-    else setMessage(c.limit);
+    if (added) {
+      update((p) =>
+        recordAchievementEvent(p, { kind: "project", id: project.id }),
+      );
+      router.push(`/app/projects/${project.id}`);
+    } else setMessage(c.limit);
   }
   return (
-    <div className="cab-stack">
+    <div className="cab-stack kids-projects">
       <div className="cab-row">
         <div>
-          <p className="cab-eyebrow">ARDUHUB LAB</p>
-          <h1>{c.projects}</h1>
+          <h1>{initialTab === "ideas" ? c.ideas : c.projects}</h1>
           <p className="cab-lead">{c.projectsIntro}</p>
         </div>
-        <Action
-          disabled={!store || store.projects.length >= 20 || store.corrupt}
-          onClick={() => create()}
-        >
-          {c.newProject} +
-        </Action>
+        {tab === "mine" && !!store?.projects.length && (
+          <Action
+            disabled={!store || store.projects.length >= 20 || store.corrupt}
+            onClick={() => create()}
+          >
+            {k.createProject} +
+          </Action>
+        )}
       </div>
       {store?.unavailable && (
         <p className="l2-error" role="alert">
@@ -89,10 +101,26 @@ export default function ProjectsView({
             { id: "ideas", title: c.ideas },
           ]}
         />
-        <label className="l2-import">
-          {c.import}
+        <details className="project-actions">
+          <summary
+            className="cab-icon-btn"
+            aria-label={onboardingRu.projectMenu}
+          >
+            ⋯
+          </summary>
+          <button
+            className="cab-btn cab-btn-secondary"
+            type="button"
+            disabled={!store || store.projects.length >= 20 || store.corrupt}
+            onClick={() => importInput.current?.click()}
+          >
+            {c.import}
+          </button>
           <input
+            ref={importInput}
+            hidden
             type="file"
+            aria-label={c.import}
             accept=".json,application/json"
             disabled={!store || store.projects.length >= 20 || store.corrupt}
             onChange={async (e) => {
@@ -115,7 +143,7 @@ export default function ProjectsView({
               setMessage(ok ? "" : c.limit);
             }}
           />
-        </label>
+        </details>
       </div>
       {message && (
         <p role="alert" className="l2-error">
@@ -126,11 +154,12 @@ export default function ProjectsView({
         <p className="l2-note">{c.limit}</p>
       )}
       {tab === "mine" && store && !store.projects.length && (
-        <Card>
-          <h2>{c.noProjects}</h2>
-          <p>{c.noProjectsNote}</p>
-          <Action secondary onClick={() => setTab("ideas")}>
-            {c.ideas} →
+        <Card className="kids-project-empty">
+          <CabinetArt name="volt" alt="" size={150} />
+          <h2>{k.emptyProjects}</h2>
+          <p>{k.emptyProjectsNote}</p>
+          <Action onClick={() => create()} disabled={!store || store.corrupt}>
+            {k.createProject}
           </Action>
         </Card>
       )}
@@ -150,9 +179,17 @@ export default function ProjectsView({
                 </p>
                 <div className="cab-row">
                   <Action href={`/app/projects/${p.id}`}>{c.open} →</Action>
-                  <Action secondary onClick={() => exportProject(p)}>
-                    {c.export}
-                  </Action>
+                  <details className="project-actions">
+                    <summary
+                      className="cab-icon-btn"
+                      aria-label={onboardingRu.projectMenu}
+                    >
+                      ⋯
+                    </summary>
+                    <Action secondary onClick={() => exportProject(p)}>
+                      {c.export}
+                    </Action>
+                  </details>
                 </div>
               </Card>
             ))
@@ -163,18 +200,56 @@ export default function ProjectsView({
                 </div>
                 <h2>{s.title}</h2>
                 <p>{s.idea}</p>
-                <p>
-                  {projectCopy.required}:{" "}
-                  {s.required.map((type) => catalog[type].name).join(", ")}
-                </p>
-                <p>{projectCopy[ideaSupport(s)]}</p>
+                <span
+                  className="kids-difficulty"
+                  aria-label={k.difficulty(
+                    Math.min(3, Math.max(1, Math.ceil(s.required.length / 2))),
+                  )}
+                >
+                  {[1, 2, 3].map((star) => (
+                    <span
+                      aria-hidden="true"
+                      key={star}
+                      className={
+                        star <=
+                        Math.min(
+                          3,
+                          Math.max(1, Math.ceil(s.required.length / 2)),
+                        )
+                          ? "filled"
+                          : ""
+                      }
+                    >
+                      ★
+                    </span>
+                  ))}
+                </span>
+                <div className="kids-required-parts">
+                  {s.required.map((type) => (
+                    <span
+                      key={type}
+                      role="img"
+                      aria-label={catalog[type].name}
+                      title={catalog[type].name}
+                    >
+                      <PartView
+                        type={type}
+                        scale={Math.min(
+                          36 / catalog[type].width,
+                          36 / catalog[type].height,
+                        )}
+                        lazy
+                      />
+                    </span>
+                  ))}
+                </div>
                 <Action
                   onClick={() => create(s.id)}
                   disabled={
                     !store || store.projects.length >= 20 || store.corrupt
                   }
                 >
-                  {c.newProject} →
+                  {k.start} →
                 </Action>
               </Card>
             ))}

@@ -16,7 +16,9 @@ export async function POST(request: Request) {
   }
   if (
     !body ||
-    !["lesson", "lesson_quiz", "mission", "game"].includes(body.source) ||
+    !["lesson", "lesson_fallback", "lesson_quiz", "mission", "game"].includes(
+      body.source,
+    ) ||
     typeof body.refId !== "string" ||
     body.refId.length > 100 ||
     !Number.isInteger(body.amount) ||
@@ -28,7 +30,12 @@ export async function POST(request: Request) {
     source: body.source,
     ref_id: body.refId,
     // The lesson reward is authoritative; older queued clients sent 40–60 XP.
-    amount: body.source === "lesson" ? 30 : body.amount,
+    amount:
+      body.source === "lesson"
+        ? 30
+        : body.source === "lesson_fallback"
+          ? 15
+          : body.amount,
   });
   if (error) {
     const code =

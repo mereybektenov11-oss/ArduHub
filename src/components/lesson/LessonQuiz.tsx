@@ -3,7 +3,7 @@ import { useRef } from "react";
 import {
   lessonQuizRu as c,
   type LessonQuestion,
-} from "@/content/lesson-quiz.ru";
+} from "@arduhub/curriculum/lesson-quiz.ru";
 import {
   quizResult,
   createQuizProgress,
@@ -11,6 +11,7 @@ import {
 } from "@/domain/lessons/quiz";
 import { Action, Card, Pill } from "@/components/cabinet/ui";
 
+import Boxicon from "@/components/icons/Boxicon";
 export default function LessonQuiz({
   questions,
   value,
@@ -54,8 +55,16 @@ export default function LessonQuiz({
                 className={result.correct[i] ? "is-correct" : "is-incorrect"}
               >
                 <strong>
-                  {result.correct[i] ? `✓ ${c.correct}` : `↻ ${c.incorrect}`} ·{" "}
-                  {q.prompt}
+                  {result.correct[i] ? (
+                    <>
+                      <Boxicon name="check" /> {c.correct}
+                    </>
+                  ) : (
+                    <>
+                      <Boxicon name="retry" /> {c.incorrect}
+                    </>
+                  )}{" "}
+                  · {q.prompt}
                 </strong>
                 {!result.correct[i] && (
                   <p>
@@ -67,7 +76,9 @@ export default function LessonQuiz({
             ))}
           </ol>
           {result.passed ? (
-            <Action onClick={onContinue}>{c.continue} →</Action>
+            <Action onClick={onContinue}>
+              {c.continue} <Boxicon name="next" />
+            </Action>
           ) : (
             <Action
               onClick={() => {
@@ -154,7 +165,7 @@ export default function LessonQuiz({
                 disabled={state.answers[state.current] === null}
                 onClick={() => move(state.current + 1)}
               >
-                {c.next} →
+                {c.next} <Boxicon name="next" />
               </Action>
             ) : (
               <Action

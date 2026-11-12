@@ -1,0 +1,158 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - link "Главная Neuralese" [ref=e7] [cursor=pointer]:
+          - /url: /
+          - img "Neuralese" [ref=e8]
+          - generic [ref=e9]: Neuralese
+        - generic [ref=e10]:
+          - link "Главная" [ref=e11] [cursor=pointer]:
+            - /url: /
+          - link "Документация" [ref=e12] [cursor=pointer]:
+            - /url: /docs
+          - link "Сертификаты" [ref=e13] [cursor=pointer]:
+            - /url: /certificates
+          - link "Команда" [ref=e14] [cursor=pointer]:
+            - /url: /team
+      - generic [ref=e15]:
+        - button "RU" [ref=e17] [cursor=pointer]
+        - generic:
+          - generic:
+            - link "Скачать для Windows":
+              - /url: download_windows_url
+  - main [ref=e21]:
+    - generic [ref=e24]:
+      - heading "Учись ИИ, собирая его." [level=1] [ref=e25]
+      - paragraph [ref=e26]: Визуальная интерактивная платформа, где любой может проектировать, обучать и понимать нейросети — без кода и высшей математики.
+      - link "Скачать для Windows" [ref=e28] [cursor=pointer]:
+        - /url: download_windows_url
+    - generic [ref=e35]:
+      - generic [ref=e36]:
+        - heading "ИИ без тумана." [level=2] [ref=e37]
+        - paragraph [ref=e38]: Мы убрали порог программирования — чтобы ученики думали об архитектуре и идеях, а не о синтаксисе.
+      - generic [ref=e39]:
+        - generic [ref=e41]:
+          - heading "Смотри на математику, не пиши её." [level=3] [ref=e42]
+          - paragraph [ref=e43]: Соединяй слои как конструктор и сразу видь, как течёт поток данных. Подход «стеклянного ящика» — ученик понимает, что происходит внутри, а не просто запускает чёрный ящик.
+        - generic [ref=e47]:
+          - heading "Личный репетитор внутри." [level=3] [ref=e48]
+          - paragraph [ref=e49]: Это Аксон — встроенный ИИ-наставник. Он объясняет, что делает каждый слой, отвечает на вопросы в реальном времени и помогает, когда что-то не клеится.
+        - generic [ref=e53]:
+          - heading "Проверь теорию на деле." [level=3] [ref=e54]
+          - paragraph [ref=e55]: Запусти модель и сразу увидь результат. Твоя нейросеть управляет автономной машиной прямо в браузере — решения сети видны в действии.
+    - generic [ref=e59]:
+      - generic [ref=e60]:
+        - heading "Создано для класса." [level=2] [ref=e61]
+        - paragraph [ref=e62]:
+          - text: До
+          - strong [ref=e63]: 2× быстрее
+          - text: — такой прогресс показывают ученики на Neuralese. Платформа даёт учителю инструменты для управления классом и проведения живых уроков по ИИ — без дорогого оборудования.
+      - generic [ref=e65]:
+        - generic [ref=e68]:
+          - generic [ref=e69]: Синхронизация
+          - generic [ref=e80]:
+            - heading "Синхронизируйте класс" [level=3] [ref=e81]
+            - paragraph [ref=e82]: Держите весь класс на одном шаге, пока ученики работают.
+        - generic [ref=e85]:
+          - generic [ref=e87]:
+            - generic [ref=e88]: Создать слой CNN
+            - generic [ref=e89]: Подключить пулинг
+            - generic [ref=e90]: Проверяю...
+          - generic [ref=e91]:
+            - heading "Направляйте каждый шаг" [level=3] [ref=e92]
+            - paragraph [ref=e93]: Разрабатывайте собственные уроки по ИИ под свой класс.
+        - generic [ref=e96]:
+          - generic [ref=e99]:
+            - generic [ref=e100]: Прогресс класса
+            - generic [ref=e101]:
+              - generic [ref=e102]: "32"
+              - generic [ref=e103]: активных
+          - generic [ref=e112]:
+            - heading "Проводите уроки вживую" [level=3] [ref=e113]
+            - paragraph [ref=e114]: Отслеживайте прогресс ИИ каждого ученика в дашборде.
+        - generic [ref=e117]:
+          - generic [ref=e119]:
+            - generic [ref=e120]: Готово к работе
+            - generic [ref=e124]:
+              - generic [ref=e125]: CPU
+              - generic [ref=e128]: GPU
+              - generic [ref=e131]: WebGL
+          - generic [ref=e136]:
+            - heading "Работает на ноутбуках" [level=3] [ref=e137]
+            - paragraph [ref=e138]: Не нужно ставить GPU — скачайте Neuralese, работает из коробки.
+    - region [ref=e139]:
+      - generic [ref=e140]:
+        - heading "Частые вопросы" [level=2] [ref=e141]
+        - generic [ref=e142]:
+          - group [ref=e143]:
+            - generic "Нужно ли уметь программировать?" [ref=e144] [cursor=pointer]
+          - group [ref=e147]:
+            - generic "На каких компьютерах работает Neuralese?" [ref=e148] [cursor=pointer]
+          - group [ref=e151]:
+            - generic "Кто такой Аксон?" [ref=e152] [cursor=pointer]
+          - group [ref=e155]:
+            - generic "Как Neuralese помогает учителю вести урок?" [ref=e156] [cursor=pointer]
+          - group [ref=e159]:
+            - generic "Как работают сертификаты?" [ref=e160] [cursor=pointer]
+          - group [ref=e163]:
+            - generic "Где узнать, что делает каждый нод?" [ref=e164] [cursor=pointer]
+  - contentinfo [ref=e167]:
+    - generic [ref=e168]:
+      - generic [ref=e170]:
+        - heading "Нейросети, которые собирают из блоков, а не пишут кодом. Попробуйте Neuralese на следующем уроке." [level=2] [ref=e171]:
+          - generic [ref=e172]: Нейросети, которые собирают из блоков, а не пишут кодом.
+          - generic [ref=e173]: Попробуйте Neuralese на следующем уроке.
+        - link "Скачать для Windows" [ref=e174] [cursor=pointer]:
+          - /url: download_windows_url
+      - generic [ref=e177]:
+        - link "Neuralese Neuralese" [ref=e179] [cursor=pointer]:
+          - /url: /
+          - img "Neuralese" [ref=e180]
+          - generic [ref=e181]: Neuralese
+        - navigation "Продукт" [ref=e182]:
+          - heading "Продукт" [level=3] [ref=e183]
+          - list [ref=e184]:
+            - listitem [ref=e185]:
+              - link "Возможности" [ref=e186] [cursor=pointer]:
+                - /url: "#features"
+            - listitem [ref=e187]:
+              - link "Учителям" [ref=e188] [cursor=pointer]:
+                - /url: "#teachers"
+        - navigation "Ресурсы" [ref=e189]:
+          - heading "Ресурсы" [level=3] [ref=e190]
+          - list [ref=e191]:
+            - listitem [ref=e192]:
+              - link "Документация" [ref=e193] [cursor=pointer]:
+                - /url: /docs
+            - listitem [ref=e194]:
+              - link "Сертификаты" [ref=e195] [cursor=pointer]:
+                - /url: /certificates
+            - listitem [ref=e196]:
+              - link "Команда" [ref=e197] [cursor=pointer]:
+                - /url: /team
+        - navigation "Скачать" [ref=e198]:
+          - heading "Скачать" [level=3] [ref=e199]
+          - list [ref=e200]:
+            - listitem [ref=e201]:
+              - link "macOS" [ref=e202] [cursor=pointer]:
+                - /url: download_macos_url
+            - listitem [ref=e203]:
+              - link "Windows" [ref=e204] [cursor=pointer]:
+                - /url: download_windows_url
+        - navigation "Поддержка" [ref=e205]:
+          - heading "Поддержка" [level=3] [ref=e206]
+          - list [ref=e207]:
+            - listitem [ref=e208]:
+              - link "Политика конфиденциальности" [ref=e209] [cursor=pointer]:
+                - /url: /privacy
+            - listitem [ref=e210]:
+              - link "Условия использования" [ref=e211] [cursor=pointer]:
+                - /url: /terms
+            - listitem [ref=e212]:
+              - link "Справочный центр" [ref=e213] [cursor=pointer]:
+                - /url: /help
+            - listitem [ref=e214]:
+              - link "Связаться с нами" [ref=e215] [cursor=pointer]:
+                - /url: mailto:hello@neuralese.com
+      - generic [ref=e216]: © 2026 Neuralese. Все права защищены.

@@ -4,17 +4,24 @@ import { Action, Modal } from "@/components/cabinet/ui";
 import { lessonFlowRu as c } from "@/content/ru";
 import { motionTokens } from "@/lib/motion";
 import RewardIcon from "@/components/icons/RewardIcon";
+import { Confetti, RewardFly } from "@/components/feedback/EventFeedback";
+import { playSfx } from "@/lib/sfx";
+import CabinetArt from "@/components/cabinet/CabinetArt";
+import Boxicon from "@/components/icons/Boxicon";
 export default function CompletionModal({
   rewarded,
   nextId,
   onClose,
+  halfReward = false,
 }: {
   rewarded: boolean;
   nextId?: string;
   onClose: () => void;
+  halfReward?: boolean;
 }) {
   const [fraction, setFraction] = useState(0);
   useEffect(() => {
+    if (rewarded) playSfx("lesson_complete");
     let frame = 0;
     const start = performance.now();
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -27,10 +34,14 @@ export default function CompletionModal({
     }
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, []);
+  }, [rewarded]);
   return (
-    <Modal title={c.success} onClose={onClose}>
+    <Modal variant="celebration" title={c.success} onClose={onClose}>
       <div className="flow-completion">
+        {rewarded && <Confetti />}
+        <div className="g3-happy-mentor">
+          <CabinetArt name="volt" size={96} alt="" />
+        </div>
         <div className="flow-stars" role="img" aria-label={c.stars}>
           {[0, 1, 2].map((i) => (
             <span
@@ -40,19 +51,21 @@ export default function CompletionModal({
                 animationDelay: `${i * motionTokens.lessonFlow.stagger}s`,
               }}
             >
-              ★
+              <Boxicon name="star" size="1em" />
             </span>
           ))}
         </div>
         <p>{c.successNote}</p>
         {rewarded ? (
           <div className="flow-rewards" aria-label={c.rewardLabel}>
-            <strong aria-label="30 XP">
-              <RewardIcon kind="xp" />+{Math.round(30 * fraction)} {c.rewardXp}
+            <RewardFly />
+            <strong aria-label={`${halfReward ? 15 : 30} XP`}>
+              <RewardIcon kind="xp" />+
+              {Math.round((halfReward ? 15 : 30) * fraction)} {c.rewardXp}
             </strong>
-            <strong aria-label="10 искр">
-              <RewardIcon kind="spark" />+{Math.round(10 * fraction)}{" "}
-              {c.rewardSparks}
+            <strong aria-label={`${halfReward ? 5 : 10} ${c.rewardSparks}`}>
+              <RewardIcon kind="spark" />+
+              {Math.round((halfReward ? 5 : 10) * fraction)} {c.rewardSparks}
             </strong>
           </div>
         ) : (
@@ -60,7 +73,9 @@ export default function CompletionModal({
         )}
         <div className="cab-row">
           {nextId && (
-            <Action href={`/app/lesson/${nextId}`}>{c.nextLesson} →</Action>
+            <Action href={`/app/lesson/${nextId}`}>
+              {c.nextLesson} <Boxicon name="next" />
+            </Action>
           )}
           <Action secondary href="/app">
             {c.back}

@@ -1,0 +1,35 @@
+{
+  "provenance": "Own ArduHub interface recorded locally in isolated guest sessions, example learner progress. review is a scripted illustrative circuit example. No Neuralese media is included. No AI API, email, compilation or real-account data used.",
+  "files": [
+    {
+      "name": "editor",
+      "source": "outputs\\landing-neuralese\\raw\\editor.webm",
+      "bytes": 149199,
+      "seconds": 7.0,
+      "size": [
+        1280,
+        800
+      ]
+    },
+    {
+      "name": "review",
+      "source": "outputs\\landing-neuralese\\raw\\review.webm",
+      "bytes": 79705,
+      "seconds": 7.0,
+      "size": [
+        1280,
+        800
+      ]
+    },
+    {
+      "name": "lessons",
+      "source": "outputs\\landing-neuralese\\raw\\lessons.webm",
+      "bytes": 445960,
+      "seconds": 6.708333333333333,
+      "size": [
+        1280,
+        800
+      ]
+    }
+  ]
+}

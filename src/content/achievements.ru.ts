@@ -1,0 +1,86 @@
+export const achievementDeck = [
+  {
+    id: "first-light",
+    title: "Первый огонёк",
+    condition: "Пройди первый урок",
+    icon: "led",
+  },
+  {
+    id: "light-bearer",
+    title: "Светоносец",
+    condition: "Пройди все уроки про светодиоды",
+    icon: "sparks",
+  },
+  {
+    id: "seven-days",
+    title: "7 дней подряд",
+    condition: "Занимайся семь дней подряд",
+    icon: "streak",
+  },
+  {
+    id: "perfect",
+    title: "Без ошибок",
+    condition: "Пройди урок без ошибок с первой попытки",
+    icon: "target",
+  },
+  {
+    id: "check-master",
+    title: "Мастер проверки",
+    condition: "Пройди пять уроков без ошибок с первой попытки",
+    icon: "book",
+  },
+  {
+    id: "inventor",
+    title: "Изобретатель",
+    condition: "Создай первый проект",
+    icon: "rocket",
+  },
+  {
+    id: "buyer",
+    title: "Покупатель",
+    condition: "Купи первый предмет",
+    icon: "tokens",
+  },
+  {
+    id: "mentor-friend",
+    title: "Друг наставника",
+    condition: "Задай наставнику десять вопросов и получи ответы",
+    icon: "hints",
+  },
+  {
+    id: "speed",
+    title: "Скорость",
+    condition: "Ответь верно десять раз подряд в блице",
+    icon: "xp",
+  },
+  {
+    id: "explorer",
+    title: "Исследователь",
+    condition: "Попробуй задания по всем шести темам",
+    icon: "sensor",
+  },
+  {
+    id: "electrician",
+    title: "Электрик",
+    condition: "Пройди десять уроков",
+    icon: "motor",
+  },
+  {
+    id: "weekly-best",
+    title: "Лучший в неделе",
+    condition: "Попади в тройку лидеров недели",
+    icon: "gold",
+  },
+] as const;
+export const achievementsRu = {
+  title: "Мои стикеры",
+  available: "Стикер открыт",
+  claimed: "Награда получена",
+  collect: "Забрать 5 искр",
+  close: "Закрыть стикер",
+  retry: "Не получилось сохранить награду. Попробуй ещё раз.",
+  locked: "Не получен",
+  obtained: "Получен",
+  reward: "+5 искр",
+  count: (n: number) => `${n} из 12`,
+} as const;

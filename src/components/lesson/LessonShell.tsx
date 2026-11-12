@@ -5,10 +5,15 @@ import { useProgress } from "@/lib/useProgress";
 import { activeStreak } from "@/domain/progress/streak";
 import CabinetArt, { type ArtName } from "@/components/cabinet/CabinetArt";
 import CabinetIcon from "@/components/icons/NavigationIcon";
-import RewardIcon from "@/components/icons/RewardIcon";
+import StreakIcon from "@/components/icons/StreakIcon";
+import ValueIcon from "@/components/icons/ValueIcon";
+import AnimatedCount from "@/components/icons/AnimatedCount";
 import { openMentor } from "@/components/mentor/openMentor";
 import { lessonFlowRu as c, learningRu } from "@/content/ru";
 import TopProgressLine from "./TopProgressLine";
+import SettingsIcon from "@/components/icons/SettingsIcon";
+import { kidsWorkspaceRu as k } from "@/content/kids-workspace.ru";
+import Boxicon from "@/components/icons/Boxicon";
 export default function LessonShell({
   children,
   title = c.course,
@@ -17,6 +22,7 @@ export default function LessonShell({
   indicator,
   onVideo,
   onReference,
+  nudge,
 }: {
   children: ReactNode;
   title?: string;
@@ -25,13 +31,14 @@ export default function LessonShell({
   indicator?: ReactNode;
   onVideo?: () => void;
   onReference?: () => void;
+  nudge?: ReactNode;
 }) {
   const { progress: p, update } = useProgress();
   return (
     <div className="flow-shell">
       <header className="flow-header" data-tour="lesson-header">
         <Link className="cab-icon-btn" href="/app" aria-label={c.back}>
-          ×
+          <Boxicon name="close" />
         </Link>
         <span className="flow-course-title">{title}</span>
         <div className="flow-header-stage" data-tour="lesson-steps">
@@ -39,28 +46,17 @@ export default function LessonShell({
         </div>
         <div className="flow-counters">
           <span title={c.course}>
-            <RewardIcon kind="flame" />
+            <StreakIcon />
             {activeStreak(p.streak)}
           </span>
-          <span>
-            <RewardIcon kind="spark" />
-            {p.sparks}
+          <span data-reward-target="sparks">
+            <ValueIcon name="sparks" value={p.sparks} />
+            <AnimatedCount value={p.sparks} />
           </span>
-          <span>
-            <RewardIcon kind="token" />
-            {p.mentor.tokens}
+          <span data-reward-target="tokens">
+            <ValueIcon name="tokens" value={p.mentor.tokens} />
+            <AnimatedCount value={p.mentor.tokens} />
           </span>
-          <button
-            className="flow-mentor-portrait"
-            aria-label={c.mentor}
-            onClick={() => openMentor()}
-          >
-            <CabinetArt
-              name={p.mentor.selectedId as ArtName}
-              alt=""
-              size={32}
-            />
-          </button>
         </div>
       </header>
       <TopProgressLine loading={loading} value={progress} />
@@ -98,30 +94,36 @@ export default function LessonShell({
         >
           <CabinetArt name={p.mentor.selectedId as ArtName} alt="" size={28} />
         </button>
+        {nudge}
       </nav>
       <div className="flow-stage-content" aria-busy={loading}>
-        <label className="l2-text-size flow-text-size">
-          Аа
-          <select
-            aria-label={learningRu.textSize}
-            value={p.settings?.textScale ?? 1}
-            onChange={(e) =>
-              update((x) => ({
-                ...x,
-                settings: {
-                  ...x.settings,
-                  textScale: Number(e.target.value) as 1 | 1.15 | 1.3,
-                },
-              }))
-            }
-          >
-            {learningRu.textSizes.map((name, i) => (
-              <option key={name} value={[1, 1.15, 1.3][i]}>
-                {name}
-              </option>
-            ))}
-          </select>
-        </label>
+        <details className="kids-lesson-settings">
+          <summary className="cab-icon-btn" aria-label={k.settings}>
+            <SettingsIcon />
+          </summary>
+          <label className="l2-text-size flow-text-size kids-options-panel">
+            {learningRu.textSize}
+            <select
+              aria-label={learningRu.textSize}
+              value={p.settings?.textScale ?? 1}
+              onChange={(e) =>
+                update((x) => ({
+                  ...x,
+                  settings: {
+                    ...x.settings,
+                    textScale: Number(e.target.value) as 1 | 1.15 | 1.3,
+                  },
+                }))
+              }
+            >
+              {learningRu.textSizes.map((name, i) => (
+                <option key={name} value={[1, 1.15, 1.3][i]}>
+                  {name}
+                </option>
+              ))}
+            </select>
+          </label>
+        </details>
         {children}
       </div>
     </div>

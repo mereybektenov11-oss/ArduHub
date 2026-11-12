@@ -9,7 +9,7 @@ import type {
   Topic,
 } from "./types";
 import { topics } from "./types";
-import { referenceCircuit } from "./checker/netlist";
+import { referenceCircuit } from "@arduhub/arduino-core/checker/netlist";
 import {
   cabinetRu,
   unitTitles,
@@ -19,7 +19,7 @@ import {
   levelDeck,
   gameDeck,
 } from "@/content/cabinet.ru";
-import { courseCopy } from "@/content/course.ru";
+import { courseCopy } from "@arduhub/curriculum/course.ru";
 export { topicNames } from "@/content/cabinet.ru";
 const courseLevels = [
   [1, 2, 3],
@@ -116,8 +116,8 @@ export function createProgress(): Progress {
   return {
     version: 1,
     curriculumVersion: 2,
-    settings: { textScale: 1 },
-    profile: { name: cabinetRu.profile, avatar: "Ю", level: 0 },
+    settings: { textScale: 1, sounds: true, mentorHints: true },
+    profile: { name: cabinetRu.profile, avatar: "Ю", level: 1 },
     diagnostic: {
       status: "none",
       answers: [],

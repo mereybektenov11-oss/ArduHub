@@ -3,23 +3,27 @@ import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { lessons } from "@/domain/seed";
-import type { LearningLesson as Lesson } from "@/domain/lessons/content";
+import type { LearningLesson as Lesson } from "@arduhub/arduino-core/lessons/content";
 import {
   initialSteps,
   type Draft,
   type LearningStore,
 } from "@/domain/projects/storage";
-import { migrateScene } from "@/domain/scene/migrate";
-import { checkScene } from "@/domain/scene/check";
-import { codeIssue } from "@/domain/lessons/codeChecks";
-import { checkBehavior, type CheckResult } from "@/domain/sim/checks";
-import type { Trace } from "@/domain/sim/runner";
+import { migrateScene } from "@arduhub/arduino-core/scene/migrate";
+import { checkScene } from "@arduhub/arduino-core/scene/check";
+import { codeIssue } from "@arduhub/arduino-core/lessons/codeChecks";
+import {
+  checkBehavior,
+  type CheckResult,
+} from "@arduhub/arduino-core/sim/checks";
+import type { Trace } from "@arduhub/arduino-core/sim/runner";
 import { lessonOpen, awardLesson } from "@/domain/progress/xp";
 import {
   migrateLessonFlow,
   flowPercent,
   resolveStage,
   flowQuizResult,
+  practiceAfterQuiz,
   type LessonStage,
   type FlowQuiz,
 } from "@/domain/lessons/flow";
@@ -40,7 +44,18 @@ import QuizStage from "./stages/QuizStage";
 import PracticeStage from "./stages/PracticeStage";
 import Link from "next/link";
 import CompletionModal from "./CompletionModal";
-import { catalog } from "@/domain/parts/catalog";
+import { catalog } from "@arduhub/arduino-core/parts/catalog";
+import { computeStageState } from "@/domain/progress/courseState";
+import {
+  matchesSolution,
+  recordCompileAttempt,
+} from "@/domain/lessons/solutions";
+import { compileRunRu } from "@arduhub/curriculum/compile-run.ru";
+import { kidsWorkspaceRu as k, kidsMentorRu } from "@/content/ru";
+import { useMentorNudge } from "@/lib/useMentorNudge";
+import { playSfx } from "@/lib/sfx";
+import HintIcon from "@/components/icons/HintIcon";
+import Boxicon from "@/components/icons/Boxicon";
 const Workspace = dynamic(() => import("@/components/workspace/Workspace"), {
   ssr: false,
   loading: () => <Skeleton shape="practice" />,
@@ -50,7 +65,7 @@ export default function LearningLesson({ id }: { id: string }) {
     { store, mutate } = useLearningStore(),
     data = useLessonData(id);
   const legacy = lessons.find((l) => l.id === id);
-  if (data.error)
+  if (data.error || (data.lesson && !data.lesson.quiz?.questions.length))
     return (
       <LessonShell title={legacy?.title}>
         <div className="flow-load-error" role="alert">
@@ -108,7 +123,10 @@ function LessonFlow({
     };
     const saved = progress.lessons[id];
     const flow = migrateLessonFlow(
-      !old.flow && saved?.stages && saved?.practice && saved?.quiz
+      (!old.flow || (saved?.flowUpdatedAt ?? "") > (old.updatedAt ?? "")) &&
+        saved?.stages &&
+        saved?.practice &&
+        saved?.quiz
         ? {
             ...old,
             flow: {
@@ -117,15 +135,24 @@ function LessonFlow({
               stages: saved.stages,
               practice: saved.practice,
               quiz: saved.quiz,
+              video: saved.video,
             },
           }
         : old,
+      id,
     );
-    if (!lesson.quiz?.questions.length) flow.stages.test = true;
     return { ...old, flow };
   });
-  const flow = draft.flow!,
-    gate = useStageGate(flow, !lesson.quiz?.questions.length);
+  const flow = {
+      ...draft.flow!,
+      stages: computeStageState(lesson, draft.flow!),
+    },
+    gate = useStageGate(flow);
+  const nudge = useMentorNudge({
+    stageKey: `${progress.account?.userId ?? "local"}:${id}:practice`,
+    active: gate.active === "practice",
+    enabled: progress.settings?.mentorHints !== false,
+  });
   const [errors, setErrors] = useState<
       { message: string; componentIds: string[] }[]
     >([]),
@@ -135,7 +162,11 @@ function LessonFlow({
     [showTheory, setShowTheory] = useState(false),
     [showReference, setShowReference] = useState(false),
     [hint, setHint] = useState({ circuit: 0, code: 0 });
-  const [complete, setComplete] = useState<null | { rewarded: boolean }>(null);
+  const [complete, setComplete] = useState<null | {
+    rewarded: boolean;
+    halfReward?: boolean;
+  }>(null);
+  const [serverFailures, setServerFailures] = useState(0);
   const initialized = useRef(false);
   const save = useCallback(
     (next: Draft, xp = 0) => {
@@ -172,11 +203,16 @@ function LessonFlow({
           ...p.lessons,
           [id]: {
             ...p.lessons[id],
-            steps: next.steps,
-            flowUpdatedAt: next.updatedAt,
-            stages: f.stages,
-            practice: f.practice,
-            quiz: f.quiz,
+            ...(p.lessons[id].status === "done"
+              ? {}
+              : {
+                  steps: next.steps,
+                  flowUpdatedAt: next.updatedAt,
+                  stages: f.stages,
+                  practice: f.practice,
+                  quiz: f.quiz,
+                  video: f.video,
+                }),
           },
         },
       }));
@@ -187,8 +223,6 @@ function LessonFlow({
     const frame = requestAnimationFrame(() => {
       if (!initialized.current) {
         initialized.current = true;
-        if (!lesson.quiz?.questions.length)
-          console.warn(`Lesson ${id} has no quiz; skipping test stage`);
         if (!store.drafts[id]?.flow) save(draft);
       }
     });
@@ -225,15 +259,24 @@ function LessonFlow({
     [],
   );
   const ask = () => openMentor(mentorContext);
-  const unlockVideo = () => {
+  const unlockVideo = (evidence: {
+    confirmed?: boolean;
+    watchedRatio?: number;
+  }) => {
     if (!flow.stages.video)
       save({
         ...draft,
-        flow: { ...flow, stages: { ...flow.stages, video: true } },
+        flow: {
+          ...flow,
+          video: evidence,
+          stages: { ...flow.stages, video: true },
+        },
       });
   };
   function verify() {
     const found = checkScene(draft.scene, lesson.circuit.referenceScene);
+    nudge.recordCheck(found.length === 0);
+    playSfx(found.length ? "wrong" : "correct");
     setErrors(found);
     const issue = codeIssue(draft.code),
       code =
@@ -272,6 +315,8 @@ function LessonFlow({
     setReport(result);
     const pass =
       !found.length && !codeIssue(draft.code) && result.every((r) => r.pass);
+    nudge.recordCheck(pass);
+    playSfx(pass ? "correct" : "wrong");
     save({
       ...draft,
       flow: {
@@ -286,7 +331,7 @@ function LessonFlow({
       },
     });
     if (pass) {
-      const rewarded = progress.lessons[id]?.status !== "done";
+      const rewarded = !progress.lessons[id]?.rewarded;
       update((p) => awardLesson(p, id));
       if (rewarded) {
         try {
@@ -296,9 +341,34 @@ function LessonFlow({
       setComplete({ rewarded });
     }
   }
+  function checkByExample() {
+    if (serverFailures < 3 || !flow.stages.test) return;
+    if (
+      !matchesSolution(id, draft.code) ||
+      checkScene(draft.scene, lesson.circuit.referenceScene).length
+    ) {
+      setNotice(compileRunRu.mismatch);
+      return;
+    }
+    const rewarded = !progress.lessons[id]?.rewarded;
+    const next = {
+      ...draft,
+      flow: {
+        ...flow,
+        stages: { ...flow.stages, practice: true },
+        practice: { circuit: true, code: true, run: true },
+      },
+    };
+    save(next);
+    update((p) => awardLesson(p, id, "lesson_fallback"));
+    setComplete({ rewarded, halfReward: true });
+    setServerFailures(0);
+  }
   const hintKind = flow.tab === "code" ? "code" : "circuit";
-  const addHint = () =>
+  const addHint = () => {
+    playSfx("hint");
     setHint((h) => ({ ...h, [hintKind]: Math.min(3, h[hintKind] + 1) }));
+  };
   const expected = lessonExpected[index] ?? lesson.task ?? "";
   function changeQuiz(quiz: FlowQuiz, passed: boolean, newAward?: string) {
     const valid =
@@ -327,6 +397,7 @@ function LessonFlow({
       progress={flowPercent(flow)}
       indicator={
         <StageIndicator
+          lesson={lesson}
           flow={flow}
           active={gate.active}
           onStage={(stage) => navigate(stage)}
@@ -334,6 +405,22 @@ function LessonFlow({
       }
       onVideo={() => navigate("video")}
       onReference={() => setShowReference(true)}
+      nudge={
+        nudge.visible ? (
+          <aside className="kids-mentor-nudge" role="status">
+            <button className="kids-nudge-open" onClick={ask}>
+              {kidsMentorRu.nudge}
+            </button>
+            <button
+              className="cab-icon-btn"
+              aria-label={kidsMentorRu.dismissNudge}
+              onClick={nudge.dismiss}
+            >
+              <Boxicon name="close" />
+            </button>
+          </aside>
+        ) : undefined
+      }
     >
       {store.unavailable && (
         <p className="l2-error" role="alert">
@@ -364,17 +451,20 @@ function LessonFlow({
         )}
         {gate.active === "test" && (
           <QuizStage
+            lessonId={lesson.id}
             questions={lesson.quiz?.questions ?? []}
             passPercent={lesson.quiz?.passPercent}
             value={flow.quiz}
             onChange={changeQuiz}
             onContinue={() => {
-              if (flow.stages.test) navigate("practice");
+              const next = practiceAfterQuiz(lesson, flow);
+              if (next) navigate("practice", next);
             }}
           />
         )}
         {gate.active === "practice" && (
           <PracticeStage
+            onActivity={nudge.recordActivity}
             lesson={lesson}
             flow={flow}
             expected={expected}
@@ -429,18 +519,35 @@ function LessonFlow({
               }
               errors={errors.flatMap((e) => e.componentIds)}
               onDiagnostics={setCompileErrors}
+              onCompileResult={(result) =>
+                setServerFailures((n) => recordCompileAttempt(n, result))
+              }
               onRun={run}
               actions={
                 <>
-                  <Action secondary onClick={ask}>
-                    {c.ask}
-                  </Action>
-                  <Action secondary onClick={addHint}>
-                    {c.hint}
-                  </Action>
                   <Action secondary onClick={verify}>
-                    {c.check}
+                    {k.check}
                   </Action>
+                  <Action
+                    secondary
+                    onClick={addHint}
+                    disabled={hint[hintKind] >= 3}
+                    aria-label={`${k.hint}: ${k.hintsLeft} ${Math.max(0, 3 - hint[hintKind])}`}
+                  >
+                    <HintIcon />
+                    {k.hint} {Math.max(0, 3 - hint[hintKind])}
+                  </Action>
+                  <Action secondary onClick={ask}>
+                    {k.ask}
+                  </Action>
+                  {serverFailures >= 3 && (
+                    <div role="status">
+                      <p>{compileRunRu.fallbackNote}</p>
+                      <Action secondary onClick={checkByExample}>
+                        {compileRunRu.fallback}
+                      </Action>
+                    </div>
+                  )}
                 </>
               }
               onScene={(scene) => {
@@ -515,6 +622,7 @@ function LessonFlow({
       {complete && (
         <CompletionModal
           rewarded={complete.rewarded}
+          halfReward={complete.halfReward}
           nextId={
             lessons.find(
               (l) =>

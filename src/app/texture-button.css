@@ -1,0 +1,202 @@
+/* TextureButton tokens (Cobalt Mono). Components read only these variables;
+   dark auth screens override them on .auth-page.auth-dark. */
+:root {
+  --tb-focus: #1460ff;
+  --tb-shadow: #0b17461f;
+
+  --tb-primary-rim-top: #4f86ff;
+  --tb-primary-rim-bottom: #0b3cae;
+  --tb-primary-border: #0b3cae40;
+  --tb-primary-top: #1460ff;
+  --tb-primary-bottom: #104ed1;
+  --tb-primary-hover-top: #1159ee;
+  --tb-primary-hover-bottom: #0d45bb;
+  --tb-primary-active: #0d45bb;
+  --tb-primary-text: #ffffff;
+  --tb-primary-highlight: #ffffff40;
+
+  --tb-glass-rim-top: #ffffffe6;
+  --tb-glass-rim-bottom: #c7d5ff8c;
+  --tb-glass-border: #ffffff73;
+  --tb-glass-top: #ffffffc7;
+  --tb-glass-bottom: #f3f1ffc2;
+  --tb-glass-hover-top: #ffffffe0;
+  --tb-glass-hover-bottom: #f3f1ffcc;
+  --tb-glass-active: #edeaffd9;
+  --tb-glass-text: #0b3594;
+  --tb-glass-highlight: #ffffff;
+
+  --tb-secondary-rim-top: #ffffff;
+  --tb-secondary-rim-bottom: #d3d5e6;
+  --tb-secondary-border: #e1e2ee;
+  --tb-secondary-top: #ffffff;
+  --tb-secondary-bottom: #f3f2fb;
+  --tb-secondary-hover-top: #f7f6ff;
+  --tb-secondary-hover-bottom: #edeaff;
+  --tb-secondary-active: #e6e2ff;
+  --tb-secondary-text: #101114;
+  --tb-secondary-highlight: #ffffff;
+
+  --tb-accent-rim-top: #a9c3ff;
+  --tb-accent-rim-bottom: #5d8dff;
+  --tb-accent-border: #1460ff33;
+  --tb-accent-top: #eef2ff;
+  --tb-accent-bottom: #dce6ff;
+  --tb-accent-hover-top: #e3ebff;
+  --tb-accent-hover-bottom: #cddcff;
+  --tb-accent-active: #c3d4ff;
+  --tb-accent-text: #0d42b5;
+  --tb-accent-highlight: #ffffffb3;
+
+  --tb-danger-soft-rim-top: #ffd6db;
+  --tb-danger-soft-rim-bottom: #eba3ac;
+  --tb-danger-soft-border: #bb263533;
+  --tb-danger-soft-top: #fff7f8;
+  --tb-danger-soft-bottom: #ffebee;
+  --tb-danger-soft-hover-top: #ffeef0;
+  --tb-danger-soft-hover-bottom: #ffdfe4;
+  --tb-danger-soft-active: #ffd6dc;
+  --tb-danger-soft-text: #bb2635;
+  --tb-danger-soft-highlight: #ffffff;
+
+  --tb-destructive-rim-top: #e66673;
+  --tb-destructive-rim-bottom: #8f1824;
+  --tb-destructive-border: #8f182440;
+  --tb-destructive-top: #c92f3f;
+  --tb-destructive-bottom: #a81f2d;
+  --tb-destructive-hover-top: #b92636;
+  --tb-destructive-hover-bottom: #951a27;
+  --tb-destructive-active: #8f1824;
+  --tb-destructive-text: #ffffff;
+  --tb-destructive-highlight: #ffffff40;
+
+  --tb-minimal-hover: #edeaffb3;
+  --tb-minimal-active: #e3dfff;
+  --tb-minimal-text: #104ed1;
+
+  --tb-icon-rim-top: #ffffff;
+  --tb-icon-rim-bottom: #d3d5e6;
+  --tb-icon-border: #e1e2ee;
+  --tb-icon-top: #ffffff;
+  --tb-icon-bottom: #f3f2fb;
+  --tb-icon-hover-top: #f7f6ff;
+  --tb-icon-hover-bottom: #edeaff;
+  --tb-icon-active: #e6e2ff;
+  --tb-icon-text: #101114;
+  --tb-icon-highlight: #ffffff;
+}
+
+.auth-page.auth-dark {
+  --tb-focus: #6f9bff;
+  --tb-shadow: #00000059;
+
+  --tb-primary-rim-top: #b5ccff;
+  --tb-primary-rim-bottom: #3d6fe0;
+  --tb-primary-border: #0b1222;
+  --tb-primary-top: #8fb0ff;
+  --tb-primary-bottom: #6f9bff;
+  --tb-primary-hover-top: #a1bdff;
+  --tb-primary-hover-bottom: #82a8ff;
+  --tb-primary-active: #6f9bff;
+  --tb-primary-text: #0b1222;
+  --tb-primary-highlight: #ffffff59;
+
+  --tb-glass-rim-top: #ffffff59;
+  --tb-glass-rim-bottom: #ffffff1a;
+  --tb-glass-border: #ffffff2e;
+  --tb-glass-top: #ffffff26;
+  --tb-glass-bottom: #ffffff12;
+  --tb-glass-hover-top: #ffffff33;
+  --tb-glass-hover-bottom: #ffffff1f;
+  --tb-glass-active: #ffffff1a;
+  --tb-glass-text: #f5f7ff;
+  --tb-glass-highlight: #ffffff40;
+
+  --tb-secondary-rim-top: #4a5c7f;
+  --tb-secondary-rim-bottom: #2c3b5b;
+  --tb-secondary-border: #3b4b69;
+  --tb-secondary-top: #243352;
+  --tb-secondary-bottom: #1c2944;
+  --tb-secondary-hover-top: #2b3c60;
+  --tb-secondary-hover-bottom: #223152;
+  --tb-secondary-active: #1c2944;
+  --tb-secondary-text: #f5f7ff;
+  --tb-secondary-highlight: #ffffff14;
+
+  --tb-accent-rim-top: #6f9bff;
+  --tb-accent-rim-bottom: #2f4f99;
+  --tb-accent-border: #6f9bff40;
+  --tb-accent-top: #1f3a78;
+  --tb-accent-bottom: #182f63;
+  --tb-accent-hover-top: #26458c;
+  --tb-accent-hover-bottom: #1d3874;
+  --tb-accent-active: #182f63;
+  --tb-accent-text: #dbe6ff;
+  --tb-accent-highlight: #ffffff1f;
+
+  --tb-danger-soft-rim-top: #ffabb459;
+  --tb-danger-soft-rim-bottom: #ffabb41f;
+  --tb-danger-soft-border: #ffabb433;
+  --tb-danger-soft-top: #3a1e2a;
+  --tb-danger-soft-bottom: #2d1822;
+  --tb-danger-soft-hover-top: #472433;
+  --tb-danger-soft-hover-bottom: #371c29;
+  --tb-danger-soft-active: #2d1822;
+  --tb-danger-soft-text: #ffabb4;
+  --tb-danger-soft-highlight: #ffffff14;
+
+  --tb-destructive-rim-top: #ffd0d6;
+  --tb-destructive-rim-bottom: #e0707e;
+  --tb-destructive-border: #2a0a10;
+  --tb-destructive-top: #ffabb4;
+  --tb-destructive-bottom: #f48b97;
+  --tb-destructive-hover-top: #ffbcc3;
+  --tb-destructive-hover-bottom: #f799a4;
+  --tb-destructive-active: #f48b97;
+  --tb-destructive-text: #2a0a10;
+  --tb-destructive-highlight: #ffffff59;
+
+  --tb-minimal-hover: #ffffff14;
+  --tb-minimal-active: #ffffff1f;
+  --tb-minimal-text: #a9c2ff;
+
+  --tb-icon-rim-top: #4a5c7f;
+  --tb-icon-rim-bottom: #2c3b5b;
+  --tb-icon-border: #3b4b69;
+  --tb-icon-top: #243352;
+  --tb-icon-bottom: #1c2944;
+  --tb-icon-hover-top: #2b3c60;
+  --tb-icon-hover-bottom: #223152;
+  --tb-icon-active: #1c2944;
+  --tb-icon-text: #f5f7ff;
+  --tb-icon-highlight: #ffffff14;
+}
+
+/* globals.css and page CSS (e.g. auth.css) style a/button/:focus-visible outside
+   cascade layers, which beats Tailwind utilities. Roll these properties back to
+   the layered utilities; the extra attribute keeps specificity above 0,2,1. */
+:is(a, button)[data-slot="texture-button"][data-variant],
+:is(a, button)[data-slot="texture-button"][data-variant]:disabled,
+:is(a, button)[data-slot="texture-button"][data-variant]:focus-visible {
+  color: revert-layer;
+  /* globals.css `button { font: inherit }` would drop font-semibold. */
+  font-weight: revert-layer;
+  background: revert-layer;
+  border-radius: revert-layer;
+  cursor: revert-layer;
+  opacity: revert-layer;
+  outline: revert-layer;
+  outline-offset: revert-layer;
+}
+
+/* sm (32px) and icon (40px) keep their compact look, but the hit area grows to
+   at least 44x44 around the centre. The root is already position: relative. */
+[data-slot="texture-button"]:is([data-size="sm"], [data-size="icon"])::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100%, 44px);
+  height: max(100%, 44px);
+  transform: translate(-50%, -50%);
+}

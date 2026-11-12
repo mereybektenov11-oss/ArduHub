@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { ru } from "@/content/ru";
-import { Button } from "./ui/primitives";
+import { TextureButton } from "./ui/texture-button";
 
 export function Brand() {
   return (
@@ -23,6 +23,12 @@ export default function Header() {
       const value = String(window.scrollY > 16);
       if (header.current && header.current.dataset.scrolled !== value)
         header.current.dataset.scrolled = value;
+      if (header.current?.closest(".landing-video")) {
+        header.current.style.setProperty(
+          "--header-scroll-progress",
+          String(Math.min(Math.max(window.scrollY / 420, 0), 1)),
+        );
+      }
     };
     update();
     window.addEventListener("scroll", update, { passive: true });
@@ -75,13 +81,17 @@ export default function Header() {
             </a>
           ))}
         </nav>
-        <Button href="/app" className="account" variant="secondary">
-          {ru.header.account.label}
-          <span aria-hidden="true">↗</span>
-        </Button>
-        <button
+        <TextureButton asChild variant="secondary" className="account">
+          <a href={ru.header.account.href}>
+            {ru.header.account.label}
+            <span aria-hidden="true">↗</span>
+          </a>
+        </TextureButton>
+        <TextureButton
           ref={trigger}
           className="menu-toggle"
+          variant="icon"
+          size="icon"
           type="button"
           aria-expanded={open}
           aria-controls="mobile-menu"
@@ -89,7 +99,7 @@ export default function Header() {
           onClick={() => setOpen(!open)}
         >
           {open ? "×" : "☰"}
-        </button>
+        </TextureButton>
       </div>
       {open && (
         <nav
@@ -103,7 +113,7 @@ export default function Header() {
               {item.label}
             </a>
           ))}
-          <a href="/app" onClick={close}>
+          <a href={ru.header.account.href} onClick={close}>
             {ru.header.account.label}
           </a>
         </nav>

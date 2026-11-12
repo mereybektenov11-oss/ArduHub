@@ -21,3 +21,5 @@ tools/arduino/
 *.log
 /tmp/
 compiler.env
+apps/desktop/dist/
+apps/desktop/release/

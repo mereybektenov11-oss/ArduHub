@@ -1,4 +1,4 @@
-import { isScene, type SceneDoc } from "../scene/scene";
+import { isScene, type SceneDoc } from "@arduhub/arduino-core/scene/scene";
 import { isQuizProgress, type QuizProgress } from "../lessons/quiz";
 import { isLessonFlow, type LessonFlowState } from "../lessons/flow";
 export type StepState = {

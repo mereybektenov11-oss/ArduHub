@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=1440">
+<title>Яркий конструктор — Карта уроков</title>
+<style>
+@font-face{font-family:Head;src:url(../../../src/fonts/Manrope-Variable.woff2) format("woff2");font-weight:700 800}
+@font-face{font-family:Body;src:url(../../../src/fonts/Inter-Variable.woff2) format("woff2");font-weight:400 700}
+:root{--color-bg:#E8F3FF;--color-surface:#FFFFFF;--color-surface-2:#FFF3C4;--color-text:#14213D;--color-muted:#3D4B6B;--color-primary:#1D4ED8;--color-on-primary:#FFFFFF;--color-accent:#C2410C;--color-line:#14213D;--color-locked:#5B6785;--color-led:#EF4444;--color-wood:#FACC15;--color-wood-dark:#CA8A04;--color-metal:#93C5FD;--color-board:#16A34A;--color-wall:#BFDBFE;--color-floor:#FDE68A}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden}
+body{font-family:Body,system-ui,sans-serif;color:var(--color-text);font-size:16px;line-height:1.45}
+.app{display:flex;flex-direction:column;height:900px;padding:24px 32px 40px;gap:20px}
+.top{display:flex;align-items:center;gap:16px}
+.logo{font-size:24px;color:var(--color-text)}
+.logo b{color:var(--color-primary)}
+.spacer{flex:1}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;background:var(--color-surface);color:var(--color-text);font-size:14px;font-weight:600;border:1px solid var(--color-line)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;background:var(--color-primary);color:var(--color-on-primary);font-weight:700;font-size:16px;border:0}
+.btn.secondary{background:var(--color-surface);color:var(--color-text)}
+.muted{color:var(--color-muted)}
+.tag{display:inline-block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:4px 10px;background:var(--color-surface-2);color:var(--color-text);border-radius:6px}
+.mock{position:fixed;right:16px;bottom:12px;font-size:12px;color:var(--color-muted)}
+.card{padding:24px}
+h1{font-size:44px;line-height:1.1}
+h2{font-size:26px;line-height:1.2}
+h3{font-size:18px}
+.node{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:20px;background:var(--color-surface-2);color:var(--color-locked);flex:none}
+
+
+body{background:var(--color-bg) radial-gradient(#c9e1ff 3px,transparent 3px) 0 0/34px 34px}
+.card{background:var(--color-surface);border:3px solid var(--color-line);border-radius:22px;box-shadow:6px 6px 0 var(--color-line)}
+.btn{border:3px solid var(--color-line);border-radius:16px;box-shadow:4px 4px 0 var(--color-line)}
+.btn.secondary{background:var(--color-surface-2)!important}
+.chip{border:2px solid var(--color-line);border-radius:999px}
+h1,h2,h3,.logo{font-family:Head;font-weight:800;letter-spacing:-.02em}
+.node{border:3px solid var(--color-line)}
+.node.done{background:var(--color-board);color:#fff}
+.node.current{background:var(--color-primary);color:#fff;box-shadow:4px 4px 0 var(--color-line)}
+
+</style></head>
+<body><div class="app">
+<header class="top"><div class="logo">Ardu<b>Hub</b></div><span class="tag">Яркий конструктор</span><div class="spacer"></div>
+<span class="chip">Алия · Free</span><span class="chip">⚙ Настройки</span></header>
+
+<div style="display:flex;align-items:flex-end;gap:16px"><div><span class="tag">Обучение · Arduino Uno</span><h1 style="font-size:36px;margin-top:8px">Карта уроков</h1></div>
+<div class="spacer"></div><span class="chip">Free: 12 уроков</span></div>
+<main style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;flex:1;align-content:start"><div class="card" style="display:flex;gap:14px;align-items:center;padding:14px 16px">
+<div class="node done">✓</div><div><h3>Первый огонёк</h3><p class="muted" style="font-size:13px">Урок 1 · Пройден</p></div></div><div class="card" style="display:flex;gap:14px;align-items:center;padding:14px 16px">
+<div class="node done">✓</div><div><h3>Мигаем быстрее и медленнее</h3><p class="muted" style="font-size:13px">Урок 2 · Пройден</p></div></div><div class="card" style="display:flex;gap:14px;align-items:center;padding:14px 16px">
+<div class="node current">3</div><div><h3>Свет по кнопке</h3><p class="muted" style="font-size:13px">Урок 3 · Сейчас</p></div></div><div class="card" style="display:flex;gap:14px;align-items:center;padding:14px 16px">
+<div class="node ">4</div><div><h3>Два светодиода: светофор</h3><p class="muted" style="font-size:13px">Урок 4 · Закрыт</p></div></div><div class="card" style="display:flex;gap:14px;align-items:center;padding:14px 16px">
+<div class="node ">5</div><div><h3>Плавное свечение: PWM</h3><p class="muted" style="font-size:13px">Урок 5 · Закрыт</p></div></div><div class="card" style="display:flex;gap:14px;align-items:center;padding:14px 16px">
+<div class="node ">6</div><div><h3>Потенциометр управляет яркостью</h3><p class="muted" style="font-size:13px">Урок 6 · Закрыт</p></div></div><div class="card" style="display:flex;gap:14px;align-items:center;padding:14px 16px">
+<div class="node ">7</div><div><h3>Зуммер и первая мелодия</h3><p class="muted" style="font-size:13px">Урок 7 · Закрыт</p></div></div><div class="card" style="display:flex;gap:14px;align-items:center;padding:14px 16px">
+<div class="node ">8</div><div><h3>Монитор порта</h3><p class="muted" style="font-size:13px">Урок 8 · Закрыт</p></div></div><div class="card" style="display:flex;gap:14px;align-items:center;padding:14px 16px">
+<div class="node ">9</div><div><h3>Цифры на 7-сегментном индикаторе</h3><p class="muted" style="font-size:13px">Урок 9 · Закрыт</p></div></div><div class="card" style="display:flex;gap:14px;align-items:center;padding:14px 16px">
+<div class="node ">10</div><div><h3>Сервопривод</h3><p class="muted" style="font-size:13px">Урок 10 · Закрыт</p></div></div><div class="card" style="display:flex;gap:14px;align-items:center;padding:14px 16px">
+<div class="node ">11</div><div><h3>Датчик расстояния HC-SR04</h3><p class="muted" style="font-size:13px">Урок 11 · Закрыт</p></div></div><div class="card" style="display:flex;gap:14px;align-items:center;padding:14px 16px">
+<div class="node ">12</div><div><h3>Экран LCD</h3><p class="muted" style="font-size:13px">Урок 12 · Закрыт</p></div></div></main>
+<div class="card" style="display:flex;align-items:center;gap:16px;padding:16px 20px;opacity:.9">
+<div class="node">🔒</div><div style="flex:1"><h3>Премиум: ESP32 и новые уроки</h3><p class="muted" style="font-size:14px">Планируется. Состав и сроки пока не определены.</p></div><span class="btn secondary">Подробнее о тарифах</span></div>
+</div><div class="mock">Макет интерфейса ArduHub для ПК · приложение в разработке · данные — пример</div></body></html>

@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "types": [],
+    "paths": {
+      "@/lib/sfx": ["./src/renderer/sound/sfx.ts"],
+      "@/lib/supabase/client": ["./src/renderer/shims/supabaseClient.ts"],
+      "@arduhub/curriculum/*": ["../../packages/curriculum/src/*"],
+      "@arduhub/arduino-core/*": ["../../packages/arduino-core/src/*"],
+      "@/*": ["../../src/*"],
+      "next/navigation": ["./src/renderer/shims/navigation.ts"],
+      "next/link": ["./src/renderer/shims/link.tsx"],
+      "next/dynamic": ["./src/renderer/shims/dynamic.tsx"],
+      "next/image": ["./src/renderer/shims/image.tsx"]
+    }
+  },
+  "include": ["src/renderer/**/*.ts", "src/renderer/**/*.tsx"]
+}

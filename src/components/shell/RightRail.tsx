@@ -1,140 +1,89 @@
 "use client";
 import { dashboardRu as c } from "@/content/dashboard.ru";
-import { polishRu } from "@/content/ru";
+import { kidsHomeRu as k } from "@/content/kids-home.ru";
 import { useProgress } from "@/lib/useProgress";
-import { activeStreak } from "@/domain/progress/streak";
-import Link from "next/link";
-import Leaderboard from "@/components/home/Leaderboard";
-import { dailyFacts } from "@/content/dashboard.ru";
+import { streakCalendar } from "@/domain/progress/streakCalendar";
 import { Card } from "@/components/cabinet/ui";
 import { dailyState } from "@/domain/missions";
-import { usePathname } from "next/navigation";
-import Schedule from "@/components/cabinet/Schedule";
 import { useState, useEffect } from "react";
-import RewardIcon, { type RewardKind } from "@/components/icons/RewardIcon";
-import AnimatedCount from "@/components/icons/AnimatedCount";
-import LevelBadge from "@/components/icons/LevelBadge";
-export function StatBar() {
-  const { progress: p } = useProgress();
-  return (
-    <div className="dash-statbar">
-      {[
-        [c.streak, activeStreak(p.streak), "flame"],
-        [c.sparks, p.sparks, "spark"],
-        [c.tokens, p.mentor.tokens, "token"],
-      ].map(([label, value, icon]) => (
-        <div
-          role="group"
-          key={label}
-          tabIndex={0}
-          title={`${label}: ${value}`}
-          aria-label={`${label}: ${value}`}
-          aria-describedby={`stat-${icon}`}
-        >
-          <span
-            className={`polish-stat-icon ${icon} ${!value ? "inactive" : ""}`}
-          >
-            <RewardIcon kind={icon as RewardKind} />
-          </span>
-          <AnimatedCount value={Number(value)} />
-          <small>{label}</small>
-          <span
-            className="polish-stat-tooltip"
-            role="tooltip"
-            id={`stat-${icon}`}
-          >
-            {label}: {value}
-          </span>
-        </div>
-      ))}
-    </div>
-  );
-}
+import Icon from "@/components/icons/Icon";
+import { streakVisualState } from "@/lib/streakState";
+export { StatBar } from "@/components/shell/StatBar";
 export default function RightRail() {
   const { progress: p } = useProgress();
-  const [open, setOpen] = useState(false);
-  const path = usePathname();
   const [now, setNow] = useState(() => new Date());
   useEffect(() => {
     const timer = setInterval(() => setNow(new Date()), 30000);
     return () => clearInterval(timer);
   }, []);
-  const fact =
-    dailyFacts[Math.floor(now.getTime() / 86400000) % dailyFacts.length];
   const daily = dailyState(p, now);
   return (
     <aside className="dash-rail">
-      <StatBar />
-      <Card tour="progress">
-        <h2>
-          <LevelBadge value={p.profile.level + 1} />
-          {c.level} {p.profile.level + 1}
-        </h2>
-        <p>
-          <RewardIcon kind="xp" /> {p.xp} XP
-        </p>
-        <progress value={p.xp % 150} max={150} aria-label="XP" />
-      </Card>
-      <Card className="dash-fact">
-        <div className="cab-row">
-          <h2>{c.fact}</h2>
-          <button
-            className="cab-text-link"
-            aria-expanded={open}
-            onClick={() => setOpen(!open)}
-          >
-            {c.open}
-          </button>
-        </div>
-        <p>{open ? fact : fact.split(" ").slice(0, 5).join(" ") + "…"}</p>
-      </Card>
-      <Card className="dash-pro">
-        <h2>ArduHub Pro</h2>
-        <p>{c.proNote}</p>
-        <span className="cab-pill">{c.soon}</span>
-      </Card>
-      <Leaderboard compact />
       <Card tour="missions">
-        <div className="cab-row">
-          <h2>{c.missions}</h2>
-          <Link href="/app/missions">{polishRu.allMissions}</Link>
-        </div>
-        {c.missionTitles.map((title, i) => (
-          <div key={title} className="dash-mission">
-            <span>
-              <RewardIcon
-                kind={
-                  (
-                    i === 0
-                      ? daily.lessonIds.length >= 1
-                      : i === 1
-                        ? daily.xp >= 50
-                        : daily.perfect
-                  )
-                    ? "check"
-                    : "mission"
-                }
-                className="polish-mission-icon"
-              />{" "}
-              {title}
-            </span>
-            <progress
-              aria-label={title}
-              value={
-                i === 0
-                  ? daily.lessonIds.length
-                  : i === 1
-                    ? daily.xp
-                    : daily.perfect
-                      ? 1
-                      : 0
-              }
-              max={i === 1 ? 50 : 1}
-            />
-          </div>
-        ))}
+        <h2>{k.missions}</h2>
+        {c.missionTitles.map((title, i) => {
+          const value =
+            i === 0
+              ? daily.lessonIds.length
+              : i === 1
+                ? daily.xp
+                : daily.perfect
+                  ? 1
+                  : 0;
+          const max = i === 1 ? 50 : 1;
+          return (
+            <div key={title} className="dash-mission">
+              <span>
+                <Icon
+                  name={i === 0 ? "book" : i === 1 ? "xp" : "target"}
+                  state={value >= max ? "done" : "idle"}
+                  className="polish-mission-icon"
+                />
+                {title}
+              </span>
+              <progress
+                aria-label={title}
+                value={Math.min(value, max)}
+                max={max}
+              />
+            </div>
+          );
+        })}
       </Card>
-      {path === "/app/lessons" && <Schedule />}
+      <Card>
+        <h2>
+          <Icon
+            name="streak"
+            state={streakVisualState(p, now)}
+            value={p.streak.count}
+          />{" "}
+          {k.streak}
+        </h2>
+        <div className="kids-streak-week">
+          {streakCalendar(p.streak, now).map((day) => (
+            <div
+              key={day.date}
+              className={
+                "kids-streak-day" +
+                (day.active ? " is-active" : "") +
+                (day.today ? " is-today" : "")
+              }
+              aria-label={
+                day.date + ": " + (day.active ? k.activeDay : k.emptyDay)
+              }
+            >
+              <small>{k.weekdays[day.weekday]}</small>
+              <span>
+                <Icon
+                  name="streak"
+                  state={day.frozen ? "frozen" : day.active ? "active" : "none"}
+                />
+                <small>{day.day}</small>
+              </span>
+            </div>
+          ))}
+        </div>
+      </Card>
     </aside>
   );
 }

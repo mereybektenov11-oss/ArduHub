@@ -1,9 +1,29 @@
-import { beforeAll, afterAll, describe, it, expect } from "vitest";
+import { beforeAll, beforeEach, afterAll, describe, it, expect } from "vitest";
 import { PGlite } from "@electric-sql/pglite";
 import { readFile } from "node:fs/promises";
+import { lessonQuizzes } from "@arduhub/curriculum/lesson-quiz.ru";
 let db: PGlite;
 const A = "00000000-0000-4000-8000-000000000001",
   B = "00000000-0000-4000-8000-000000000002";
+function completedLesson(id = 1, source = "lesson") {
+  const key = id === 1 ? [0, 1, 2, 0, 1, 2] : [1, 0, 2, 1, 0, 2];
+  return {
+    status: "done",
+    attempts: 1,
+    bestErrors: 0,
+    completionSource: source,
+    video: { confirmed: true },
+    stages: { video: true, test: true, practice: true },
+    practice: { circuit: true, code: true, run: true },
+    quiz: {
+      phase: "result",
+      answers: Object.fromEntries(
+        key.map((answer, i) => [`q${i + 1}`, answer]),
+      ),
+      retryAnswers: {},
+    },
+  };
+}
 async function asUser(id: string, sql: string) {
   await db.exec(
     `reset role;set request.jwt.claim.sub='${id}';set role authenticated;`,
@@ -40,6 +60,21 @@ beforeAll(async () => {
   await db.exec(
     `insert into auth.users values('${A}','{"display_name":"Лис","role":"student"}'),('${B}','{"display_name":"Робот","role":"teacher"}');insert into public.progress values('${A}','{"lessons":{"lesson-1":{"status":"done","attempts":1,"bestErrors":0},"lesson-2":{"status":"done","attempts":1,"bestErrors":0}}}'),('${B}','{}');insert into public.drafts(user_id,lesson_id,scene,code) values('${B}','lesson-1','{}','');insert into public.projects(user_id,title,scene,code) values('${B}','Hidden','{}','');`,
   );
+  await db.exec(
+    await readFile(
+      "supabase/migrations/20261025154502_progress_evidence_fallback_rewards.sql",
+      "utf8",
+    ),
+  );
+  await db.query("update public.progress set data=$1::jsonb where user_id=$2", [
+    JSON.stringify({
+      lessons: {
+        "lesson-1": completedLesson(1),
+        "lesson-2": completedLesson(2),
+      },
+    }),
+    A,
+  ]);
 }, 30000);
 afterAll(async () => {
   await db?.close();
@@ -232,5 +267,243 @@ describe("ArduHub PostgreSQL migration and security", () => {
     expect(
       (await asUser(B, "select sparks from public.profiles")).rows,
     ).toEqual(before.rows);
+  });
+});
+
+describe("G1/G4 server evidence and fallback receipts", () => {
+  const C = "00000000-0000-4000-8000-000000000003";
+  async function setLessons(lessons: Record<string, unknown>, extra = {}) {
+    await db.query(
+      "insert into public.progress(user_id,data) values($1,$2::jsonb) on conflict(user_id) do update set data=excluded.data",
+      [C, JSON.stringify({ progressEvidenceVersion: 1, lessons, ...extra })],
+    );
+  }
+  beforeEach(async () => {
+    await db.exec(
+      `insert into auth.users values('${C}','{}') on conflict do nothing;delete from public.xp_events where user_id='${C}';delete from public.mission_progress where user_id='${C}';update public.profiles set sparks=0,mentor_tokens=50 where id='${C}'`,
+    );
+    await setLessons({ "lesson-1": completedLesson(1, "lesson_fallback") });
+  });
+  it("keeps the server answer keys aligned with every current lesson quiz", async () => {
+    const keys = await db.query<{ keys: unknown }>(
+      "select private.lesson_answer_keys() as keys",
+    );
+    expect(keys.rows[0].keys).toEqual(
+      Object.fromEntries(
+        Object.entries(lessonQuizzes).map(([id, quiz]) => [
+          id,
+          Object.fromEntries(
+            quiz.map((question, index) => [`q${index + 1}`, question.correct]),
+          ),
+        ]),
+      ),
+    );
+  });
+  it.each([
+    null,
+    {},
+    { stages: null, video: null, quiz: null, practice: null },
+    {
+      stages: { video: true, test: true, practice: true },
+      video: { watchedRatio: "0.99" },
+      quiz: { phase: "result", answers: null },
+    },
+  ])(
+    "malformed lesson evidence fails closed without a SQL cast error: %j",
+    async (lesson) => {
+      const result = await db.query<{ stages: unknown }>(
+        "select private.lesson_stages($1::jsonb,private.lesson_answer_keys()->'lesson-1') as stages",
+        [JSON.stringify(lesson)],
+      );
+      expect(result.rows[0].stages).toEqual({
+        video: false,
+        test: false,
+        practice: false,
+      });
+    },
+  );
+  it("a malformed save rolls back and preserves existing progress and balances", async () => {
+    const before = await asUser(C, "select data from public.progress");
+    await expect(
+      asUser(
+        C,
+        `select public.save_progress('{"progressEvidenceVersion":1,"lessons":{"lesson-1":null}}')`,
+      ),
+    ).rejects.toThrow(/bad_request/);
+    expect((await asUser(C, "select data from public.progress")).rows).toEqual(
+      before.rows,
+    );
+    expect(
+      (await asUser(C, "select sparks,mentor_tokens from public.profiles"))
+        .rows,
+    ).toEqual([{ sparks: 0, mentor_tokens: 50 }]);
+  });
+  it("awards exactly half reward once and cannot switch source to collect again", async () => {
+    await asUser(C, "select public.award('lesson_fallback','lesson-1',15)");
+    expect(
+      (await asUser(C, "select sparks,mentor_tokens from public.profiles"))
+        .rows,
+    ).toEqual([{ sparks: 5, mentor_tokens: 50 }]);
+    expect(
+      (await asUser(C, "select amount,source from public.xp_events")).rows,
+    ).toEqual([{ amount: 15, source: "lesson_fallback" }]);
+    await expect(
+      asUser(C, "select public.award('lesson_fallback','lesson-1',15)"),
+    ).rejects.toThrow(/already_awarded/);
+    await setLessons({ "lesson-1": completedLesson(1) });
+    await expect(
+      asUser(C, "select public.award('lesson','lesson-1',30)"),
+    ).rejects.toThrow(/already_awarded/);
+  });
+  it("prevents fallback collection after normal reward too", async () => {
+    await setLessons({ "lesson-1": completedLesson(1) });
+    await asUser(C, "select public.award('lesson','lesson-1',30)");
+    await setLessons({ "lesson-1": completedLesson(1, "lesson_fallback") });
+    await expect(
+      asUser(C, "select public.award('lesson_fallback','lesson-1',15)"),
+    ).rejects.toThrow(/already_awarded/);
+  });
+  it("rejects forged amount and mismatched completion source", async () => {
+    await expect(
+      asUser(C, "select public.award('lesson_fallback','lesson-1',30)"),
+    ).rejects.toThrow(/bad_request/);
+    await expect(
+      asUser(C, "select public.award('lesson','lesson-1',30)"),
+    ).rejects.toThrow(/bad_request/);
+  });
+  it("checks real video evidence, not a prefilled stage flag", async () => {
+    const lesson = completedLesson(1, "lesson_fallback");
+    lesson.video = { confirmed: false };
+    await setLessons({ "lesson-1": lesson });
+    await expect(
+      asUser(C, "select public.award('lesson_fallback','lesson-1',15)"),
+    ).rejects.toThrow(/bad_request/);
+    await setLessons({
+      "lesson-1": { ...lesson, video: { watchedRatio: 0.79 } },
+    });
+    await expect(
+      asUser(C, "select public.award('lesson_fallback','lesson-1',15)"),
+    ).rejects.toThrow(/bad_request/);
+    await setLessons({
+      "lesson-1": { ...lesson, video: { watchedRatio: 0.8 } },
+    });
+    await asUser(C, "select public.award('lesson_fallback','lesson-1',15)");
+  });
+  it("scores actual quiz answers at 70 percent and disregards claimed score", async () => {
+    const lesson = completedLesson(1, "lesson_fallback");
+    lesson.quiz.answers.q5 = 0;
+    lesson.quiz.answers.q6 = 0;
+    await setLessons({
+      "lesson-1": { ...lesson, quiz: { ...lesson.quiz, lastScore: 100 } },
+    });
+    await expect(
+      asUser(C, "select public.award('lesson_fallback','lesson-1',15)"),
+    ).rejects.toThrow(/bad_request/);
+    lesson.quiz.retryAnswers = { q5: 1 };
+    await setLessons({ "lesson-1": lesson });
+    await asUser(C, "select public.award('lesson_fallback','lesson-1',15)");
+  });
+  it.each(["circuit", "code", "run"] as const)(
+    "requires practice evidence: %s",
+    async (step) => {
+      const lesson = completedLesson(1, "lesson_fallback");
+      lesson.practice[step] = false;
+      await setLessons({ "lesson-1": lesson });
+      await expect(
+        asUser(C, "select public.award('lesson_fallback','lesson-1',15)"),
+      ).rejects.toThrow(/bad_request/);
+    },
+  );
+  it("requires preceding lessons before awarding later ones", async () => {
+    await setLessons({ "lesson-2": completedLesson(2, "lesson_fallback") });
+    await expect(
+      asUser(C, "select public.award('lesson_fallback','lesson-2',15)"),
+    ).rejects.toThrow(/bad_request/);
+  });
+  it("resets bare legacy completions remotely while preserving balances and receipts", async () => {
+    await setLessons({
+      "lesson-1": {
+        status: "done",
+        stages: { video: true, test: true, practice: true },
+      },
+      "lesson-2": { status: "done" },
+    });
+    await db.exec(
+      `update public.profiles set sparks=75,mentor_tokens=41 where id='${C}';insert into public.xp_events(user_id,amount,source,ref_id) values('${C}',30,'lesson','lesson-1')`,
+    );
+    const payload = {
+      progressEvidenceVersion: 1,
+      lessons: {
+        "lesson-1": { status: "current" },
+        "lesson-2": { status: "locked" },
+      },
+      sparks: 999,
+      xp: 999,
+      mentor: { tokens: 999 },
+    };
+    const saved = await asUser(
+      C,
+      `select public.save_progress('${JSON.stringify(payload)}') as result`,
+    );
+    expect(saved.rows[0].result).toMatchObject({
+      sparks: 75,
+      xp: 30,
+      mentor: { tokens: 41 },
+      lessons: {
+        "lesson-1": {
+          status: "current",
+          rewarded: true,
+          stages: { video: false, test: false, practice: false },
+        },
+        "lesson-2": { status: "locked" },
+      },
+    });
+    await expect(
+      asUser(C, "select public.award('lesson','lesson-1',30)"),
+    ).rejects.toThrow(/already_awarded/);
+  });
+  it("normalizes claimed done without evidence and keeps exactly one current lesson", async () => {
+    await setLessons({});
+    const payload = {
+      progressEvidenceVersion: 1,
+      lessons: {
+        "lesson-1": { status: "done" },
+        "lesson-2": completedLesson(2),
+      },
+    };
+    const saved = await asUser(
+      C,
+      `select public.save_progress('${JSON.stringify(payload)}') as result`,
+    );
+    const result = saved.rows[0].result as {
+      lessons: Record<string, { status: string }>;
+    };
+    expect(result.lessons["lesson-1"].status).toBe("current");
+    expect(result.lessons["lesson-2"].status).toBe("locked");
+    expect(
+      Object.values(result.lessons).filter(
+        (lesson) => lesson.status === "current",
+      ),
+    ).toHaveLength(1);
+  });
+  it("preserves verified old completion across a stale evidence-aware device save", async () => {
+    const payload = {
+      progressEvidenceVersion: 1,
+      lessons: {
+        "lesson-1": { status: "current" },
+        "lesson-2": completedLesson(2),
+      },
+    };
+    const saved = await asUser(
+      C,
+      `select public.save_progress('${JSON.stringify(payload)}') as result`,
+    );
+    expect(saved.rows[0].result).toMatchObject({
+      lessons: {
+        "lesson-1": { status: "done", completionSource: "lesson_fallback" },
+        "lesson-2": { status: "done" },
+        "lesson-3": { status: "current" },
+      },
+    });
   });
 });

@@ -1,5 +1,5 @@
-import cached from "../../../../content/lesson-videos.json" with { type: "json" };
-import queries from "../../../../content/lesson-video-queries.json" with { type: "json" };
+import cached from "@arduhub/curriculum/lesson-videos.json" with { type: "json" };
+import queries from "@arduhub/curriculum/lesson-video-queries.json" with { type: "json" };
 import { createVideoResolver } from "@/services/video/resolve.mjs";
 import { createRateLimiter } from "@/lib/rateLimit";
 const limiter = createRateLimiter(20);

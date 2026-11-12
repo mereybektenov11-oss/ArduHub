@@ -1,4 +1,4 @@
-import { learningRu as c } from "@/content/learning.ru";
+import { learningRu as c } from "@arduhub/curriculum/learning.ru";
 export function reviewSections(text: string) {
   const headings = [c.works, c.risk, c.nextStep];
   return headings.map((title, i) => {

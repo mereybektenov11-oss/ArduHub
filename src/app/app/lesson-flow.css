@@ -792,3 +792,12 @@
     transition: none;
   }
 }
+.flow-theory .stagger-eager > .stagger-item {
+  animation: flow-content-enter var(--flow-reveal) var(--motion-ease)
+    var(--reveal-delay) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .flow-theory .stagger-eager > .stagger-item {
+    animation: none;
+  }
+}

@@ -2,7 +2,7 @@ import { afterEach, it, expect, vi } from "vitest";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { LearningStore } from "@/domain/projects/storage";
 import { loadLearning, saveLearning } from "@/lib/supabase/learningSync";
-import { emptyScene } from "@/domain/scene/scene";
+import { emptyScene } from "@arduhub/arduino-core/scene/scene";
 afterEach(() => vi.unstubAllGlobals());
 function storage() {
   const map = new Map<string, string>();

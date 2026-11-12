@@ -5,32 +5,36 @@ import {
   type LessonFlowState,
   type LessonStage,
 } from "@/domain/lessons/flow";
+import { computeStageState } from "@/domain/progress/courseState";
+import Boxicon from "@/components/icons/Boxicon";
 export default function StageIndicator({
   flow,
   active,
   onStage,
+  lesson,
 }: {
   flow: LessonFlowState;
   active: LessonStage;
   onStage: (stage: LessonStage) => void;
+  lesson: { id: string };
 }) {
+  const stages = computeStageState(lesson, flow);
+  const verified = { ...flow, stages };
   return (
     <nav className="flow-stage-indicator" aria-label={c.lessonProgress}>
       {lessonStages.map((stage, i) => (
         <button
           key={stage}
           className={
-            flow.stages[stage]
-              ? "is-done"
-              : active === stage
-                ? "is-current"
-                : ""
+            stages[stage] ? "is-done" : active === stage ? "is-current" : ""
           }
           aria-current={active === stage ? "step" : undefined}
-          disabled={!canOpenStage(flow, stage)}
+          disabled={!canOpenStage(verified, stage)}
           onClick={() => onStage(stage)}
         >
-          <span aria-hidden="true">{flow.stages[stage] ? "✓" : i + 1}</span>
+          <span aria-hidden="true">
+            {stages[stage] ? <Boxicon name="check" /> : i + 1}
+          </span>
           {c.stages[i]}
         </button>
       ))}

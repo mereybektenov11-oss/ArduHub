@@ -1,10 +1,14 @@
 "use client";
-import { catalog, type PartType } from "@/domain/parts/catalog";
-import { learningRu as c } from "@/content/learning.ru";
+import { catalog, type PartType } from "@arduhub/arduino-core/parts/catalog";
+import { learningRu as c } from "@arduhub/curriculum/learning.ru";
 import PartView from "./PartView";
 import { useState } from "react";
-import { partCategories, paletteCopy as text } from "@/content/parts.ru";
-import { compilerLibraries } from "@/domain/parts/catalog.overrides";
+import {
+  partCategories,
+  paletteCopy as text,
+} from "@arduhub/curriculum/parts.ru";
+import { compilerLibraries } from "@arduhub/arduino-core/parts/catalog.overrides";
+import { kidsWorkspaceRu as k } from "@/content/kids-workspace.ru";
 export default function Palette({
   types,
   busy,
@@ -18,14 +22,11 @@ export default function Palette({
   hasBoard: boolean;
   onAdd: (type: PartType) => void;
 }) {
-  const [query, setQuery] = useState(""),
-    [category, setCategory] = useState("all");
-  const filtered = types.filter(
-    (type) =>
-      (category === "all" || catalog[type].category === category) &&
-      `${catalog[type].name} ${catalog[type].tag}`
-        .toLocaleLowerCase("ru")
-        .includes(query.toLocaleLowerCase("ru")),
+  const [query, setQuery] = useState("");
+  const filtered = types.filter((type) =>
+    `${catalog[type].name} ${catalog[type].tag}`
+      .toLocaleLowerCase("ru")
+      .includes(query.toLocaleLowerCase("ru")),
   );
   const row = (items: PartType[]) => (
     <div className="l2-palette" aria-label={c.palette}>
@@ -48,9 +49,9 @@ export default function Palette({
             attrs={catalog[type].attrs}
             lazy
             scale={Math.min(
-              0.6,
-              48 / catalog[type].width,
-              40 / catalog[type].height,
+              0.85,
+              96 / catalog[type].width,
+              64 / catalog[type].height,
             )}
           />
           <span>{catalog[type].name}</span>
@@ -78,24 +79,53 @@ export default function Palette({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
-        <select
-          aria-label={text.all}
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        >
-          <option value="all">{text.all}</option>
-          {Object.entries(partCategories)
-            .filter(([key]) =>
-              types.some((type) => catalog[type].category === key),
-            )
-            .map(([key, title]) => (
-              <option key={key} value={key}>
-                {title}
-              </option>
-            ))}
-        </select>
       </div>
-      {row(filtered)}
+      {[
+        {
+          id: "basic",
+          title: k.basic,
+          types: filtered.filter((type) =>
+            [
+              "uno",
+              "breadboard",
+              "led",
+              "resistor",
+              "button",
+              "pot",
+              "buzzer",
+            ].includes(type),
+          ),
+        },
+        ...Object.entries(partCategories).map(([id, title]) => ({
+          id,
+          title,
+          types: filtered.filter(
+            (type) =>
+              ![
+                "uno",
+                "breadboard",
+                "led",
+                "resistor",
+                "button",
+                "pot",
+                "buzzer",
+              ].includes(type) && catalog[type].category === id,
+          ),
+        })),
+      ]
+        .filter((group) => group.types.length)
+        .map((group) => (
+          <details
+            className="kids-palette-group"
+            key={group.id}
+            open={group.id === "basic" || query ? true : undefined}
+          >
+            <summary>
+              {group.title} <span>{group.types.length}</span>
+            </summary>
+            {row(group.types)}
+          </details>
+        ))}
       {!filtered.length && <p className="l2-note">{text.empty}</p>}
     </>
   );

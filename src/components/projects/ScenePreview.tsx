@@ -1,8 +1,8 @@
 "use client";
-import type { SceneDoc } from "@/domain/scene/scene";
-import { catalog } from "@/domain/parts/catalog";
-import { pinPosition } from "@/domain/parts/pins";
-import { sceneExtent } from "@/domain/scene/placement";
+import type { SceneDoc } from "@arduhub/arduino-core/scene/scene";
+import { catalog } from "@arduhub/arduino-core/parts/catalog";
+import { pinPosition } from "@arduhub/arduino-core/parts/pins";
+import { sceneExtent } from "@arduhub/arduino-core/scene/placement";
 import PartView from "@/components/workspace/PartView";
 export default function ScenePreview({
   scene,

@@ -1,0 +1,164 @@
+[
+  {
+    "concept": "workshop",
+    "fg": "--color-text",
+    "bg": "--color-bg",
+    "ratio": 13.78
+  },
+  {
+    "concept": "workshop",
+    "fg": "--color-text",
+    "bg": "--color-surface",
+    "ratio": 15.27
+  },
+  {
+    "concept": "workshop",
+    "fg": "--color-text",
+    "bg": "--color-surface-2",
+    "ratio": 12.31
+  },
+  {
+    "concept": "workshop",
+    "fg": "--color-muted",
+    "bg": "--color-bg",
+    "ratio": 5.92
+  },
+  {
+    "concept": "workshop",
+    "fg": "--color-muted",
+    "bg": "--color-surface",
+    "ratio": 6.56
+  },
+  {
+    "concept": "workshop",
+    "fg": "--color-muted",
+    "bg": "--color-surface-2",
+    "ratio": 5.29
+  },
+  {
+    "concept": "workshop",
+    "fg": "--color-on-primary",
+    "bg": "--color-primary",
+    "ratio": 5.12
+  },
+  {
+    "concept": "workshop",
+    "fg": "--color-primary",
+    "bg": "--color-surface",
+    "ratio": 4.96
+  },
+  {
+    "concept": "workshop",
+    "fg": "--color-locked",
+    "bg": "--color-surface-2",
+    "ratio": 5.51
+  },
+  {
+    "concept": "neon",
+    "fg": "--color-text",
+    "bg": "--color-bg",
+    "ratio": 16.16
+  },
+  {
+    "concept": "neon",
+    "fg": "--color-text",
+    "bg": "--color-surface",
+    "ratio": 14.72
+  },
+  {
+    "concept": "neon",
+    "fg": "--color-text",
+    "bg": "--color-surface-2",
+    "ratio": 13.03
+  },
+  {
+    "concept": "neon",
+    "fg": "--color-muted",
+    "bg": "--color-bg",
+    "ratio": 7.98
+  },
+  {
+    "concept": "neon",
+    "fg": "--color-muted",
+    "bg": "--color-surface",
+    "ratio": 7.26
+  },
+  {
+    "concept": "neon",
+    "fg": "--color-muted",
+    "bg": "--color-surface-2",
+    "ratio": 6.43
+  },
+  {
+    "concept": "neon",
+    "fg": "--color-on-primary",
+    "bg": "--color-primary",
+    "ratio": 9.32
+  },
+  {
+    "concept": "neon",
+    "fg": "--color-primary",
+    "bg": "--color-surface",
+    "ratio": 9.54
+  },
+  {
+    "concept": "neon",
+    "fg": "--color-locked",
+    "bg": "--color-surface-2",
+    "ratio": 5.59
+  },
+  {
+    "concept": "toy",
+    "fg": "--color-text",
+    "bg": "--color-bg",
+    "ratio": 14.22
+  },
+  {
+    "concept": "toy",
+    "fg": "--color-text",
+    "bg": "--color-surface",
+    "ratio": 15.97
+  },
+  {
+    "concept": "toy",
+    "fg": "--color-text",
+    "bg": "--color-surface-2",
+    "ratio": 14.35
+  },
+  {
+    "concept": "toy",
+    "fg": "--color-muted",
+    "bg": "--color-bg",
+    "ratio": 7.73
+  },
+  {
+    "concept": "toy",
+    "fg": "--color-muted",
+    "bg": "--color-surface",
+    "ratio": 8.69
+  },
+  {
+    "concept": "toy",
+    "fg": "--color-muted",
+    "bg": "--color-surface-2",
+    "ratio": 7.81
+  },
+  {
+    "concept": "toy",
+    "fg": "--color-on-primary",
+    "bg": "--color-primary",
+    "ratio": 6.7
+  },
+  {
+    "concept": "toy",
+    "fg": "--color-primary",
+    "bg": "--color-surface",
+    "ratio": 6.7
+  },
+  {
+    "concept": "toy",
+    "fg": "--color-locked",
+    "bg": "--color-surface-2",
+    "ratio": 5.07
+  }
+]

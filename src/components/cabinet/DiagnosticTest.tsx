@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useProgress } from "@/lib/useProgress";
 import { answerDiagnostic } from "@/domain/diagnostic";
 import { diagnosticDeck, diagnosticCopy as c } from "@/content/cabinet.ru";
-import { levels, topicNames } from "@/domain/seed";
+import { topicNames } from "@/domain/seed";
 import { topics } from "@/domain/types";
 import { Card, Action, Pill, ProgressBar, SkillBar } from "./ui";
 import PinDiagram from "./PinDiagram";
@@ -20,7 +20,7 @@ export default function DiagnosticTest() {
         <h1>{c.result}</h1>
         <Card>
           <h2>
-            {levels[p.profile.level].name} {uiCopy.text019}
+            {uiCopy.text019} {p.profile.level}
             {p.profile.level}
           </h2>
           <p className="cab-lead">{c.resultNote}</p>

@@ -1,0 +1,590 @@
+{
+  "screens": [
+    {
+      "slug": "landing",
+      "path": "/",
+      "width": 1440,
+      "height": 9910,
+      "count": 1171
+    },
+    {
+      "slug": "signin",
+      "path": "/sign-in",
+      "width": 1440,
+      "height": 1000,
+      "count": 43
+    },
+    {
+      "slug": "register",
+      "path": "/register",
+      "width": 1440,
+      "height": 1219,
+      "count": 71
+    },
+    {
+      "slug": "reset",
+      "path": "/auth/reset",
+      "width": 1440,
+      "height": 1000,
+      "count": 34
+    },
+    {
+      "slug": "about",
+      "path": "/about",
+      "width": 1440,
+      "height": 1000,
+      "count": 20
+    },
+    {
+      "slug": "privacy",
+      "path": "/privacy",
+      "width": 1440,
+      "height": 1618,
+      "count": 49
+    },
+    {
+      "slug": "dashboard",
+      "path": "/app",
+      "width": 1440,
+      "height": 1475,
+      "count": 348
+    },
+    {
+      "slug": "lessons",
+      "path": "/app/lessons",
+      "width": 1440,
+      "height": 1704,
+      "count": 378
+    },
+    {
+      "slug": "map",
+      "path": "/app/map",
+      "width": 1440,
+      "height": 1320,
+      "count": 202
+    },
+    {
+      "slug": "practice",
+      "path": "/app/practice",
+      "width": 1440,
+      "height": 1000,
+      "count": 180
+    },
+    {
+      "slug": "glossary",
+      "path": "/app/practice?tab=glossary",
+      "width": 1440,
+      "height": 4705,
+      "count": 766
+    },
+    {
+      "slug": "projects",
+      "path": "/app/projects",
+      "width": 1440,
+      "height": 1000,
+      "count": 179
+    },
+    {
+      "slug": "ideas",
+      "path": "/app/ideas",
+      "width": 1440,
+      "height": 1745,
+      "count": 386
+    },
+    {
+      "slug": "missions",
+      "path": "/app/missions",
+      "width": 1440,
+      "height": 1000,
+      "count": 204
+    },
+    {
+      "slug": "leaderboard",
+      "path": "/app/leaderboard",
+      "width": 1440,
+      "height": 1000,
+      "count": 156
+    },
+    {
+      "slug": "shop",
+      "path": "/app/shop",
+      "width": 1440,
+      "height": 1000,
+      "count": 199
+    },
+    {
+      "slug": "profile",
+      "path": "/app/profile",
+      "width": 1440,
+      "height": 2483,
+      "count": 372
+    },
+    {
+      "slug": "cab-about",
+      "path": "/app/about",
+      "width": 1440,
+      "height": 1000,
+      "count": 167
+    },
+    {
+      "slug": "test",
+      "path": "/app/test",
+      "width": 1440,
+      "height": 1000,
+      "count": 180
+    },
+    {
+      "slug": "level-0",
+      "path": "/app/map/0",
+      "width": 1440,
+      "height": 1008,
+      "count": 216
+    },
+    {
+      "slug": "level-1",
+      "path": "/app/map/1",
+      "width": 1440,
+      "height": 1008,
+      "count": 216
+    },
+    {
+      "slug": "level-2",
+      "path": "/app/map/2",
+      "width": 1440,
+      "height": 1000,
+      "count": 204
+    },
+    {
+      "slug": "level-3",
+      "path": "/app/map/3",
+      "width": 1440,
+      "height": 1000,
+      "count": 204
+    },
+    {
+      "slug": "level-4",
+      "path": "/app/map/4",
+      "width": 1440,
+      "height": 1000,
+      "count": 204
+    },
+    {
+      "slug": "lesson-1",
+      "path": "/app/lesson/lesson-1?stage=video",
+      "width": 1440,
+      "height": 1384,
+      "count": 114
+    },
+    {
+      "slug": "lesson-2",
+      "path": "/app/lesson/lesson-2?stage=video",
+      "width": 1440,
+      "height": 1384,
+      "count": 114
+    },
+    {
+      "slug": "lesson-3",
+      "path": "/app/lesson/lesson-3?stage=video",
+      "width": 1440,
+      "height": 1269,
+      "count": 99
+    },
+    {
+      "slug": "lesson-4",
+      "path": "/app/lesson/lesson-4?stage=video",
+      "width": 1440,
+      "height": 1384,
+      "count": 114
+    },
+    {
+      "slug": "lesson-5",
+      "path": "/app/lesson/lesson-5?stage=video",
+      "width": 1440,
+      "height": 1354,
+      "count": 114
+    },
+    {
+      "slug": "lesson-6",
+      "path": "/app/lesson/lesson-6?stage=video",
+      "width": 1440,
+      "height": 1384,
+      "count": 114
+    },
+    {
+      "slug": "lesson-7",
+      "path": "/app/lesson/lesson-7?stage=video",
+      "width": 1440,
+      "height": 1384,
+      "count": 114
+    },
+    {
+      "slug": "lesson-8",
+      "path": "/app/lesson/lesson-8?stage=video",
+      "width": 1440,
+      "height": 1384,
+      "count": 114
+    },
+    {
+      "slug": "lesson-9",
+      "path": "/app/lesson/lesson-9?stage=video",
+      "width": 1440,
+      "height": 1384,
+      "count": 114
+    },
+    {
+      "slug": "lesson-10",
+      "path": "/app/lesson/lesson-10?stage=video",
+      "width": 1440,
+      "height": 1384,
+      "count": 114
+    },
+    {
+      "slug": "lesson-11",
+      "path": "/app/lesson/lesson-11?stage=video",
+      "width": 1440,
+      "height": 1384,
+      "count": 114
+    },
+    {
+      "slug": "lesson-12",
+      "path": "/app/lesson/lesson-12?stage=video",
+      "width": 1440,
+      "height": 1384,
+      "count": 114
+    },
+    {
+      "slug": "blitz",
+      "path": "/app/practice/blitz",
+      "width": 1440,
+      "height": 1000,
+      "count": 185
+    },
+    {
+      "slug": "findbug",
+      "path": "/app/practice/findbug",
+      "width": 1440,
+      "height": 1000,
+      "count": 171
+    },
+    {
+      "slug": "match",
+      "path": "/app/practice/match",
+      "width": 1440,
+      "height": 1000,
+      "count": 173
+    },
+    {
+      "slug": "lesson-test",
+      "path": "/app/lesson/lesson-1?stage=test",
+      "width": 1440,
+      "height": 1015,
+      "count": 77
+    },
+    {
+      "slug": "lesson-practice",
+      "path": "/app/lesson/lesson-1?stage=practice",
+      "width": 1440,
+      "height": 1285,
+      "count": 280
+    },
+    {
+      "slug": "editor",
+      "path": "/app/projects",
+      "width": 1440,
+      "height": 1321,
+      "count": 645
+    },
+    {
+      "slug": "editor-code",
+      "path": "/app/projects",
+      "width": 1440,
+      "height": 1000,
+      "count": 190
+    },
+    {
+      "slug": "editor-serial",
+      "path": "/app/projects",
+      "width": 1440,
+      "height": 1000,
+      "count": 195
+    },
+    {
+      "slug": "search",
+      "path": "/app",
+      "width": 1440,
+      "height": 1475,
+      "count": 472
+    },
+    {
+      "slug": "mentor-dialog",
+      "path": "/app/lesson/lesson-1?stage=practice",
+      "width": 1440,
+      "height": 1285,
+      "count": 359
+    },
+    {
+      "slug": "forgot",
+      "path": "/sign-in",
+      "width": 1440,
+      "height": 1000,
+      "count": 28
+    },
+    {
+      "slug": "dev-cabinet-ui",
+      "path": "/dev/cabinet-ui",
+      "width": 1440,
+      "height": 1000,
+      "count": 65
+    },
+    {
+      "slug": "dev-circuits",
+      "path": "/dev/circuits",
+      "width": 1440,
+      "height": 1756,
+      "count": 18
+    },
+    {
+      "slug": "dev-icons",
+      "path": "/dev/icons",
+      "width": 1440,
+      "height": 2444,
+      "count": 329
+    },
+    {
+      "slug": "dev-motion",
+      "path": "/dev/motion",
+      "width": 1440,
+      "height": 3707,
+      "count": 31
+    },
+    {
+      "slug": "dev-map-editor",
+      "path": "/dev/map-editor",
+      "width": 1440,
+      "height": 1321,
+      "count": 645
+    },
+    {
+      "slug": "dev-progress",
+      "path": "/dev/progress",
+      "width": 1440,
+      "height": 2922,
+      "count": 16
+    },
+    {
+      "slug": "m-landing",
+      "path": "/",
+      "width": 390,
+      "height": 14139,
+      "count": 1239
+    },
+    {
+      "slug": "m-signin",
+      "path": "/sign-in",
+      "width": 390,
+      "height": 844,
+      "count": 43
+    },
+    {
+      "slug": "m-register",
+      "path": "/register",
+      "width": 390,
+      "height": 1207,
+      "count": 71
+    },
+    {
+      "slug": "m-reset",
+      "path": "/auth/reset",
+      "width": 390,
+      "height": 844,
+      "count": 34
+    },
+    {
+      "slug": "m-about",
+      "path": "/about",
+      "width": 390,
+      "height": 844,
+      "count": 20
+    },
+    {
+      "slug": "m-privacy",
+      "path": "/privacy",
+      "width": 390,
+      "height": 2150,
+      "count": 49
+    },
+    {
+      "slug": "m-dashboard",
+      "path": "/app",
+      "width": 390,
+      "height": 1722,
+      "count": 236
+    },
+    {
+      "slug": "m-lessons",
+      "path": "/app/lessons",
+      "width": 390,
+      "height": 2839,
+      "count": 289
+    },
+    {
+      "slug": "m-map",
+      "path": "/app/map",
+      "width": 390,
+      "height": 1309,
+      "count": 113
+    },
+    {
+      "slug": "m-practice",
+      "path": "/app/practice",
+      "width": 390,
+      "height": 1219,
+      "count": 91
+    },
+    {
+      "slug": "m-glossary",
+      "path": "/app/practice?tab=glossary",
+      "width": 390,
+      "height": 11459,
+      "count": 677
+    },
+    {
+      "slug": "m-projects",
+      "path": "/app/projects",
+      "width": 390,
+      "height": 844,
+      "count": 90
+    },
+    {
+      "slug": "m-ideas",
+      "path": "/app/ideas",
+      "width": 390,
+      "height": 4219,
+      "count": 286
+    },
+    {
+      "slug": "m-missions",
+      "path": "/app/missions",
+      "width": 390,
+      "height": 1076,
+      "count": 115
+    },
+    {
+      "slug": "m-leaderboard",
+      "path": "/app/leaderboard",
+      "width": 390,
+      "height": 844,
+      "count": 67
+    },
+    {
+      "slug": "m-shop",
+      "path": "/app/shop",
+      "width": 390,
+      "height": 1553,
+      "count": 110
+    },
+    {
+      "slug": "m-profile",
+      "path": "/app/profile",
+      "width": 390,
+      "height": 3299,
+      "count": 283
+    },
+    {
+      "slug": "m-cab-about",
+      "path": "/app/about",
+      "width": 390,
+      "height": 844,
+      "count": 78
+    },
+    {
+      "slug": "m-test",
+      "path": "/app/test",
+      "width": 390,
+      "height": 974,
+      "count": 91
+    },
+    {
+      "slug": "m-level-0",
+      "path": "/app/map/0",
+      "width": 390,
+      "height": 1191,
+      "count": 127
+    },
+    {
+      "slug": "m-lesson-1",
+      "path": "/app/lesson/lesson-1?stage=video",
+      "width": 390,
+      "height": 1371,
+      "count": 108
+    },
+    {
+      "slug": "m-blitz",
+      "path": "/app/practice/blitz",
+      "width": 390,
+      "height": 1068,
+      "count": 96
+    },
+    {
+      "slug": "m-findbug",
+      "path": "/app/practice/findbug",
+      "width": 390,
+      "height": 995,
+      "count": 82
+    },
+    {
+      "slug": "m-match",
+      "path": "/app/practice/match",
+      "width": 390,
+      "height": 1116,
+      "count": 84
+    },
+    {
+      "slug": "m-lesson-test",
+      "path": "/app/lesson/lesson-1?stage=test",
+      "width": 390,
+      "height": 951,
+      "count": 71
+    },
+    {
+      "slug": "m-lesson-practice",
+      "path": "/app/lesson/lesson-1?stage=practice",
+      "width": 390,
+      "height": 1855,
+      "count": 240
+    },
+    {
+      "slug": "m-editor",
+      "path": "/app/projects",
+      "width": 390,
+      "height": 2629,
+      "count": 556
+    },
+    {
+      "slug": "m-editor-code",
+      "path": "/app/projects",
+      "width": 390,
+      "height": 1272,
+      "count": 145
+    },
+    {
+      "slug": "m-mentor-dialog",
+      "path": "/app/lesson/lesson-1?stage=practice",
+      "width": 390,
+      "height": 1907,
+      "count": 319
+    },
+    {
+      "slug": "m-menu",
+      "path": "/app",
+      "width": 390,
+      "height": 1722,
+      "count": 210
+    }
+  ],
+  "count": 83,
+  "nodeCount": 17401,
+  "assets": 13,
+  "unverified": false,
+  "figmaExecutionVerified": true
+}

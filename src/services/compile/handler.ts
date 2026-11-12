@@ -1,8 +1,8 @@
 import { createRateLimiter } from "@/lib/rateLimit";
 import fixtures from "./fixtures.json" with { type: "json" };
 import type { CompileResult } from "./client";
-import { normalizeCode } from "./normalize";
-export { normalizeCode } from "./normalize";
+import { normalizeCode } from "@arduhub/arduino-core/compile/normalize";
+export { normalizeCode } from "@arduhub/arduino-core/compile/normalize";
 export function createCompileHandler(
   config: { url?: string; key?: string; fetcher?: typeof fetch } = {},
 ) {

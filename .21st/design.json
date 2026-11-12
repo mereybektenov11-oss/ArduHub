@@ -1,0 +1,255 @@
+{
+  "version": 1,
+  "project": {
+    "name": "arduhub-landing",
+    "productType": "Educational Arduino learning dashboard for schoolchildren",
+    "stack": ["nextjs", "react", "tailwind-v4"]
+  },
+  "sources": {
+    "tokens": [
+      "src/app/globals.css",
+      "src/app/app/cabinet.css",
+      "src/lib/motion.ts",
+      "src/app/landing-video.css"
+    ],
+    "components": ["src/components/ui"],
+    "assets": [],
+    "instructions": ["AGENTS.md"]
+  },
+  "design": {
+    "colorMode": "light",
+    "colors": {
+      "--text-muted-dark": {
+        "value": "#59645b",
+        "source": "src/app/globals.css"
+      },
+      "--text-muted-light": {
+        "value": "var(--topic-muted)",
+        "source": "src/app/globals.css"
+      },
+      "--error-border": {
+        "value": "#e5bbb1",
+        "source": "src/app/globals.css"
+      },
+      "--topic-muted": {
+        "value": "#c5d0c7",
+        "source": "src/app/globals.css"
+      }
+    },
+    "typography": {
+      "--type-page-title": {
+        "value": "2rem",
+        "source": "src/app/globals.css"
+      },
+      "--type-section-title": {
+        "value": "1.375rem",
+        "source": "src/app/globals.css"
+      },
+      "--type-card-title": {
+        "value": "1.125rem",
+        "source": "src/app/globals.css"
+      },
+      "--type-body": {
+        "value": "1rem",
+        "source": "src/app/globals.css"
+      },
+      "--type-body-small": {
+        "value": "0.875rem",
+        "source": "src/app/globals.css"
+      },
+      "--type-caption": {
+        "value": "0.8125rem",
+        "source": "src/app/globals.css"
+      },
+      "--type-group-label": {
+        "value": "0.75rem",
+        "source": "src/app/globals.css"
+      },
+      "--type-button": {
+        "value": "1rem",
+        "source": "src/app/globals.css"
+      },
+      "--type-stat": {
+        "value": "1rem",
+        "source": "src/app/globals.css"
+      },
+      "--text-dark": {
+        "value": "#14201a",
+        "source": "src/app/globals.css"
+      },
+      "--text-light": {
+        "value": "#f5f2e9",
+        "source": "src/app/globals.css"
+      },
+      "--text-hero": {
+        "value": "clamp(2.5rem, 7vw, 5.5rem)",
+        "source": "src/app/globals.css"
+      },
+      "--text-section": {
+        "value": "clamp(2rem, 4vw, 3.25rem)",
+        "source": "src/app/globals.css"
+      },
+      "--text-body": {
+        "value": "1.0625rem",
+        "source": "src/app/globals.css"
+      },
+      "--error-text-dark": {
+        "value": "#ffb5ad",
+        "source": "src/app/globals.css"
+      }
+    },
+    "spacing": {
+      "--space-page": {
+        "value": "clamp(1rem, 4vw, 3rem)",
+        "source": "src/app/globals.css"
+      },
+      "--space-section": {
+        "value": "72px",
+        "source": "src/app/globals.css"
+      },
+      "--space-stack": {
+        "value": "1.5rem",
+        "source": "src/app/globals.css"
+      },
+      "--space-xs": {
+        "value": "0.5rem",
+        "source": "src/app/globals.css"
+      },
+      "--space-sm": {
+        "value": "1rem",
+        "source": "src/app/globals.css"
+      },
+      "--space-md": {
+        "value": "1.5rem",
+        "source": "src/app/globals.css"
+      },
+      "--space-lg": {
+        "value": "2rem",
+        "source": "src/app/globals.css"
+      },
+      "--space-xl": {
+        "value": "3rem",
+        "source": "src/app/globals.css"
+      }
+    },
+    "radius": {
+      "--radius-card": {
+        "value": "1.5rem",
+        "source": "src/app/globals.css"
+      },
+      "--radius-pill": {
+        "value": "999px",
+        "source": "src/app/globals.css"
+      }
+    },
+    "shadows": {
+      "--shadow-ink": {
+        "value": "#0006",
+        "source": "src/app/globals.css"
+      },
+      "--shadow-ink-soft": {
+        "value": "#0003",
+        "source": "src/app/globals.css"
+      },
+      "--shadow-card": {
+        "value": "0 20px 60px #06120b1a",
+        "source": "src/app/globals.css"
+      }
+    },
+    "motion": {
+      "--motion-duration": {
+        "value": "500ms",
+        "source": "src/app/globals.css"
+      },
+      "--motion-ease": {
+        "value": "cubic-bezier(0.22, 1, 0.36, 1)",
+        "source": "src/app/globals.css"
+      }
+    },
+    "density": "comfortable"
+  },
+  "components": {
+    "installed": [
+      "AccessLink",
+      "Accordion",
+      "AnchorScroll",
+      "AnimatedNumber",
+      "AnimatedSectionTitle",
+      "CircuitIcon",
+      "DeferredMotion",
+      "MiniInterface",
+      "primitives",
+      "Reveal",
+      "Stagger"
+    ],
+    "preferredPrimitives": [],
+    "patterns": []
+  },
+  "constraints": {
+    "must": [
+      "Preserve ArduHub cream, green-black and amber palette and Inter/Manrope fonts.",
+      "Use existing real components and truthful progress from computeCourseState.",
+      "Use Russian content modules, 44px touch targets, reduced motion and only transform/opacity animation.",
+      "Follow docs/ArduHub_G2_ui_for_kids.md for G-5,G-6,G-7,G-13."
+    ],
+    "avoid": [
+      "Global mentor floating action buttons.",
+      "Invented learner progress, rankings, projects or unavailable product features.",
+      "Decorative gradients and unrelated visual redesigns."
+    ]
+  },
+  "decisions": [
+    "2026-11-10 latest user correction: login displays email and current password together immediately, with one sign-in submit button; no next-step email action. Registration remains progressive. Glass input text/placeholders gain 12px inline padding via scoped --signup-input-padding, preserving the visible logo/title and internal scrolling on short viewports.",
+    "2026-11-10 viewport correction: both login and registration now reuse the supplied glass step form. Login is email -> current password, preserving real credentials, errors, resend, recovery, guest and registration switch. Keep logo/title outside a bounded internal scroll area; card max-height follows 100dvh, compact spacing below 600px height, focus uses preventScroll. This prevents autofocus from scrolling the whole page and hiding the beginning. Backgrounds remain lossless with 5-second scene changes.",
+    "2026-11-10 supplied glass sign-up reference adapted in src/components/ui/sign-up.tsx: Russian email -> password -> confirmation/profile flow, glossy pill fields/arrow actions, translucent centered surface, real infinity brand mark + ArduHub. Existing AuthCard owns actual account requests, validation, roles, consent, guest entry and error handling. No demo success timers or unsupported OAuth buttons. Inter/Cobalt Mono retained. Latest explicit interval is 5 seconds per scene (15-second cycle). Backgrounds use lossless source-derived *-hq.webp, served unoptimized to avoid secondary lossy recompression; original resolution/pixels verified, no invented detail/upscaling.",
+    "2026-11-10 latest auth illustration correction: replace all seated desk scenes with varied full-body poses and a shared giant robot project. Three frames: mentors walking/fetching tools/pushing a parts trolley/Oma at the window; collaborative giant humanoid robot assembly with Shina on a step ladder and Rezik kneeling at wiring; first robot test with reaching/crouching/jumping poses. Keep the centered form and existing crossfade. Assets: mentor-tool-run.webp, mentor-giant-robot.webp, mentor-robot-test.webp. These are still illustrations, not animated walking footage.",
+    "2026-11-10 user correction supersedes split authentication layout: full-viewport background slideshow of three mentor workshop scenes, slow 2.2s crossfades every 12s, centered form on all widths. Remove workshop headings/captions, auth subtitles, role descriptions and duplicate login/register prompts. Retain essential labels, consent, parent guidance, recovery, guest entry and theme. Inter/Cobalt Mono retained. Reduced motion uses a static first image, hidden tabs pause, transitions start after all images load.",
+    "2026-11-09: explicit user request extends Cobalt Mono and local Inter to sign-in, registration and shared password-recovery shell. Reuse AuthCard with its existing auth behavior; coherent generated workshop illustration preserves all four existing mentor identities (Shina soldering, Rezik assembling Arduino, Oma observing, Volt waving). Wide screens use a sticky illustration beside the form; narrow screens show the complete workshop above it. Asset: public/images/auth/mentor-workshop.webp. Auth has scoped blue/white/lavender tokens and dark-theme equivalents; no glass button material.",
+    "G3 preserves the existing dashboard palette; thematic SVG icons use the flame, ice, spark and chip colors specified in docs/ArduHub_G3_motion_sound_icons.md. Event motion has bounded lifetimes and a reduced-motion alternative.",
+    "2026-11-08: public homepage only uses Cobalt Mono scoped tokens, local Inter/EB Garamond, transparent generated Arduino renders animated without cursor tracking; cabinet and auth retain existing styling. Neuralese reference guides motion and product storytelling, no copied media.",
+    "2026-11-08 user correction: apply Cobalt Mono reference with Inter for all landing text and headings, white background, cobalt actions and pale lavender surfaces. Remove editorial serif/italic styling. Preserve all existing animations, durations, phase delays and interactions. This supersedes the earlier serif choice.",
+    "2026-11-08 latest user instruction: compact Neuralese-inspired video-led structure, blue-to-white dot hero with no Arduino cutouts, own local recordings in rainbow/blue/pink/green video frames, four vivid benefit cards, FAQ and final CTA. Inter and Cobalt Mono retained. Prior long gallery/stats/steps/pricing layout superseded on homepage only.",
+    "2026-11-08 user reference Ludr: replace hero dots with continuously scrolling Arduino code and component names in pale grey-white and blue on the existing blue background. Columns alternate direction and speed; center is subdued for readability. Pause control, offscreen/hidden-tab pause and reduced-motion static fallback. Other sections unchanged.",
+    "2026-11-08 user correction: decorative hero code uses VT323; Cyrillic component names use pixel Tiny5 as glyph fallback. Both fonts are local WOFF2, scoped to homepage. Foreground typography remains Inter.",
+    "2026-11-08 latest user correction: component labels, including Latin names, use local Monocraft Regular v4.2.1; Arduino code remains VT323. Monocraft replaces Tiny5 on the homepage backdrop.",
+    "2026-11-08 explicit user request: remove all animation and video play/pause overlay buttons from homepage. Background and videos retain automatic visibility/tab/reduced-motion handling. No replacement overlay controls.",
+    "2026-11-08 explicit user request: apply the supplied Simey iridescent Glass Button material project-wide to native buttons, button-like links and controls. Shared glass-buttons.css owns pale rounded glass surfaces, inset highlights, soft shadows and cyan/violet hover lustre; preserve labels, dimensions, actions, state feedback, keyboard focus, reduced motion and forced colors. Supersedes earlier button palettes across landing/auth/cabinet; removed media overlay controls remain absent.",
+    "2026-11-08 scope correction: iridescent Glass Button styles apply ONLY inside the homepage .landing-video container. Remove global body marker/import; all other routes restore their existing button styling, including client-side navigation from homepage.",
+    "2026-11-08 clarified meaning of first page: Glass Button is ONLY for the first hero screen and public navbar, scoped to .landing-video :is(.hero, .header). Restore original controls in all lower landing sections (FAQ and final CTA included), auth, cabinet and other routes. Earlier whole-homepage scope was a misunderstanding.",
+    "2026-11-08 explicit user typography change: homepage hero headline uses local Spectral Medium 500 with real italic for the question word Заработает?. Other foreground text remains Inter; backdrop code/components remain VT323/Monocraft.",
+    "2026-11-08 user video reference: four benefit cards act as an expanding accordion. Desktop hover/focus/click widens one card and narrows neighbors; long copy and themed side art appear. <=1050px uses a vertical tap accordion. First card shows existing Arduino/LED assets, Arduino mark and Wokwi Elements word label; other cards show wiring, lesson stages, and project code. Respect reduced motion; no new media control buttons or claims of partnerships.",
+    "2026-11-08 correction: benefit cards start ALL closed, open on pointer hover and close on leave (mouse clicks must not latch them). Keyboard focus stays supported; touch taps toggle open/closed. Primary summary is never line-clamped or truncated. Unified 850ms material easing for width, details and side art; mobile collapsed height increased to fit all primary text.",
+    "2026-11-09 user Neuralese video: homepage navbar has no boxed surface, border, blur or shadow, including scrolled state. A full-width 160px blue-to-transparent top gradient sits behind links; deep blue/white links on hero, soft blue/dark links on scroll. Existing glass buttons and mobile dropdown retained. Scoped to landing-video.css."
+  ],
+  "evidence": [
+    {
+      "fact": "components.installed",
+      "source": "src/components/ui"
+    },
+    {
+      "fact": "design.colorMode:light",
+      "source": "src/app/globals.css"
+    },
+    {
+      "fact": "design.tokens",
+      "source": "src/app/globals.css"
+    },
+    {
+      "fact": "project.instructions",
+      "source": "AGENTS.md"
+    },
+    {
+      "fact": "project.stack:nextjs",
+      "source": "package.json"
+    },
+    {
+      "fact": "project.stack:react",
+      "source": "package.json"
+    },
+    {
+      "fact": "project.stack:tailwind-v4",
+      "source": "package.json"
+    }
+  ],
+  "generatedAt": "2026-10-25T17:46:57.451Z"
+}

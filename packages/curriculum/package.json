@@ -1,0 +1,19 @@
+{
+  "name": "@arduhub/curriculum",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*.json": "./src/*.json",
+    "./*": "./src/*.ts",
+    "./hex/*": "./hex/*"
+  },
+  "scripts": {
+    "test": "vitest run --config vitest.config.ts"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "vitest": "5.0.5"
+  }
+}

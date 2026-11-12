@@ -4,7 +4,7 @@ import { createRateLimiter } from "@/lib/rateLimit";
 import { lessons, mentors } from "@/domain/seed";
 import { mentorPrompt } from "./prompts";
 import { templateReply } from "./templates";
-import { learningRu as learning } from "@/content/learning.ru";
+import { learningRu as learning } from "@arduhub/curriculum/learning.ru";
 type Turn = { role: "user" | "assistant"; text: string };
 type Cached = { text: string; expires: number };
 export function createStreamingMentorHandler(
@@ -13,9 +13,13 @@ export function createStreamingMentorHandler(
     model?: string;
     fastModel?: string;
     fetcher?: typeof fetch;
-    account?: (mentorId: string) => Promise<{
+    account?: (
+      mentorId: string,
+      request: Request,
+    ) => Promise<{
       remaining: number;
       spend: (n: number) => Promise<void>;
+      onSuccess?: () => Promise<void>;
     } | null>;
   } = {},
 ) {
@@ -96,9 +100,10 @@ export function createStreamingMentorHandler(
     let account: {
       remaining: number;
       spend: (n: number) => Promise<void>;
+      onSuccess?: () => Promise<void>;
     } | null = null;
     try {
-      account = (await config.account?.(mentor.id)) ?? null;
+      account = (await config.account?.(mentor.id, request)) ?? null;
     } catch {
       return fail("unauthorized", 401);
     }
@@ -176,6 +181,8 @@ export function createStreamingMentorHandler(
               cached?.text ??
               (safety ? templateReply(message) : fallbackReply());
             emit("delta", { text });
+            if (cached && !controller.signal.aborted)
+              await account?.onSuccess?.().catch(() => {});
             emit("done", {
               tokensUsed: 0,
               fallback: !cached,
@@ -239,6 +246,8 @@ export function createStreamingMentorHandler(
               if (cache.size >= 500) cache.delete(cache.keys().next().value!);
               cache.set(cacheKey, { text, expires: now + 86400000 });
             }
+            if (!controller.signal.aborted)
+              await account?.onSuccess?.().catch(() => {});
             emit("done", { tokensUsed, usage, fallback: false });
             finished = true;
           }

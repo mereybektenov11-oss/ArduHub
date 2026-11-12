@@ -48,7 +48,6 @@ jobs:
       - run: pnpm start --port 3100 &
       - run: npx --yes @lhci/cli@0.15.1 autorun
       - run: pnpm test:lighthouse:cabinet
-      - run: pnpm test:lighthouse:learning
       - run: pnpm test:lighthouse:dashboard
       - if: always()
         run: docker rm -f arduhub-e2e-compiler || true

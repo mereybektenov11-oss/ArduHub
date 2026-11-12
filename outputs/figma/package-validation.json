@@ -1,0 +1,40 @@
+{
+  "screens": 83,
+  "desktop": 53,
+  "mobile": 30,
+  "frames": 10437,
+  "texts": 5862,
+  "svgs": 1085,
+  "images": 65,
+  "assets": 13,
+  "errorCount": 0,
+  "errors": [],
+  "figmaExecutionVerified": true,
+  "liveFileValidation": {
+    "screens": 83,
+    "desktop": 53,
+    "mobile": 30,
+    "components": 23,
+    "instances": 334,
+    "legacyCapturesRemaining": 0,
+    "counts": {
+      "FRAME": 11190,
+      "TEXT": 5933,
+      "GROUP": 1157,
+      "VECTOR": 2611,
+      "RECTANGLE": 28,
+      "INSTANCE": 334
+    },
+    "fonts": [
+      "Manrope",
+      "Inter",
+      "Cousine"
+    ],
+    "verifiedViews": [
+      "Desktop sign-in /sign-in",
+      "Mobile dashboard /app"
+    ],
+    "mapImagesVerified": true,
+    "figmaHistoryVersionObserved": true
+  }
+}

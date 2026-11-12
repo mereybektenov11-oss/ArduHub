@@ -1,3 +1,4 @@
+import type { Netlist } from "@arduhub/arduino-core/types";
 export const topics = [
   "leds",
   "buttons",
@@ -7,36 +8,6 @@ export const topics = [
   "projects",
 ] as const;
 export type Topic = (typeof topics)[number];
-export type ComponentType = "arduino" | "led" | "resistor" | "button";
-export type PinRef = { componentId: string; pin: string };
-export type CircuitComponent = {
-  id: string;
-  type: ComponentType;
-  pins: string[];
-  x: number;
-  y: number;
-};
-export type Netlist = {
-  components: CircuitComponent[];
-  links: { id: string; from: PinRef; to: PinRef }[];
-};
-export type ErrorCode =
-  | "missing_resistor"
-  | "led_reversed"
-  | "power_ground_swap"
-  | "wrong_pin"
-  | "open_circuit"
-  | "short_circuit"
-  | "extra_component";
-export type CheckError = {
-  code: ErrorCode;
-  message: string;
-  hint1: string;
-  hint2: string;
-  answer: string;
-  componentIds: string[];
-  severity: "error" | "warning";
-};
 export type Lesson = {
   id: string;
   unitId: string;
@@ -91,6 +62,9 @@ export type Mentor = {
   unlockCost: number;
 };
 export type LessonProgress = {
+  rewarded?: boolean;
+  completionSource?: "lesson" | "lesson_fallback";
+  video?: { confirmed?: boolean; watchedRatio?: number };
   flowUpdatedAt?: string;
   stages?: import("./lessons/flow").LessonFlowState["stages"];
   practice?: import("./lessons/flow").LessonFlowState["practice"];
@@ -108,6 +82,7 @@ export type LessonProgress = {
   };
 };
 export type Progress = {
+  progressEvidenceVersion?: 1;
   account?: {
     userId?: string;
     role: "student" | "teacher";
@@ -117,6 +92,15 @@ export type Progress = {
   };
   boosts?: { freeze: number; hints: number };
   inventory?: string[];
+  achievements?: { unlocked: string[]; notified: string[]; claimed: string[] };
+  achievementStats?: {
+    projectIds?: string[];
+    mentorQuestionIds?: string[];
+    topics?: Topic[];
+    blitzCurrent?: number;
+    blitzBest?: number;
+    bestWeeklyRank?: number;
+  };
   daily?: {
     day: string;
     lessonIds: string[];
@@ -127,7 +111,12 @@ export type Progress = {
   };
   version: 1;
   curriculumVersion?: 2;
-  settings?: { textScale: 1 | 1.15 | 1.3 };
+  settings?: {
+    textScale: 1 | 1.15 | 1.3;
+    sounds?: boolean;
+    soundVolume?: number;
+    mentorHints?: boolean;
+  };
   profile: { name: string; avatar: string; level: number };
   diagnostic: {
     status: "none" | "inprogress" | "done";
@@ -136,7 +125,12 @@ export type Progress = {
   };
   lessons: Record<string, LessonProgress>;
   reviewQueue: { termOrLessonId: string; errorCode: string; addedAt: string }[];
-  streak: { count: number; lastActiveDate: string | null };
+  streak: {
+    count: number;
+    lastActiveDate: string | null;
+    frozenDates?: string[];
+    activityDates?: string[];
+  };
   sparks: number;
   xp: number;
   mentor: { selectedId: string; unlockedIds: string[]; tokens: number };

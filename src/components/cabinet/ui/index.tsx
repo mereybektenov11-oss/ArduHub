@@ -7,9 +7,10 @@ import {
   type ReactNode,
   type ButtonHTMLAttributes,
 } from "react";
-import { cabinetRu as c } from "@/content/cabinet.ru";
 import Reveal from "@/components/ui/Reveal";
+import Overlay from "@/components/overlay/Overlay";
 
+import Boxicon from "@/components/icons/Boxicon";
 export function Card({
   children,
   className = "",
@@ -104,57 +105,10 @@ export function Tabs({
     </div>
   );
 }
-export function Modal({
-  children,
-  title,
-  onClose,
-}: {
-  children: ReactNode;
-  title: string;
-  onClose: () => void;
-}) {
-  const ref = useRef<HTMLDialogElement>(null);
-  const close = useRef(onClose);
-  useEffect(() => {
-    close.current = onClose;
-  });
-  useEffect(() => {
-    const before = document.activeElement as HTMLElement;
-    const el = ref.current!;
-    el.showModal();
-    return () => {
-      el.close();
-      before?.focus();
-    };
-  }, []);
-  return (
-    <dialog
-      className="cab-modal"
-      ref={ref}
-      aria-label={title}
-      onCancel={(e) => {
-        e.preventDefault();
-        close.current();
-      }}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
-      <div className="cab-modal-content">
-        <div className="cab-row">
-          <h2>{title}</h2>
-          <button
-            className="cab-icon-btn"
-            aria-label={c.close}
-            onClick={onClose}
-          >
-            ×
-          </button>
-        </div>
-        {children}
-      </div>
-    </dialog>
-  );
+export function Modal(
+  props: import("@/components/overlay/Overlay").OverlayProps,
+) {
+  return <Overlay {...props} />;
 }
 export function Tooltip({
   text,
@@ -231,14 +185,14 @@ export function HorizontalShelf({
             aria-label={uiCopy.text043(title)}
             onClick={() => scroll(-280)}
           >
-            ←
+            <Boxicon name="back" />
           </button>
           <button
             className="cab-icon-btn"
             aria-label={uiCopy.text044(title)}
             onClick={() => scroll(280)}
           >
-            →
+            <Boxicon name="next" />
           </button>
         </div>
       </div>

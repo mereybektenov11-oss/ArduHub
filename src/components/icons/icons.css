@@ -1,0 +1,267 @@
+.ardu-icon {
+  --icon-flame: #e5484d;
+  --icon-amber: #f5a524;
+  --icon-core: #ffd66b;
+  --icon-frost: #7cc4ff;
+  --icon-spark: #e9a93b;
+  --icon-green: #3fb37f;
+  --icon-muted: #87928c;
+  --icon-highlight: #fff;
+  --icon-number-size: 10px;
+  --icon-crown-size: 5px;
+  --icon-outline: #345144;
+  --icon-tone-start: var(--icon-green);
+  --icon-tone-end: #b4e8c6;
+  display: inline-block;
+  flex-shrink: 0;
+  overflow: visible;
+  vertical-align: middle;
+  stroke: var(--icon-outline);
+  transform-origin: center;
+}
+.icon-streak {
+  --icon-tone-start: var(--icon-flame);
+  --icon-tone-end: var(--icon-amber);
+  --icon-outline: #a33138;
+}
+.icon-sparks,
+.icon-xp,
+.icon-level,
+.icon-gold,
+.icon-hints {
+  --icon-tone-start: var(--icon-spark);
+  --icon-tone-end: var(--icon-core);
+  --icon-outline: #9e641c;
+}
+.icon-silver {
+  --icon-tone-start: #a3b5c3;
+  --icon-tone-end: #edf2f6;
+  --icon-outline: #586c7a;
+}
+.icon-bronze {
+  --icon-tone-start: #be7d4b;
+  --icon-tone-end: #f3c098;
+  --icon-outline: #855331;
+}
+.icon-ice {
+  --icon-tone-start: var(--icon-frost);
+  --icon-tone-end: #d4efff;
+  --icon-outline: #397caf;
+}
+.icon-core {
+  fill: var(--icon-core);
+}
+.icon-state-none {
+  --icon-tone-start: var(--icon-muted);
+  --icon-tone-end: #b7c0ba;
+  --icon-outline: #67756d;
+  --icon-core: #a9b4ac;
+}
+.icon-state-none,
+.icon-state-none * {
+  animation: none !important;
+}
+.icon-state-locked .icon-body {
+  opacity: 0.38;
+}
+.icon-lock {
+  fill: var(--cream-50);
+}
+.icon-body {
+  transform-origin: 12px 20px;
+}
+.icon-streak.icon-state-active {
+  animation: ardu-flame 1.2s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 3px var(--icon-amber));
+}
+.icon-streak.icon-state-pending {
+  animation: ardu-pending 0.9s ease-in-out infinite alternate;
+}
+.icon-streak.icon-state-milestone {
+  animation: ardu-flame 1.1s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 4px var(--icon-amber));
+}
+.icon-state-current .icon-current-ring {
+  animation: ardu-ring 1.4s ease-out infinite;
+}
+.icon-current-ring {
+  fill: none;
+  stroke: var(--icon-spark);
+  stroke-width: 1;
+}
+.icon-state-done {
+  filter: drop-shadow(0 0 2px var(--icon-green));
+}
+.icon-check {
+  fill: none;
+  stroke: var(--icon-green);
+  stroke-dasharray: 14;
+  animation: ardu-check var(--icon-event-duration) ease-out;
+}
+.icon-sparks:not(.icon-state-none) .icon-shine,
+.icon-gold .icon-shine,
+.icon-silver .icon-shine,
+.icon-bronze .icon-shine {
+  animation: ardu-shine 3s ease-in-out infinite;
+}
+.icon-state-gain {
+  animation: ardu-gain var(--icon-event-duration) ease-out;
+}
+.icon-tokens.icon-state-gain {
+  animation: ardu-coin var(--icon-event-duration) ease-out;
+}
+.icon-state-spend {
+  animation: ardu-spend 0.6s ease-in;
+}
+.icon-state-ignite {
+  animation: ardu-ignite var(--icon-event-duration) ease-out;
+}
+.icon-state-extinguish {
+  animation: ardu-extinguish 0.6s ease-in forwards;
+}
+.icon-state-extinguish .icon-smoke {
+  animation: ardu-smoke 0.6s ease-out;
+}
+.icon-value {
+  font: 800 var(--icon-number-size) var(--font-manrope, sans-serif);
+}
+.icon-crown-value {
+  font: 800 var(--icon-crown-size) var(--font-manrope, sans-serif);
+  fill: var(--icon-outline);
+}
+.icon-smoke {
+  fill: none;
+  stroke-width: 1;
+  opacity: 0.5;
+}
+@keyframes ardu-flame {
+  from {
+    transform: scaleY(0.96) rotate(-2deg);
+  }
+  to {
+    transform: scaleY(1.04) rotate(2deg);
+  }
+}
+@keyframes ardu-pending {
+  from {
+    transform: scale(0.82);
+    opacity: 0.65;
+  }
+  to {
+    transform: scale(0.9);
+    opacity: 1;
+  }
+}
+@keyframes ardu-ring {
+  from {
+    opacity: 1;
+    transform: scale(0.9);
+    transform-origin: center;
+  }
+  to {
+    opacity: 0.2;
+    transform: scale(1.08);
+    transform-origin: center;
+  }
+}
+@keyframes ardu-check {
+  from {
+    stroke-dashoffset: 14;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes ardu-shine {
+  0%,
+  75%,
+  100% {
+    opacity: 0.3;
+  }
+  86% {
+    opacity: 1;
+  }
+}
+@keyframes ardu-gain {
+  0% {
+    transform: scale(0.8);
+  }
+  60% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes ardu-coin {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+}
+@keyframes ardu-spend {
+  50% {
+    transform: translateY(4px);
+    opacity: 0.4;
+  }
+}
+@keyframes ardu-ignite {
+  0% {
+    transform: scale(0);
+  }
+  70% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes ardu-extinguish {
+  to {
+    transform: scale(0.7);
+    opacity: 0.5;
+  }
+}
+@keyframes ardu-smoke {
+  to {
+    transform: translateY(-4px);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ardu-icon,
+  .ardu-icon * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+[data-reduced-motion="true"] .ardu-icon,
+[data-reduced-motion="true"] .ardu-icon * {
+  animation: none !important;
+  transition: none !important;
+}
+.icon-gallery {
+  padding: var(--space-md);
+  max-width: 1200px;
+  margin-inline: auto;
+}
+.icon-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-sm);
+}
+.icon-gallery figure {
+  margin: 0;
+  padding: var(--space-sm);
+  background: var(--cream-50);
+  color: var(--text-dark);
+  border-radius: var(--radius-card);
+  display: grid;
+  justify-items: center;
+  gap: var(--space-xs);
+}
+.icon-gallery figcaption {
+  font-size: var(--type-body-small);
+}

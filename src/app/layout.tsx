@@ -4,7 +4,9 @@ import Script from "next/script";
 import { siteUrl } from "@/lib/site";
 import { ru } from "@/content/ru";
 import { motionCssVars } from "@/lib/motion";
+import GlassFilters from "@/components/ui/GlassFilters";
 import "./globals.css";
+import "./texture-button.css";
 
 const inter = localFont({
   src: "../fonts/Inter-Variable.woff2",
@@ -19,6 +21,26 @@ const manrope = localFont({
   weight: "700 800",
   display: "swap",
   variable: "--font-manrope",
+});
+
+// Geist (from the `geist` package). Same options as `geist/font/sans`, but
+// loaded here: in this checkout node_modules lives on another drive, and the
+// package's own localFont call cannot resolve its font across drives.
+const geistSans = localFont({
+  src: "../../node_modules/geist/dist/fonts/geist-sans/Geist-Variable.woff2",
+  weight: "100 900",
+  display: "swap",
+  variable: "--font-geist-sans",
+});
+
+// Neuralese display serif. The file is a variable Cyrillic+Latin subset
+// (wght 400–800); headings use it at 500.
+const ebGaramond = localFont({
+  src: "../fonts/EBGaramond-Cyrillic.woff2",
+  weight: "400 800",
+  display: "swap",
+  adjustFontFallback: "Times New Roman",
+  variable: "--font-eb-garamond",
 });
 
 export const metadata: Metadata = {
@@ -48,9 +70,10 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body
-        className={`${inter.variable} ${manrope.variable} antialiased`}
+        className={`${inter.variable} ${manrope.variable} ${geistSans.variable} ${ebGaramond.variable} antialiased`}
         style={motionCssVars}
       >
+        <GlassFilters />
         {children}
         {process.env.NEXT_PUBLIC_ENABLE_ANALYTICS === "true" && (
           <Script

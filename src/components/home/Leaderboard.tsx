@@ -1,18 +1,25 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { recordAchievementEvent } from "@/domain/achievements";
 import Link from "next/link";
+import { kidsPagesRu as k } from "@/content/kids-pages.ru";
+import CabinetArt from "@/components/cabinet/CabinetArt";
 import { dashboardRu as c } from "@/content/dashboard.ru";
 import { browserSupabase } from "@/lib/supabase/client";
 import type { LeaderboardRow } from "@/lib/supabase/types";
 import { useProgress } from "@/lib/useProgress";
 import { Card } from "@/components/cabinet/ui";
-import RewardIcon from "@/components/icons/RewardIcon";
+import Icon from "@/components/icons/Icon";
 export default function Leaderboard({
   compact = false,
 }: {
   compact?: boolean;
 }) {
-  const { progress: p } = useProgress();
+  const { progress: p, update } = useProgress();
+  const updateRef = useRef(update);
+  useEffect(() => {
+    updateRef.current = update;
+  }, [update]);
   const [rows, setRows] = useState<LeaderboardRow[]>([]),
     [offline, setOffline] = useState(false);
   useEffect(() => {
@@ -24,7 +31,16 @@ export default function Leaderboard({
       .then(({ data, error }) => {
         if (cancelled) return;
         if (error) setOffline(true);
-        else setRows((data ?? []) as LeaderboardRow[]);
+        else {
+          setRows((data ?? []) as LeaderboardRow[]);
+          const self = (data as LeaderboardRow[] | null)?.find(
+            (row) => row.is_self,
+          );
+          if (self)
+            updateRef.current((p) =>
+              recordAchievementEvent(p, { kind: "ranking", rank: self.rank }),
+            );
+        }
       });
     return () => {
       cancelled = true;
@@ -40,7 +56,17 @@ export default function Leaderboard({
           {visible.map((row) => (
             <li key={row.rank} className={row.is_self ? "self" : ""}>
               <strong className={`polish-medal rank-${row.rank}`}>
-                {row.rank <= 3 && <RewardIcon kind="medal" />}
+                {row.rank <= 3 && (
+                  <Icon
+                    name={
+                      row.rank === 1
+                        ? "gold"
+                        : row.rank === 2
+                          ? "silver"
+                          : "bronze"
+                    }
+                  />
+                )}
                 {row.rank}
               </strong>
               <span
@@ -54,11 +80,25 @@ export default function Leaderboard({
           ))}
         </ol>
       ) : (
-        <p>{c.emptyLeaders}</p>
+        <div className="leaderboard-empty">
+          <span className="leaderboard-podium" aria-hidden="true">
+            {(["oma", "volt", "rezik"] as const).map((name) => (
+              <span className="kids-podium-step" key={name}>
+                <CabinetArt name={name} alt="" size={80} />
+              </span>
+            ))}
+          </span>
+          <p>{c.emptyLeaders}</p>
+        </div>
       )}
-      {!compact && own && own.rank > 20 && (
-        <p>
-          {own.rank}. {own.display_name} · {own.xp} XP
+      {!compact && own && (
+        <p className="kids-own-rank">
+          <Icon
+            name={
+              own.rank === 1 ? "gold" : own.rank === 2 ? "silver" : "bronze"
+            }
+          />
+          {k.ownRank(own.rank)}
         </p>
       )}
       {!compact && !p.account?.userId && (

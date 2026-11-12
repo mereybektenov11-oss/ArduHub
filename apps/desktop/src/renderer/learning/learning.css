@@ -1,0 +1,166 @@
+/* Light theme of the learning area (D2).
+   The reused site lesson CSS is light (cream background, ink text, amber
+   accent). While the learning area is open its tokens are recoloured to the
+   app's cool palette; amber becomes the app's deep cyan. Text on the primary
+   colour is set by neon-on-primary.generated.css through --neon-on-primary. */
+:root:has(.learning-area) {
+  color-scheme: light;
+  --neon-on-primary: #ffffff;
+
+  --cream-50: #f4f7fd;
+  --cream-100: #e6ecf7;
+  --white: #ffffff;
+  --ink-900: #0b1020;
+  --ink-800: #1a2442;
+  --forest-700: #15803d;
+  --text-dark: #0b1020;
+  --text-light: #ffffff;
+  --text-muted-dark: #47526f;
+  --text-muted-light: #c9d4f2;
+  --line-dark: #cbd5e8;
+  --line-light: #2a3760;
+
+  --amber-500: #0e7490;
+  --amber-600: #155e75;
+  --amber-ink: #ffffff;
+  --wire: #0e7490;
+
+  --success: #15803d;
+  --success-ink: #15803d;
+  --light-success: #dcfce7;
+  --error: #be123c;
+  --error-ink: #9f1239;
+  --light-error: #ffe4e6;
+  --error-border: #fda4af;
+  --error-text-dark: #be123c;
+
+  --surface-mentor: #e6ecf7;
+  --surface-video: #e6ecf7;
+  --surface-repeat: #e6ecf7;
+  --surface-sensor: #e6ecf7;
+  --surface-motor: #e6ecf7;
+  --surface-button: #e6ecf7;
+  --surface-collection: #e6ecf7;
+  --surface-rank: #e6ecf7;
+
+  --glass-light: #ffffffd9;
+  --glass-dark: #0b1020d9;
+  --glass-amber: #0e7490ed;
+  --glass-amber-hover: #155e75ef;
+  --glass-edge: #0e749040;
+  --dialog-backdrop: #0b102099;
+  --topic-muted: #47526f;
+  --topic-link: #0e7490;
+
+  /* CodeMirror defaults that are weak on white; the rest stay (≥ 5:1). */
+  --code-e40: #c2410c;
+  --code-085: #047857;
+  --code-940: #b45309;
+  --code-f00: #dc2626;
+}
+:root:has(.learning-area) .cabinet {
+  color-scheme: light;
+  --cab-border: #cbd5e8;
+  --cab-muted: #47526f;
+}
+
+:root:has(.learning-area) {
+  --shadow-card: var(--shadow-card-app);
+  /* Site fonts map to the app's text face (SF Pro if installed, else
+     Inter); the pixel face is kept for the lesson's main title below. */
+  --font-manrope: var(--font-body);
+  --font-inter: var(--font-body);
+  --font-geist-sans: var(--font-body);
+}
+:root:has(.learning-area) .cabinet h1 {
+  font-family: var(--font-head);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+:root:has(.learning-area) body {
+  background: var(--color-bg)
+    linear-gradient(var(--grid-line) 1px, transparent 1px) 0 0 / 100% 28px;
+}
+/* Primary actions glow like in the rest of the app. */
+:root:has(.learning-area) .cab-btn:not(.cab-btn-secondary),
+:root:has(.learning-area) .button-primary {
+  box-shadow: var(--glow);
+}
+/* The code editor follows the theme surfaces. */
+:root:has(.learning-area) .cm-editor {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+:root:has(.learning-area) .cm-gutters {
+  background: var(--color-surface);
+  color: var(--color-locked);
+  border-color: var(--color-line);
+}
+:root:has(.learning-area) .cm-activeLine,
+:root:has(.learning-area) .cm-activeLineGutter {
+  background: var(--color-surface-2);
+}
+
+.learning-area {
+  min-height: 100vh;
+}
+
+/* Lesson map — the app's own screen. Site globals load with the learning
+   area, so the theme's type and chips are restated with enough weight. */
+.learning-area .lesson-map h1,
+.learning-area .lesson-map .map-title {
+  font-family: var(--font-head);
+  font-weight: 400;
+  font-size: 2.4rem;
+  letter-spacing: 0.02em;
+  line-height: 1.15;
+  margin-top: 8px;
+}
+.learning-area .lesson-map .chip {
+  border: 1px solid var(--color-line);
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-radius: 6px;
+}
+.map-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+.map-card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  text-align: left;
+  color: var(--color-text);
+}
+.map-card:not(:disabled):hover {
+  border-color: var(--color-primary);
+}
+.map-card:disabled {
+  cursor: not-allowed;
+}
+.map-card .node {
+  width: 52px;
+  height: 52px;
+  font-size: 1.1rem;
+}
+.map-name {
+  font-weight: 700;
+}
+.map-premium {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+}
+@media (max-width: 1100px) {
+  .map-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

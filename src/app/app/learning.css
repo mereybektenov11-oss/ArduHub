@@ -224,7 +224,7 @@
   background: var(--cream-50);
   opacity: 0.75;
   padding: 0;
-  z-index: 5;
+  z-index: 10;
   cursor: crosshair;
 }
 .l2-pin:hover,
@@ -233,7 +233,7 @@
   opacity: 1;
   background: var(--amber-500);
   outline: 3px solid var(--white);
-  z-index: 6;
+  z-index: 11;
 }
 .l2-pin:disabled {
   pointer-events: none;
@@ -679,6 +679,14 @@
 .l2-canvas-scroll {
   max-height: 640px;
   touch-action: none;
+}
+@media (max-width: 767px) {
+  .l2-canvas-scroll {
+    scroll-padding-block: 112px 90px;
+  }
+  .l2-pin {
+    scroll-margin-block: 112px 90px;
+  }
 }
 .cab-chat-user p,
 .cab-chat-assistant p {

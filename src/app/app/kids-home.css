@@ -1,0 +1,223 @@
+.kids-greeting {
+  display: grid;
+  gap: var(--space-md);
+}
+.kids-greeting h1 {
+  margin: 0;
+  padding-right: var(--space-lg);
+}
+.kids-stats {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  max-width: 560px;
+}
+.kids-stats > div {
+  min-height: 64px;
+}
+.kids-level-ring {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+}
+.kids-level-ring svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+  fill: none;
+  stroke-width: 3;
+}
+.kids-ring-track {
+  stroke: var(--line-dark);
+}
+.kids-ring-value {
+  stroke: var(--amber-600);
+  stroke-linecap: round;
+}
+.kids-level-ring strong {
+  font-size: var(--type-card-title);
+}
+.kids-continue .cab-btn {
+  min-height: 48px;
+  border-radius: var(--radius-card);
+}
+.kids-home .dash-path {
+  width: 100%;
+  display: grid;
+  gap: var(--space-sm);
+  padding: var(--space-sm) 0;
+}
+.kids-path-chapter {
+  width: 100%;
+  border: 1px solid var(--line-dark);
+  border-radius: var(--radius-card);
+  background: var(--cream-50);
+}
+.kids-path-chapter summary {
+  cursor: pointer;
+  min-height: 56px;
+  padding: var(--space-sm);
+  font-size: var(--type-body);
+  font-weight: 700;
+}
+.kids-path-chapter summary small {
+  float: right;
+  margin-left: var(--space-xs);
+  color: var(--text-muted-dark);
+  font-size: var(--type-caption);
+  font-weight: 500;
+}
+.kids-path-chapter summary:focus-visible {
+  outline: 3px solid var(--amber-600);
+  outline-offset: 3px;
+  border-radius: var(--radius-card);
+}
+.kids-path-nodes {
+  display: grid;
+  justify-items: center;
+  padding: var(--space-md) var(--space-sm);
+}
+.kids-home .kids-path-nodes .dash-node-row {
+  width: min(100%, 380px);
+}
+.kids-home .kids-path-nodes .dash-node-row:last-child:before {
+  display: none;
+}
+.kids-home .kids-path-nodes .dash-node-row:not(:last-child):before {
+  display: block;
+}
+.kids-diagnostic {
+  position: relative;
+  display: grid;
+  gap: var(--space-xs);
+}
+.kids-diagnostic > button {
+  position: absolute;
+  right: var(--space-xs);
+  top: var(--space-xs);
+}
+.kids-diagnostic h2 {
+  padding-right: var(--space-lg);
+}
+.kids-diagnostic .cab-btn {
+  justify-self: start;
+}
+.kids-streak-week {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: var(--space-xs);
+  margin-top: var(--space-sm);
+}
+.kids-streak-day {
+  display: grid;
+  gap: var(--space-xs);
+  text-align: center;
+  font-size: var(--type-caption);
+}
+.kids-streak-day > small {
+  font-size: var(--type-caption);
+  color: var(--text-muted-dark);
+}
+.kids-streak-day > span {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border-radius: var(--radius-pill);
+  background: var(--cream-100);
+}
+.kids-streak-day.is-active > span {
+  background: var(--amber-500);
+  color: var(--ink-900);
+}
+.kids-streak-day.is-today > span {
+  outline: 2px solid var(--forest-700);
+  outline-offset: 2px;
+}
+.dash-nav-group .group-label {
+  cursor: default;
+  margin: 0;
+}
+.dash-rail > .cab-card h2 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+.dash-rail .dash-mission {
+  grid-template-columns: minmax(0, 1fr) 64px;
+  align-items: center;
+  gap: var(--space-xs);
+}
+.dash-rail .dash-mission > span {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+.dash-rail .dash-mission svg {
+  flex-shrink: 0;
+}
+.dash-rail .dash-mission progress {
+  appearance: none;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--cream-100);
+  overflow: hidden;
+}
+.dash-rail .dash-mission progress::-webkit-progress-bar {
+  background: var(--cream-100);
+}
+.dash-rail .dash-mission progress::-webkit-progress-value {
+  background: var(--amber-600);
+}
+.dash-rail .dash-mission progress::-moz-progress-bar {
+  background: var(--amber-600);
+}
+.kids-mobile-search {
+  display: none;
+}
+@media (max-width: 1199px) {
+  .dash-columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .dash-rail {
+    display: none;
+  }
+  .dash-sidebar-foot > button {
+    position: relative;
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .dash-sidebar-foot > button > span,
+  .dash-sidebar-foot > button > kbd {
+    display: none;
+  }
+}
+@media (max-width: 767px) {
+  .kids-mobile-search {
+    position: absolute;
+    top: var(--space-sm);
+    right: var(--space-sm);
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    z-index: 2;
+  }
+  .kids-mobile-search svg {
+    width: 24px;
+    height: 24px;
+  }
+  .kids-greeting h1 {
+    padding-right: 44px;
+  }
+  .kids-home .dash-node-row:nth-of-type(even) {
+    padding-left: var(--space-md);
+  }
+  .kids-path-chapter summary small {
+    float: none;
+    display: block;
+    margin-left: var(--space-md);
+  }
+}

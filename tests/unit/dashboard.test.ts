@@ -13,14 +13,23 @@ import {
 } from "@/domain/missions";
 import { validateRegistration } from "@/domain/auth";
 import { searchCabinet } from "@/domain/search";
+import { progressEvidence } from "../helpers/progressEvidence";
 describe("Dashboard rules", () => {
   it("merges completed lessons without moving guest balances", () => {
     const guest = createProgress(),
       account = createProgress();
-    guest.lessons["lesson-1"].status = "done";
+    guest.lessons["lesson-1"] = {
+      ...guest.lessons["lesson-1"],
+      ...progressEvidence("lesson-1"),
+      status: "done",
+    };
     guest.sparks = 100;
     guest.mentor.tokens = 100;
-    account.lessons["lesson-2"].status = "done";
+    account.lessons["lesson-2"] = {
+      ...account.lessons["lesson-2"],
+      ...progressEvidence("lesson-2"),
+      status: "done",
+    };
     account.sparks = 25;
     const m = mergeProgress(guest, account);
     expect(m.lessons["lesson-1"].status).toBe("done");

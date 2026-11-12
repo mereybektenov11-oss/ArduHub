@@ -1,0 +1,245 @@
+/* Iridescent button material adapted from the supplied Simey reference.
+   Paint overrides are intentional: only the first screen and navbar use this material,
+   while native buttons and existing button links share the same material.
+   No pseudo-elements are reserved, so existing icons and status marks survive.
+   TextureButton ([data-slot="texture-button"]) keeps its own variant; :where()
+   adds no specificity, so the remaining buttons cascade exactly as before. */
+@property --button-iridescence {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0.18;
+}
+
+.landing-video :is(.hero, .header) {
+  --button-glass-ink: var(--lv-text);
+  --button-glass-top: #f2f5fc;
+  --button-glass-middle: #e4ebf6d9;
+  --button-glass-bottom: #fbfcffed;
+  --button-glass-rim: #d6e0f1;
+  --button-glass-light: #ffffffed;
+  --button-glass-shadow: #304f771f;
+  --button-glass-focus: var(--lv-primary);
+  --button-glass-ease: cubic-bezier(0.33, 1, 0.68, 1);
+  --button-glass-duration: 330ms;
+}
+
+.landing-video
+  :is(.hero, .header)
+  :is(
+    button,
+    .button,
+    .cab-btn,
+    .cab-icon-btn,
+    .text-button,
+    [role="button"]
+  ):where(:not([data-slot="texture-button"])) {
+  --glass-top: var(--button-glass-top);
+  --glass-middle: var(--button-glass-middle);
+  --glass-bottom: var(--button-glass-bottom);
+  --glass-ink: var(--button-glass-ink);
+  color: var(--glass-ink) !important;
+  border-color: transparent !important;
+  border-radius: 999px !important;
+  /* Layered padding/border backgrounds give the supplied rounded glass rim
+     without changing control dimensions or the existing action layout. */
+  background:
+    radial-gradient(
+        ellipse at 82% 120%,
+        oklch(0.9 0.15 200 / var(--button-iridescence)),
+        transparent 65%
+      )
+      padding-box,
+    radial-gradient(
+        ellipse at 28% 130%,
+        oklch(0.82 0.16 310 / var(--button-iridescence)),
+        transparent 60%
+      )
+      padding-box,
+    linear-gradient(
+        180deg,
+        var(--glass-top),
+        var(--glass-middle) 33%,
+        var(--glass-bottom)
+      )
+      padding-box,
+    linear-gradient(
+        165deg,
+        var(--button-glass-rim) 25%,
+        var(--button-glass-light)
+      )
+      border-box !important;
+  box-shadow:
+    inset 0 1px 1px var(--button-glass-light),
+    inset -0.35em -0.35em 0.25em -0.25em var(--button-glass-light),
+    inset -0.33em -1em 0.75em -0.75em var(--button-glass-light),
+    0 max(4px, 0.3em) 0.3em var(--button-glass-shadow),
+    0 max(2px, 0.18em) 0.18em var(--button-glass-shadow),
+    0 1px 2px var(--button-glass-shadow) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(1.15) !important;
+  backdrop-filter: blur(8px) saturate(1.15) !important;
+  text-shadow: 0 1px 0 var(--button-glass-light);
+  transition:
+    --button-iridescence var(--button-glass-duration) var(--button-glass-ease),
+    box-shadow var(--button-glass-duration) var(--button-glass-ease),
+    translate 150ms var(--button-glass-ease),
+    opacity 150ms ease;
+}
+
+/* Text-only auth actions need a little room inside the new glass surface. */
+.landing-video :is(.hero, .header) button.auth-link {
+  padding: 0.35em 0.75em;
+}
+
+.landing-video
+  :is(.hero, .header)
+  :is(
+    button,
+    .button,
+    .cab-btn,
+    .cab-icon-btn,
+    .text-button,
+    [role="button"]
+  ):where(:not([data-slot="texture-button"])):is(:hover, :focus-visible):not(
+    :disabled,
+    [aria-disabled="true"]
+  ) {
+  --button-iridescence: 0.58;
+  box-shadow:
+    inset 0 0.25em 0.66em #ffffffa8,
+    inset -0.35em -0.35em 0.25em -0.25em var(--button-glass-light),
+    inset 0 -0.3em 0.6em #ffffffb3,
+    0 5px 12px var(--button-glass-shadow),
+    0 2px 4px var(--button-glass-shadow) !important;
+}
+
+.landing-video
+  :is(.hero, .header)
+  :is(
+    button,
+    .button,
+    .cab-btn,
+    .cab-icon-btn,
+    .text-button,
+    [role="button"]
+  ):where(:not([data-slot="texture-button"])):active:not(
+    :disabled,
+    [aria-disabled="true"]
+  ) {
+  translate: 0 1px;
+  --button-iridescence: 0.75;
+}
+
+.landing-video
+  :is(.hero, .header)
+  :is(
+    button,
+    .button,
+    .cab-btn,
+    .cab-icon-btn,
+    .text-button,
+    [role="button"]
+  ):where(:not([data-slot="texture-button"])):focus-visible {
+  outline: 2px solid var(--button-glass-focus) !important;
+  outline-offset: 4px !important;
+}
+
+/* Selection and feedback remain distinguishable through the glass. */
+.landing-video
+  :is(.hero, .header)
+  :is(button, .button, .cab-btn, .cab-icon-btn, [role="button"]):where(
+    :not([data-slot="texture-button"])
+  ):is(
+    [aria-pressed="true"],
+    [aria-selected="true"],
+    [aria-current="step"],
+    .is-active
+  ) {
+  --glass-top: #dce9ff;
+  --glass-middle: #c9dcf8e6;
+  --glass-bottom: #eaf1ff;
+  border-color: #81a8e6 !important;
+}
+
+.landing-video :is(.hero, .header) button.is-correct {
+  --glass-top: #e1f6ea;
+  --glass-middle: #c8ead8;
+  --glass-bottom: #f0fff5;
+  --glass-ink: #205c40;
+  border-color: #75af8d !important;
+}
+
+.landing-video :is(.hero, .header) button.is-incorrect {
+  --glass-top: #ffe9e9;
+  --glass-middle: #f8d5d5;
+  --glass-bottom: #fff4f4;
+  --glass-ink: #8b3030;
+  border-color: #d59a9a !important;
+}
+
+.landing-video
+  :is(.hero, .header)
+  :is(
+    button,
+    .button,
+    .cab-btn,
+    .cab-icon-btn,
+    .text-button,
+    [role="button"]
+  ):where(:not([data-slot="texture-button"])):is(
+    :disabled,
+    [aria-disabled="true"]
+  ) {
+  opacity: 0.5;
+  cursor: not-allowed;
+  --button-iridescence: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-video
+    :is(.hero, .header)
+    :is(
+      button,
+      .button,
+      .cab-btn,
+      .cab-icon-btn,
+      .text-button,
+      [role="button"]
+    ):where(:not([data-slot="texture-button"])) {
+    transition: none !important;
+    translate: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .landing-video
+    :is(.hero, .header)
+    :is(
+      button,
+      .button,
+      .cab-btn,
+      .cab-icon-btn,
+      .text-button,
+      [role="button"]
+    ):where(:not([data-slot="texture-button"])) {
+    color: ButtonText !important;
+    background: ButtonFace !important;
+    border: 1px solid ButtonText !important;
+    box-shadow: none !important;
+    text-shadow: none;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    forced-color-adjust: auto;
+  }
+  .landing-video
+    :is(.hero, .header)
+    :is(
+      button,
+      .button,
+      .cab-btn,
+      .cab-icon-btn,
+      .text-button,
+      [role="button"]
+    ):where(:not([data-slot="texture-button"])):focus-visible {
+    outline-color: Highlight !important;
+  }
+}

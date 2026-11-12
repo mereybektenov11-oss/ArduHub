@@ -1,0 +1,44 @@
+.kids-home .kids-stats {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.kids-home .kids-stats > div,
+.kids-home .kids-stats .kids-level-stat {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  min-width: 0;
+  min-height: 64px;
+}
+
+.kids-home .kids-stats > div > .polish-stat-icon {
+  flex: 0 0 32px;
+}
+
+.kids-home .kids-stat-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.kids-home .kids-stat-copy > small,
+.kids-home .kids-stats .kids-level-stat > small {
+  flex: none;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.kids-home .kids-stats .kids-level-ring {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+}
+
+@media (max-width: 767px) {
+  .kids-home .kids-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

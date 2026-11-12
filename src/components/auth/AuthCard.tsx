@@ -1,9 +1,19 @@
 "use client";
 import Link from "next/link";
-import { useState, useRef, type FormEvent } from "react";
+import AuthBackdrop from "./AuthBackdrop";
+import AuthBrand from "./AuthBrand";
+import { AuthComponent } from "@/components/ui/sign-up";
+import { TextureButton } from "@/components/ui/texture-button";
+import { ru } from "@/content/ru";
+import { useState, useRef, useEffect, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { authRu as c } from "@/content/dashboard.ru";
-import { authError, validateRegistration } from "@/domain/auth";
+import {
+  authError,
+  validateRegistration,
+  normalizeAuthEmail,
+  recoverySession,
+} from "@/domain/auth";
 import { motionTokens, motionCssVars } from "@/lib/motion";
 type Mode = "login" | "register" | "forgot" | "reset";
 export default function AuthCard({
@@ -28,6 +38,42 @@ export default function AuthCard({
     [show, setShow] = useState(false),
     [cooldown, setCooldown] = useState(false);
   const card = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const session = recoverySession(location.hash);
+    if (!session) return;
+    // Fragments never reach the callback server. Consume them here and remove
+    // credentials from browser history before loading the auth client.
+    let cancelled = false;
+    async function restore() {
+      try {
+        const { browserSupabase } = await import("@/lib/supabase/client");
+        if (cancelled) return;
+        history.replaceState(null, "", location.pathname + location.search);
+        setBusy(true);
+        const client = browserSupabase();
+        if (!client) throw Error();
+        const { error } = await client.auth.setSession(session!);
+        if (error) throw error;
+        if (!cancelled) {
+          setMode("reset");
+          setError("");
+          setMessage("");
+          history.replaceState(null, "", "/auth/reset");
+        }
+      } catch {
+        if (!cancelled) {
+          setMode("forgot");
+          setError(c.expired);
+        }
+      } finally {
+        if (!cancelled) setBusy(false);
+      }
+    }
+    void restore();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
   function changeMode(next: Mode) {
     const height = card.current?.offsetHeight;
     requestAnimationFrame(() => {
@@ -58,7 +104,7 @@ export default function AuthCard({
     try {
       const response = await fetch("/api/auth/guest", { method: "POST" });
       if (!response.ok) throw Error();
-      router.push("/app");
+      router.push("/app/profile");
       router.refresh();
     } catch {
       setError(c.network);
@@ -80,8 +126,10 @@ export default function AuthCard({
       setError(password.length < 8 ? c.short : c.mismatch);
       return;
     }
-    const { browserSupabase } = await import("@/lib/supabase/client");
-    const client = browserSupabase();
+    const { browserSupabase, passwordRecoveryClient } =
+      await import("@/lib/supabase/client");
+    const client =
+      mode === "forgot" ? passwordRecoveryClient() : browserSupabase();
     if (!client) {
       setError(c.unavailable);
       return;
@@ -89,9 +137,12 @@ export default function AuthCard({
     setBusy(true);
     try {
       if (mode === "forgot") {
-        const { error } = await client.auth.resetPasswordForEmail(email, {
-          redirectTo: location.origin + "/auth/callback?next=reset",
-        });
+        const { error } = await client.auth.resetPasswordForEmail(
+          normalizeAuthEmail(email),
+          {
+            redirectTo: location.origin + "/auth/callback?next=reset",
+          },
+        );
         if (error?.name === "AuthRetryableFetchError") setError(c.network);
         else if (error) setError(c.mailUnavailable);
         else setMessage(c.resetMail);
@@ -104,12 +155,12 @@ export default function AuthCard({
             setError(c.network);
           } else setError(c.expired);
         } else {
-          router.push("/app");
+          router.push("/app/profile");
           router.refresh();
         }
       } else if (mode === "register") {
         const { data, error } = await client.auth.signUp({
-          email,
+          email: normalizeAuthEmail(email),
           password,
           options: {
             data: {
@@ -117,7 +168,7 @@ export default function AuthCard({
               role,
               timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
             },
-            emailRedirectTo: location.origin + "/auth/callback",
+            emailRedirectTo: location.origin + "/auth/callback?next=profile",
           },
         });
         if (error) {
@@ -125,9 +176,11 @@ export default function AuthCard({
             setPassword("");
             setRepeat("");
             setError(c.network);
-          } else if (error.code === "user_already_exists")
+          } else if (error.code === "user_already_exists") {
+            setMode("login");
+            setRepeat("");
             setError(c.alreadyRegistered);
-          else if (
+          } else if (
             error.code === "email_address_not_authorized" ||
             error.code === "email_address_not_allowed"
           )
@@ -139,12 +192,12 @@ export default function AuthCard({
             setError(c.rate);
           else setError(c.registrationFailed);
         } else if (data.session) {
-          router.push("/app");
+          router.replace("/app/profile");
           router.refresh();
         } else setMessage(c.checkMail);
       } else {
         const { error } = await client.auth.signInWithPassword({
-          email,
+          email: normalizeAuthEmail(email),
           password,
         });
         if (error) {
@@ -153,7 +206,7 @@ export default function AuthCard({
             setError(c.network);
           } else setError(authError(error.code));
         } else {
-          router.push("/app");
+          router.push("/app/profile");
           router.refresh();
         }
       }
@@ -172,7 +225,10 @@ export default function AuthCard({
     if (!client) return;
     setCooldown(true);
     try {
-      const { error } = await client.auth.resend({ type: "signup", email });
+      const { error } = await client.auth.resend({
+        type: "signup",
+        email: normalizeAuthEmail(email),
+      });
       if (error) setError(c.mailUnavailable);
       else setMessage(c.checkMail);
     } catch {
@@ -183,161 +239,128 @@ export default function AuthCard({
   return (
     <main
       className={`auth-page ${dark ? "auth-dark" : ""}`}
+      data-auth-mode={mode}
       style={motionCssVars}
     >
+      <AuthBackdrop />
       <header className="auth-header">
         <Link href="/" prefetch={false}>
           ← {c.home}
         </Link>
-        <button aria-label={c.theme} onClick={() => setDark(!dark)}>
+        <TextureButton
+          variant="icon"
+          size="icon"
+          aria-label={c.theme}
+          onClick={() => setDark(!dark)}
+        >
           {dark ? "☀" : "☾"}
-        </button>
+        </TextureButton>
       </header>
-      <section className="auth-card" ref={card}>
-        <Link className="auth-brand" href="/" prefetch={false}>
-          ∞ ArduHub<span>.</span>
-        </Link>
-        <h1>
-          {mode === "forgot"
-            ? c.reset
-            : mode === "reset"
-              ? c.newPassword
-              : c.welcome}
-        </h1>
-        <p className="auth-subtitle">
-          {mode === "register" ? c.instantRegistration : c.subtitle}
-        </p>
-        {(mode === "login" || mode === "register") && (
-          <div className="auth-tabs" role="group" aria-label={c.signIn}>
-            <button
-              aria-pressed={mode === "login"}
-              onClick={() => changeMode("login")}
-            >
-              {c.signIn}
-            </button>
-            <button
-              aria-pressed={mode === "register"}
-              onClick={() => changeMode("register")}
-            >
-              {c.signUp}
-            </button>
-          </div>
-        )}
-        <form onSubmit={submit} className="auth-form">
-          {mode === "register" && (
-            <>
-              <fieldset className="auth-roles">
-                <legend>{c.signUp}</legend>
-                {(["student", "teacher"] as const).map((r) => (
-                  <label key={r} className={role === r ? "selected" : ""}>
-                    <input
-                      type="radio"
-                      name="role"
-                      value={r}
-                      checked={role === r}
-                      onChange={() => setRole(r)}
-                    />
-                    <strong>{c[r]}</strong>
-                    <small>
-                      {r === "student" ? c.studentNote : c.teacherNote}
-                    </small>
-                  </label>
-                ))}
-              </fieldset>
+      {mode === "register" || mode === "login" ? (
+        <AuthComponent
+          key={mode}
+          mode={mode}
+          values={{ email, password, repeat, name, role, consent }}
+          onChange={(patch) => {
+            if (patch.email !== undefined) setEmail(patch.email);
+            if (patch.password !== undefined) setPassword(patch.password);
+            if (patch.repeat !== undefined) setRepeat(patch.repeat);
+            if (patch.name !== undefined) setName(patch.name);
+            if (patch.role !== undefined) setRole(patch.role);
+            if (patch.consent !== undefined) setConsent(patch.consent);
+            setError("");
+          }}
+          onSubmit={submit}
+          onSignIn={() => changeMode(mode === "login" ? "register" : "login")}
+          onForgot={() => changeMode("forgot")}
+          onResend={resend}
+          cooldown={cooldown}
+          onGuest={guest}
+          busy={busy}
+          error={error}
+          message={message}
+          logo={<AuthBrand />}
+          brandName={ru.brand}
+        />
+      ) : (
+        <section className="auth-card" ref={card}>
+          <Link className="auth-brand" href="/" prefetch={false}>
+            <AuthBrand />
+            {ru.brand}
+          </Link>
+          <h1>
+            {mode === "forgot"
+              ? c.reset
+              : mode === "reset"
+                ? c.newPassword
+                : c.signIn}
+          </h1>
+          <form onSubmit={submit} className="auth-form">
+            {mode !== "reset" && (
               <label>
-                {c.name}
+                {c.email}
                 <input
-                  autoComplete="nickname"
-                  maxLength={20}
+                  type="email"
+                  autoComplete="email"
                   required
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder={c.nameHint}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </label>
-            </>
-          )}
-          {mode !== "reset" && (
-            <label>
-              {c.email}
-              <input
-                type="email"
-                autoComplete="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </label>
-          )}
-          {mode !== "forgot" && (
-            <>
-              <label>
-                {c.password}
-                <span className="auth-password">
-                  <input
-                    aria-label={c.password}
-                    type={show ? "text" : "password"}
-                    autoComplete={
-                      mode === "login" ? "current-password" : "new-password"
-                    }
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                  <button
-                    type="button"
-                    aria-label={show ? c.hide : c.show}
-                    aria-pressed={show}
-                    onClick={() => setShow(!show)}
-                  >
-                    {show ? "◉" : "◎"}
-                  </button>
-                </span>
-              </label>
-              {(mode === "register" || mode === "reset") && (
+            )}
+            {mode !== "forgot" && (
+              <>
                 <label>
-                  {c.repeat}
-                  <input
-                    type={show ? "text" : "password"}
-                    autoComplete="new-password"
-                    value={repeat}
-                    required
-                    aria-describedby={error ? "auth-error" : undefined}
-                    onChange={(e) => setRepeat(e.target.value)}
-                  />
+                  {c.password}
+                  <span className="auth-password">
+                    <input
+                      aria-label={c.password}
+                      type={show ? "text" : "password"}
+                      autoComplete="new-password"
+                      required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <TextureButton
+                      variant="icon"
+                      size="icon"
+                      type="button"
+                      aria-label={show ? c.hide : c.show}
+                      aria-pressed={show}
+                      onClick={() => setShow(!show)}
+                    >
+                      {show ? "◉" : "◎"}
+                    </TextureButton>
+                  </span>
                 </label>
-              )}
-            </>
-          )}
-          {mode === "register" && (
-            <>
-              <label className="auth-consent">
-                <input
-                  type="checkbox"
-                  checked={consent}
-                  onChange={(e) => setConsent(e.target.checked)}
-                />
-                <span>
-                  {c.agree} ·{" "}
-                  <Link href="/privacy" prefetch={false}>
-                    {c.policy}
-                  </Link>
-                </span>
-              </label>
-              <p className="auth-caption">{c.parent}</p>
-            </>
-          )}
-          {error && (
-            <p id="auth-error" role="alert" className="auth-error">
-              {error}
-            </p>
-          )}
-          {message && <p role="status">{message}</p>}
-          <button className="auth-primary" disabled={busy}>
-            {busy
-              ? c.pending
-              : mode === "login"
-                ? c.login
+                {mode === "reset" && (
+                  <label>
+                    {c.repeat}
+                    <input
+                      type={show ? "text" : "password"}
+                      autoComplete="new-password"
+                      value={repeat}
+                      required
+                      aria-describedby={error ? "auth-error" : undefined}
+                      onChange={(e) => setRepeat(e.target.value)}
+                    />
+                  </label>
+                )}
+              </>
+            )}
+            {error && (
+              <p id="auth-error" role="alert" className="auth-error">
+                {error}
+              </p>
+            )}
+            {message && <p role="status">{message}</p>}
+            <TextureButton
+              variant="primary"
+              className="auth-primary"
+              disabled={busy}
+            >
+              {busy
+                ? c.pending
                 : mode === "forgot"
                   ? c.resetButton
                   : mode === "reset"
@@ -345,51 +368,39 @@ export default function AuthCard({
                     : role === "student"
                       ? c.registerStudent
                       : c.registerTeacher}
-          </button>
-          {error === c.confirm && (
-            <button type="button" disabled={cooldown} onClick={resend}>
-              {c.resend}
-            </button>
-          )}
-        </form>
-        {mode === "login" && (
-          <button className="auth-link" onClick={() => changeMode("forgot")}>
-            {c.forgot}
-          </button>
-        )}
-        {(mode === "login" || mode === "register") && (
-          <>
-            <p className="auth-subtitle">{c.other}</p>
-            <div className="auth-providers">
-              {["Google", "GitHub", "Apple"].map((p) => (
-                <button disabled key={p}>
-                  {p}
-                  <small>{c.soon}</small>
-                </button>
-              ))}
-            </div>
-            <p className="auth-caption">
-              {mode === "login" ? c.needAccount : c.haveAccount}{" "}
-              <button
-                className="auth-link"
-                onClick={() =>
-                  changeMode(mode === "login" ? "register" : "login")
-                }
+            </TextureButton>
+            {error === c.confirm && (
+              <TextureButton
+                variant="secondary"
+                size="sm"
+                type="button"
+                disabled={cooldown}
+                onClick={resend}
               >
-                {mode === "login" ? c.signUp : c.login}
-              </button>
-            </p>
-          </>
-        )}
-        {(mode === "forgot" || mode === "reset") && (
-          <button className="auth-link" onClick={() => changeMode("login")}>
-            {c.login}
-          </button>
-        )}
-        <button className="auth-guest" disabled={busy} onClick={guest}>
-          {c.guest} →
-        </button>
-      </section>
+                {c.resend}
+              </TextureButton>
+            )}
+          </form>
+          {(mode === "forgot" || mode === "reset") && (
+            <TextureButton
+              variant="minimal"
+              size="sm"
+              className="auth-link"
+              onClick={() => changeMode("login")}
+            >
+              {c.login}
+            </TextureButton>
+          )}
+          <TextureButton
+            variant="secondary"
+            className="auth-guest"
+            disabled={busy}
+            onClick={guest}
+          >
+            {c.guest} →
+          </TextureButton>
+        </section>
+      )}
     </main>
   );
 }

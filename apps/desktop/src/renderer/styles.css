@@ -1,0 +1,615 @@
+/* Тема ArduHub для ПК: светлая версия стиля «Ночная лаборатория»
+   (docs/specs/app-design-concepts.md). Тёмная тема удалена по решению
+   владельца 11.11.2026. Контраст текста ≥ 4.5:1 (расчёт в отчёте THEME). */
+@font-face {
+  font-family: "Monocraft";
+  src: url("./fonts/Monocraft-Regular.woff2") format("woff2");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("./fonts/Inter-Variable.woff2") format("woff2");
+  font-weight: 400 700;
+  font-display: swap;
+}
+
+:root {
+  --color-bg: #f4f7fd;
+  --color-surface: #ffffff;
+  --color-surface-2: #e6ecf7;
+  --color-text: #0b1020;
+  --color-muted: #47526f;
+  --color-primary: #0e7490;
+  --color-on-primary: #ffffff;
+  --color-accent: #db2777;
+  --color-line: #cbd5e8;
+  --color-locked: #4f5b7a;
+  --color-led: #15803d;
+  --color-danger: #be123c;
+  --glow: 0 4px 14px rgba(14, 116, 144, 0.28);
+  --glow-hover: 0 10px 28px rgba(14, 116, 144, 0.18);
+  --glow-current: 0 6px 18px rgba(14, 116, 144, 0.35);
+  --glow-done: 0 4px 12px rgba(21, 128, 61, 0.22);
+  --grid-line: rgba(14, 116, 144, 0.07);
+  --shadow-card-app:
+    0 1px 2px rgba(11, 16, 32, 0.06), 0 8px 24px rgba(11, 16, 32, 0.06);
+  --radius: 10px;
+  --text-scale: 1;
+  --font-head: "Monocraft", ui-monospace, monospace;
+  /* Pixel face only for the main headings; everything else uses SF Pro when
+     it is installed on the computer (the app does not ship it: Apple's
+     licence allows it only on Apple platforms), otherwise the bundled Inter. */
+  --font-body:
+    "SF Pro Text", "SF Pro Display", "SF Pro", "Inter", system-ui, sans-serif;
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+html {
+  font-size: calc(16px * var(--text-scale));
+}
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  line-height: 1.45;
+  color: var(--color-text);
+  background: var(--color-bg)
+    linear-gradient(var(--grid-line) 1px, transparent 1px) 0 0 / 100% 28px;
+}
+h1,
+.logo {
+  font-family: var(--font-head);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+h2 {
+  font-family: var(--font-body);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+h1 {
+  font-size: 2.4rem;
+  line-height: 1.15;
+}
+h2 {
+  font-size: 1.4rem;
+}
+p {
+  margin: 0;
+}
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+.muted {
+  color: var(--color-muted);
+}
+.small {
+  font-size: 0.8rem;
+}
+.lead {
+  font-size: 1.15rem;
+  max-width: 34rem;
+}
+.spacer {
+  flex: 1;
+}
+.center {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+}
+
+.logo {
+  font-size: 1.5rem;
+}
+.logo b {
+  color: var(--color-primary);
+  font-weight: 400;
+}
+.tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 3px 9px;
+  border-radius: 6px;
+  background: var(--color-surface-2);
+  color: var(--color-text);
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--color-line);
+  background: var(--color-surface);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+button.chip:hover {
+  border-color: var(--color-primary);
+}
+
+.card {
+  background: linear-gradient(180deg, var(--color-surface), var(--color-bg));
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card-app);
+  padding: 24px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font-weight: 700;
+  box-shadow: var(--glow);
+}
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.btn.danger {
+  background: transparent;
+  color: var(--color-danger);
+  border: 1px solid var(--color-danger);
+  box-shadow: none;
+}
+.link {
+  background: none;
+  border: 0;
+  padding: 4px 0;
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.ghost {
+  background: none;
+  border: 0;
+  padding: 0 12px;
+  color: var(--color-muted);
+}
+
+/* Login */
+.login {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+.login-card {
+  width: min(440px, 100%);
+  display: grid;
+  gap: 14px;
+}
+.login-card .tag {
+  justify-self: start;
+}
+form {
+  display: grid;
+  gap: 14px;
+  margin-top: 6px;
+}
+label,
+.label {
+  display: grid;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+input[type="email"],
+input[type="password"],
+input[type="text"],
+.field {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--color-line);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font: inherit;
+}
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+  padding: 11px 14px;
+}
+.field {
+  display: flex;
+  align-items: center;
+}
+.field input {
+  border: 0;
+  background: transparent;
+}
+input:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+}
+.error {
+  min-height: 1.4em;
+  color: var(--color-danger);
+  font-size: 0.9rem;
+}
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  align-items: center;
+}
+
+/* Shell */
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px 32px;
+}
+.top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.foot {
+  text-align: right;
+}
+
+/* Menu */
+.menu {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 32px;
+  align-items: center;
+}
+.hero {
+  display: grid;
+  gap: 18px;
+}
+.cards {
+  display: grid;
+  gap: 16px;
+}
+.tile {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  text-align: left;
+}
+button.tile:hover {
+  border-color: var(--color-primary);
+}
+.tile[aria-disabled="true"] {
+  cursor: default;
+}
+.tile-body {
+  display: grid;
+  gap: 6px;
+  flex: 1;
+}
+.tile-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.node {
+  width: 64px;
+  height: 64px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-family: var(--font-head);
+  font-size: 1.3rem;
+  background: var(--color-surface-2);
+  color: var(--color-locked);
+}
+.node.done {
+  color: var(--color-led);
+  border: 2px solid var(--color-led);
+  background: transparent;
+  box-shadow: var(--glow-done);
+}
+.node.current {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  box-shadow: var(--glow-current);
+}
+.bar {
+  height: 8px;
+  border-radius: 99px;
+  background: var(--color-surface-2);
+  overflow: hidden;
+}
+.bar i {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--color-accent);
+  border-radius: 99px;
+  transform-origin: left center;
+  transition: transform 0.9s var(--ease-out) 0.25s;
+}
+
+/* Settings */
+.settings {
+  display: grid;
+  gap: 18px;
+  max-width: 720px;
+  width: 100%;
+  margin: 0 auto;
+}
+.settings .card {
+  display: grid;
+  gap: 16px;
+}
+fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+legend {
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.seg {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.seg label,
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+}
+.seg label {
+  border: 1px solid var(--color-line);
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 8px 14px;
+}
+.seg label:has(input:checked) {
+  border-color: var(--color-primary);
+  box-shadow: var(--glow);
+}
+input[type="radio"],
+input[type="checkbox"] {
+  accent-color: var(--color-primary);
+}
+dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 8px 20px;
+  margin: 0;
+}
+dt {
+  color: var(--color-muted);
+}
+dd {
+  margin: 0;
+}
+
+@media (max-width: 1100px) {
+  .menu {
+    grid-template-columns: 1fr;
+  }
+}
+/* ---------- Motion ----------
+   Only transform and opacity are animated (compositor-friendly), with one
+   shared easing. Everything stops for the Windows "reduce motion" setting
+   and for the app's own «Меньше анимации». */
+:root {
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+.screen {
+  animation: screen-in 320ms var(--ease-out) both;
+}
+@keyframes screen-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.appear,
+.hero > * {
+  animation: rise 460ms var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 55ms + 90ms);
+}
+.hero > :nth-child(2) {
+  --i: 1;
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.login-card {
+  animation: pop 420ms var(--ease-out) both;
+}
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.error:not(:empty) {
+  animation: fade 220ms var(--ease-out) both;
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Interactive surfaces lift on hover and settle on press. The hover glow is
+   a pseudo-element faded with opacity instead of an animated box-shadow. */
+.tile,
+.map-card,
+.btn,
+.chip,
+.link,
+.seg label {
+  transition:
+    transform 180ms var(--ease-out),
+    border-color 200ms var(--ease-out),
+    opacity 200ms var(--ease-out);
+}
+.tile,
+.map-card {
+  position: relative;
+}
+.tile::after,
+.map-card::after,
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  box-shadow: var(--glow-hover);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms var(--ease-out);
+}
+.btn {
+  position: relative;
+}
+button.tile:hover,
+.map-card:not(:disabled):hover {
+  transform: translateY(-3px);
+}
+button.tile:hover::after,
+.map-card:not(:disabled):hover::after,
+.btn:not(:disabled):hover::after {
+  opacity: 1;
+}
+button.tile:active,
+.map-card:not(:disabled):active {
+  transform: translateY(-1px) scale(0.99);
+  transition-duration: 90ms;
+}
+.btn:not(:disabled):hover,
+button.chip:hover {
+  transform: translateY(-1px);
+}
+.btn:not(:disabled):active,
+button.chip:active,
+.seg label:active {
+  transform: scale(0.97);
+  transition-duration: 90ms;
+}
+
+/* The current step breathes softly. */
+.node.current {
+  position: relative;
+}
+.node.current::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid var(--color-primary);
+  opacity: 0;
+  animation: breathe 2.4s var(--ease-in-out) infinite;
+}
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(1.04);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+:root[data-motion="reduce"] *,
+:root[data-motion="reduce"] *::before,
+:root[data-motion="reduce"] *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+.volume input[type="range"] {
+  flex: 1;
+  max-width: 280px;
+  accent-color: var(--color-primary);
+}
+.volume output {
+  min-width: 3.5em;
+  color: var(--color-muted);
+}
+.btn.secondary {
+  background: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  box-shadow: none;
+  justify-self: start;
+}
+
+/* Boxicons (inline SVG) sit on the text baseline like a glyph. */
+.boxicon {
+  flex: none;
+  vertical-align: -0.18em;
+}
+.chip .boxicon,
+.btn .boxicon,
+.link .boxicon {
+  margin-inline: 0.05em;
+}
+.node .boxicon {
+  vertical-align: middle;
+}

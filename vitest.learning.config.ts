@@ -3,15 +3,18 @@ import { fileURLToPath } from "node:url";
 export default defineConfig({
   resolve: { alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) } },
   test: {
-    include: ["tests/unit/learning*.test.ts"],
+    include: [
+      "tests/unit/learning*.test.ts",
+      "packages/arduino-core/tests/learning*.test.ts",
+    ],
     env: { LEARNING_COVERAGE: "1" },
     coverage: {
       provider: "v8",
       include: [
-        "src/domain/scene/netlist.ts",
-        "src/domain/scene/migrate.ts",
-        "src/domain/scene/check.ts",
-        "src/domain/sim/checks.ts",
+        "packages/arduino-core/src/scene/netlist.ts",
+        "packages/arduino-core/src/scene/migrate.ts",
+        "packages/arduino-core/src/scene/check.ts",
+        "packages/arduino-core/src/sim/checks.ts",
         "src/services/compile/explain.ts",
       ],
       reportsDirectory: "coverage/learning-v2",

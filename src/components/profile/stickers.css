@@ -1,0 +1,95 @@
+.sticker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-sm);
+}
+.sticker-cell {
+  border: 1px solid var(--line-dark);
+  border-radius: var(--radius-card);
+  padding: var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  text-align: center;
+}
+.sticker-cell h3 {
+  font-size: var(--type-card-title);
+  margin: 0;
+}
+.sticker-cell p {
+  font-size: var(--type-body-small);
+  margin: 0;
+  color: var(--text-muted-dark);
+}
+.sticker-art {
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-card);
+  background: var(--cream-100);
+  padding: var(--space-sm);
+}
+.sticker-cell.is-locked .sticker-art {
+  filter: grayscale(1) brightness(0.45);
+}
+.sticker-reward {
+  position: relative;
+  margin-top: auto;
+  padding-top: var(--space-xs);
+}
+.sticker-reward .cab-btn {
+  min-height: 44px;
+}
+.achievement-popup {
+  position: fixed;
+  bottom: 84px;
+  left: var(--space-md);
+  z-index: 80;
+  width: min(300px, calc(100vw - 48px));
+  max-height: 65dvh;
+  overflow: auto;
+  padding: var(--space-md);
+  background: var(--cream-50);
+  border: 2px solid var(--amber-500);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  text-align: center;
+  animation: g3-feedback var(--motion-dialog) both;
+}
+.achievement-popup > .cab-icon-btn {
+  position: absolute;
+  top: var(--space-xs);
+  right: var(--space-xs);
+}
+.achievement-popup h2 {
+  font-size: var(--type-section-title);
+}
+.achievement-popup p {
+  font-size: var(--type-body-small);
+}
+.achievement-popup .sticker-art {
+  width: fit-content;
+  margin: var(--space-sm) auto;
+}
+.sticker-burst {
+  pointer-events: none;
+}
+@media (min-width: 1200px) {
+  .achievement-popup {
+    left: calc(var(--cab-sidebar) + var(--space-md));
+  }
+}
+@media (max-width: 480px) {
+  .sticker-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .sticker-cell {
+    padding: var(--space-xs);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .achievement-popup,
+  .sticker-art {
+    animation: none !important;
+  }
+}

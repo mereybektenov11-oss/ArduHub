@@ -4,6 +4,7 @@ import { BrowserProgressStore, isProgress } from "./storage";
 import { createProgress } from "@/domain/seed";
 import { mergeProgress } from "./merge";
 import { xpLevel } from "./xp";
+import { normalizeProgress } from "./courseState";
 export function scopedStorage(storage: Storage, userId?: string) {
   return {
     getItem: (key: string) =>
@@ -15,6 +16,7 @@ export function scopedStorage(storage: Storage, userId?: string) {
   };
 }
 export class SupabaseProgressStore extends BrowserProgressStore {
+  streakWasFrozen = false;
   private timer: ReturnType<typeof setTimeout> | undefined;
   offline = false;
   constructor(
@@ -26,8 +28,9 @@ export class SupabaseProgressStore extends BrowserProgressStore {
   }
   async hydrate(): Promise<Progress> {
     const local = this.load();
-    await this.client.rpc("consume_boost", { kind: "freeze" });
-    const [stored, profile, events] = await Promise.all([
+    const consumed = await this.client.rpc("consume_boost", { kind: "freeze" });
+    this.streakWasFrozen = consumed.data?.used === true;
+    const [stored, profile, events, receipts] = await Promise.all([
       this.client
         .from("progress")
         .select("data")
@@ -35,8 +38,12 @@ export class SupabaseProgressStore extends BrowserProgressStore {
         .maybeSingle(),
       this.client.from("profiles").select("*").eq("id", this.userId).single(),
       this.client.from("xp_events").select("amount").eq("user_id", this.userId),
+      this.client
+        .from("user_achievements")
+        .select("achievement_id,awarded_at")
+        .eq("user_id", this.userId),
     ]);
-    if (stored.error || profile.error || events.error) {
+    if (stored.error || profile.error || events.error || receipts.error) {
       this.offline = true;
       this.onConnection(true);
       return local;
@@ -50,11 +57,42 @@ export class SupabaseProgressStore extends BrowserProgressStore {
       events.data?.reduce((sum, event) => sum + Number(event.amount), 0) ?? 0;
     const next = {
       ...p,
+      achievements: {
+        unlocked: [
+          ...new Set([
+            ...(p.achievements?.unlocked ?? []),
+            ...(local.achievements?.unlocked ?? []),
+            ...(receipts.data ?? []).map((r) => r.achievement_id),
+          ]),
+        ],
+        notified: [
+          ...new Set([
+            ...(p.achievements?.notified ?? []),
+            ...(local.achievements?.notified ?? []),
+          ]),
+        ],
+        claimed: (receipts.data ?? [])
+          .filter((r) => r.awarded_at !== null)
+          .map((r) => r.achievement_id),
+      },
+      ...(this.streakWasFrozen && p.streak.lastActiveDate
+        ? {
+            streak: {
+              ...p.streak,
+              frozenDates: [
+                ...new Set([
+                  ...(p.streak.frozenDates ?? []),
+                  p.streak.lastActiveDate,
+                ]),
+              ],
+            },
+          }
+        : {}),
       xp,
       profile: {
         ...p.profile,
         name: row.display_name,
-        level: Math.max(p.profile.level, xpLevel(xp)),
+        level: xpLevel(xp),
       },
       sparks: row.sparks,
       mentor: {
@@ -77,10 +115,11 @@ export class SupabaseProgressStore extends BrowserProgressStore {
       inventory: row.inventory ?? [],
       boosts: { freeze: row.freeze_count ?? 0, hints: row.hint_count ?? 0 },
     } as Progress;
-    super.save(next);
+    const normalized = normalizeProgress(next);
+    super.save(normalized);
     this.offline = false;
     this.onConnection(false);
-    return next;
+    return normalized;
   }
   override save(p: Progress) {
     super.save(p);
@@ -89,7 +128,7 @@ export class SupabaseProgressStore extends BrowserProgressStore {
       crypto.randomUUID(),
     );
     clearTimeout(this.timer);
-    this.timer = setTimeout(() => void this.flush(), 1500);
+    this.timer = setTimeout(() => void this.flush().catch(() => {}), 1500);
   }
   async flush() {
     clearTimeout(this.timer);
@@ -108,9 +147,10 @@ export class SupabaseProgressStore extends BrowserProgressStore {
         localStorage.removeItem("arduhub.pending-progress:" + this.userId);
       this.offline = false;
       this.onConnection(false);
-    } catch {
+    } catch (error) {
       this.offline = true;
       this.onConnection(true);
+      throw error;
     }
   }
   override reset() {

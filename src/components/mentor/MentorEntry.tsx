@@ -1,18 +1,17 @@
 "use client";
 import { useEffect } from "react";
-import { openMentor, type MentorRequest } from "./openMentor";
-import { polishRu as c } from "@/content/ru";
+import { useRouter } from "next/navigation";
+import { lessons } from "@/domain/seed";
+import type { MentorRequest } from "./openMentor";
 export default function MentorEntry(props: MentorRequest) {
-  const { lessonId, errorCode } = props;
+  const { lessonId } = props;
+  const router = useRouter();
   useEffect(() => {
-    const frame = requestAnimationFrame(() =>
-      openMentor({ lessonId, errorCode }),
+    router.replace(
+      lessons.some((lesson) => lesson.id === lessonId)
+        ? `/app/lesson/${lessonId}`
+        : "/app/profile",
     );
-    return () => cancelAnimationFrame(frame);
-  }, [lessonId, errorCode]);
-  return (
-    <button className="cab-btn" onClick={() => openMentor(props)}>
-      {c.askMentor}
-    </button>
-  );
+  }, [lessonId, router]);
+  return null;
 }

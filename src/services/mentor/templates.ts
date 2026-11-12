@@ -1,5 +1,5 @@
-import { errorCopy } from "@/domain/checker/errors.ru";
-import type { ErrorCode } from "@/domain/types";
+import { errorCopy } from "@arduhub/arduino-core/checker/errors.ru";
+import type { ErrorCode } from "@arduhub/arduino-core/types";
 import { mentorCopy as c } from "@/content/cabinet.ru";
 export function templateReply(message = "", code?: string): string {
   if (

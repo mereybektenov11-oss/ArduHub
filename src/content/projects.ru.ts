@@ -25,9 +25,9 @@ export const ideaCopy = [
 ] as const;
 export const projectCopy = {
   required: "Нужные детали",
-  working: "Работает в симуляции",
+  working: "Можно запустить",
   partial: "Частично",
-  soon: "Скоро",
+  soon: "Пока без запуска",
   ownBreadboard:
     "Макетная плата — компонент ArduHub; в Wokwi Elements 1.9.2 её нет.",
   lcdInterface: "Подключение LCD",

@@ -1,9 +1,10 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { learningRu as c } from "@/content/learning.ru";
+import { learningRu as c } from "@arduhub/curriculum/learning.ru";
 import { Action, Card } from "@/components/cabinet/ui";
 import { polishRu } from "@/content/ru";
 import { lessonFlowRu as flowCopy } from "@/content/ru";
+import Boxicon from "@/components/icons/Boxicon";
 type Video = {
   videoId: string;
   title: string;
@@ -153,7 +154,7 @@ export default function VideoStep({
 }: {
   lessonId: string;
   onDone: () => void;
-  onUnlock?: () => void;
+  onUnlock?: (evidence: { confirmed?: boolean; watchedRatio?: number }) => void;
   completed?: boolean;
   nextLabel?: string;
 }) {
@@ -191,7 +192,7 @@ export default function VideoStep({
   }
   const video = videos[index];
   useEffect(() => {
-    if (watched >= 0.8 && !completed) onUnlock?.();
+    if (watched >= 0.8 && !completed) onUnlock?.({ watchedRatio: watched });
   }, [watched, completed, onUnlock]);
   return (
     <Card className="polish-video-step">
@@ -226,7 +227,7 @@ export default function VideoStep({
               {c.anotherVideo}
             </Action>
             <Action disabled={watched < 0.8 && !completed} onClick={onDone}>
-              {nextLabel ?? c.next} →
+              {nextLabel ?? c.next} <Boxicon name="next" />
             </Action>
           </div>
         </>
@@ -238,18 +239,18 @@ export default function VideoStep({
         </div>
       )}
       {onUnlock && (
-        <Action secondary onClick={onUnlock}>
+        <Action secondary onClick={() => onUnlock({ confirmed: true })}>
           {flowCopy.watched}
         </Action>
       )}
-      {(!onUnlock || !video) && (
+      {!onUnlock && (
         <Action secondary onClick={onDone}>
-          {c.withoutVideo} →
+          {c.withoutVideo} <Boxicon name="next" />
         </Action>
       )}
       {onUnlock && !video && (
         <Action disabled={!completed} onClick={onDone}>
-          {nextLabel ?? flowCopy.toTest} →
+          {nextLabel ?? flowCopy.toTest} <Boxicon name="next" />
         </Action>
       )}
     </Card>

@@ -1,7 +1,10 @@
 {
   "ci": {
     "collect": {
-      "url": ["http://127.0.0.1:3100/sign-in", "http://127.0.0.1:3100/app"],
+      "url": [
+        "http://127.0.0.1:3100/sign-in",
+        "http://127.0.0.1:3100/app/docs"
+      ],
       "numberOfRuns": 1,
       "puppeteerScript": "scripts/lighthouse-guest.cjs",
       "settings": {

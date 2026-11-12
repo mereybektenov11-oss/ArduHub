@@ -50,7 +50,7 @@ try {
   }, tags);
   await mkdir("src/domain/parts", { recursive: true });
   await writeFile(
-    "src/domain/parts/wokwi-pins.json",
+    "packages/arduino-core/src/parts/wokwi-pins.json",
     JSON.stringify(data, null, 2) + "\n",
   );
   console.log(

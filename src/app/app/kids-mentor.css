@@ -1,0 +1,28 @@
+.kids-mentor-nudge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs);
+  border: 1px solid var(--forest-700);
+  border-radius: var(--radius-card);
+  background: var(--cream-50);
+  color: var(--text-dark);
+  font-size: var(--type-body-small);
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.kids-mentor-nudge button {
+  min-width: 44px;
+  min-height: 44px;
+  flex-shrink: 0;
+}
+.flow-mentor-portrait span,
+.flow-mentor-portrait small,
+.polish-chat-identity h2 {
+  white-space: nowrap;
+  hyphens: none;
+  word-break: normal;
+}
+.kids-mentor-project-actions {
+  flex-wrap: wrap;
+}

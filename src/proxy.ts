@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { requestOrigin } from "@/lib/requestOrigin";
+import { supabaseFetch } from "@/lib/supabase/fetch";
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -9,6 +10,7 @@ export async function proxy(request: NextRequest) {
   if (url && key) {
     try {
       const client = createServerClient(url, key, {
+        global: { fetch: supabaseFetch },
         cookies: {
           getAll: () => request.cookies.getAll(),
           setAll(values) {

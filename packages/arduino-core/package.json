@@ -1,0 +1,23 @@
+{
+  "name": "@arduhub/arduino-core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*.json": "./src/*.json",
+    "./*": "./src/*.ts",
+    "./lessons/content": "./src/lessons/content/index.ts",
+    "./sim/interpreter": "./src/sim/interpreter/index.ts"
+  },
+  "scripts": {
+    "test": "vitest run --config vitest.config.ts"
+  },
+  "dependencies": {
+    "@arduhub/curriculum": "workspace:*",
+    "avr8js": "^0.21.1"
+  },
+  "devDependencies": {
+    "vitest": "5.0.5"
+  }
+}

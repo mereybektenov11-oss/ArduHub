@@ -10,7 +10,11 @@ export async function GET(request: Request) {
     if (!error)
       return NextResponse.redirect(
         new URL(
-          url.searchParams.get("next") === "reset" ? "/auth/reset" : "/app",
+          url.searchParams.get("next") === "reset"
+            ? "/auth/reset"
+            : url.searchParams.get("next") === "profile"
+              ? "/app/profile"
+              : "/app/profile",
           requestOrigin(request),
         ),
       );

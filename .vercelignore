@@ -19,3 +19,7 @@ scripts/
 *.tsbuildinfo
 AGENTS.md
 .npmrc
+outputs/
+tmp/
+apps/
+packages/*/tests/

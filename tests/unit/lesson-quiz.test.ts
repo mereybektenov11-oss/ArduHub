@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { lessonQuizzes } from "../../src/content/lesson-quiz.ru";
-import { learningLessons } from "../../src/domain/lessons/content";
+import { lessonQuizzes } from "@arduhub/curriculum/lesson-quiz.ru";
+import { learningLessons } from "@arduhub/arduino-core/lessons/content";
 import {
   quizResult,
   createQuizProgress,

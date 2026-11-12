@@ -1,4 +1,5 @@
 "use client";
+import Icon from "@/components/icons/Icon";
 import { useEffect, useState } from "react";
 import { dashboardRu as c } from "@/content/dashboard.ru";
 import { useProgress } from "@/lib/useProgress";
@@ -6,11 +7,16 @@ import {
   dailyState,
   millisecondsToReset,
   missionsDone,
-  claimDaily,
 } from "@/domain/missions";
 import { Card, Action } from "@/components/cabinet/ui";
 export default function MissionsPage() {
-  const { progress: p, update, refreshAccount, notify } = useProgress();
+  const {
+    progress: p,
+    update,
+    refreshAccount,
+    notify,
+    claimMissions,
+  } = useProgress();
   const [now, setNow] = useState(() => new Date()),
     [busy, setBusy] = useState(false),
     [answer, setAnswer] = useState<number | null>(null);
@@ -36,13 +42,7 @@ export default function MissionsPage() {
     if (busy || daily.claimed || !missionsDone(p, now)) return;
     setBusy(true);
     try {
-      if (p.account?.userId) {
-        await award("mission", daily.day, 5);
-        update((x) => ({
-          ...x,
-          daily: { ...dailyState(x, now), claimed: true },
-        }));
-      } else update((x) => claimDaily(x, now));
+      await claimMissions();
     } catch {
       notify(c.offline);
     } finally {
@@ -66,7 +66,6 @@ export default function MissionsPage() {
   return (
     <div className="cab-stack">
       <div>
-        <p className="cab-eyebrow">ArduHub / {c.groups[2].title}</p>
         <h1>{c.missions}</h1>
         <p className="cab-muted">
           {c.remaining}: <time>{remaining}</time>
@@ -86,7 +85,13 @@ export default function MissionsPage() {
           return (
             <div className="dash-mission" key={title}>
               <div className="cab-row">
-                <strong>{title}</strong>
+                <strong>
+                  <Icon
+                    name={i === 0 ? "book" : i === 1 ? "xp" : "target"}
+                    state={value >= max ? "done" : "idle"}
+                  />{" "}
+                  {title}
+                </strong>
                 <span>
                   {Math.min(value, max)} / {max}
                 </span>
@@ -99,7 +104,8 @@ export default function MissionsPage() {
       <Card>
         <h2>{c.rewards}</h2>
         <p>
-          ϟ +5 {c.tokenUnits} · ◆ +10 {c.sparkUnits}
+          <Icon name="tokens" /> +5 {c.tokenUnits} · <Icon name="sparks" /> +10{" "}
+          {c.sparkUnits}
         </p>
         <Action
           disabled={busy || daily.claimed || !missionsDone(p, now)}

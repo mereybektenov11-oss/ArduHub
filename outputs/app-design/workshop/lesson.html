@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=1440">
+<title>Мастерская изобретателя — Урок — схема и код</title>
+<style>
+@font-face{font-family:Head;src:url(../../../src/fonts/Manrope-Variable.woff2) format("woff2");font-weight:700 800}
+@font-face{font-family:Body;src:url(../../../src/fonts/Inter-Variable.woff2) format("woff2");font-weight:400 700}
+:root{--color-bg:#F6EFE3;--color-surface:#FFFBF4;--color-surface-2:#EFE2CC;--color-text:#2B2118;--color-muted:#6B5844;--color-primary:#B4501A;--color-on-primary:#FFFFFF;--color-accent:#2F6B4F;--color-line:#D8C5A6;--color-locked:#665645;--color-led:#E5322D;--color-wood:#A9744A;--color-wood-dark:#7A4E2D;--color-metal:#9AA3A8;--color-board:#2F6B4F;--color-wall:#E9D9BD;--color-floor:#C9A57A}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden}
+body{font-family:Body,system-ui,sans-serif;color:var(--color-text);font-size:16px;line-height:1.45}
+.app{display:flex;flex-direction:column;height:900px;padding:24px 32px 40px;gap:20px}
+.top{display:flex;align-items:center;gap:16px}
+.logo{font-size:24px;color:var(--color-text)}
+.logo b{color:var(--color-primary)}
+.spacer{flex:1}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;background:var(--color-surface);color:var(--color-text);font-size:14px;font-weight:600;border:1px solid var(--color-line)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;background:var(--color-primary);color:var(--color-on-primary);font-weight:700;font-size:16px;border:0}
+.btn.secondary{background:var(--color-surface);color:var(--color-text)}
+.muted{color:var(--color-muted)}
+.tag{display:inline-block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:4px 10px;background:var(--color-surface-2);color:var(--color-text);border-radius:6px}
+.mock{position:fixed;right:16px;bottom:12px;font-size:12px;color:var(--color-muted)}
+.card{padding:24px}
+h1{font-size:44px;line-height:1.1}
+h2{font-size:26px;line-height:1.2}
+h3{font-size:18px}
+.node{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:20px;background:var(--color-surface-2);color:var(--color-locked);flex:none}
+
+
+body{background:var(--color-bg) radial-gradient(var(--color-line) 1px,transparent 1px) 0 0/22px 22px}
+.card{background:var(--color-surface);border:1.5px dashed var(--color-line);border-radius:18px;box-shadow:0 2px 0 var(--color-line),0 10px 24px rgba(77,52,26,.10)}
+.btn{border-radius:12px;box-shadow:0 3px 0 #7d3711}
+.btn.secondary{box-shadow:0 3px 0 var(--color-line)}
+.chip{border-radius:999px}
+h1,h2,h3,.logo{font-family:Head;letter-spacing:-.01em}
+.node.done{background:var(--color-accent);color:#fff}
+.node.current{background:var(--color-primary);color:#fff;outline:3px dashed var(--color-primary);outline-offset:4px}
+.tag{transform:rotate(-2deg)}
+
+</style></head>
+<body><div class="app">
+<header class="top"><div class="logo">Ardu<b>Hub</b></div><span class="tag">Мастерская изобретателя</span><div class="spacer"></div>
+<span class="chip">Алия · Free</span><span class="chip">⚙ Настройки</span></header>
+
+<div style="display:flex;align-items:center;gap:12px"><span class="tag">Урок 1</span><h2>Первый огонёк</h2><div class="spacer"></div><span class="chip" style="">✓ Видео</span><span class="chip" style="">✓ Теория</span><span class="chip" style="">✓ Тест</span><span class="chip" style="background:var(--color-primary);color:var(--color-on-primary)">Схема</span><span class="chip" style="background:var(--color-primary);color:var(--color-on-primary)">Код</span><span class="chip" style="opacity:.7">Запуск</span></div>
+<main style="display:grid;grid-template-columns:320px 1fr 420px;gap:18px;flex:1;min-height:0">
+  <aside class="card" style="display:flex;flex-direction:column;gap:14px">
+    <h3>Задание</h3>
+    <p>Собери цепь светодиода с резистором на пине 13 и дополни программу мигания.</p>
+    <h3>Замкнутая цепь</h3><p class="muted" style="font-size:14px">Ток должен пройти через резистор и светодиод, а затем вернуться к GND.</p>
+    <h3>Полярность</h3><p class="muted" style="font-size:14px">Анод A подключают к выходу через резистор. Катод C ведёт к GND.</p>
+    <div class="spacer"></div><span class="btn secondary">💡 Подсказка</span>
+  </aside>
+  <section class="card" style="display:flex;flex-direction:column;gap:10px">
+    <div style="display:flex;gap:8px"><span class="chip">Uno</span><span class="chip">Резистор 220 Ом</span><span class="chip">Светодиод</span></div>
+    <svg viewBox="0 0 560 360" style="flex:1;width:100%">
+      <rect x="30" y="80" width="230" height="200" rx="14" fill="var(--color-board)"/>
+      <text x="60" y="190" font-family="Head" font-size="26" fill="#fff">UNO</text>
+      <rect x="60" y="92" width="10" height="14" rx="2" fill="#fff" opacity=".85"/><rect x="78" y="92" width="10" height="14" rx="2" fill="#fff" opacity=".85"/><rect x="96" y="92" width="10" height="14" rx="2" fill="#fff" opacity=".85"/><rect x="114" y="92" width="10" height="14" rx="2" fill="#fff" opacity=".85"/><rect x="132" y="92" width="10" height="14" rx="2" fill="#fff" opacity=".85"/><rect x="150" y="92" width="10" height="14" rx="2" fill="#fff" opacity=".85"/><rect x="168" y="92" width="10" height="14" rx="2" fill="#fff" opacity=".85"/><rect x="186" y="92" width="10" height="14" rx="2" fill="#fff" opacity=".85"/><rect x="204" y="92" width="10" height="14" rx="2" fill="#fff" opacity=".85"/><rect x="222" y="92" width="10" height="14" rx="2" fill="#fff" opacity=".85"/>
+      <text x="226" y="128" font-size="13" fill="#fff">13</text><text x="150" y="128" font-size="13" fill="#fff">GND</text>
+      <path d="M232 100 C 300 40, 340 40, 360 120" stroke="var(--color-primary)" stroke-width="6" fill="none" stroke-linecap="round" class="glow"/>
+      <rect x="350" y="118" width="22" height="70" rx="6" fill="var(--color-wood)" stroke="var(--color-line)" stroke-width="2"/>
+      <rect x="350" y="138" width="22" height="6" fill="var(--color-wood-dark)"/><rect x="350" y="154" width="22" height="6" fill="var(--color-wood-dark)"/>
+      <path d="M361 188 C 361 230, 420 230, 430 200" stroke="var(--color-primary)" stroke-width="6" fill="none" stroke-linecap="round" class="glow"/>
+      <circle cx="440" cy="170" r="30" fill="var(--color-led)" class="glow" style="color:var(--color-led)"/>
+      <rect x="425" y="196" width="6" height="40" fill="var(--color-metal)"/><rect x="449" y="196" width="6" height="52" fill="var(--color-metal)"/>
+      <path d="M452 250 C 430 330, 180 330, 165 108" stroke="var(--color-accent)" stroke-width="6" fill="none" stroke-dasharray="2 12" stroke-linecap="round"/>
+      <text x="300" y="345" font-size="14" fill="var(--color-muted)">Провод к GND ещё не подключён</text>
+    </svg>
+  </section>
+  <section class="card" style="display:flex;flex-direction:column;gap:12px">
+    <h3>Код</h3>
+    <pre style="flex:1;font:15px/1.6 Consolas,monospace;background:var(--color-surface-2);color:var(--color-text);padding:16px;border-radius:10px;white-space:pre">void setup() {
+  pinMode(<b style="color:var(--color-primary)">___</b>, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(13, <b style="color:var(--color-primary)">___</b>);
+  delay(<b style="color:var(--color-primary)">___</b>);
+  digitalWrite(13, LOW);
+  delay(1000);
+}</pre>
+    <div style="display:flex;gap:10px"><span class="btn" style="flex:1">▶ Запустить</span><span class="btn secondary">Проверить</span></div>
+  </section>
+</main>
+</div><div class="mock">Макет интерфейса ArduHub для ПК · приложение в разработке · данные — пример</div></body></html>

@@ -1,0 +1,84 @@
+.cab-modal:has(.cab-chat) {
+  height: min(720px, 90dvh);
+  max-height: 90dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.cab-modal:has(.cab-chat) .cab-modal-content {
+  height: auto;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+.cab-modal .cab-chat > :not(.cab-chat-log) {
+  flex-shrink: 0;
+}
+.cab-modal .cab-chat textarea {
+  overflow-y: hidden;
+}
+.cab-modal .cab-chat .cab-chat-log {
+  flex: 1;
+  min-height: 0;
+  max-height: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+.cab-chat-log::-webkit-scrollbar {
+  width: var(--space-xs);
+}
+.cab-chat-log::-webkit-scrollbar-thumb {
+  background: var(--cab-border);
+  border-radius: var(--radius-pill);
+}
+.cab-chat-log::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+.cab-chat .cab-row.polish-chat-quick {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  min-width: 0;
+}
+.polish-chat-quick > * {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.cab-chat .polish-chat-notes {
+  max-height: none;
+  overflow: visible;
+}
+.cab-chat-log > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.h-mentor-content {
+  min-width: 0;
+}
+.h-mentor-content pre {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.h-mentor-content ul {
+  list-style: disc;
+  padding-left: var(--space-lg);
+}
+.h-mentor-content ol {
+  list-style: decimal;
+  padding-left: var(--space-lg);
+}
+@media (max-width: 767px) {
+  .cab-modal:has(.cab-chat) {
+    height: var(--overlay-viewport-height, 100dvh);
+    max-height: var(--overlay-viewport-height, 100dvh);
+  }
+  .cab-modal:has(.cab-chat) .cab-modal-content {
+    height: auto;
+  }
+}

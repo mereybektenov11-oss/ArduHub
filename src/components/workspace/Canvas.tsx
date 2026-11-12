@@ -1,12 +1,30 @@
 "use client";
-import { useCallback, useEffect, useRef, useState } from "react";
-import type { SceneDoc, PinRef } from "@/domain/scene/scene";
-import { canWire, pinKey, connections } from "@/domain/scene/netlist";
-import { pinPosition, componentPins } from "@/domain/parts/pins";
-import { catalog, isPartType, type PartType } from "@/domain/parts/catalog";
-import { sceneExtent, snap } from "@/domain/scene/placement";
-import { learningRu as c } from "@/content/learning.ru";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
+import type { SceneDoc, PinRef } from "@arduhub/arduino-core/scene/scene";
+import {
+  canWire,
+  pinKey,
+  connections,
+} from "@arduhub/arduino-core/scene/netlist";
+import { pinPosition, componentPins } from "@arduhub/arduino-core/parts/pins";
+import {
+  catalog,
+  isPartType,
+  type PartType,
+} from "@arduhub/arduino-core/parts/catalog";
+import { sceneExtent, snap } from "@arduhub/arduino-core/scene/placement";
+import { learningRu as c } from "@arduhub/curriculum/learning.ru";
 import PartView from "./PartView";
+import { fitSceneToViewport } from "@arduhub/arduino-core/scene/viewport";
+import { kidsWorkspaceRu as k } from "@/content/kids-workspace.ru";
+import { playSfx } from "@/lib/sfx";
+import Boxicon from "@/components/icons/Boxicon";
 export default function Canvas({
   scene,
   onChange,
@@ -21,6 +39,8 @@ export default function Canvas({
   inputs = {},
   onView,
   onRemove,
+  tools,
+  wireOptions,
 }: {
   scene: SceneDoc;
   onChange: (s: SceneDoc) => void;
@@ -35,6 +55,8 @@ export default function Canvas({
   inputs?: Record<string, number>;
   onView?: (center: { x: number; y: number }) => void;
   onRemove?: () => void;
+  tools?: ReactNode;
+  wireOptions?: ReactNode;
 }) {
   const root = useRef<HTMLDivElement>(null),
     viewport = useRef<HTMLDivElement>(null),
@@ -57,21 +79,46 @@ export default function Canvas({
     reportView();
     return () => observer.disconnect();
   }, [reportView]);
-  const fit = () => {
-    if (viewport.current) {
-      setZoom(
-        Math.max(
-          0.01,
-          Math.min(
-            1,
-            viewport.current.clientWidth / extent.width,
-            600 / extent.height,
+  const manuallyZoomed = useRef(false);
+  const fit = useCallback(
+    (editing = false) => {
+      if (viewport.current) {
+        setZoom(
+          Math.max(
+            editing && viewport.current.clientWidth < 600 ? 0.8 : 0.01,
+            fitSceneToViewport(
+              { width: extent.width, height: extent.height },
+              {
+                width: viewport.current.clientWidth,
+                height: viewport.current.clientHeight,
+              },
+            ),
           ),
-        ),
-      );
-      viewport.current.scrollTo(0, 0);
-    }
-  };
+        );
+        viewport.current.scrollTo(0, 0);
+      }
+    },
+    [extent.width, extent.height],
+  );
+  const fitRef = useRef(() => fit(true));
+  useEffect(() => {
+    fitRef.current = () => fit(true);
+  }, [fit]);
+  useEffect(() => {
+    const element = viewport.current;
+    if (!element) return;
+    const observer = new ResizeObserver(() => {
+      if (!manuallyZoomed.current) fitRef.current();
+    });
+    observer.observe(element);
+    const frame = requestAnimationFrame(() => {
+      if (!manuallyZoomed.current) fitRef.current();
+    });
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+    };
+  }, []);
   const touches = useRef(new Map<number, { x: number; y: number }>());
   const space = useRef(false),
     pan = useRef<{ x: number; y: number } | null>(null);
@@ -81,6 +128,7 @@ export default function Canvas({
     if (!element) return;
     const wheel = (event: WheelEvent) => {
       event.preventDefault();
+      manuallyZoomed.current = true;
       setZoom((z) =>
         Math.max(0.01, Math.min(2, z * (event.deltaY > 0 ? 0.9 : 1.1))),
       );
@@ -116,6 +164,12 @@ export default function Canvas({
     })),
   };
   const [hovered, setHovered] = useState<PinRef | null>(null);
+  const [flash, setFlash] = useState<string | null>(null);
+  useEffect(() => {
+    if (!flash) return;
+    const timer = setTimeout(() => setFlash(null), 400);
+    return () => clearTimeout(timer);
+  }, [flash]);
   const linked = hovered ? connections(scene) : null;
   function wire(p: PinRef) {
     if (disabled) return;
@@ -125,6 +179,8 @@ export default function Canvas({
       return;
     }
     if (canWire(scene, pending, p)) {
+      playSfx("wire_snap");
+      setFlash(pinKey(p));
       onChange({
         ...scene,
         wires: [
@@ -142,48 +198,81 @@ export default function Canvas({
   };
   return (
     <>
-      <p className="l2-canvas-hint">{c.partsHint}</p>
-      <div className="l2-tools">
-        <button className="cab-btn cab-btn-secondary" onClick={fit}>
-          {c.fit}
-        </button>
-        <button
-          className="cab-btn cab-btn-secondary"
-          disabled={disabled || scene.wires.length === 0}
-          onClick={() => {
-            onChange({ ...scene, wires: [] });
-            onSelect(null);
-            setPending(null);
-            setMessage(c.wiresCleared);
-          }}
+      <div className="kids-canvas-controls">
+        <div
+          className="kids-circuit-toolbar"
+          role="toolbar"
+          aria-label={k.tools}
         >
-          {c.clearWires}
-        </button>
-        {scene.wires.some((wire) => wire.id === selected) && (
+          {tools}
           <button
             className="cab-btn cab-btn-secondary"
-            disabled={disabled}
-            onClick={onRemove}
+            onClick={() => {
+              manuallyZoomed.current = true;
+              fit();
+            }}
           >
-            {c.removeWire}
+            {c.fit}
           </button>
-        )}
-        <label>
-          {c.zoom}
-          <input
-            aria-label={c.zoom}
-            type="range"
-            min="1"
-            max="200"
-            value={Math.round(zoom * 100)}
-            onChange={(e) => setZoom(Number(e.target.value) / 100)}
-          />{" "}
-          {Math.round(zoom * 100)}%
-        </label>
-        <span>
-          {c.partsCount}: {scene.components.length}/60
-        </span>
+          <button
+            className="cab-icon-btn"
+            aria-label={k.zoomIn}
+            onClick={() => {
+              manuallyZoomed.current = true;
+              setZoom((z) => Math.min(2, z * 1.2));
+            }}
+          >
+            <Boxicon name="plus" />
+          </button>
+          <button
+            className="cab-icon-btn"
+            aria-label={k.zoomOut}
+            onClick={() => {
+              manuallyZoomed.current = true;
+              setZoom((z) => Math.max(0.01, z / 1.2));
+            }}
+          >
+            <Boxicon name="minus" />
+          </button>
+        </div>
+        <details className="kids-canvas-menu">
+          <summary className="cab-icon-btn" aria-label={k.more}>
+            <Boxicon name="more" />
+          </summary>
+          <div className="kids-options-panel">
+            {wireOptions}
+            <button
+              className="cab-btn cab-btn-secondary"
+              disabled={disabled || scene.wires.length === 0}
+              onClick={() => {
+                onChange({ ...scene, wires: [] });
+                onSelect(null);
+                setPending(null);
+                setMessage(c.wiresCleared);
+              }}
+            >
+              {c.clearWires}
+            </button>
+            {scene.wires.some((wire) => wire.id === selected) && (
+              <button
+                className="cab-btn cab-btn-secondary"
+                disabled={disabled}
+                onClick={onRemove}
+              >
+                {c.removeWire}
+              </button>
+            )}
+            <span>
+              {c.zoom}: {Math.round(zoom * 100)}%
+            </span>
+          </div>
+        </details>
       </div>
+      {scene.components.length >= 50 && (
+        <p className="l2-note" role="status">
+          {c.partsCount}: {scene.components.length}/60
+        </p>
+      )}
       <div
         ref={viewport}
         className="l2-canvas-scroll"
@@ -340,8 +429,9 @@ export default function Canvas({
                 if (!a || !b) return null;
                 const points = [a, ...w.bends, b];
                 return (
-                  <g key={w.id}>
+                  <g key={w.id} className="g3-wire-connected">
                     <polyline
+                      pathLength="1"
                       points={points.map((p) => `${p.x},${p.y}`).join(" ")}
                       fill="none"
                       stroke={w.color}
@@ -506,7 +596,7 @@ export default function Canvas({
                       setHovered({ componentId: part.id, pin: pin.name })
                     }
                     onPointerLeave={() => setHovered(null)}
-                    className={`l2-pin ${pending && pinKey(pending) === `${part.id}:${pin.name}` ? "pending" : ""}`}
+                    className={`l2-pin ${pending && pinKey(pending) === `${part.id}:${pin.name}` ? "pending" : ""} ${flash === `${part.id}:${pin.name}` ? "g3-pin-connected" : ""}`}
                     aria-label={`${part.id} ${pin.name}`}
                     disabled={disabled}
                     style={{
